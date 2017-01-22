@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demgauss</title>
+  <meta name="keywords" content="demgauss">
+  <meta name="description" content="DEMGAUSS Demonstrate sampling from Gaussian distributions.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demgauss.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demgauss
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMGAUSS Demonstrate sampling from Gaussian distributions.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMGAUSS Demonstrate sampling from Gaussian distributions.
+
+    Description
+
+    DEMGAUSS provides a simple illustration of the generation of data
+    from Gaussian distributions. It first samples from a one-dimensional
+    distribution using RANDN, and then plots a normalized histogram
+    estimate of the distribution using HISTP together with the true
+    density calculated using GAUSS.
+
+    DEMGAUSS then demonstrates sampling from a Gaussian distribution in
+    two dimensions. It creates a mean vector and a covariance matrix, and
+    then plots contours of constant density using the function GAUSS. A
+    sample of points drawn from this distribution, obtained using the
+    function GSAMP, is then superimposed on the contours.
+
+    See also
+    <a href="gauss.html" class="code" title="function y = gauss(mu, covar, x)">GAUSS</a>, <a href="gsamp.html" class="code" title="function x = gsamp(mu, covar, nsamp)">GSAMP</a>, <a href="histp.html" class="code" title="function h = histp(x, xmin, xmax, nbins)">HISTP</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gauss.html" class="code" title="function y = gauss(mu, covar, x)">gauss</a>	GAUSS	Evaluate a Gaussian distribution.</li><li><a href="gsamp.html" class="code" title="function x = gsamp(mu, covar, nsamp)">gsamp</a>	GSAMP	Sample from a Gaussian distribution.</li><li><a href="histp.html" class="code" title="function h = histp(x, xmin, xmax, nbins)">histp</a>	HISTP	Histogram estimate of 1-dimensional probability distribution.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMGAUSS Demonstrate sampling from Gaussian distributions.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    DEMGAUSS provides a simple illustration of the generation of data</span>
+0006 <span class="comment">%    from Gaussian distributions. It first samples from a one-dimensional</span>
+0007 <span class="comment">%    distribution using RANDN, and then plots a normalized histogram</span>
+0008 <span class="comment">%    estimate of the distribution using HISTP together with the true</span>
+0009 <span class="comment">%    density calculated using GAUSS.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    DEMGAUSS then demonstrates sampling from a Gaussian distribution in</span>
+0012 <span class="comment">%    two dimensions. It creates a mean vector and a covariance matrix, and</span>
+0013 <span class="comment">%    then plots contours of constant density using the function GAUSS. A</span>
+0014 <span class="comment">%    sample of points drawn from this distribution, obtained using the</span>
+0015 <span class="comment">%    function GSAMP, is then superimposed on the contours.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    See also</span>
+0018 <span class="comment">%    GAUSS, GSAMP, HISTP</span>
+0019 <span class="comment">%</span>
+0020 
+0021 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0022 
+0023 clc
+0024 mean = 2; var = 5; nsamp = 3000;
+0025 xmin = -10; xmax = 10; nbins = 30;
+0026 disp(<span class="string">'Demonstration of sampling from a uni-variate Gaussian with mean'</span>)
+0027 dstring = [num2str(mean), <span class="string">' and variance '</span>, num2str(var), <span class="string">'.  '</span>, <span class="keyword">...</span>
+0028     num2str(nsamp), <span class="string">' samples are taken.'</span>];
+0029 disp(dstring);
+0030 x = mean + sqrt(var)*randn(nsamp, 1);
+0031 fh1 = figure;
+0032 <a href="histp.html" class="code" title="function h = histp(x, xmin, xmax, nbins)">histp</a>(x, xmin, xmax, nbins);
+0033 hold on;
+0034 axis([xmin xmax 0 0.2]);
+0035 plotvals = linspace(xmin, xmax, 200)';
+0036 probs = <a href="gauss.html" class="code" title="function y = gauss(mu, covar, x)">gauss</a>(mean, var, plotvals);
+0037 plot(plotvals, probs, <span class="string">'-r'</span>);
+0038 xlabel(<span class="string">'X'</span>)
+0039 ylabel(<span class="string">'Density'</span>)
+0040 
+0041 disp(<span class="string">' '</span>)
+0042 disp(<span class="string">'Press any key to continue'</span>)
+0043 pause; 
+0044 mu = [3 2];
+0045 lam1 = 0.5;
+0046 lam2 = 5.0;
+0047 Sigma = lam1*[1,1]'*[1,1] + lam2*[1,-1]'*[1,-1];
+0048 disp(<span class="string">' '</span>)
+0049 disp(<span class="string">'Demonstration of sampling from a bi-variate Gaussian.  The mean is'</span>)
+0050 dstring = [<span class="string">'['</span>, num2str(mu(1)), <span class="string">', '</span>, num2str(mu(2)), <span class="keyword">...</span>
+0051       <span class="string">'] and the covariance matrix is'</span>];
+0052 disp(dstring)
+0053 disp(Sigma);
+0054 ngrid = 40;
+0055 cmin = -5; cmax = 10; 
+0056 cvals = linspace(cmin, cmax, ngrid);
+0057 [X1, X2] = meshgrid(cvals, cvals);
+0058 XX = [X1(:), X2(:)];
+0059 probs = <a href="gauss.html" class="code" title="function y = gauss(mu, covar, x)">gauss</a>(mu, Sigma, XX);
+0060 probs = reshape(probs, ngrid, ngrid);
+0061 
+0062 fh2 = figure;
+0063 contour(X1, X2, probs, <span class="string">'b'</span>);
+0064 hold on
+0065 
+0066 nsamp = 300;
+0067 dstring = [num2str(nsamp), <span class="string">' samples are generated.'</span>];
+0068 disp(<span class="string">'The plot shows the sampled data points with a contour plot of their density.'</span>)
+0069 samples = <a href="gsamp.html" class="code" title="function x = gsamp(mu, covar, nsamp)">gsamp</a>(mu, Sigma, nsamp);
+0070 plot(samples(:,1), samples(:,2), <span class="string">'or'</span>);
+0071 xlabel(<span class="string">'X1'</span>)
+0072 ylabel(<span class="string">'X2'</span>)
+0073 grid off;
+0074 
+0075 disp(<span class="string">' '</span>)
+0076 disp(<span class="string">'Press any key to end'</span>)
+0077 pause; 
+0078 close(fh1);
+0079 close(fh2);
+0080 clear all;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

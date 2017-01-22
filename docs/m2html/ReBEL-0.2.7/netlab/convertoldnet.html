@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of convertoldnet</title>
+  <meta name="keywords" content="convertoldnet">
+  <meta name="description" content="CONVERTOLDNET Convert pre-2.3 release MLP and MDN nets to new format">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; convertoldnet.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>convertoldnet
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CONVERTOLDNET Convert pre-2.3 release MLP and MDN nets to new format</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = convertoldnet(net) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CONVERTOLDNET Convert pre-2.3 release MLP and MDN nets to new format
+
+    Description
+    NET = CONVERTOLDNET(NET) takes a network NET and, if appropriate,
+    converts it from pre-2.3 to the current format.  The difference is
+    simply  that in MLPs and the MLP sub-net of MDNs the field ACTFN has
+    been  renamed OUTFN to make it consistent with GLM and RBF networks.
+    If the network is not old-format or an MLP or MDN it is left
+    unchanged.
+
+    See also
+    <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mdn.html" class="code" title="function net = mdn(nin, nhidden, ncentres, dim_target, mix_type,prior, beta)">MDN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="convertoldnet.html" class="code" title="function net = convertoldnet(net)">convertoldnet</a>	CONVERTOLDNET Convert pre-2.3 release MLP and MDN nets to new format</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="convertoldnet.html" class="code" title="function net = convertoldnet(net)">convertoldnet</a>	CONVERTOLDNET Convert pre-2.3 release MLP and MDN nets to new format</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = convertoldnet(net)</a>
+0002 <span class="comment">%CONVERTOLDNET Convert pre-2.3 release MLP and MDN nets to new format</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = CONVERTOLDNET(NET) takes a network NET and, if appropriate,</span>
+0006 <span class="comment">%    converts it from pre-2.3 to the current format.  The difference is</span>
+0007 <span class="comment">%    simply  that in MLPs and the MLP sub-net of MDNs the field ACTFN has</span>
+0008 <span class="comment">%    been  renamed OUTFN to make it consistent with GLM and RBF networks.</span>
+0009 <span class="comment">%    If the network is not old-format or an MLP or MDN it is left</span>
+0010 <span class="comment">%    unchanged.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    See also</span>
+0013 <span class="comment">%    MLP, MDN</span>
+0014 <span class="comment">%</span>
+0015 
+0016 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0017 
+0018 <span class="keyword">switch</span> net.type
+0019     <span class="keyword">case</span> <span class="string">'mlp'</span>
+0020     <span class="keyword">if</span> (isfield(net, <span class="string">'actfn'</span>))
+0021         net.outfn = net.actfn;
+0022         net = rmfield(net, <span class="string">'actfn'</span>);
+0023     <span class="keyword">end</span>
+0024     <span class="keyword">case</span> <span class="string">'mdn'</span>
+0025     net.mlp = <a href="convertoldnet.html" class="code" title="function net = convertoldnet(net)">convertoldnet</a>(net.mlp);
+0026 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

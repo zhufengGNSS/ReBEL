@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlp</title>
+  <meta name="keywords" content="mlp">
+  <meta name="description" content="MLP	Create a 2-layer feedforward network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLP	Create a 2-layer feedforward network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = mlp(nin, nhidden, nout, outfunc, prior, beta) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLP    Create a 2-layer feedforward network.
+
+    Description
+    NET = MLP(NIN, NHIDDEN, NOUT, FUNC) takes the number of inputs,
+    hidden units and output units for a 2-layer feed-forward network,
+    together with a string FUNC which specifies the output unit
+    activation function, and returns a data structure NET. The weights
+    are drawn from a zero mean, unit variance isotropic Gaussian, with
+    varianced scaled by the fan-in of the hidden or output units as
+    appropriate. This makes use of the Matlab function RANDN and so the
+    seed for the random weight initialization can be  set using
+    RANDN('STATE', S) where S is the seed value.  The hidden units use
+    the TANH activation function.
+
+    The fields in NET are
+      type = 'mlp'
+      nin = number of inputs
+      nhidden = number of hidden units
+      nout = number of outputs
+      nwts = total number of weights and biases
+      actfn = string describing the output unit activation function:
+          'linear'
+          'logistic
+          'softmax'
+      w1 = first-layer weight matrix
+      b1 = first-layer bias vector
+      w2 = second-layer weight matrix
+      b2 = second-layer bias vector
+     Here W1 has dimensions NIN times NHIDDEN, B1 has dimensions 1 times
+    NHIDDEN, W2 has dimensions NHIDDEN times NOUT, and B2 has dimensions
+    1 times NOUT.
+
+    NET = MLP(NIN, NHIDDEN, NOUT, FUNC, PRIOR), in which PRIOR is a
+    scalar, allows the field NET.ALPHA in the data structure NET to be
+    set, corresponding to a zero-mean isotropic Gaussian prior with
+    inverse variance with value PRIOR. Alternatively, PRIOR can consist
+    of a data structure with fields ALPHA and INDEX, allowing individual
+    Gaussian priors to be set over groups of weights in the network. Here
+    ALPHA is a column vector in which each element corresponds to a
+    separate group of weights, which need not be mutually exclusive.  The
+    membership of the groups is defined by the matrix INDX in which the
+    columns correspond to the elements of ALPHA. Each column has one
+    element for each weight in the matrix, in the order defined by the
+    function MLPPAK, and each element is 1 or 0 according to whether the
+    weight is a member of the corresponding group or not. A utility
+    function MLPPRIOR is provided to help in setting up the PRIOR data
+    structure.
+
+    NET = MLP(NIN, NHIDDEN, NOUT, FUNC, PRIOR, BETA) also sets the
+    additional field NET.BETA in the data structure NET, where beta
+    corresponds to the inverse noise variance.
+
+    See also
+    <a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">MLPPRIOR</a>, <a href="mlppak.html" class="code" title="function w = mlppak(net)">MLPPAK</a>, <a href="mlpunpak.html" class="code" title="function net = mlpunpak(net, w)">MLPUNPAK</a>, <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">MLPFWD</a>, <a href="mlperr.html" class="code" title="function [e, edata, eprior, mse] = mlperr(net, x, t)">MLPERR</a>, <a href="mlpbkp.html" class="code" title="function g = mlpbkp(net, x, z, deltas)">MLPBKP</a>, <a href="mlpgrad.html" class="code" title="function [g, gdata, gprior] = mlpgrad(net, x, t)">MLPGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demard.html" class="code" title="">demard</a>	DEMARD	Automatic relevance determination using the MLP.</li><li><a href="demev1.html" class="code" title="">demev1</a>	DEMEV1	Demonstrate Bayesian regression for the MLP.</li><li><a href="demev2.html" class="code" title="">demev2</a>	DEMEV2	Demonstrate Bayesian classification for the MLP.</li><li><a href="demhint.html" class="code" title="function demhint(nin, nhidden, nout)">demhint</a>	DEMHINT Demonstration of Hinton diagram for 2-layer feed-forward network.</li><li><a href="demhmc2.html" class="code" title="">demhmc2</a>	DEMHMC2 Demonstrate Bayesian regression with Hybrid Monte Carlo sampling.</li><li><a href="demhmc3.html" class="code" title="">demhmc3</a>	DEMHMC3 Demonstrate Bayesian regression with Hybrid Monte Carlo sampling.</li><li><a href="demmdn1.html" class="code" title="">demmdn1</a>	DEMMDN1 Demonstrate fitting a multi-valued function using a Mixture Density Network.</li><li><a href="demmlp1.html" class="code" title="">demmlp1</a>	DEMMLP1 Demonstrate simple regression using a multi-layer perceptron</li><li><a href="demmlp2.html" class="code" title="">demmlp2</a>	DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</li><li><a href="demolgd1.html" class="code" title="">demolgd1</a>	DEMOLGD1 Demonstrate simple MLP optimisation with on-line gradient descent</li><li><a href="demprior.html" class="code" title="function demprior(action);">demprior</a>	DEMPRIOR Demonstrate sampling from a multi-parameter Gaussian prior.</li><li><a href="demtrain.html" class="code" title="function demtrain(action);">demtrain</a>	DEMTRAIN Demonstrate training of MLP network.</li><li><a href="mdn.html" class="code" title="function net = mdn(nin, nhidden, ncentres, dim_target, mix_type,prior, beta)">mdn</a>	MDN	Creates a Mixture Density Network with specified architecture.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = mlp(nin, nhidden, nout, outfunc, prior, beta)</a>
+0002 <span class="comment">%MLP    Create a 2-layer feedforward network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = MLP(NIN, NHIDDEN, NOUT, FUNC) takes the number of inputs,</span>
+0006 <span class="comment">%    hidden units and output units for a 2-layer feed-forward network,</span>
+0007 <span class="comment">%    together with a string FUNC which specifies the output unit</span>
+0008 <span class="comment">%    activation function, and returns a data structure NET. The weights</span>
+0009 <span class="comment">%    are drawn from a zero mean, unit variance isotropic Gaussian, with</span>
+0010 <span class="comment">%    varianced scaled by the fan-in of the hidden or output units as</span>
+0011 <span class="comment">%    appropriate. This makes use of the Matlab function RANDN and so the</span>
+0012 <span class="comment">%    seed for the random weight initialization can be  set using</span>
+0013 <span class="comment">%    RANDN('STATE', S) where S is the seed value.  The hidden units use</span>
+0014 <span class="comment">%    the TANH activation function.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    The fields in NET are</span>
+0017 <span class="comment">%      type = 'mlp'</span>
+0018 <span class="comment">%      nin = number of inputs</span>
+0019 <span class="comment">%      nhidden = number of hidden units</span>
+0020 <span class="comment">%      nout = number of outputs</span>
+0021 <span class="comment">%      nwts = total number of weights and biases</span>
+0022 <span class="comment">%      actfn = string describing the output unit activation function:</span>
+0023 <span class="comment">%          'linear'</span>
+0024 <span class="comment">%          'logistic</span>
+0025 <span class="comment">%          'softmax'</span>
+0026 <span class="comment">%      w1 = first-layer weight matrix</span>
+0027 <span class="comment">%      b1 = first-layer bias vector</span>
+0028 <span class="comment">%      w2 = second-layer weight matrix</span>
+0029 <span class="comment">%      b2 = second-layer bias vector</span>
+0030 <span class="comment">%     Here W1 has dimensions NIN times NHIDDEN, B1 has dimensions 1 times</span>
+0031 <span class="comment">%    NHIDDEN, W2 has dimensions NHIDDEN times NOUT, and B2 has dimensions</span>
+0032 <span class="comment">%    1 times NOUT.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%    NET = MLP(NIN, NHIDDEN, NOUT, FUNC, PRIOR), in which PRIOR is a</span>
+0035 <span class="comment">%    scalar, allows the field NET.ALPHA in the data structure NET to be</span>
+0036 <span class="comment">%    set, corresponding to a zero-mean isotropic Gaussian prior with</span>
+0037 <span class="comment">%    inverse variance with value PRIOR. Alternatively, PRIOR can consist</span>
+0038 <span class="comment">%    of a data structure with fields ALPHA and INDEX, allowing individual</span>
+0039 <span class="comment">%    Gaussian priors to be set over groups of weights in the network. Here</span>
+0040 <span class="comment">%    ALPHA is a column vector in which each element corresponds to a</span>
+0041 <span class="comment">%    separate group of weights, which need not be mutually exclusive.  The</span>
+0042 <span class="comment">%    membership of the groups is defined by the matrix INDX in which the</span>
+0043 <span class="comment">%    columns correspond to the elements of ALPHA. Each column has one</span>
+0044 <span class="comment">%    element for each weight in the matrix, in the order defined by the</span>
+0045 <span class="comment">%    function MLPPAK, and each element is 1 or 0 according to whether the</span>
+0046 <span class="comment">%    weight is a member of the corresponding group or not. A utility</span>
+0047 <span class="comment">%    function MLPPRIOR is provided to help in setting up the PRIOR data</span>
+0048 <span class="comment">%    structure.</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%    NET = MLP(NIN, NHIDDEN, NOUT, FUNC, PRIOR, BETA) also sets the</span>
+0051 <span class="comment">%    additional field NET.BETA in the data structure NET, where beta</span>
+0052 <span class="comment">%    corresponds to the inverse noise variance.</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">%    See also</span>
+0055 <span class="comment">%    MLPPRIOR, MLPPAK, MLPUNPAK, MLPFWD, MLPERR, MLPBKP, MLPGRAD</span>
+0056 <span class="comment">%</span>
+0057 
+0058 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0059 
+0060 net.type = <span class="string">'mlp'</span>;
+0061 net.nin = nin;
+0062 net.nhidden = nhidden;
+0063 net.nout = nout;
+0064 net.nwts = (nin + 1)*nhidden + (nhidden + 1)*nout;
+0065 
+0066 outfns = {<span class="string">'linear'</span>, <span class="string">'logistic'</span>, <span class="string">'softmax'</span>};
+0067 
+0068 <span class="keyword">if</span> sum(strcmp(outfunc, outfns)) == 0
+0069   error(<span class="string">'Undefined output function. Exiting.'</span>);
+0070 <span class="keyword">else</span>
+0071   net.outfn = outfunc;
+0072 <span class="keyword">end</span>
+0073 
+0074 <span class="keyword">if</span> nargin &gt; 4
+0075   <span class="keyword">if</span> isstruct(prior)
+0076     net.alpha = prior.alpha;
+0077     net.index = prior.index;
+0078   <span class="keyword">elseif</span> size(prior) == [1 1]
+0079     net.alpha = prior;
+0080   <span class="keyword">else</span>
+0081     error(<span class="string">'prior must be a scalar or a structure'</span>);
+0082   <span class="keyword">end</span>  
+0083 <span class="keyword">end</span>
+0084 
+0085 net.w1 = randn(nin, nhidden)/sqrt(nin + 1);
+0086 net.b1 = randn(1, nhidden)/sqrt(nin + 1);
+0087 net.w2 = randn(nhidden, nout)/sqrt(nhidden + 1);
+0088 net.b2 = randn(1, nout)/sqrt(nhidden + 1);
+0089 
+0090 <span class="keyword">if</span> nargin == 6
+0091   net.beta = beta;
+0092 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

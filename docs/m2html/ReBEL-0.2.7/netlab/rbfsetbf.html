@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rbfsetbf</title>
+  <meta name="keywords" content="rbfsetbf">
+  <meta name="description" content="RBFSETBF Set basis functions of RBF from data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; rbfsetbf.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>rbfsetbf
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>RBFSETBF Set basis functions of RBF from data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = rbfsetbf(net, options, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RBFSETBF Set basis functions of RBF from data.
+
+    Description
+    NET = RBFSETBF(NET, OPTIONS, X) sets the basis functions of the RBF
+    network NET so that they model the unconditional density of the
+    dataset X.  This is done by training a GMM with spherical covariances
+    using GMMEM.  The OPTIONS vector is passed to GMMEM. The widths of
+    the functions are set by a call to RBFSETFW.
+
+    See also
+    <a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">RBFTRAIN</a>, <a href="rbfsetfw.html" class="code" title="function net = rbfsetfw(net, scale)">RBFSETFW</a>, <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">GMMEM</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>	GMMINIT Initialises Gaussian mixture model from data</li><li><a href="rbfsetfw.html" class="code" title="function net = rbfsetfw(net, scale)">rbfsetfw</a>	RBFSETFW Set basis function widths of RBF.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev3.html" class="code" title="">demev3</a>	DEMEV3	Demonstrate Bayesian regression for the RBF.</li><li><a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">gtminit</a>	GTMINIT Initialise the weights and latent sample in a GTM.</li><li><a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">rbftrain</a>	RBFTRAIN Two stage training of RBF network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = rbfsetbf(net, options, x)</a>
+0002 <span class="comment">%RBFSETBF Set basis functions of RBF from data.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = RBFSETBF(NET, OPTIONS, X) sets the basis functions of the RBF</span>
+0006 <span class="comment">%    network NET so that they model the unconditional density of the</span>
+0007 <span class="comment">%    dataset X.  This is done by training a GMM with spherical covariances</span>
+0008 <span class="comment">%    using GMMEM.  The OPTIONS vector is passed to GMMEM. The widths of</span>
+0009 <span class="comment">%    the functions are set by a call to RBFSETFW.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    RBFTRAIN, RBFSETFW, GMMEM</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'rbf'</span>, x);
+0018 <span class="keyword">if</span> ~isempty(errstring)
+0019   error(errstring);
+0020 <span class="keyword">end</span>
+0021 
+0022 <span class="comment">% Create a spherical Gaussian mixture model</span>
+0023 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(net.nin, net.nhidden, <span class="string">'spherical'</span>);
+0024 
+0025 <span class="comment">% Initialise the parameters from the input data</span>
+0026 <span class="comment">% Just use a small number of k means iterations</span>
+0027 kmoptions = zeros(1, 18);
+0028 kmoptions(1) = -1;    <span class="comment">% Turn off warnings</span>
+0029 kmoptions(14) = 5;  <span class="comment">% Just 5 iterations to get centres roughly right</span>
+0030 mix = <a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>(mix, x, kmoptions);
+0031 
+0032 <span class="comment">% Train mixture model using EM algorithm</span>
+0033 [mix, options] = <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>(mix, x, options);
+0034 
+0035 <span class="comment">% Now set the centres of the RBF from the centres of the mixture model</span>
+0036 net.c = mix.centres;
+0037 
+0038 <span class="comment">% options(7) gives scale of function widths</span>
+0039 net = <a href="rbfsetfw.html" class="code" title="function net = rbfsetfw(net, scale)">rbfsetfw</a>(net, options(7));</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

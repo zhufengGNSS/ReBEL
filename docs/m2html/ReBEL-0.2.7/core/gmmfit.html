@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmmfit</title>
+  <meta name="keywords" content="gmmfit">
+  <meta name="description" content="GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; gmmfit.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmmfit
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X
+          using an expectation maximization algorithm (EM).
+
+
+   [gmmDS, leb] = gmmfit(X, M, tt, cov_type,  check_cov, display, W)
+
+   INPUT
+          X            Dataset of N samples (column vectors) [dim-by-N matrix]
+          M            Number of Gaussian mixture component densities [scalar]
+                       OR a pre-initialized GMM data structure (gmmDS)
+          tt           Termination threshold 0 &lt; tt &lt; 1 (if % change in log likelihood
+                       falls below this value, the EM algorithm terminates.) [scalar]
+                       OR if tt is a [1-by-2 vector] the first component is the termination
+                       threshold and the second component is the maximum number of iterations
+                       allowed for the EM, i.e. tt = [tt max_iterations]
+          cov_type     Covariance type 'full','diag','sqrt','sqrt-diag' [string]
+          check_cov    (optional) Covariance check flag : If this flag is set, a covariance
+                       matrix is reset to its original value when any of its singular values
+                       are too small (less than MIN_COVAR which has the value eps). With the
+                       default value of 0 no action is taken.
+          display      (optional) Display results of training if this is set to 1 (default=0)
+          W            (optional) 1xN vector of sample weights used to do a weighted EM fit to
+                                  the data.
+
+   OUTPUT
+          gmmDS         Gaussian mixture model data structure with the following fields
+            .cov_type   covariance matrix type 'full' , 'diag' , 'sqrt' , 'sqrt-diag'    [string]
+            .dim        data dimension  [scalar]
+            .M          number of Gaussian component densities  [scalar]
+            .weights    mixing priors (component weights) [1-by-M matrix]
+            .mu         N Gaussian component means (columns of matrix) [dim-by-N matrix]
+            .cov        covariance matrices of Gaussian components (must comply with .cov_type)
+                        [dim-by-dim-by-N matrix]
+          leb           log evidence buffer (sum of log evidence of data as a function of EM iteration)
+
+
+   See also
+     GMMEVAL, <a href="gmmsample.html" class="code" title="function [X,comp] = gmmsample(gmmDS, N)">GMMSAMPLE</a>, <a href="gmminitialize.html" class="code" title="function gmmDS = gmminitialize(gmmDS, X, maxI)">GMMINITIALIZE</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmminitialize.html" class="code" title="function gmmDS = gmminitialize(gmmDS, X, maxI)">gmminitialize</a>	GMMINITIALIZE  Initialises Gaussian mixture model (GMM) from data</li><li><a href="gmmprobability.html" class="code" title="function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W)">gmmprobability</a>	GMMPROBABILITY  Calculates any of the related (through Bayes rule) probabilities</li><li><a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmsppf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise, extra] = gmsppf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">gmsppf</a>	GMSPPF  Gaussian Mixture Sigma-Point Particle Filter</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse2.html" class="code" title="">demse2</a>	DEMSE2  Demonstrate state estimation on a simple scalar nonlinear (time variant) problem</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse4.html" class="code" title="">demse4</a>	DEMSE4  Bearing Only Tracking Example</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse5.html" class="code" title="">demse5</a>	DEMSE4  Bearing and Frequency Tracking Example</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W)</a>
+0002 
+0003 <span class="comment">% GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X</span>
+0004 <span class="comment">%          using an expectation maximization algorithm (EM).</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   [gmmDS, leb] = gmmfit(X, M, tt, cov_type,  check_cov, display, W)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   INPUT</span>
+0010 <span class="comment">%          X            Dataset of N samples (column vectors) [dim-by-N matrix]</span>
+0011 <span class="comment">%          M            Number of Gaussian mixture component densities [scalar]</span>
+0012 <span class="comment">%                       OR a pre-initialized GMM data structure (gmmDS)</span>
+0013 <span class="comment">%          tt           Termination threshold 0 &lt; tt &lt; 1 (if % change in log likelihood</span>
+0014 <span class="comment">%                       falls below this value, the EM algorithm terminates.) [scalar]</span>
+0015 <span class="comment">%                       OR if tt is a [1-by-2 vector] the first component is the termination</span>
+0016 <span class="comment">%                       threshold and the second component is the maximum number of iterations</span>
+0017 <span class="comment">%                       allowed for the EM, i.e. tt = [tt max_iterations]</span>
+0018 <span class="comment">%          cov_type     Covariance type 'full','diag','sqrt','sqrt-diag' [string]</span>
+0019 <span class="comment">%          check_cov    (optional) Covariance check flag : If this flag is set, a covariance</span>
+0020 <span class="comment">%                       matrix is reset to its original value when any of its singular values</span>
+0021 <span class="comment">%                       are too small (less than MIN_COVAR which has the value eps). With the</span>
+0022 <span class="comment">%                       default value of 0 no action is taken.</span>
+0023 <span class="comment">%          display      (optional) Display results of training if this is set to 1 (default=0)</span>
+0024 <span class="comment">%          W            (optional) 1xN vector of sample weights used to do a weighted EM fit to</span>
+0025 <span class="comment">%                                  the data.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%   OUTPUT</span>
+0028 <span class="comment">%          gmmDS         Gaussian mixture model data structure with the following fields</span>
+0029 <span class="comment">%            .cov_type   covariance matrix type 'full' , 'diag' , 'sqrt' , 'sqrt-diag'    [string]</span>
+0030 <span class="comment">%            .dim        data dimension  [scalar]</span>
+0031 <span class="comment">%            .M          number of Gaussian component densities  [scalar]</span>
+0032 <span class="comment">%            .weights    mixing priors (component weights) [1-by-M matrix]</span>
+0033 <span class="comment">%            .mu         N Gaussian component means (columns of matrix) [dim-by-N matrix]</span>
+0034 <span class="comment">%            .cov        covariance matrices of Gaussian components (must comply with .cov_type)</span>
+0035 <span class="comment">%                        [dim-by-dim-by-N matrix]</span>
+0036 <span class="comment">%          leb           log evidence buffer (sum of log evidence of data as a function of EM iteration)</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%   See also</span>
+0040 <span class="comment">%     GMMEVAL, GMMSAMPLE, GMMINITIALIZE</span>
+0041 
+0042 <span class="comment">%   This function has been derived and modified from the 'gmmem' function in</span>
+0043 <span class="comment">%   the NETLAB toolkit (by Ian T Nabney and Chris Bishop). See LICENSE file</span>
+0044 <span class="comment">%   in the NETLAB subdirectory for the Netlab license</span>
+0045 <span class="comment">%   Copyright (c) Ian T Nabney (1996-2001)</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%   The license for the derived file (this function) follows:</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0052 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0053 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0054 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0057 <span class="comment">%   detail.</span>
+0058 
+0059 <span class="comment">%=============================================================================================</span>
+0060 Nin = nargin;
+0061 
+0062 <span class="keyword">switch</span> Nin
+0063 <span class="keyword">case</span> 2
+0064   tt = [0.1 100];
+0065   cov_type = <span class="string">'full'</span>;
+0066   check_cov = 0;
+0067   display = 0;
+0068 <span class="keyword">case</span> 3
+0069   cov_type = <span class="string">'full'</span>;
+0070   check_cov = 0;
+0071   display = 0;
+0072 <span class="keyword">case</span> 4
+0073   check_cov = 0;
+0074   display = 0;
+0075 <span class="keyword">case</span> 5
+0076   display = 0;
+0077 <span class="keyword">case</span> {6,7}
+0078 <span class="keyword">otherwise</span>
+0079   error(<span class="string">' [ gmmfit ] Incorrect number of input arguments.'</span>);
+0080 <span class="keyword">end</span>
+0081 
+0082 [dim, Ndata] = size(X);             <span class="comment">% get dimensions of dataset</span>
+0083 
+0084 <span class="comment">% Sort out the options</span>
+0085 <span class="keyword">if</span> (length(tt)==2)                  <span class="comment">% number of EM iterations</span>
+0086   niters = tt(2);
+0087 <span class="keyword">else</span>
+0088   niters = 100;
+0089 <span class="keyword">end</span>
+0090 
+0091 
+0092 store = 0;
+0093 <span class="keyword">if</span> (nargout &gt; 1)
+0094   store = 1;    <span class="comment">% Store the evidence values to return them</span>
+0095   leb = zeros(1, niters);
+0096 <span class="keyword">end</span>
+0097 
+0098 test = 0;
+0099 <span class="keyword">if</span> tt(1) &gt; 0.0
+0100   test = 1;                         <span class="comment">% Test log likelihood for termination</span>
+0101   leb = zeros(1, niters);
+0102 <span class="keyword">end</span>
+0103 
+0104 
+0105 <span class="keyword">if</span> isnumeric(M)                    <span class="comment">% Initialize GMM from data if needed</span>
+0106   gmmDS.cov_type = cov_type;
+0107   gmmDS.dim = dim;
+0108   gmmDS.M = M;
+0109   gmmDS.weights = ones(dim,M);
+0110   gmmDS.mu = zeros(dim,M);
+0111   gmmDS.cov = repmat(eye(dim),[1 1 M]);   <span class="comment">% initialize GMM centroids and their covariances</span>
+0112   gmmDS = <a href="gmminitialize.html" class="code" title="function gmmDS = gmminitialize(gmmDS, X, maxI)">gmminitialize</a>(gmmDS, X, 5);     <span class="comment">% using Netlab's KMEANS algorithm.</span>
+0113 <span class="keyword">else</span>
+0114   gmmDS = M;
+0115   M = gmmDS.M;
+0116 <span class="keyword">end</span>
+0117 
+0118 
+0119 <span class="keyword">if</span> check_cov                        <span class="comment">% Ensure that covariances don't collapse</span>
+0120   MIN_COVAR = eps;                  <span class="comment">% Minimum singular value of covariance matrix</span>
+0121   MIN_COVAR_SQRT = sqrt(eps);
+0122   init_covars = gmmDS.cov;
+0123 <span class="keyword">end</span>
+0124 
+0125 
+0126 eold = -Inf;
+0127 
+0128 ones_dim = ones(1,dim);
+0129 ones_Ndata = ones(Ndata,1);
+0130 
+0131 <span class="comment">% Main loop of algorithm</span>
+0132 <span class="keyword">for</span> n = 1:niters
+0133 
+0134   <span class="comment">% Calculate posteriors based on old parameters</span>
+0135   <span class="keyword">if</span> (nargin == 7)
+0136       [prior, likelihood, <a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>, posterior] = <a href="gmmprobability.html" class="code" title="function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W)">gmmprobability</a>(gmmDS, X, W);
+0137   <span class="keyword">else</span>
+0138       [prior, likelihood, <a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>, posterior] = <a href="gmmprobability.html" class="code" title="function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W)">gmmprobability</a>(gmmDS, X);
+0139   <span class="keyword">end</span>
+0140 
+0141   <span class="comment">% Calculate error value if needed</span>
+0142   <span class="keyword">if</span> (display | store | test)
+0143     <span class="comment">% Error value is negative log likelihood of data evidence</span>
+0144     e = sum(log(<a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>));
+0145     <span class="keyword">if</span> store
+0146       leb(n) = e;
+0147     <span class="keyword">end</span>
+0148     <span class="keyword">if</span> display
+0149       fprintf(1, <span class="string">'Cycle %4d  Evidence %11.6f\n'</span>, n, e);
+0150     <span class="keyword">end</span>
+0151     <span class="keyword">if</span> test
+0152       <span class="keyword">if</span> (n &gt; 1 &amp; abs((e - eold)/eold) &lt; tt(1))
+0153         leb=leb(1:n);
+0154         <span class="keyword">return</span>;
+0155       <span class="keyword">else</span>
+0156         eold = e;
+0157       <span class="keyword">end</span>
+0158     <span class="keyword">end</span>
+0159   <span class="keyword">end</span>
+0160 
+0161 
+0162   <span class="comment">% Adjust the new estimates for the parameters</span>
+0163   new_pr = (sum(posterior, 2))';
+0164   new_c =  (posterior * X')';
+0165 
+0166   <span class="comment">% Now move new estimates to old parameter vectors</span>
+0167   gmmDS.weights = new_pr / Ndata;
+0168   new_mu = new_c ./ new_pr(ones_dim,:);
+0169   gmmDS.mu = new_mu;
+0170 
+0171   <span class="keyword">switch</span> cov_type
+0172 
+0173   <span class="keyword">case</span> <span class="string">'full'</span>
+0174     <span class="keyword">for</span> j = 1:M
+0175       tmu = new_mu(:,j);
+0176       diffs = X - tmu(:,ones_Ndata);
+0177       tpost = sqrt(posterior(j,:));
+0178       diffs = diffs .* tpost(ones_dim,:);
+0179       gmmDS.cov(:,:,j) = (diffs*diffs')/new_pr(j);
+0180     <span class="keyword">end</span>
+0181     <span class="keyword">if</span> check_cov
+0182       <span class="comment">% Ensure that no covariance is too small</span>
+0183       <span class="keyword">for</span> j = 1:M
+0184         <span class="keyword">if</span> min(svd(gmmDS.cov(:,:,j))) &lt; MIN_COVAR
+0185           gmmDS.cov(:,:,j) = init_covars(:,:,j);
+0186         <span class="keyword">end</span>
+0187       <span class="keyword">end</span>
+0188     <span class="keyword">end</span>
+0189 
+0190   <span class="keyword">case</span> {<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}
+0191     <span class="keyword">for</span> j = 1:M
+0192       tmu = new_mu(:,j);
+0193       diffs = X - tmu(:,ones_Ndata);
+0194       tpost = (1/sqrt(new_pr(j))) * sqrt(posterior(j,:));
+0195       diffs = diffs .* tpost(ones_dim,:);
+0196       [foo,tcov] = qr(diffs',0);
+0197       gmmDS.cov(:,:,j) = tcov';
+0198     <span class="keyword">end</span>
+0199     <span class="keyword">if</span> check_cov
+0200       <span class="comment">% Ensure that no covariance is too small</span>
+0201       <span class="keyword">for</span> j = 1:M
+0202         <span class="keyword">if</span> min(abs(diag(gmmDS.cov(:,:,j)))) &lt; MIN_COVAR_SQRT
+0203           gmmDS.cov(:,:,j) = init_covars(:,:,j);
+0204         <span class="keyword">end</span>
+0205       <span class="keyword">end</span>
+0206     <span class="keyword">end</span>
+0207 
+0208 
+0209   <span class="keyword">case</span> <span class="string">'diag'</span>
+0210     <span class="keyword">for</span> j = 1:M
+0211       tmu = new_mu(:,j);
+0212       diffs = X - tmu(:,ones_Ndata);
+0213       tpost = posterior(j,:);
+0214       dd = sum((diffs.*diffs).*tpost(ones_dim,:), 2)/new_pr(j);
+0215       <span class="keyword">if</span> check_cov
+0216         <span class="keyword">if</span> min(dd) &lt; MIN_COVAR
+0217           gmmDS.cov(:,:,j) = init_covars(:,:,j);
+0218         <span class="keyword">else</span>
+0219           gmmDS.cov(:,:,j) = diag(dd);
+0220         <span class="keyword">end</span>
+0221       <span class="keyword">else</span>
+0222         gmmDS.cov(:,:,j) = diag(dd);
+0223       <span class="keyword">end</span>
+0224     <span class="keyword">end</span>
+0225 
+0226 
+0227    <span class="keyword">otherwise</span>
+0228       error([<span class="string">'Unknown covariance type '</span>, cov_type]);
+0229   <span class="keyword">end</span>
+0230 
+0231 <span class="keyword">end</span>
+0232</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

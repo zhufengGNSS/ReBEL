@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of datread</title>
+  <meta name="keywords" content="datread">
+  <meta name="description" content="DATREAD Read data from an ascii file.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; datread.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>datread
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DATREAD Read data from an ascii file.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x, t, nin, nout, ndata] = datread(filename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DATREAD Read data from an ascii file.
+
+    Description
+
+    [X, T, NIN, NOUT, NDATA] = DATREAD(FILENAME) reads from the file
+    FILENAME and returns a matrix X of input vectors, a matrix T of
+    target vectors, and integers NIN, NOUT and NDATA specifying the
+    number of inputs, the number of outputs and the number of data points
+    respectively.
+
+    The format of the data file is as follows: the first row contains the
+    string NIN followed by the number of inputs, the second row contains
+    the string NOUT followed by the number of outputs, and the third row
+    contains the string NDATA followed by the number of data vectors.
+    Subsequent lines each contain one input vector followed by one output
+    vector, with individual values separated by spaces.
+
+    See also
+     nin   2   nout  1   ndata 4   0.000000e+00  0.000000e+00
+    1.000000e+00    0.000000e+00  1.000000e+00  0.000000e+00
+    1.000000e+00  0.000000e+00  0.000000e+00    1.000000e+00
+    1.000000e+00  1.000000e+00   See Also
+    <a href="datwrite.html" class="code" title="function datwrite(filename, x, t)">DATWRITE</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demtrain.html" class="code" title="function demtrain(action);">demtrain</a>	DEMTRAIN Demonstrate training of MLP network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x, t, nin, nout, ndata] = datread(filename)</a>
+0002 <span class="comment">%DATREAD Read data from an ascii file.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    [X, T, NIN, NOUT, NDATA] = DATREAD(FILENAME) reads from the file</span>
+0007 <span class="comment">%    FILENAME and returns a matrix X of input vectors, a matrix T of</span>
+0008 <span class="comment">%    target vectors, and integers NIN, NOUT and NDATA specifying the</span>
+0009 <span class="comment">%    number of inputs, the number of outputs and the number of data points</span>
+0010 <span class="comment">%    respectively.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    The format of the data file is as follows: the first row contains the</span>
+0013 <span class="comment">%    string NIN followed by the number of inputs, the second row contains</span>
+0014 <span class="comment">%    the string NOUT followed by the number of outputs, and the third row</span>
+0015 <span class="comment">%    contains the string NDATA followed by the number of data vectors.</span>
+0016 <span class="comment">%    Subsequent lines each contain one input vector followed by one output</span>
+0017 <span class="comment">%    vector, with individual values separated by spaces.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also</span>
+0020 <span class="comment">%     nin   2   nout  1   ndata 4   0.000000e+00  0.000000e+00</span>
+0021 <span class="comment">%    1.000000e+00    0.000000e+00  1.000000e+00  0.000000e+00</span>
+0022 <span class="comment">%    1.000000e+00  0.000000e+00  0.000000e+00    1.000000e+00</span>
+0023 <span class="comment">%    1.000000e+00  1.000000e+00   See Also</span>
+0024 <span class="comment">%    DATWRITE</span>
+0025 <span class="comment">%</span>
+0026 
+0027 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0028 
+0029 fid = fopen(filename, <span class="string">'rt'</span>);
+0030 <span class="keyword">if</span> fid == -1
+0031   error(<span class="string">'Failed to open file.'</span>)
+0032 <span class="keyword">end</span>
+0033 
+0034 <span class="comment">% Read number of inputs</span>
+0035 s1 = fscanf(fid, <span class="string">'%s'</span>, 1);
+0036 <span class="keyword">if</span> ~strcmp(s1, <span class="string">'nin'</span>)
+0037   fclose(fid);
+0038   error(<span class="string">'String ''nin'' not found'</span>)
+0039 <span class="keyword">end</span>
+0040 nin   = fscanf(fid, <span class="string">'%d\n'</span>, 1);
+0041 <span class="keyword">if</span> ~isnumeric(nin)
+0042   fclose(fid);
+0043   error(<span class="string">'No number for nin'</span>)
+0044 <span class="keyword">end</span>
+0045 <span class="keyword">if</span> nin &lt; 0 | round(nin) ~= nin
+0046   fclose(fid);
+0047   error(<span class="string">'nin must be a non-negative integer'</span>)
+0048 <span class="keyword">end</span>
+0049 
+0050 <span class="comment">% Read number of outputs</span>
+0051 s2 = fscanf(fid, <span class="string">'%s'</span>, 1);
+0052 <span class="keyword">if</span> ~strcmp(s2, <span class="string">'nout'</span>)
+0053   fclose(fid);
+0054   error(<span class="string">'String ''nout'' not found'</span>)
+0055 <span class="keyword">end</span>
+0056 nout  = fscanf(fid, <span class="string">'%d\n'</span>, 1);
+0057 <span class="keyword">if</span> ~isnumeric(nout)
+0058   fclose(fid);
+0059   error(<span class="string">'No number for nout'</span>)
+0060 <span class="keyword">end</span>
+0061 <span class="keyword">if</span> nout &lt; 0 | round(nout) ~= nout
+0062   fclose(fid);
+0063   error(<span class="string">'nout must be a non-negative integer'</span>)
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="comment">% Read number of data values</span>
+0067 s3 = fscanf(fid, <span class="string">'%s'</span>, 1);
+0068 <span class="keyword">if</span> ~strcmp(s3, <span class="string">'ndata'</span>)
+0069   fclose(fid);
+0070   error(<span class="string">'String ''ndata'' not found'</span>)
+0071 <span class="keyword">end</span>
+0072 ndata = fscanf(fid, <span class="string">'%d\n'</span>, 1);
+0073 <span class="keyword">if</span> ~isnumeric(ndata)
+0074   fclose(fid);
+0075   error(<span class="string">'No number for ndata'</span>)
+0076 <span class="keyword">end</span>
+0077 <span class="keyword">if</span> ndata &lt; 0 | round(ndata) ~= ndata
+0078   fclose(fid);
+0079   error(<span class="string">'ndata must be a non-negative integer'</span>)
+0080 <span class="keyword">end</span>
+0081 
+0082 <span class="comment">% The following line reads all of the remaining data to the end of file.</span>
+0083 temp  = fscanf(fid, <span class="string">'%f'</span>, inf);
+0084 
+0085 <span class="comment">% Check that size of temp is correct</span>
+0086 <span class="keyword">if</span> size(temp, 1) * size(temp,2) ~= (nin+nout) * ndata
+0087   fclose(fid);
+0088   error(<span class="string">'Incorrect number of elements in file'</span>)
+0089 <span class="keyword">end</span>
+0090 
+0091 temp = reshape(temp, nin + nout, ndata)';
+0092 x = temp(:, 1:nin);
+0093 t = temp(:, nin + 1 : nin + nout);
+0094 
+0095 flag = fclose(fid);
+0096 <span class="keyword">if</span> flag == -1
+0097   error(<span class="string">'Failed to close file.'</span>)
+0098 <span class="keyword">end</span>
+0099</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

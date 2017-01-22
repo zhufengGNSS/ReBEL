@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmmpost</title>
+  <meta name="keywords" content="gmmpost">
+  <meta name="description" content="GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gmmpost.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmmpost
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [post, a] = gmmpost(mix, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.
+
+    Description
+    This function computes the posteriors POST (i.e. the probability of
+    each component conditioned on the data P(J|X)) for a Gaussian mixture
+    model.   The data structure MIX defines the mixture model, while the
+    matrix X contains the data vectors.  Each row of X represents a
+    single vector.
+
+    See also
+    <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a>, <a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">GMMACTIV</a>, <a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">GMMPROB</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>	GMMACTIV Computes the activations of a Gaussian mixture model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev2.html" class="code" title="">demev2</a>	DEMEV2	Demonstrate Bayesian classification for the MLP.</li><li><a href="demgmm1.html" class="code" title="">demgmm1</a>	DEMGMM1 Demonstrate EM for Gaussian mixtures.</li><li><a href="demmlp2.html" class="code" title="">demmlp2</a>	DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</li><li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">gtmpost</a>	GTMPOST Latent space responsibility for data in a GTM.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [post, a] = gmmpost(mix, x)</a>
+0002 <span class="comment">%GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    This function computes the posteriors POST (i.e. the probability of</span>
+0006 <span class="comment">%    each component conditioned on the data P(J|X)) for a Gaussian mixture</span>
+0007 <span class="comment">%    model.   The data structure MIX defines the mixture model, while the</span>
+0008 <span class="comment">%    matrix X contains the data vectors.  Each row of X represents a</span>
+0009 <span class="comment">%    single vector.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    GMM, GMMACTIV, GMMPROB</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 <span class="comment">% Check that inputs are consistent</span>
+0018 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mix, <span class="string">'gmm'</span>, x);
+0019 <span class="keyword">if</span> ~isempty(errstring)
+0020   error(errstring);
+0021 <span class="keyword">end</span>
+0022 
+0023 ndata = size(x, 1);
+0024 
+0025 a = <a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>(mix, x);
+0026 
+0027 post = (ones(ndata, 1)*mix.priors).*a;
+0028 s = sum(post, 2);
+0029 <span class="keyword">if</span> any(s==0)
+0030    warning(<span class="string">'Some zero posterior probabilities'</span>)
+0031    <span class="comment">% Set any zeros to one before dividing</span>
+0032    zero_rows = find(s==0);
+0033    s = s + (s==0);
+0034    post(zero_rows, :) = 1/mix.ncentres;
+0035 <span class="keyword">end</span>
+0036 post = post./(s*ones(1, mix.ncentres));</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

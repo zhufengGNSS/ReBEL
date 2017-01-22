@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hbayes</title>
+  <meta name="keywords" content="hbayes">
+  <meta name="description" content="HBAYES	Evaluate Hessian of Bayesian error function for network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; hbayes.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>hbayes
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>HBAYES	Evaluate Hessian of Bayesian error function for network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [h, hdata] = hbayes(net, hdata) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HBAYES    Evaluate Hessian of Bayesian error function for network.
+
+    Description
+    H = HBAYES(NET, HDATA) takes a network data structure NET together
+    the data contribution to the Hessian for a set of inputs and targets.
+    It returns the regularised Hessian using any zero mean Gaussian
+    priors on the weights defined in NET.  In addition, if a MASK is
+    defined in NET, then the entries in H that correspond to weights with
+    a 0 in the mask are removed.
+
+    [H, HDATA] = HBAYES(NET, HDATA) additionally returns the data
+    component of the Hessian.
+
+    See also
+    <a href="gbayes.html" class="code" title="function [g, gdata, gprior] = gbayes(net, gdata)">GBAYES</a>, <a href="glmhess.html" class="code" title="function [h, hdata] = glmhess(net, x, t, hdata)">GLMHESS</a>, <a href="mlphess.html" class="code" title="function [h, hdata] = mlphess(net, x, t, hdata)">MLPHESS</a>, <a href="rbfhess.html" class="code" title="function [h, hdata] = rbfhess(net, x, t, hdata)">RBFHESS</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li><li><a href="glmhess.html" class="code" title="function [h, hdata] = glmhess(net, x, t, hdata)">glmhess</a>	GLMHESS Evaluate the Hessian matrix for a generalised linear model.</li><li><a href="mlphess.html" class="code" title="function [h, hdata] = mlphess(net, x, t, hdata)">mlphess</a>	MLPHESS Evaluate the Hessian matrix for a multi-layer perceptron network.</li><li><a href="rbfhess.html" class="code" title="function [h, hdata] = rbfhess(net, x, t, hdata)">rbfhess</a>	RBFHESS Evaluate the Hessian matrix for RBF network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [h, hdata] = hbayes(net, hdata) </a>
+0002 <span class="comment">%HBAYES    Evaluate Hessian of Bayesian error function for network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    H = HBAYES(NET, HDATA) takes a network data structure NET together</span>
+0006 <span class="comment">%    the data contribution to the Hessian for a set of inputs and targets.</span>
+0007 <span class="comment">%    It returns the regularised Hessian using any zero mean Gaussian</span>
+0008 <span class="comment">%    priors on the weights defined in NET.  In addition, if a MASK is</span>
+0009 <span class="comment">%    defined in NET, then the entries in H that correspond to weights with</span>
+0010 <span class="comment">%    a 0 in the mask are removed.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    [H, HDATA] = HBAYES(NET, HDATA) additionally returns the data</span>
+0013 <span class="comment">%    component of the Hessian.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    See also</span>
+0016 <span class="comment">%    GBAYES, GLMHESS, MLPHESS, RBFHESS</span>
+0017 <span class="comment">%</span>
+0018 
+0019 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0020 
+0021 <span class="keyword">if</span> (isfield(net, <span class="string">'mask'</span>))
+0022   <span class="comment">% Extract relevant entries in Hessian</span>
+0023   nmask_rows = size(find(net.mask), 1);
+0024   hdata = reshape(hdata(logical(net.mask*(net.mask'))), <span class="keyword">...</span>
+0025      nmask_rows, nmask_rows);
+0026   nwts = nmask_rows;
+0027 <span class="keyword">else</span>
+0028   nwts = net.nwts;
+0029 <span class="keyword">end</span>
+0030 <span class="keyword">if</span> isfield(net, <span class="string">'beta'</span>)
+0031   h = net.beta*hdata;
+0032 <span class="keyword">else</span>
+0033   h = hdata;
+0034 <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> isfield(net, <span class="string">'alpha'</span>)
+0037   <span class="keyword">if</span> size(net.alpha) == [1 1]
+0038     h = h + net.alpha*eye(nwts);
+0039   <span class="keyword">else</span>
+0040     <span class="keyword">if</span> isfield(net, <span class="string">'mask'</span>)
+0041       nindx_cols = size(net.index, 2);
+0042       index = reshape(net.index(logical(repmat(net.mask, <span class="keyword">...</span>
+0043          1, nindx_cols))), nmask_rows, nindx_cols);
+0044     <span class="keyword">else</span>
+0045       index = net.index;
+0046     <span class="keyword">end</span>
+0047     h = h + diag(index*net.alpha);
+0048   <span class="keyword">end</span> 
+0049 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

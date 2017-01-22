@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demopt1</title>
+  <meta name="keywords" content="demopt1">
+  <meta name="description" content="DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demopt1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demopt1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function demopt1(xinit) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.
+
+    Description
+    The four general optimisers (quasi-Newton, conjugate gradients,
+    scaled conjugate gradients, and gradient descent) are applied to the
+    minimisation of Rosenbrock's well known `banana' function. Each
+    optimiser is run for at most 100 cycles, and a stopping criterion of
+    1.0e-4 is used for both position and function value. At the end, the
+    trajectory of each algorithm is shown on a contour plot of the
+    function.
+
+    DEMOPT1(XINIT) allows the user to specify a row vector with two
+    columns as the starting point.  The default is the point [-1 1]. Note
+    that the contour plot has an x range of [-1.5, 1.5] and a y range of
+    [-0.5, 2.1], so it is best to choose a starting point in the same
+    region.
+
+    See also
+    <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">GRADDESC</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a>, <a href="rosen.html" class="code" title="function y = rosen(x)">ROSEN</a>, <a href="rosegrad.html" class="code" title="function g = rosegrad(x)">ROSEGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">conjgrad</a>	CONJGRAD Conjugate gradients optimization.</li><li><a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">graddesc</a>	GRADDESC Gradient descent optimization.</li><li><a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">quasinew</a>	QUASINEW Quasi-Newton optimization.</li><li><a href="rosen.html" class="code" title="function y = rosen(x)">rosen</a>	ROSEN	Calculate Rosenbrock's function.</li><li><a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">scg</a>	SCG	Scaled conjugate gradient optimization.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function demopt1(xinit)</a>
+0002 <span class="comment">%DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    The four general optimisers (quasi-Newton, conjugate gradients,</span>
+0006 <span class="comment">%    scaled conjugate gradients, and gradient descent) are applied to the</span>
+0007 <span class="comment">%    minimisation of Rosenbrock's well known `banana' function. Each</span>
+0008 <span class="comment">%    optimiser is run for at most 100 cycles, and a stopping criterion of</span>
+0009 <span class="comment">%    1.0e-4 is used for both position and function value. At the end, the</span>
+0010 <span class="comment">%    trajectory of each algorithm is shown on a contour plot of the</span>
+0011 <span class="comment">%    function.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    DEMOPT1(XINIT) allows the user to specify a row vector with two</span>
+0014 <span class="comment">%    columns as the starting point.  The default is the point [-1 1]. Note</span>
+0015 <span class="comment">%    that the contour plot has an x range of [-1.5, 1.5] and a y range of</span>
+0016 <span class="comment">%    [-0.5, 2.1], so it is best to choose a starting point in the same</span>
+0017 <span class="comment">%    region.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also</span>
+0020 <span class="comment">%    CONJGRAD, GRADDESC, QUASINEW, SCG, ROSEN, ROSEGRAD</span>
+0021 <span class="comment">%</span>
+0022 
+0023 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0024 
+0025 <span class="comment">% Initialise start point for search</span>
+0026 <span class="keyword">if</span> nargin &lt; 1 | size(xinit) ~= [1 2]
+0027   xinit = [-1 1];    <span class="comment">% Traditional start point</span>
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="comment">% Find out if flops is available (i.e. pre-version 6 Matlab)</span>
+0031 v = version;
+0032 <span class="keyword">if</span> (str2num(strtok(v, <span class="string">'.'</span>)) &gt;= 6)
+0033     flops_works = logical(0);
+0034 <span class="keyword">else</span>
+0035     flops_works = logical(1);
+0036 <span class="keyword">end</span>
+0037 
+0038 <span class="comment">% Set up options</span>
+0039 options = foptions;    <span class="comment">% Standard options</span>
+0040 options(1) = -1;     <span class="comment">% Turn off printing completely</span>
+0041 options(3) = 1e-8;     <span class="comment">% Tolerance in value of function</span>
+0042 options(14) = 100;      <span class="comment">% Max. 100 iterations of algorithm</span>
+0043 
+0044 clc
+0045 disp(<span class="string">'This demonstration compares the performance of four generic'</span>)
+0046 disp(<span class="string">'optimisation routines when finding the minimum of Rosenbrock''s'</span>)
+0047 disp(<span class="string">'function y = 100*(x2-x1^2)^2 + (1-x1)^2.'</span>)
+0048 disp(<span class="string">' '</span>)
+0049 disp(<span class="string">'The global minimum of this function is at [1 1].'</span>)
+0050 disp([<span class="string">'Each algorithm starts at the point ['</span> num2str(xinit(1))<span class="keyword">...</span>
+0051     <span class="string">' '</span> num2str(xinit(2)) <span class="string">'].'</span>])
+0052 disp(<span class="string">' '</span>)
+0053 disp(<span class="string">'Press any key to continue.'</span>)
+0054 pause 
+0055 
+0056 <span class="comment">% Generate a contour plot of the function</span>
+0057 a = -1.5:.02:1.5;
+0058 b = -0.5:.02:2.1;
+0059 [A, B] = meshgrid(a, b);
+0060 Z = <a href="rosen.html" class="code" title="function y = rosen(x)">rosen</a>([A(:), B(:)]);
+0061 Z = reshape(Z, length(b), length(a));
+0062 l = -1:6;
+0063 v = 2.^l;
+0064 fh1 = figure;
+0065 contour(a, b, Z, v)
+0066 title(<span class="string">'Contour plot of Rosenbrock''s function'</span>)
+0067 hold on
+0068 
+0069 clc
+0070 disp(<span class="string">'We now use quasi-Newton, conjugate gradient, scaled conjugate'</span>)
+0071 disp(<span class="string">'gradient, and gradient descent with line search algorithms'</span>)
+0072 disp(<span class="string">'to find a local minimum of this function.  Each algorithm is stopped'</span>)
+0073 disp(<span class="string">'when 100 cycles have elapsed, or if the change in function value'</span>)
+0074 disp(<span class="string">'is less than 1.0e-8 or the change in the input vector is less than'</span>)
+0075 disp(<span class="string">'1.0e-4 in magnitude.'</span>)
+0076 disp(<span class="string">' '</span>)
+0077 disp(<span class="string">'Press any key to continue.'</span>)
+0078 pause
+0079 
+0080 clc
+0081 x = xinit;
+0082 flops(0)
+0083 [x, options, errlog, pointlog] = <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">quasinew</a>(<span class="string">'rosen'</span>, x, options, <span class="string">'rosegrad'</span>);
+0084 fprintf(1, <span class="string">'For quasi-Newton method:\n'</span>)
+0085 fprintf(1, <span class="string">'Final point is (%f, %f), value is %f\n'</span>, x(1), x(2), options(8))
+0086 fprintf(1, <span class="string">'Number of function evaluations is %d\n'</span>, options(10))
+0087 fprintf(1, <span class="string">'Number of gradient evaluations is %d\n'</span>, options(11))
+0088 <span class="keyword">if</span> flops_works
+0089     opt_flops = flops;
+0090     fprintf(1, <span class="string">'Number of floating point operations is %d\n'</span>, opt_flops)
+0091 <span class="keyword">end</span>
+0092 fprintf(1, <span class="string">'Number of cycles is %d\n'</span>, size(pointlog, 1) - 1);
+0093 disp(<span class="string">' '</span>)
+0094 
+0095 x = xinit;
+0096 flops(0)
+0097 [x, options, errlog2, pointlog2] = <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">conjgrad</a>(<span class="string">'rosen'</span>, x, options, <span class="string">'rosegrad'</span>);
+0098 fprintf(1, <span class="string">'For conjugate gradient method:\n'</span>)
+0099 fprintf(1, <span class="string">'Final point is (%f, %f), value is %f\n'</span>, x(1), x(2), options(8))
+0100 fprintf(1, <span class="string">'Number of function evaluations is %d\n'</span>, options(10))
+0101 fprintf(1, <span class="string">'Number of gradient evaluations is %d\n'</span>, options(11))
+0102 <span class="keyword">if</span> flops_works
+0103     opt_flops = flops;
+0104     fprintf(1, <span class="string">'Number of floating point operations is %d\n'</span>, <span class="keyword">...</span>
+0105     opt_flops)
+0106 <span class="keyword">end</span>
+0107 fprintf(1, <span class="string">'Number of cycles is %d\n'</span>, size(pointlog2, 1) - 1);
+0108 disp(<span class="string">' '</span>)
+0109 
+0110 x = xinit;
+0111 flops(0)
+0112 [x, options, errlog3, pointlog3] = <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">scg</a>(<span class="string">'rosen'</span>, x, options, <span class="string">'rosegrad'</span>);
+0113 fprintf(1, <span class="string">'For scaled conjugate gradient method:\n'</span>)
+0114 fprintf(1, <span class="string">'Final point is (%f, %f), value is %f\n'</span>, x(1), x(2), options(8))
+0115 fprintf(1, <span class="string">'Number of function evaluations is %d\n'</span>, options(10))
+0116 fprintf(1, <span class="string">'Number of gradient evaluations is %d\n'</span>, options(11))
+0117 <span class="keyword">if</span> flops_works
+0118     opt_flops = flops;
+0119     fprintf(1, <span class="string">'Number of floating point operations is %d\n'</span>, opt_flops)
+0120 <span class="keyword">end</span>
+0121 fprintf(1, <span class="string">'Number of cycles is %d\n'</span>, size(pointlog3, 1) - 1);
+0122 disp(<span class="string">' '</span>)
+0123 
+0124 x = xinit;
+0125 options(7) = 1; <span class="comment">% Line minimisation used</span>
+0126 flops(0)
+0127 [x, options, errlog4, pointlog4] = <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">graddesc</a>(<span class="string">'rosen'</span>, x, options, <span class="string">'rosegrad'</span>);
+0128 fprintf(1, <span class="string">'For gradient descent method:\n'</span>)
+0129 fprintf(1, <span class="string">'Final point is (%f, %f), value is %f\n'</span>, x(1), x(2), options(8))
+0130 fprintf(1, <span class="string">'Number of function evaluations is %d\n'</span>, options(10))
+0131 fprintf(1, <span class="string">'Number of gradient evaluations is %d\n'</span>, options(11))
+0132 <span class="keyword">if</span> flops_works
+0133     opt_flops = flops;
+0134     fprintf(1, <span class="string">'Number of floating point operations is %d\n'</span>, opt_flops)
+0135 <span class="keyword">end</span>
+0136 fprintf(1, <span class="string">'Number of cycles is %d\n'</span>, size(pointlog4, 1) - 1);
+0137 disp(<span class="string">' '</span>)
+0138 disp(<span class="string">'Note that gradient descent does not reach a local minimum in'</span>)
+0139 disp(<span class="string">'100 cycles.'</span>)
+0140 disp(<span class="string">' '</span>)
+0141 disp(<span class="string">'On this problem, where the function is cheap to evaluate, the'</span>)
+0142 disp(<span class="string">'computational effort is dominated by the algorithm overhead.'</span>)
+0143 disp(<span class="string">'However on more complex optimisation problems (such as those'</span>)
+0144 disp(<span class="string">'involving neural networks), computational effort is dominated by'</span>)
+0145 disp(<span class="string">'the number of function and gradient evaluations.  Counting these,'</span>)
+0146 disp(<span class="string">'we can rank the algorithms: quasi-Newton (the best), conjugate'</span>)
+0147 disp(<span class="string">'gradient, scaled conjugate gradient, gradient descent (the worst)'</span>)
+0148 disp(<span class="string">' '</span>)
+0149 disp(<span class="string">'Press any key to continue.'</span>)
+0150 pause
+0151 clc
+0152 disp(<span class="string">'We now plot the trajectory of search points for each algorithm'</span>)
+0153 disp(<span class="string">'superimposed on the contour plot.'</span>)
+0154 disp(<span class="string">' '</span>)
+0155 disp(<span class="string">'Press any key to continue.'</span>)
+0156 pause
+0157 plot(pointlog4(:,1), pointlog4(:,2), <span class="string">'bd'</span>, <span class="string">'MarkerSize'</span>, 6)
+0158 plot(pointlog3(:,1), pointlog3(:,2), <span class="string">'mx'</span>, <span class="string">'MarkerSize'</span>, 6, <span class="string">'LineWidth'</span>, 2)
+0159 plot(pointlog(:,1), pointlog(:,2), <span class="string">'k.'</span>, <span class="string">'MarkerSize'</span>, 18)
+0160 plot(pointlog2(:,1), pointlog2(:,2), <span class="string">'g+'</span>, <span class="string">'MarkerSize'</span>, 6, <span class="string">'LineWidth'</span>, 2)
+0161 lh = legend(  <span class="string">'Gradient Descent'</span>, <span class="string">'Scaled Conjugate Gradients'</span>, <span class="keyword">...</span>
+0162   <span class="string">'Quasi Newton'</span>, <span class="string">'Conjugate Gradients'</span>);
+0163 
+0164 hold off
+0165 
+0166 clc
+0167 disp(<span class="string">'Press any key to end.'</span>)
+0168 pause
+0169 close(fh1);
+0170 clear all;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

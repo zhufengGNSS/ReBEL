@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gssm_bot</title>
+  <meta name="keywords" content="gssm_bot">
+  <meta name="description" content="GSSM_BOT  General state space model for Bearings-Only Tracking of a randomly maneuvering">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">gssm</a> &gt; gssm_bot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\gssm&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>gssm_bot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>GSSM_BOT  General state space model for Bearings-Only Tracking of a randomly maneuvering</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [varargout] = model_interface(func, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GSSM_BOT  General state space model for Bearings-Only Tracking of a randomly maneuvering
+           target relative to a stationary observer.
+
+   The following state space model is used :
+
+     X(k) = |1 1 0 0| X(k-1) + |0.5  0 | V(k-1)
+            |0 1 0 0|          | 1   0 |
+            |0 0 1 1|          | 0  0.5|
+            |0 0 0 1|          | 0   1 |
+
+     O(k) = arctan(x3(k)/x1(k)) + n(k)
+
+   Where the state vector is defined as the 2D position and velocity vector of the target,
+   relative to a fixed external reference frame, i.e.
+
+     X(k) = |x1(k)| = |x-position at time k|
+            |x2(k)|   |x-velocity at time k|
+            |x3(k)|   |y-position at time k|
+            |x4(k)|   |y-velocity at time k|
+
+   and the observation at time k, O(k) is the bearing angle (in radians) from the fixed
+   observer towards the target.
+
+   The state dynamics are driven by a 2 dimensional white Gaussian noise source and the
+   observations are corrupted by additive scalar white Gaussian noise.
+
+   See :  Gordon, Salmond &amp; Ewing, &quot;Bayesian State Estimation for Tracking and Guidance Using
+   the Bootstrap Filter&quot;, Journal of Guidance, Control and Dynamics, 1995.
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>	CONSISTENT   Check ReBEL data structures for consistentency.</li><li><a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="../../.././ReBEL-0.2.7/core/subangle.html" class="code" title="function C = subangle(A, B)">subangle</a>	ADDANGLE   Addition function for 'angle space' sigma-points expressed in radians.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/examples/state_estimation/demse4.html" class="code" title="">demse4</a>	DEMSE4  Bearing Only Tracking Example</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function model = init(init_args)</a></li><li><a href="#_sub2" class="code">function model = setparams(model, params, index_vector)</a></li><li><a href="#_sub3" class="code">function new_state = ffun(model, state, V, U1)</a></li><li><a href="#_sub4" class="code">function observ = hfun(model, state, N, U2)</a></li><li><a href="#_sub5" class="code">function tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a></li><li><a href="#_sub6" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub7" class="code">function innov = innovation(model, obs, observ)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% GSSM_BOT  General state space model for Bearings-Only Tracking of a randomly maneuvering</span>
+0002 <span class="comment">%           target relative to a stationary observer.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   The following state space model is used :</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%     X(k) = |1 1 0 0| X(k-1) + |0.5  0 | V(k-1)</span>
+0007 <span class="comment">%            |0 1 0 0|          | 1   0 |</span>
+0008 <span class="comment">%            |0 0 1 1|          | 0  0.5|</span>
+0009 <span class="comment">%            |0 0 0 1|          | 0   1 |</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%     O(k) = arctan(x3(k)/x1(k)) + n(k)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Where the state vector is defined as the 2D position and velocity vector of the target,</span>
+0014 <span class="comment">%   relative to a fixed external reference frame, i.e.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%     X(k) = |x1(k)| = |x-position at time k|</span>
+0017 <span class="comment">%            |x2(k)|   |x-velocity at time k|</span>
+0018 <span class="comment">%            |x3(k)|   |y-position at time k|</span>
+0019 <span class="comment">%            |x4(k)|   |y-velocity at time k|</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%   and the observation at time k, O(k) is the bearing angle (in radians) from the fixed</span>
+0022 <span class="comment">%   observer towards the target.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   The state dynamics are driven by a 2 dimensional white Gaussian noise source and the</span>
+0025 <span class="comment">%   observations are corrupted by additive scalar white Gaussian noise.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%   See :  Gordon, Salmond &amp; Ewing, &quot;Bayesian State Estimation for Tracking and Guidance Using</span>
+0028 <span class="comment">%   the Bootstrap Filter&quot;, Journal of Guidance, Control and Dynamics, 1995.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0033 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0034 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0035 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0038 <span class="comment">%   detail.</span>
+0039 
+0040 <span class="comment">%=============================================================================================</span>
+0041 
+0042 <a name="_sub0" href="#_subfunctions" class="code">function [varargout] = model_interface(func, varargin)</a>
+0043 
+0044   <span class="keyword">switch</span> func
+0045 
+0046     <span class="comment">%--- Initialize GSSM data structure --------------------------------------------------------</span>
+0047     <span class="keyword">case</span> <span class="string">'init'</span>
+0048       model = <a href="#_sub1" class="code" title="subfunction model = init(init_args)">init</a>(varargin);
+0049         error(<a href="../../.././ReBEL-0.2.7/core/consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>(model,<span class="string">'gssm'</span>));               <span class="comment">% check consistentency of initialized model</span>
+0050       varargout{1} = model;
+0051 
+0052     <span class="comment">%--------------------------------------------------------------------------------------------</span>
+0053     <span class="keyword">otherwise</span>
+0054 
+0055       error([<span class="string">'Function '''</span> func <span class="string">''' not supported.'</span>]);
+0056 
+0057   <span class="keyword">end</span>
+0058 
+0059 
+0060 <span class="comment">%===============================================================================================</span>
+0061 <a name="_sub1" href="#_subfunctions" class="code">function model = init(init_args)</a>
+0062 
+0063   model.type = <span class="string">'gssm'</span>;                         <span class="comment">% object type = generalized state space model</span>
+0064   model.tag  = <span class="string">'GSSM_Bearings_Only_Tracking'</span>;  <span class="comment">% ID tag</span>
+0065 
+0066   model.statedim   = 4;                      <span class="comment">%   state dimension</span>
+0067   model.obsdim     = 1;                      <span class="comment">%   observation dimension</span>
+0068   model.paramdim   = 10;                     <span class="comment">%   parameter dimension</span>
+0069                                              <span class="comment">%   parameter estimation will be done)</span>
+0070   model.U1dim      = 0;                      <span class="comment">%   exogenous control input 1 dimension</span>
+0071   model.U2dim      = 0;                      <span class="comment">%   exogenous control input 2 dimension</span>
+0072   model.Vdim       = 2;                      <span class="comment">%   process noise dimension</span>
+0073   model.Ndim       = 1;                      <span class="comment">%   observation noise dimension</span>
+0074 
+0075   model.ffun      = @<a href="#_sub3" class="code" title="subfunction new_state = ffun(model, state, V, U1)">ffun</a>;                   <span class="comment">% file handle to FFUN</span>
+0076   model.hfun      = @<a href="#_sub4" class="code" title="subfunction observ = hfun(model, state, N, U2)">hfun</a>;                   <span class="comment">% file handle to HFUN</span>
+0077   model.prior     = @<a href="#_sub5" class="code" title="subfunction tranprior = prior(model, nextstate, state, U1, pNoiseDS)">prior</a>;
+0078   model.likelihood = @<a href="#_sub6" class="code" title="subfunction llh = likelihood(model, obs, state, U2, oNoiseDS)">likelihood</a>;            <span class="comment">% file handle to LIKELIHOOD</span>
+0079   model.innovation = @<a href="#_sub7" class="code" title="subfunction innov = innovation(model, obs, observ)">innovation</a>;            <span class="comment">% file handle to INNOVATION</span>
+0080   model.setparams  = @<a href="#_sub2" class="code" title="subfunction model = setparams(model, params, index_vector)">setparams</a>;             <span class="comment">% file handle to SETPARAMS</span>
+0081 
+0082   model.obsAngleCompIdxVec = [1];            <span class="comment">% indicate that the first (and only component) of the observation</span>
+0083                                              <span class="comment">% vector is an angle measured in radians. This is needed so that the</span>
+0084                                              <span class="comment">% SPKF based algorithms can correctly deal with the angular discontinuity</span>
+0085                                              <span class="comment">% at +- pi radians.</span>
+0086 
+0087 
+0088   Arg.type = <span class="string">'gaussian'</span>;
+0089   Arg.cov_type = <span class="string">'sqrt'</span>;
+0090   Arg.dim = model.Vdim;
+0091   Arg.mu  = zeros(Arg.dim,1);
+0092   Arg.cov   = 0.01*eye(Arg.dim);
+0093   model.pNoise = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);            <span class="comment">% process noise : zero mean white Gaussian noise, cov = 0.001^2</span>
+0094 
+0095   Arg.type = <span class="string">'gaussian'</span>;
+0096   Arg.cov_type = <span class="string">'sqrt'</span>;
+0097   Arg.dim = model.Ndim;
+0098   Arg.mu = 0;
+0099   Arg.cov  = 0.01;
+0100   model.oNoise = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);            <span class="comment">% observation noise : zero mean white Gaussian noise, cov=0.01^2</span>
+0101 
+0102   model.params = zeros(model.paramdim,1);
+0103   model.A = zeros(model.statedim, model.statedim);
+0104   model.G = zeros(model.statedim, model.Vdim);
+0105 
+0106   model = <a href="#_sub2" class="code" title="subfunction model = setparams(model, params, index_vector)">setparams</a>(model,[1 1 1 1 1 1 0.5 1 0.5 1]');
+0107 
+0108 
+0109 <span class="comment">%===============================================================================================</span>
+0110 <span class="comment">%-- Unpack and update model internal parameters from parameter vector, 'params'</span>
+0111 
+0112 <a name="_sub2" href="#_subfunctions" class="code">function model = setparams(model, params, index_vector)</a>
+0113 
+0114   <span class="keyword">if</span> (nargin==2)
+0115     model.params = params(:);
+0116   <span class="keyword">elseif</span> (nargin==3)
+0117     model.params(index_vector) = params(:);
+0118   <span class="keyword">else</span>
+0119     error(<span class="string">'[ setparams ] Incorrect number of input arguments.'</span>);
+0120   <span class="keyword">end</span>
+0121 
+0122   model.A([1 5 6 11 15 16]) = params(1:6);
+0123   model.G([1 2 7 8]) = params(7:10);
+0124 
+0125   G = model.G;
+0126 
+0127   model.convFact1 = (G'*G)\G';    <span class="comment">% conversion matrix needed to calculate state transition prior</span>
+0128 
+0129 
+0130 <span class="comment">%===============================================================================================</span>
+0131 <span class="comment">%-- State transition function (vehicle dynamic model)</span>
+0132 
+0133 <a name="_sub3" href="#_subfunctions" class="code">function new_state = ffun(model, state, V, U1)</a>
+0134 
+0135   <span class="keyword">if</span> isempty(V)
+0136       new_state = model.A*state;
+0137   <span class="keyword">else</span>
+0138       new_state = model.A*state + model.G*V;
+0139   <span class="keyword">end</span>
+0140 
+0141 
+0142 <span class="comment">%===============================================================================================</span>
+0143 <span class="comment">%-- State observation function</span>
+0144 
+0145 <a name="_sub4" href="#_subfunctions" class="code">function observ = hfun(model, state, N, U2)</a>
+0146 
+0147   observ = atan2(state(3,:),state(1,:));
+0148 
+0149   <span class="comment">% Now add the process noise... taking care with the discontinueties at +-pi radians</span>
+0150   <span class="keyword">if</span> ~isempty(N),
+0151       observ = observ + N;
+0152       idx = find(abs(observ) &gt; pi);
+0153       temp = rem(observ(idx),2*pi);
+0154       observ(idx) = temp - sign(temp).*(2*pi);
+0155   <span class="keyword">end</span>
+0156 
+0157 
+0158 <span class="comment">%===============================================================================================</span>
+0159 <a name="_sub5" href="#_subfunctions" class="code">function tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a>
+0160 
+0161   V = model.convFact1 * (nextstate - model.A*state);
+0162 
+0163   tranprior = pNoiseDS.likelihood( pNoiseDS, V);
+0164 
+0165 
+0166 <span class="comment">%===============================================================================================</span>
+0167 <a name="_sub6" href="#_subfunctions" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a>
+0168 
+0169   observ = <a href="#_sub4" class="code" title="subfunction observ = hfun(model, state, N, U2)">hfun</a>(model, state, [], U2);
+0170 
+0171   N = <a href="../../.././ReBEL-0.2.7/core/subangle.html" class="code" title="function C = subangle(A, B)">subangle</a>(obs, observ);
+0172 
+0173   llh = oNoiseDS.likelihood( oNoiseDS, N);
+0174 
+0175 
+0176 
+0177 <span class="comment">%===============================================================================================</span>
+0178 <a name="_sub7" href="#_subfunctions" class="code">function innov = innovation(model, obs, observ)</a>
+0179 
+0180   innov = <a href="../../.././ReBEL-0.2.7/core/subangle.html" class="code" title="function C = subangle(A, B)">subangle</a>(obs,observ);
+0181</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

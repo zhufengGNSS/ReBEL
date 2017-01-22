@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlpjacobian</title>
+  <meta name="keywords" content="mlpjacobian">
+  <meta name="description" content="MLPJACOBIAN   Calculates the Jacobian (first partial derivative matrix)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; mlpjacobian.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlpjacobian
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPJACOBIAN   Calculates the Jacobian (first partial derivative matrix)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [J1,J2] = mlpjacobian(jacType, olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> MLPJACOBIAN   Calculates the Jacobian (first partial derivative matrix)
+               of a ReBEL MLP neural network. The independent variable can
+               be either the network input 'X' or the network parameters (weights
+               and biases packed into a single vector).
+
+  [J1,J2] = mlpjacobian(jacType, olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)
+
+  INPUT
+         jacType :   Jacobian type : 'dydx'  : d(output)/d(input)
+                                      'dydw'  : d(output)/d(parameters)
+                                      'dydxw' : J1=d(output)/d(input) J2=d(output)/d(parameters)
+         olType  :   output layer type, linear ('lin') or hyperbolic-tangent ('tanh')
+         nodes    :   network layer descriptor vector  [numIn numHid1 (numHid2) (numHid3) numOut]
+         X        :   neural network input
+         W1       :   layer 1 weights
+         B1       :   layer 1 biases
+         W2       :   layer 2 weights
+         B2       :   layer 2 biases
+         W3       :   (optional) layer 3 weights
+         B3       :   (optional) layer 3 biases
+         W4       :   (optional) layer 4 weights
+         B4       :   (optional) layer 4 biases
+
+         NOTE  - If only W1 is specified, then it is assumed that W1 is a packed vector containing ALL
+                 the neural network parameters (weights and biases for all layers).
+
+  OUTPUT
+         J1       :   Jacobian matrix: This matrix has dimensions :
+                        (dimension of network output)-by-(dimension of independent variable)
+         J2       :   (optional) if jacType='dydxw' then J1=d(out)/d(X) and J2=d(out)/d(parameters)
+
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>	CVECREP  Column vector replicate</li><li><a href="mlpunpack.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpunpack(nodes, wh)">mlpunpack</a>	MLPUNPACK  ReBEL MLP neural network weight matrices de-vectorizer.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_mackey_glass.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_mackey_glass</a>	GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [J1,J2] = mlpjacobian(jacType, olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)</a>
+0002 
+0003 <span class="comment">% MLPJACOBIAN   Calculates the Jacobian (first partial derivative matrix)</span>
+0004 <span class="comment">%               of a ReBEL MLP neural network. The independent variable can</span>
+0005 <span class="comment">%               be either the network input 'X' or the network parameters (weights</span>
+0006 <span class="comment">%               and biases packed into a single vector).</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  [J1,J2] = mlpjacobian(jacType, olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  INPUT</span>
+0011 <span class="comment">%         jacType :   Jacobian type : 'dydx'  : d(output)/d(input)</span>
+0012 <span class="comment">%                                      'dydw'  : d(output)/d(parameters)</span>
+0013 <span class="comment">%                                      'dydxw' : J1=d(output)/d(input) J2=d(output)/d(parameters)</span>
+0014 <span class="comment">%         olType  :   output layer type, linear ('lin') or hyperbolic-tangent ('tanh')</span>
+0015 <span class="comment">%         nodes    :   network layer descriptor vector  [numIn numHid1 (numHid2) (numHid3) numOut]</span>
+0016 <span class="comment">%         X        :   neural network input</span>
+0017 <span class="comment">%         W1       :   layer 1 weights</span>
+0018 <span class="comment">%         B1       :   layer 1 biases</span>
+0019 <span class="comment">%         W2       :   layer 2 weights</span>
+0020 <span class="comment">%         B2       :   layer 2 biases</span>
+0021 <span class="comment">%         W3       :   (optional) layer 3 weights</span>
+0022 <span class="comment">%         B3       :   (optional) layer 3 biases</span>
+0023 <span class="comment">%         W4       :   (optional) layer 4 weights</span>
+0024 <span class="comment">%         B4       :   (optional) layer 4 biases</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%         NOTE  - If only W1 is specified, then it is assumed that W1 is a packed vector containing ALL</span>
+0027 <span class="comment">%                 the neural network parameters (weights and biases for all layers).</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%  OUTPUT</span>
+0030 <span class="comment">%         J1       :   Jacobian matrix: This matrix has dimensions :</span>
+0031 <span class="comment">%                        (dimension of network output)-by-(dimension of independent variable)</span>
+0032 <span class="comment">%         J2       :   (optional) if jacType='dydxw' then J1=d(out)/d(X) and J2=d(out)/d(parameters)</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0038 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0039 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0040 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0043 <span class="comment">%   detail.</span>
+0044 
+0045 <span class="comment">%==================================================================================================</span>
+0046 
+0047 numArgIn = nargin;
+0048 
+0049 <span class="keyword">if</span> (numArgIn == 5),
+0050 
+0051   wh = W1;
+0052   numWeights = length(wh);
+0053   numLayers = length(nodes)-1;
+0054   <span class="keyword">switch</span> numLayers
+0055    <span class="keyword">case</span> 2
+0056      [W1,B1,W2,B2] = <a href="mlpunpack.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpunpack(nodes, wh)">mlpunpack</a>(nodes, wh);
+0057    <span class="keyword">case</span> 3
+0058      [W1,B1,W2,B2,W3,B3] = <a href="mlpunpack.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpunpack(nodes, wh)">mlpunpack</a>(nodes, wh);
+0059    <span class="keyword">case</span> 4
+0060      [W1,B1,W2,B2,W3,B3,W4,B4] = <a href="mlpunpack.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpunpack(nodes, wh)">mlpunpack</a>(nodes, wh);
+0061    <span class="keyword">otherwise</span>
+0062      error(<span class="string">' [ mlpjacobian ] ReBEL MLP neural networks can only have 2, 3 or 4 weight layers.'</span>);
+0063    <span class="keyword">end</span>
+0064 
+0065 <span class="keyword">else</span>
+0066 
+0067    numWeights = sum([nodes(1:end-1).*nodes(2:end) nodes(2:end)]);
+0068    numLayers  = (numArgIn - 4)/2;
+0069 
+0070 <span class="keyword">end</span>
+0071 
+0072 
+0073 hiddenLayer1Act = tanh(W1*X + B1);                     <span class="comment">% first hidden layer output;</span>
+0074 
+0075 
+0076 <span class="keyword">switch</span> numLayers
+0077 <span class="keyword">case</span> 2
+0078   outputLayerAct = W2*hiddenLayer1Act + B2;            <span class="comment">% calculate output layer activation</span>
+0079   nOUT = length(B2);                                   <span class="comment">% number of output units</span>
+0080 <span class="keyword">case</span> 3
+0081   hiddenLayer2Act = tanh(W2*hiddenLayer1Act + B2);     <span class="comment">% calculate second hidden layer output</span>
+0082   outputLayerAct  = W3*hiddenLayer2Act + B3;           <span class="comment">% calculate output layer activation</span>
+0083   nOUT = length(B3);                                   <span class="comment">% number of output units</span>
+0084 <span class="keyword">case</span> 4
+0085   hiddenLayer2Act = tanh(W2*hiddenLayer1Act + B2);     <span class="comment">% calculate second hidden layer output</span>
+0086   hiddenLayer3Act = tanh(W3*hiddenLayer2Act + B3);     <span class="comment">% calculate third hidden layer output</span>
+0087   outputLayerAct  = W4*hiddenLayer3Act + B4;           <span class="comment">% calculate output layer activation</span>
+0088   nOUT = length(B4);                                   <span class="comment">% number of output units</span>
+0089 <span class="keyword">end</span>
+0090 
+0091 <span class="comment">% Output layer</span>
+0092 <span class="keyword">switch</span> olType
+0093 <span class="keyword">case</span> <span class="string">'lin'</span>
+0094 <span class="keyword">case</span> <span class="string">'tanh'</span>
+0095   outputLayerAct  = tanh(outputLayerAct);               <span class="comment">% calculate output layer output</span>
+0096 <span class="keyword">otherwise</span>
+0097   error(<span class="string">' [ mlpjacobian ] Unknown output layer activation function'</span>);
+0098 <span class="keyword">end</span>
+0099 
+0100 
+0101 <span class="comment">% Deltas for output layer</span>
+0102 <span class="keyword">switch</span> (olType),
+0103  <span class="keyword">case</span> <span class="string">'lin'</span>
+0104   deltaOUT = eye(nOUT);
+0105  <span class="keyword">case</span> <span class="string">'tanh'</span>
+0106   deltaOUT = diag(1-outputLayerAct.^2);
+0107 <span class="keyword">end</span>
+0108 
+0109 <span class="comment">% Deltas for hidden layers</span>
+0110 <span class="keyword">if</span> (nOUT&gt;1)
+0111     <span class="keyword">switch</span> numLayers
+0112     <span class="keyword">case</span> 2
+0113         delta1 = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(1-hiddenLayer1Act.^2, nOUT) .* (W2'*deltaOUT);
+0114     <span class="keyword">case</span> 3
+0115         delta2 = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(1-hiddenLayer2Act.^2, nOUT) .* (W3'*deltaOUT);
+0116         delta1 = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(1-hiddenLayer1Act.^2, nOUT) .* (W2'*delta2);
+0117     <span class="keyword">case</span> 4
+0118         delta3 = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(1-hiddenLayer3Act.^2, nOUT) .* (W4'*deltaOUT);
+0119         delta2 = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(1-hiddenLayer2Act.^2, nOUT) .* (W3'*delta3);
+0120         delta1 = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(1-hiddenLayer1Act.^2, nOUT) .* (W2'*delta2);
+0121     <span class="keyword">end</span>
+0122 <span class="keyword">else</span>
+0123     <span class="keyword">switch</span> numLayers
+0124     <span class="keyword">case</span> 2
+0125         delta1 = (1-hiddenLayer1Act.^2) .* (W2'*deltaOUT);
+0126     <span class="keyword">case</span> 3
+0127         delta2 = (1-hiddenLayer2Act.^2) .* (W3'*deltaOUT);
+0128         delta1 = (1-hiddenLayer1Act.^2) .* (W2'*delta2);
+0129     <span class="keyword">case</span> 4
+0130         delta3 = (1-hiddenLayer3Act.^2) .* (W4'*deltaOUT);
+0131         delta2 = (1-hiddenLayer2Act.^2) .* (W3'*delta3);
+0132         delta1 = (1-hiddenLayer1Act.^2) .* (W2'*delta2);
+0133     <span class="keyword">end</span>
+0134 <span class="keyword">end</span>
+0135 
+0136 
+0137 
+0138 <span class="comment">% Calculate the apropriate Jacobian</span>
+0139 
+0140 <span class="keyword">switch</span> (jacType)
+0141 
+0142 <span class="comment">%--- Derivative with respect to input</span>
+0143 <span class="keyword">case</span> <span class="string">'dydx'</span>
+0144 
+0145   J1 = (W1' * delta1)';
+0146 
+0147 <span class="comment">%--- Derivative with respect to parameters</span>
+0148 <span class="keyword">case</span> {<span class="string">'dydw'</span>,<span class="string">'dydxw'</span>},
+0149 
+0150   dW = zeros(numWeights,nOUT);
+0151 
+0152   <span class="keyword">for</span> j=1:nOUT,
+0153 
+0154     <span class="keyword">switch</span> numLayers
+0155     <span class="keyword">case</span> 2
+0156       ddB1 = delta1(:,j);
+0157       ddW1 = ddB1*X';
+0158       ddB2 = deltaOUT(:,j);
+0159       ddW2 = ddB2*hiddenLayer1Act';
+0160       dW(:,j) = [ddW1(:) ; ddB1 ; ddW2(:) ; ddB2];
+0161     <span class="keyword">case</span> 3
+0162       ddB1 = delta1(:,j);
+0163       ddW1 = ddB1*X';
+0164       ddB2 = delta2(:,j);
+0165       ddW2 = ddB2*hiddenLayer1Act';
+0166       ddB3 = deltaOUT(:,j);
+0167       ddW3 = ddB3*hiddenLayer2Act';
+0168       dW(:,j) = [ddW1(:) ; ddB1 ; ddW2(:) ; ddB2 ; ddW3(:) ; ddB3];
+0169     <span class="keyword">case</span> 4
+0170       ddB1 = delta1(:,j);
+0171       ddW1 = ddB1*X';
+0172       ddB2 = delta2(:,j);
+0173       ddW2 = ddB2*hiddenLayer1Act';
+0174       ddB3 = delta3(:,j);
+0175       ddW3 = ddB3*hiddenLayer2Act';
+0176       ddB4 = deltaOUT(:,j);
+0177       ddW4 = ddB4*hiddenLayer3Act';
+0178       dW(:,j) = [ddW1(:) ; ddB1 ; ddW2(:) ; ddB2 ; ddW3(:) ; ddB3 ; ddW4(:) ; ddB4];
+0179     <span class="keyword">end</span>
+0180 
+0181   <span class="keyword">end</span>
+0182 
+0183   <span class="keyword">switch</span> jacType
+0184   <span class="keyword">case</span>  <span class="string">'dydxw'</span>
+0185     J1 = (W1' * delta1)';
+0186     J2 = dW';
+0187   <span class="keyword">otherwise</span>
+0188     J1 = dW';
+0189   <span class="keyword">end</span>
+0190 
+0191   <span class="comment">% test by perturbation</span>
+0192   <span class="comment">%if (strcmp(deriv_type,'dydxp')),</span>
+0193   <span class="comment">%  epsilon=1e-8;</span>
+0194   <span class="comment">%  WW = cvecrep(W,length(W)) + epsilon*eye(length(W));</span>
+0195   <span class="comment">%  YY = zeros(length(W),1);</span>
+0196   <span class="comment">%  dYdW=zeros(length(W),1);</span>
+0197   <span class="comment">%  Y  = lo{end};</span>
+0198   <span class="comment">%  for j=1:length(W),</span>
+0199   <span class="comment">%    YY(j) = nnetN(olType,WW(:,j),nodes,X);</span>
+0200   <span class="comment">%    dYdW(j) = (YY(j)-Y)/epsilon;</span>
+0201   <span class="comment">%  end</span>
+0202   <span class="comment">%  ZZ=(J1'-dYdW)./(dYdW);</span>
+0203   <span class="comment">%  disp(['Max discrepancy : ' num2str(max(abs(ZZ)))]);</span>
+0204   <span class="comment">%end</span>
+0205 
+0206 <span class="keyword">otherwise</span>
+0207 
+0208   error(<span class="string">' [ mlpjacobian ] Unknown Jacobian type.'</span>);
+0209 
+0210 <span class="keyword">end</span>
+0211 
+0212 
+0213 <span class="keyword">if</span> (0)
+0214 
+0215 
+0216   <span class="comment">% test by perturbation</span>
+0217   <span class="keyword">switch</span> (jacType)
+0218 
+0219   <span class="keyword">case</span> <span class="string">'dydx'</span>
+0220     epsilon=1e-8;
+0221     XX = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(X,length(X)) + epsilon*eye(length(X));
+0222     YY = zeros(nOUT,length(X));
+0223     dYdX=zeros(nOUT,length(X));
+0224     Y  = outputLayerAct;
+0225     <span class="keyword">for</span> j=1:length(X),
+0226       YY(:,j) = nnetN(olType,wh,nodes,XX(:,j));
+0227       dYdW(:,j) = (YY(:,j)-Y)/epsilon;
+0228     <span class="keyword">end</span>
+0229     ZZ=(J1-dYdW)./(dYdW);
+0230     disp([<span class="string">'Max discrepancy : '</span> num2str(max(max(abs(ZZ))))]);
+0231 
+0232   <span class="keyword">case</span> <span class="string">'dydw'</span>
+0233     epsilon=1e-8;
+0234     WW = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(wh,length(wh)) + epsilon*eye(length(wh));
+0235     YY = zeros(nOUT,length(wh));
+0236     dYdW=zeros(nOUT,length(wh));
+0237     Y  = outputLayerAct;
+0238     <span class="keyword">for</span> j=1:length(wh),
+0239       YY(:,j) = nnetN(olType,WW(:,j),nodes,X);
+0240       dYdW(:,j) = (YY(:,j)-Y)/epsilon;
+0241     <span class="keyword">end</span>
+0242     ZZ=(J1-dYdW)./(dYdW);
+0243     disp([<span class="string">'Max discrepancy : '</span> num2str(max(max(abs(ZZ))))]);
+0244 
+0245   <span class="keyword">end</span>
+0246 
+0247 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

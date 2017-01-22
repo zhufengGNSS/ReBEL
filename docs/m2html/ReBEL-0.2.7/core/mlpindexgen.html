@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlpindexgen</title>
+  <meta name="keywords" content="mlpindexgen">
+  <meta name="description" content="MLPINDEXGEN  ReBEL MLP neural network parameter matrices de-vectorizing index generator">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; mlpindexgen.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlpindexgen
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPINDEXGEN  ReBEL MLP neural network parameter matrices de-vectorizing index generator</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [idxW1, idxB1, idxW2, idxB2, idxW3, idxB3, idxW4, idxB4] = mlpindexgen(nodes) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> MLPINDEXGEN  ReBEL MLP neural network parameter matrices de-vectorizing index generator
+
+  This function generates the needed index vectors to directly devoctorize a single ReBEL MLP
+  neural network parameter vector into the corresponding weight and bias matrices. The output
+  arguments are the index vectors for each layers weight and bias matrices. 'nodes' specify
+  the MLP structure.
+
+  [idxW1, idxB1, idxW2, idxB2, idxW3, idxB3, idxW4, idxB4] = mlpindexgen(nodes)
+
+  INPUT
+        nodes    :   MLP neural network layer descriptor vector
+
+  OUTPUT
+        idxW1       :   layer 1 weights index vector
+        idxB1       :   layer 1 biases index vector
+        idxW2       :   layer 2 weights index vector
+        idxB2       :   layer 2 biases index vector
+        idxW3       :   (optional) layer 3 weights index vector
+        idxB3       :   (optional) layer 3 biases index vector
+        idxW4       :   (optional) layer 4 weights index vector
+        idxB4       :   (optional) layer 4 biases index vector
+
+
+  SEE ALSO:
+            <a href="mlppack.html" class="code" title="function [wh, nodes] = mlppack(W1, B1, W2, B2, W3, B3, W4, B4)">mlppack</a>, <a href="mlpunpack.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpunpack(nodes, wh)">mlpunpack</a>
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_mackey_glass.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_mackey_glass</a>	GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [idxW1, idxB1, idxW2, idxB2, idxW3, idxB3, idxW4, idxB4] = mlpindexgen(nodes)</a>
+0002 
+0003 <span class="comment">% MLPINDEXGEN  ReBEL MLP neural network parameter matrices de-vectorizing index generator</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  This function generates the needed index vectors to directly devoctorize a single ReBEL MLP</span>
+0006 <span class="comment">%  neural network parameter vector into the corresponding weight and bias matrices. The output</span>
+0007 <span class="comment">%  arguments are the index vectors for each layers weight and bias matrices. 'nodes' specify</span>
+0008 <span class="comment">%  the MLP structure.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  [idxW1, idxB1, idxW2, idxB2, idxW3, idxB3, idxW4, idxB4] = mlpindexgen(nodes)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  INPUT</span>
+0013 <span class="comment">%        nodes    :   MLP neural network layer descriptor vector</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  OUTPUT</span>
+0016 <span class="comment">%        idxW1       :   layer 1 weights index vector</span>
+0017 <span class="comment">%        idxB1       :   layer 1 biases index vector</span>
+0018 <span class="comment">%        idxW2       :   layer 2 weights index vector</span>
+0019 <span class="comment">%        idxB2       :   layer 2 biases index vector</span>
+0020 <span class="comment">%        idxW3       :   (optional) layer 3 weights index vector</span>
+0021 <span class="comment">%        idxB3       :   (optional) layer 3 biases index vector</span>
+0022 <span class="comment">%        idxW4       :   (optional) layer 4 weights index vector</span>
+0023 <span class="comment">%        idxB4       :   (optional) layer 4 biases index vector</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  SEE ALSO:</span>
+0027 <span class="comment">%            mlppack, mlpunpack</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0032 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0033 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0034 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0037 <span class="comment">%   detail.</span>
+0038 
+0039 <span class="comment">%=============================================================================================</span>
+0040 
+0041 
+0042 nLayers = length(nodes)-1;
+0043 
+0044 <span class="keyword">if</span> (nLayers&lt;2)
+0045   error(<span class="string">' [ mlpindexgen ]  MLP neural networks need at least 2 layers.'</span>);
+0046 <span class="keyword">elseif</span> (nLayers&gt;4)
+0047   error(<span class="string">' [ mlpindexgen ]  MLP neural networks with more than 4 layers are not supported.'</span>);
+0048 <span class="keyword">end</span>
+0049 
+0050 
+0051 <span class="comment">%--- If nLayers at leat == 2</span>
+0052 
+0053   numW1 = nodes(1)*nodes(2);        <span class="comment">% number of parameters in W1 matrix</span>
+0054   numB1 = nodes(2);                 <span class="comment">% number of parameters in B1 matrix (actually a vector)</span>
+0055   numW2 = nodes(2)*nodes(3);        <span class="comment">% number of parameters in W2</span>
+0056   numB2 = nodes(3);                 <span class="comment">% number of parameters in B2</span>
+0057 
+0058   i=0;
+0059   j=i+numW1; idxW1 = i+1:j; i=j;
+0060   j=i+numB1; idxB1 = i+1:j; i=j;
+0061   j=i+numW2; idxW2 = i+1:j; i=j;
+0062   j=i+numB2; idxB2 = i+1:j; i=j;
+0063 
+0064 
+0065 <span class="comment">%--- If nLayers at least == 3</span>
+0066 <span class="keyword">if</span> (nLayers &gt; 2)
+0067 
+0068    numW3 = nodes(3)*nodes(4);
+0069    numB3 = nodes(4);
+0070 
+0071    j=i+numW3; idxW3 = i+1:j; i=j;
+0072    j=i+numB3; idxB3 = i+1:j; i=j;
+0073 
+0074 <span class="keyword">end</span>
+0075 
+0076 
+0077 <span class="comment">%--- If nLayers == 4</span>
+0078 <span class="keyword">if</span> (nLayers &gt; 3)
+0079 
+0080    numW4 = nodes(4)*nodes(5);
+0081    numB4 = nodes(5);
+0082 
+0083    j=i+numW4; idxW4 = i+1:j; i=j;
+0084    j=i+numB4; idxB4 = i+1:j; i=j;
+0085 
+0086 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of knnfwd</title>
+  <meta name="keywords" content="knnfwd">
+  <meta name="description" content="KNNFWD	Forward propagation through a K-nearest-neighbour classifier.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; knnfwd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>knnfwd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>KNNFWD	Forward propagation through a K-nearest-neighbour classifier.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [y, l] = knnfwd(net, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">KNNFWD    Forward propagation through a K-nearest-neighbour classifier.
+
+    Description
+    [Y, L] = KNNFWD(NET, X) takes a matrix X of input vectors (one vector
+    per row)   and uses the K-nearest-neighbour rule on the training data
+    contained in NET to  produce  a matrix Y of outputs and a matrix L of
+    classification labels. The nearest neighbours are determined using
+    Euclidean distance. The IJth entry of Y counts the number of
+    occurrences that an example from class J is among the K closest
+    training examples to example I from X. The matrix L contains the
+    predicted class labels as an index 1..N, not as 1-of-N coding.
+
+    See also
+    <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">KMEANS</a>, <a href="knn.html" class="code" title="function net = knn(nin, nout, k, tr_in, tr_targets)">KNN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demknn1.html" class="code" title="">demknn1</a>	DEMKNN1 Demonstrate nearest neighbour classifier.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [y, l] = knnfwd(net, x)</a>
+0002 
+0003 <span class="comment">%KNNFWD    Forward propagation through a K-nearest-neighbour classifier.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    [Y, L] = KNNFWD(NET, X) takes a matrix X of input vectors (one vector</span>
+0007 <span class="comment">%    per row)   and uses the K-nearest-neighbour rule on the training data</span>
+0008 <span class="comment">%    contained in NET to  produce  a matrix Y of outputs and a matrix L of</span>
+0009 <span class="comment">%    classification labels. The nearest neighbours are determined using</span>
+0010 <span class="comment">%    Euclidean distance. The IJth entry of Y counts the number of</span>
+0011 <span class="comment">%    occurrences that an example from class J is among the K closest</span>
+0012 <span class="comment">%    training examples to example I from X. The matrix L contains the</span>
+0013 <span class="comment">%    predicted class labels as an index 1..N, not as 1-of-N coding.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    See also</span>
+0016 <span class="comment">%    KMEANS, KNN</span>
+0017 <span class="comment">%</span>
+0018 
+0019 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0020 
+0021 
+0022 
+0023 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'knn'</span>, x);
+0024 
+0025 <span class="keyword">if</span> ~isempty(errstring)
+0026 
+0027   error(errstring);
+0028 
+0029 <span class="keyword">end</span>
+0030 
+0031 
+0032 
+0033 ntest = size(x, 1);                      <span class="comment">% Number of input vectors.</span>
+0034 nclass = size(net.tr_targets, 2);        <span class="comment">% Number of classes.</span>
+0035 
+0036 <span class="comment">% Compute matrix of squared distances between input vectors from the training</span>
+0037 <span class="comment">% and test sets.  The matrix distsq has dimensions (ntrain, ntest).</span>
+0038 
+0039 distsq = <a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(net.tr_in, x);
+0040 
+0041 <span class="comment">% Now sort the distances. This generates a matrix kind of the same</span>
+0042 <span class="comment">% dimensions as distsq, in which each column gives the indices of the</span>
+0043 <span class="comment">% elements in the corresponding column of distsq in ascending order.</span>
+0044 
+0045 [vals, kind] = sort(distsq);
+0046 y = zeros(ntest, nclass);
+0047 
+0048 <span class="keyword">for</span> k=1:net.k
+0049   <span class="comment">% We now look at the predictions made by the Kth nearest neighbours alone,</span>
+0050   <span class="comment">% and represent this as a 1-of-N coded matrix, and then accumulate the</span>
+0051   <span class="comment">% predictions so far.</span>
+0052 
+0053   y = y + net.tr_targets(kind(k,:),:);
+0054 
+0055 <span class="keyword">end</span>
+0056 
+0057 
+0058 <span class="keyword">if</span> nargout == 2
+0059 
+0060   <span class="comment">% Convert this set of outputs to labels, randomly breaking ties</span>
+0061 
+0062   [temp, l] = max((y + 0.1*rand(size(y))), [], 2);
+0063 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

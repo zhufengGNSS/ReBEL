@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gpgrad</title>
+  <meta name="keywords" content="gpgrad">
+  <meta name="description" content="GPGRAD	Evaluate error gradient for Gaussian Process.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gpgrad.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gpgrad
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GPGRAD	Evaluate error gradient for Gaussian Process.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function g = gpgrad(net, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GPGRAD    Evaluate error gradient for Gaussian Process.
+
+    Description
+    G = GPGRAD(NET, X, T) takes a Gaussian Process data structure NET
+    together  with a matrix X of input vectors and a matrix T of target
+    vectors, and evaluates the error gradient G. Each row of X
+    corresponds to one input vector and each row of T corresponds to one
+    target vector.
+
+    See also
+    <a href="gp.html" class="code" title="function net = gp(nin, covar_fn, prior)">GP</a>, <a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">GPCOVAR</a>, <a href="gpfwd.html" class="code" title="function [y, sigsq] = gpfwd(net, x, cninv)">GPFWD</a>, <a href="gperr.html" class="code" title="function [e, edata, eprior] = gperr(net, x, t)">GPERR</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>	GPCOVAR Calculate the covariance for a Gaussian Process.</li><li><a href="gppak.html" class="code" title="function hp = gppak(net)">gppak</a>	GPPAK	Combines GP hyperparameters into one vector.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function g = gpgrad(net, x, t)</a>
+0002 <span class="comment">%GPGRAD    Evaluate error gradient for Gaussian Process.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    G = GPGRAD(NET, X, T) takes a Gaussian Process data structure NET</span>
+0006 <span class="comment">%    together  with a matrix X of input vectors and a matrix T of target</span>
+0007 <span class="comment">%    vectors, and evaluates the error gradient G. Each row of X</span>
+0008 <span class="comment">%    corresponds to one input vector and each row of T corresponds to one</span>
+0009 <span class="comment">%    target vector.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    GP, GPCOVAR, GPFWD, GPERR</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gp'</span>, x, t);
+0018 <span class="keyword">if</span> ~isempty(errstring);
+0019   error(errstring);
+0020 <span class="keyword">end</span>
+0021 
+0022 <span class="comment">% Evaluate derivatives with respect to each hyperparameter in turn.</span>
+0023 ndata = size(x, 1);
+0024 [cov, covf] = <a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>(net, x);
+0025 cninv = inv(cov);
+0026 trcninv = trace(cninv);
+0027 cninvt = cninv*t;
+0028 
+0029 <span class="comment">% Function parameters</span>
+0030 <span class="keyword">switch</span> net.covar_fn
+0031 
+0032   <span class="keyword">case</span> <span class="string">'sqexp'</span>        <span class="comment">% Squared exponential</span>
+0033     gfpar = trace(cninv*covf) - cninvt'*covf*cninvt;
+0034 
+0035   <span class="keyword">case</span> <span class="string">'ratquad'</span>     <span class="comment">% Rational quadratic</span>
+0036     beta = diag(exp(net.inweights));
+0037     gfpar(1) = trace(cninv*covf) - cninvt'*covf*cninvt;
+0038     D2 = (x.*x)*beta*ones(net.nin, ndata) - 2*x*beta*x' <span class="keyword">...</span><span class="comment"> </span>
+0039       + ones(ndata, net.nin)*beta*(x.*x)';
+0040     E = ones(size(D2));
+0041     L = - exp(net.fpar(2)) * covf .* log(E + D2); <span class="comment">% d(cn)/d(nu)</span>
+0042     gfpar(2) = trace(cninv*L) - cninvt'*L*cninvt;
+0043 
+0044   <span class="keyword">otherwise</span>
+0045     error([<span class="string">'Unknown covariance function '</span>, net.covar_fn]);
+0046 <span class="keyword">end</span>
+0047 
+0048 <span class="comment">% Bias derivative</span>
+0049 ndata = size(x, 1);
+0050 fac = exp(net.bias)*ones(ndata);
+0051 gbias = trace(cninv*fac) - cninvt'*fac*cninvt;
+0052 
+0053 <span class="comment">% Noise derivative</span>
+0054 gnoise = exp(net.noise)*(trcninv - cninvt'*cninvt);
+0055 
+0056 <span class="comment">% Input weight derivatives</span>
+0057 <span class="keyword">if</span> strcmp(net.covar_fn, <span class="string">'ratquad'</span>)
+0058   F = (exp(net.fpar(2))*E)./(E + D2);
+0059 <span class="keyword">end</span>
+0060 
+0061 nparams = length(net.inweights);
+0062 <span class="keyword">for</span> l = 1 : nparams
+0063   vect = x(:, l);
+0064   matx = (vect.*vect)*ones(1, ndata) <span class="keyword">...</span><span class="comment"> </span>
+0065     - 2.0*vect*vect' <span class="keyword">...</span><span class="comment"> </span>
+0066     + ones(ndata, 1)*(vect.*vect)';
+0067   <span class="keyword">switch</span> net.covar_fn
+0068     <span class="keyword">case</span> <span class="string">'sqexp'</span>    <span class="comment">% Squared exponential</span>
+0069       dmat = -0.5*exp(net.inweights(l))*covf.*matx;
+0070       
+0071     <span class="keyword">case</span> <span class="string">'ratquad'</span>    <span class="comment">% Rational quadratic</span>
+0072       dmat = - exp(net.inweights(l))*covf.*matx.*F;
+0073     <span class="keyword">otherwise</span>
+0074       error([<span class="string">'Unknown covariance function '</span>, net.covar_fn]);
+0075   <span class="keyword">end</span>
+0076 
+0077   gw1(l) = trace(cninv*dmat) - cninvt'*dmat*cninvt;
+0078 <span class="keyword">end</span>
+0079 
+0080 g1 = [gbias, gnoise, gw1, gfpar];
+0081 g1 = 0.5*g1;
+0082 
+0083 <span class="comment">% Evaluate the prior contribution to the gradient.</span>
+0084 <span class="keyword">if</span> isfield(net, <span class="string">'pr_mean'</span>)
+0085   w = <a href="gppak.html" class="code" title="function hp = gppak(net)">gppak</a>(net);
+0086 
+0087   m = repmat(net.pr_mean, size(w));
+0088   <span class="keyword">if</span> size(net.pr_mean) == [1 1]
+0089     gprior = w - m;
+0090     g2 = gprior/net.pr_var;
+0091   <span class="keyword">else</span>
+0092     ngroups = size(net.pr_mean, 1);
+0093     gprior = net.index'.*(ones(ngroups, 1)*w - m);
+0094     g2 = (1./net.pr_var)'*gprior;
+0095   <span class="keyword">end</span>
+0096 <span class="keyword">else</span>
+0097   gprior = 0;
+0098   g2 = 0;
+0099 <span class="keyword">end</span>
+0100 
+0101 g = g1 + g2;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

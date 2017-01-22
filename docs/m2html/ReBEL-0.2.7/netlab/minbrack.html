@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of minbrack</title>
+  <meta name="keywords" content="minbrack">
+  <meta name="description" content="MINBRACK Bracket a minimum of a function of one variable.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; minbrack.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>minbrack
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MINBRACK Bracket a minimum of a function of one variable.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function  [br_min, br_mid, br_max, num_evals] = minbrack(f, a, b, fa,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MINBRACK Bracket a minimum of a function of one variable.
+
+    Description
+    BRMIN, BRMID, BRMAX, NUMEVALS] = MINBRACK(F, A, B, FA) finds a
+    bracket of three points around a local minimum of F.  The function F
+    must have a one dimensional domain. A &lt; B is an initial guess at the
+    minimum and maximum points of a bracket, but MINBRACK will search
+    outside this interval if necessary. The bracket consists of three
+    points (in increasing order) such that F(BRMID) &lt; F(BRMIN) and
+    F(BRMID) &lt; F(BRMAX). FA is the value of the function at A: it is
+    included to avoid unnecessary function evaluations in the
+    optimization routines. The return value NUMEVALS is the number of
+    function evaluations in MINBRACK.
+
+    MINBRACK(F, A, B, FA, P1, P2, ...) allows additional arguments to be
+    passed to F
+
+    See also
+    <a href="linemin.html" class="code" title="function [x, options] = linemin(f, pt, dir, fpt, options,varargin)">LINEMIN</a>, <a href="linef.html" class="code" title="function y = linef(lambda, fn, x, d, varargin)">LINEF</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function  [br_min, br_mid, br_max, num_evals] = minbrack(f, a, b, fa,  </a><span class="keyword">...</span>
+0002              varargin)
+0003 <span class="comment">%MINBRACK Bracket a minimum of a function of one variable.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    BRMIN, BRMID, BRMAX, NUMEVALS] = MINBRACK(F, A, B, FA) finds a</span>
+0007 <span class="comment">%    bracket of three points around a local minimum of F.  The function F</span>
+0008 <span class="comment">%    must have a one dimensional domain. A &lt; B is an initial guess at the</span>
+0009 <span class="comment">%    minimum and maximum points of a bracket, but MINBRACK will search</span>
+0010 <span class="comment">%    outside this interval if necessary. The bracket consists of three</span>
+0011 <span class="comment">%    points (in increasing order) such that F(BRMID) &lt; F(BRMIN) and</span>
+0012 <span class="comment">%    F(BRMID) &lt; F(BRMAX). FA is the value of the function at A: it is</span>
+0013 <span class="comment">%    included to avoid unnecessary function evaluations in the</span>
+0014 <span class="comment">%    optimization routines. The return value NUMEVALS is the number of</span>
+0015 <span class="comment">%    function evaluations in MINBRACK.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    MINBRACK(F, A, B, FA, P1, P2, ...) allows additional arguments to be</span>
+0018 <span class="comment">%    passed to F</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    See also</span>
+0021 <span class="comment">%    LINEMIN, LINEF</span>
+0022 <span class="comment">%</span>
+0023 
+0024 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0025 
+0026 <span class="comment">% Check function string</span>
+0027 f = fcnchk(f, length(varargin));
+0028 
+0029 <span class="comment">% Value of golden section (1 + sqrt(5))/2.0</span>
+0030 phi = 1.6180339887499;
+0031 
+0032 <span class="comment">% Initialise count of number of function evaluations</span>
+0033 num_evals = 0;
+0034 
+0035 <span class="comment">% A small non-zero number to avoid dividing by zero in quadratic interpolation</span>
+0036 TINY = 1.e-10;
+0037 
+0038 <span class="comment">% Maximal proportional step to take: don't want to make this too big</span>
+0039 <span class="comment">% as then spend a lot of time finding the minimum inside the bracket</span>
+0040 max_step = 10.0;
+0041 
+0042 fb = feval(f, b, varargin{:});
+0043 num_evals = num_evals + 1;
+0044 
+0045 <span class="comment">% Assume that we know going from a to b is downhill initially</span>
+0046 <span class="comment">% (usually because gradf(a) &lt; 0).</span>
+0047 <span class="keyword">if</span> (fb &gt; fa)
+0048   <span class="comment">% Minimum must lie between a and b: do golden section until we find point</span>
+0049   <span class="comment">% low enough to be middle of bracket</span>
+0050   c = b;
+0051   b = a + (c-a)/phi;
+0052   fb = feval(f, b, varargin{:});
+0053   num_evals = num_evals + 1;
+0054   <span class="keyword">while</span> (fb &gt; fa)
+0055     c = b;
+0056     b = a + (c-a)/phi;
+0057     fb = feval(f, b, varargin{:});
+0058     num_evals = num_evals + 1;
+0059   <span class="keyword">end</span>
+0060 <span class="keyword">else</span>  
+0061   <span class="comment">% There is a valid bracket upper bound greater than b</span>
+0062   c = b + phi*(b-a);
+0063   fc = feval(f, c, varargin{:});
+0064   num_evals = num_evals + 1;
+0065   bracket_found = 0;
+0066   
+0067   <span class="keyword">while</span> (fb &gt; fc)
+0068     <span class="comment">% Do a quadratic interpolation (i.e. to minimum of quadratic)</span>
+0069     r = (b-a).*(fb-fc);
+0070     q = (b-c).*(fb-fa);
+0071     u = b - ((b-c)*q - (b-a)*r)/(2.0*(sign(q-r)*max([abs(q-r), TINY])));
+0072     ulimit = b + max_step*(c-b);
+0073     
+0074     <span class="keyword">if</span> ((b-u)'*(u-c) &gt; 0.0)
+0075       <span class="comment">% Interpolant lies between b and c</span>
+0076       fu = feval(f, u, varargin{:});
+0077       num_evals = num_evals + 1;
+0078       <span class="keyword">if</span> (fu &lt; fc)
+0079     <span class="comment">% Have a minimum between b and c</span>
+0080     br_min = b;
+0081     br_mid = u;
+0082     br_max = c;
+0083     <span class="keyword">return</span>;
+0084       <span class="keyword">elseif</span> (fu &gt; fb)
+0085     <span class="comment">% Have a minimum between a and u</span>
+0086     br_min = a;
+0087     br_mid = c;
+0088     br_max = u;
+0089     <span class="keyword">return</span>;
+0090       <span class="keyword">end</span>
+0091       <span class="comment">% Quadratic interpolation didn't give a bracket, so take a golden step</span>
+0092       u = c + phi*(c-b);
+0093     <span class="keyword">elseif</span> ((c-u)'*(u-ulimit) &gt; 0.0)
+0094       <span class="comment">% Interpolant lies between c and limit</span>
+0095       fu = feval(f, u, varargin{:});
+0096       num_evals = num_evals + 1;
+0097       <span class="keyword">if</span> (fu &lt; fc)
+0098     <span class="comment">% Move bracket along, and then take a golden section step</span>
+0099     b = c;
+0100     c = u;
+0101     u = c + phi*(c-b);
+0102       <span class="keyword">else</span>
+0103     bracket_found = 1;
+0104       <span class="keyword">end</span>
+0105     <span class="keyword">elseif</span> ((u-ulimit)'*(ulimit-c) &gt;= 0.0)
+0106       <span class="comment">% Limit parabolic u to maximum value</span>
+0107       u = ulimit;
+0108     <span class="keyword">else</span>
+0109       <span class="comment">% Reject parabolic u and use golden section step</span>
+0110       u = c + phi*(c-b);
+0111     <span class="keyword">end</span>
+0112     <span class="keyword">if</span> ~bracket_found
+0113       fu = feval(f, u, varargin{:});
+0114       num_evals = num_evals + 1;
+0115     <span class="keyword">end</span>
+0116     a = b; b = c; c = u;
+0117     fa = fb; fb = fc; fc = fu;
+0118   <span class="keyword">end</span> <span class="comment">% while loop</span>
+0119 <span class="keyword">end</span>   <span class="comment">% bracket found</span>
+0120 br_mid = b;
+0121 <span class="keyword">if</span> (a &lt; c)
+0122   br_min = a;
+0123   br_max = c;
+0124 <span class="keyword">else</span>
+0125   br_min = c; 
+0126   br_max = a;
+0127 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

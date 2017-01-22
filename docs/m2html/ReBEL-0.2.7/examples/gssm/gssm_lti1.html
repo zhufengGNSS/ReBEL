@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gssm_lti1</title>
+  <meta name="keywords" content="gssm_lti1">
+  <meta name="description" content="GSSM_LTI1  Generalized state space model for simple LTI system">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">gssm</a> &gt; gssm_lti1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\gssm&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>gssm_lti1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>GSSM_LTI1  Generalized state space model for simple LTI system</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [varargout] = model_interface(func, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GSSM_LTI1  Generalized state space model for simple LTI system
+
+ The model is a simple 2nd order LTI system with Gaussian observation noise
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>	CONSISTENT   Check ReBEL data structures for consistentency.</li><li><a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/examples/joint_estimation/demje1.html" class="code" title="">demje1</a>	DEMJE1  Demonstrate joint estimation on a 2nd order LTI system.</li><li><a href="../../.././ReBEL-0.2.7/examples/parameter_estimation/dempe1.html" class="code" title="">dempe1</a>	DEMPE1  Demonstrate parameter estimation on a simple 2nd order LTI system.</li><li><a href="../../.././ReBEL-0.2.7/examples/state_estimation/demse1.html" class="code" title="">demse1</a>	DEMSE1  Demonstrate state estimation on a simple 2nd order LTI system.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function model = init(init_args)</a></li><li><a href="#_sub2" class="code">function model = setparams(model, params, index_vector)</a></li><li><a href="#_sub3" class="code">function new_state = ffun(model, state, V, U1)</a></li><li><a href="#_sub4" class="code">function tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a></li><li><a href="#_sub5" class="code">function observ = hfun(model, state, N, U2)</a></li><li><a href="#_sub6" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub7" class="code">function out = linearize(model, state, V, N, U1, U2, term, index_vector)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% GSSM_LTI1  Generalized state space model for simple LTI system</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% The model is a simple 2nd order LTI system with Gaussian observation noise</span>
+0004 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0007 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0008 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0009 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0012 <span class="comment">%   detail.</span>
+0013 
+0014 
+0015 <span class="comment">%===============================================================================================</span>
+0016 <a name="_sub0" href="#_subfunctions" class="code">function [varargout] = model_interface(func, varargin)</a>
+0017 
+0018   <span class="keyword">switch</span> func
+0019 
+0020     <span class="comment">%--- Initialize GSSM data structure --------------------------------------------------------</span>
+0021     <span class="keyword">case</span> <span class="string">'init'</span>
+0022       model = <a href="#_sub1" class="code" title="subfunction model = init(init_args)">init</a>(varargin);
+0023         error(<a href="../../.././ReBEL-0.2.7/core/consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>(model,<span class="string">'gssm'</span>));               <span class="comment">% check consistentency of initialized model</span>
+0024       varargout{1} = model;
+0025 
+0026     <span class="comment">%--------------------------------------------------------------------------------------------</span>
+0027     <span class="keyword">otherwise</span>
+0028 
+0029       error([<span class="string">'Function '''</span> func <span class="string">''' not supported.'</span>]);
+0030 
+0031   <span class="keyword">end</span>
+0032 
+0033 
+0034 <span class="comment">%===============================================================================================</span>
+0035 <a name="_sub1" href="#_subfunctions" class="code">function model = init(init_args)</a>
+0036 
+0037   model.type = <span class="string">'gssm'</span>;                       <span class="comment">% object type = generalized state space model</span>
+0038   model.tag  = <span class="string">'GSSM_LTI1'</span>;                  <span class="comment">% ID tag</span>
+0039 
+0040   model.ffun       = @<a href="#_sub3" class="code" title="subfunction new_state = ffun(model, state, V, U1)">ffun</a>;                  <span class="comment">% file handle to FFUN</span>
+0041   model.hfun       = @<a href="#_sub5" class="code" title="subfunction observ = hfun(model, state, N, U2)">hfun</a>;                  <span class="comment">% file handle to HFUN</span>
+0042   model.prior      = @<a href="#_sub4" class="code" title="subfunction tranprior = prior(model, nextstate, state, U1, pNoiseDS)">prior</a>;                 <span class="comment">% file handle to PRIOR</span>
+0043   model.likelihood = @<a href="#_sub6" class="code" title="subfunction llh = likelihood(model, obs, state, U2, oNoiseDS)">likelihood</a>;            <span class="comment">% file handle to LIKELIHOOD</span>
+0044   model.linearize  = @<a href="#_sub7" class="code" title="subfunction out = linearize(model, state, V, N, U1, U2, term, index_vector)">linearize</a>;             <span class="comment">% file handle to LINEARIZE</span>
+0045   model.setparams  = @<a href="#_sub2" class="code" title="subfunction model = setparams(model, params, index_vector)">setparams</a>;             <span class="comment">% file handle to SETPARAMS</span>
+0046 
+0047   model.statedim   = 2;                      <span class="comment">%   state dimension</span>
+0048   model.obsdim     = 1;                      <span class="comment">%   observation dimension</span>
+0049   model.paramdim   = 2;                      <span class="comment">%   parameter dimension</span>
+0050   model.U1dim      = 0;                      <span class="comment">%   exogenous control input 1 dimension</span>
+0051   model.U2dim      = 0;                      <span class="comment">%   exogenous control input 2 dimension</span>
+0052   model.Vdim       = 1;                      <span class="comment">%   process noise dimension</span>
+0053   model.Ndim       = 1;                      <span class="comment">%   observation noise dimension</span>
+0054 
+0055   Arg.type = <span class="string">'gaussian'</span>;
+0056   Arg.cov_type = <span class="string">'full'</span>;
+0057   Arg.dim = model.Vdim;
+0058   Arg.mu = 0;
+0059   Arg.cov  = 0.001;
+0060   model.pNoise     = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);   <span class="comment">% process noise : zero mean white Gaussian noise , cov=0.001</span>
+0061 
+0062   Arg.type = <span class="string">'gaussian'</span>;
+0063   Arg.cov_type = <span class="string">'full'</span>;
+0064   Arg.dim = model.Ndim;
+0065   Arg.mu = 0;
+0066   Arg.cov  = 0.3;
+0067   model.oNoise     = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);     <span class="comment">% observation noise : zero mean white Gaussian noise, cov=0.2</span>
+0068 
+0069   model.params     = zeros(model.paramdim,1);
+0070   model.A  = [model.params(1) model.params(2); 1 0];
+0071   model.B  = [];
+0072   model.C  = [1 0];
+0073   model.D  = [];
+0074   model.G  = [1 0]';
+0075   model.H  = [1];
+0076 
+0077   model = <a href="#_sub2" class="code" title="subfunction model = setparams(model, params, index_vector)">setparams</a>(model,[1.9223 -0.9604]);   <span class="comment">% 2nd order under-damped LTI system</span>
+0078 
+0079 
+0080 <span class="comment">%===============================================================================================</span>
+0081 <a name="_sub2" href="#_subfunctions" class="code">function model = setparams(model, params, index_vector)</a>
+0082 
+0083   <span class="keyword">if</span> (nargin==2)
+0084     model.params = params(:);
+0085   <span class="keyword">elseif</span> (nargin==3)
+0086     model.params(index_vector) = params(:);
+0087   <span class="keyword">else</span>
+0088     error(<span class="string">'[ setparams ] Incorrect number of input arguments.'</span>);
+0089   <span class="keyword">end</span>
+0090 
+0091   model.A(1,:)  = model.params';
+0092 
+0093 <span class="comment">%===============================================================================================</span>
+0094 <a name="_sub3" href="#_subfunctions" class="code">function new_state = ffun(model, state, V, U1)</a>
+0095 
+0096   new_state      = model.A * state;
+0097 
+0098   <span class="keyword">if</span> ~isempty(V)
+0099       new_state(1,:) = new_state(1,:) + V(1,:);
+0100   <span class="keyword">end</span>
+0101 
+0102 
+0103 <span class="comment">%===============================================================================================</span>
+0104 <a name="_sub4" href="#_subfunctions" class="code">function tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a>
+0105 
+0106   X = nextstate - <a href="#_sub3" class="code" title="subfunction new_state = ffun(model, state, V, U1)">ffun</a>(model, state, [], U1);
+0107 
+0108   tranprior = pNoiseDS.likelihood( pNoiseDS, X(1,:));
+0109 
+0110 <span class="comment">%===============================================================================================</span>
+0111 <a name="_sub5" href="#_subfunctions" class="code">function observ = hfun(model, state, N, U2)</a>
+0112 
+0113   observ = state(1,:);
+0114 
+0115   <span class="keyword">if</span> ~isempty(N)
+0116     observ = state(1,:) + N(1,:);
+0117   <span class="keyword">end</span>
+0118 
+0119 <span class="comment">%===============================================================================================</span>
+0120 <a name="_sub6" href="#_subfunctions" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a>
+0121 
+0122   X = obs - <a href="#_sub5" class="code" title="subfunction observ = hfun(model, state, N, U2)">hfun</a>(model, state, [], U2);
+0123 
+0124   llh = oNoiseDS.likelihood( oNoiseDS, X);
+0125 
+0126 
+0127 <span class="comment">%===============================================================================================</span>
+0128 <a name="_sub7" href="#_subfunctions" class="code">function out = linearize(model, state, V, N, U1, U2, term, index_vector)</a>
+0129 
+0130   <span class="keyword">if</span> (nargin&lt;7)
+0131     error(<span class="string">'[ linearize ] Not enough input arguments!'</span>);
+0132   <span class="keyword">end</span>
+0133 
+0134   <span class="comment">%--------------------------------------------------------------------------------------</span>
+0135   <span class="keyword">switch</span> (term)
+0136 
+0137     <span class="keyword">case</span> <span class="string">'A'</span>
+0138       <span class="comment">%%%========================================================</span>
+0139       <span class="comment">%%%             Calculate A = df/dstate</span>
+0140       <span class="comment">%%%========================================================</span>
+0141       out = model.A;
+0142 
+0143     <span class="keyword">case</span> <span class="string">'B'</span>
+0144       <span class="comment">%%%========================================================</span>
+0145       <span class="comment">%%%             Calculate B = df/dU1</span>
+0146       <span class="comment">%%%========================================================</span>
+0147       out = model.B;
+0148 
+0149     <span class="keyword">case</span> <span class="string">'C'</span>
+0150       <span class="comment">%%%========================================================</span>
+0151       <span class="comment">%%%             Calculate C = dh/dx</span>
+0152       <span class="comment">%%%========================================================</span>
+0153       out = model.C;
+0154 
+0155     <span class="keyword">case</span> <span class="string">'D'</span>
+0156       <span class="comment">%%%========================================================</span>
+0157       <span class="comment">%%%             Calculate D = dh/dU2</span>
+0158       <span class="comment">%%%========================================================</span>
+0159       out = model.D;
+0160 
+0161     <span class="keyword">case</span> <span class="string">'G'</span>
+0162       <span class="comment">%%%========================================================</span>
+0163       <span class="comment">%%%             Calculate G = df/dv</span>
+0164       <span class="comment">%%%========================================================</span>
+0165       out = model.G;
+0166 
+0167     <span class="keyword">case</span> <span class="string">'H'</span>
+0168       <span class="comment">%%%========================================================</span>
+0169       <span class="comment">%%%             Calculate H = dh/dn</span>
+0170       <span class="comment">%%%========================================================</span>
+0171       out = model.H;
+0172 
+0173     <span class="keyword">case</span> <span class="string">'JFW'</span>
+0174       <span class="comment">%%%========================================================</span>
+0175       <span class="comment">%%%             Calculate  = dffun/dparameters</span>
+0176       <span class="comment">%%%========================================================</span>
+0177       out = [state(1) state(2); 0 0];
+0178 
+0179 
+0180     <span class="keyword">case</span> <span class="string">'JHW'</span>
+0181       <span class="comment">%%%========================================================</span>
+0182       <span class="comment">%%%             Calculate  = dhfun/dparameters</span>
+0183       <span class="comment">%%%========================================================</span>
+0184       out = zeros(model.obsdim,model.paramdim);
+0185 
+0186     <span class="keyword">otherwise</span>
+0187       error(<span class="string">'[ linearize ] Invalid model term requested!'</span>);
+0188 
+0189   <span class="keyword">end</span>
+0190 
+0191   <span class="keyword">if</span> (nargin==8), out = out(:,index_vector); <span class="keyword">end</span>
+0192 
+0193   <span class="comment">%--------------------------------------------------------------------------------------</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gssm</title>
+  <meta name="keywords" content="gssm">
+  <meta name="description" content="GSSM  Template file for generalized state space model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; gssm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gssm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GSSM  Template file for generalized state space model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [varargout] = model_interface(func, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GSSM  Template file for generalized state space model.
+
+   This template file is used to completely describe a system in a generalized
+   state space format useable by the ReBEL inference and estimation system.
+   This file must be copied, renamed and adapted to your specific problem. The
+   interface to each function should NOT BE CHANGED however.
+
+   The following main and subfunctions must be defined:
+
+   1) [VARARGOUT] = MODEL_INTERFACE(FUNC, VARARGIN) :  This function is the
+        main gateway function which is used to initialise the generalized state
+        space model data structure. This is done by calling the 'init'
+        subfunction. The user can extend this function to indirectly call other
+        subfunctions within this file if needed.
+
+   2) MODEL = INIT(INIT_ARGS) : This function generates and initializes a
+        generalized state space model (gssm) data structure which summarizes
+        all relevant information about the system. 'model' is a Matlab structure
+        that must contain the following fields (consistentency can be checked
+        with the 'consistent' function.
+       - type : String which contains the model type. Use 'gssm' for generalized
+                state space model.
+       - tag  : ID string which contains instance specific identification info.
+                Default value=''
+       - ffun : Function-handle to the state transition (state dynamics)
+                subfunction.
+       - hfun : Function-handle to the state observation subfunction.
+       - setparams : Function-handle to the setparams subfunction to update and
+                     possibly unpack the model parameters.
+
+       - prior : &lt;&lt;optional&gt;&gt; Function-handle to the state transition 'prior'
+                 function that calculates P(x(k)|x(k-1)). This must be defined
+                 if any of the particle filter family of estimators will be used
+                 on this model.
+       - likelihood : &lt;&lt;optional&gt;&gt; Function-handle to the observation likelihood
+                      function that calculates p(y(k)|x(k)) for a given
+                      realization of the state variable x and a particular
+                      observation instance y. This must be defined if any of the
+                      particle filter family of estimators will be used on this
+                      model.
+       - innovation : &lt;&lt;optional&gt;&gt; Function-handle to the innovation model
+                      function that calculates the difference between the output
+                      of the observation function (hfun) and the actual
+                      'real-world' measurement/observation of that signal. If
+                      this field is not defined, a generic innovation is used.
+       - linearize : &lt;&lt;optional&gt;&gt; Function-handle to the linearization
+                     subfunction. This is only needed if a linear Kalman filter
+                     (kf) or Extended Kalman Filter (ekf) will be used on this
+                     model. If no subfunction is defined, a default 'perturbation'
+                     based method of linearization will be used. This function
+                     does not need to be defined for the use of any of the
+                     Sigma-Point Kalman Filters (ukf, cdkf, srukf &amp; srcdkf) or
+                     any of the Particle Filters (pf &amp; sppf).
+
+       - statedim  : state dimension (this should be consistentent with the ffun
+                     and hfun subfunctions).
+       - obsdim    : observation dimension (this should be consistentent with
+                     the hfun subfunction).
+       - paramdim  : parameter dimension (number of free parameters in the
+                     system).
+       - U1dim     : dimension of exogenous input to ffun
+       - U2dim     : dimension of exogenous input to hfun
+       - pNoise    : process noise data structure  (this data structure is of
+                     type NoiseDS)
+       - oNoise    : observation noise data structure (this data structure is of
+                     type NoiseDS)
+       - params    : vector to hold all model parameters (must be of dimension
+                     [paramdim-by-1] )
+
+       - stateAngleCompIdxVec : &lt;&lt;optional&gt;&gt; Index vector idicating which (if
+                                any) of the state vector components are
+                                angular quantities (measured in radians) that
+                                has a discontinuety at +-Pi radians (this is
+                                needed by all SPKF based algorithms and derived
+                                hybrids)
+       - obsAngleCompIdxVec   : &lt;&lt;optional&gt;&gt; Index vector idicating which (if
+                                any) of the observation vector components are
+                                angular quantities (measured in radians) that
+                                has a discontinuety at +-Pi radians (this is
+                                needed by all SPKF based algorithms and
+                                derived hybrids)
+
+   3) MODEL = SETPARAMS(MODEL, PARAMS, IDXVECTOR) : This function unpacks a
+      column vector containing system parameters into specific forms needed by
+      FFUN, HFUN and possibly defined sub-functional objects. Both the
+      vectorized (packed) form of the parameters 'PARAMS' as well as the
+      unpacked forms are stored within the model data structure. 'IDXVECTOR' is
+      an optional argument which indicates which parameters should be updated.
+      This can be used to only modify a subset of the total system parameters.
+      'PARAMS' and 'IDXVECTOR' must have the same length.
+      Example :  model=setparams(model, [1 1 2 1 3]', [1 3 6:8])
+      &lt;&lt; THIS SUBFUNCTION IS REQUIRED &gt;&gt;
+
+   4) NEW_STATE = FFUN(MODEL, STATE, V, U1) : State transition function which
+      takes as input the current state of the system 'STATE', a process noise
+      vector 'V', an exogenous control input 'U1', and a gssm data structure
+      'MODEL', and calculates the system state at the next discrete time instant,
+      'NEW_STATE'. This function implements the system dynamics.
+      &lt;&lt; THIS SUBFUNCTION IS REQUIRED &gt;&gt;
+
+   5) OBSERV = HFUN(MODEL, STATE, N, U2) : State observation function which
+      takes as input the current state of the system 'STATE', an observation
+      noise vector 'N', an exogenous control input 'U2' and a gssm data
+      structure 'MODEL', and calculates the current observation vector of the
+      system, 'OBSERV'.
+      &lt;&lt; THIS SUBFUNCTION IS REQUIRED &gt;&gt;
+
+   6) TRAN_PRIOR = PRIOR(MODEL, NEXT_STATE, STATE, U1, PNOISEDS) : Calculates
+      the transition prior p(next_state|state) = p(state(k)|state(k-1)) =
+      p(x(k)|x(k-1)) given a gssm data structure 'MODEL', realizations of the
+      system state at time k and k-1, 'NEXT_STATE' and 'STATE' and the
+      exogeneous inputs to the process model, U1. The process noise data
+      structure 'PNOISEDS' specifies which noise model should be used to
+      calculate the likelihood. If this is ommitted, the default model defined
+      process noise data structure 'model.pNoise' is used.
+      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only required by particle filter
+         family of estimator &gt;&gt;
+
+   7) LLH = LIKELIHOOD(MODEL, OBS, STATE, U2, ONOISEDS) : Calculates the
+      likelihood of a 'real world' observation 'OBS' for a given realization
+      or instance of the state variable STATE. i.e. Calculates the value of
+      P(OBS|STATE). The measurement noise data structure 'ONOISEDS' specifies
+      which noise model should be used to calculate the likelihood. If this is
+      ommitted, the default model defined observation noise data structure
+      'model.pNoise' is used. 'U2' is the (optional) exogeneous input to the
+      state observation function 'hfun'.
+      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only required by particle filter
+         family of estimator &gt;&gt;
+
+   8) INNOV = INNOVATION(MODEL, OBS, OBSERV) : Calculates the innovation signal
+      (difference) between the output of HFUN, i.e. OBSERV=HFUN(STATE) (the
+      predicted system observation) and an actual 'real world' observation OBS.
+      This function might be as simple as INNOV = OBS - OBSERV, which is the
+      default case, but can also be more complex for complex measurement
+      processes where for example multiple (possibly false) observations can be
+      observed for a given hidden ground truth.
+      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only redefine if the default does not
+         reflect the true measurement process &gt;&gt;
+
+   9) OUT = LINEARIZE(MODEL, STATE, V, N, U1, U2, TERM, IDXVECTOR) generates a
+      linearized model of the nonlinear system described by the gssm data
+      structure MODEL at the current operating point, STATE, exogenous inputs U1
+      and U2. The linearized model is of the form:
+
+           state(k) = A*state(k-1) + B*u1(k-1) + G*v(k-1)
+               y(k) = C*state(k)   + D*u2(k)   + H*n(k)
+
+      for an arbitrary model defined by this GSSM file. The string TERM
+      specifies which of the model terms are returned, i.e.
+
+       A = linearize(model, state, v, n, u1, u2, 'A') or
+       H = linearize(model, state, v, n, u1, u2, 'H') etc.
+
+      TERM can be one of the following, 'A','B','C','D','G','H','JFW','JHW' ,
+      where 'JFW' and 'JHW' are the partial derivatives of FFUN and HFUN with
+      respect to the system parameters.
+
+      IDXVECTOR is an optional argument indicating which subset of the
+      independent vector should be used to calculate any specific derivative.
+      This will result in a Jacobian matrix with a reduced number of columns,
+      corresponding with the subvector as defined by 'IDXVECTOR'. The default
+      (when this argument is ommitted) is to use the full vector.
+
+      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only required for Kalman and Extended
+      Kalman filters &gt;&gt;
+
+     See also
+     CONSIST, <a href="geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">GENINFDS</a>, <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">GENNOISEDS</a>
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE.TXT (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>	CONSISTENT   Check ReBEL data structures for consistentency.</li><li><a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function model = init(init_args)</a></li><li><a href="#_sub2" class="code">function model = setparams(model, params, idxVector)</a></li><li><a href="#_sub3" class="code">function new_state = ffun(model, state, V, U1)</a></li><li><a href="#_sub4" class="code">function  tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a></li><li><a href="#_sub5" class="code">function observ = hfun(model, state, N, U2)</a></li><li><a href="#_sub6" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub7" class="code">function INNOV = innovation(model, obs, observ)</a></li><li><a href="#_sub8" class="code">function out = linearize(model, state, V, N, U1, U2, term, idxVector)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% GSSM  Template file for generalized state space model.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   This template file is used to completely describe a system in a generalized</span>
+0004 <span class="comment">%   state space format useable by the ReBEL inference and estimation system.</span>
+0005 <span class="comment">%   This file must be copied, renamed and adapted to your specific problem. The</span>
+0006 <span class="comment">%   interface to each function should NOT BE CHANGED however.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   The following main and subfunctions must be defined:</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   1) [VARARGOUT] = MODEL_INTERFACE(FUNC, VARARGIN) :  This function is the</span>
+0011 <span class="comment">%        main gateway function which is used to initialise the generalized state</span>
+0012 <span class="comment">%        space model data structure. This is done by calling the 'init'</span>
+0013 <span class="comment">%        subfunction. The user can extend this function to indirectly call other</span>
+0014 <span class="comment">%        subfunctions within this file if needed.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   2) MODEL = INIT(INIT_ARGS) : This function generates and initializes a</span>
+0017 <span class="comment">%        generalized state space model (gssm) data structure which summarizes</span>
+0018 <span class="comment">%        all relevant information about the system. 'model' is a Matlab structure</span>
+0019 <span class="comment">%        that must contain the following fields (consistentency can be checked</span>
+0020 <span class="comment">%        with the 'consistent' function.</span>
+0021 <span class="comment">%       - type : String which contains the model type. Use 'gssm' for generalized</span>
+0022 <span class="comment">%                state space model.</span>
+0023 <span class="comment">%       - tag  : ID string which contains instance specific identification info.</span>
+0024 <span class="comment">%                Default value=''</span>
+0025 <span class="comment">%       - ffun : Function-handle to the state transition (state dynamics)</span>
+0026 <span class="comment">%                subfunction.</span>
+0027 <span class="comment">%       - hfun : Function-handle to the state observation subfunction.</span>
+0028 <span class="comment">%       - setparams : Function-handle to the setparams subfunction to update and</span>
+0029 <span class="comment">%                     possibly unpack the model parameters.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%       - prior : &lt;&lt;optional&gt;&gt; Function-handle to the state transition 'prior'</span>
+0032 <span class="comment">%                 function that calculates P(x(k)|x(k-1)). This must be defined</span>
+0033 <span class="comment">%                 if any of the particle filter family of estimators will be used</span>
+0034 <span class="comment">%                 on this model.</span>
+0035 <span class="comment">%       - likelihood : &lt;&lt;optional&gt;&gt; Function-handle to the observation likelihood</span>
+0036 <span class="comment">%                      function that calculates p(y(k)|x(k)) for a given</span>
+0037 <span class="comment">%                      realization of the state variable x and a particular</span>
+0038 <span class="comment">%                      observation instance y. This must be defined if any of the</span>
+0039 <span class="comment">%                      particle filter family of estimators will be used on this</span>
+0040 <span class="comment">%                      model.</span>
+0041 <span class="comment">%       - innovation : &lt;&lt;optional&gt;&gt; Function-handle to the innovation model</span>
+0042 <span class="comment">%                      function that calculates the difference between the output</span>
+0043 <span class="comment">%                      of the observation function (hfun) and the actual</span>
+0044 <span class="comment">%                      'real-world' measurement/observation of that signal. If</span>
+0045 <span class="comment">%                      this field is not defined, a generic innovation is used.</span>
+0046 <span class="comment">%       - linearize : &lt;&lt;optional&gt;&gt; Function-handle to the linearization</span>
+0047 <span class="comment">%                     subfunction. This is only needed if a linear Kalman filter</span>
+0048 <span class="comment">%                     (kf) or Extended Kalman Filter (ekf) will be used on this</span>
+0049 <span class="comment">%                     model. If no subfunction is defined, a default 'perturbation'</span>
+0050 <span class="comment">%                     based method of linearization will be used. This function</span>
+0051 <span class="comment">%                     does not need to be defined for the use of any of the</span>
+0052 <span class="comment">%                     Sigma-Point Kalman Filters (ukf, cdkf, srukf &amp; srcdkf) or</span>
+0053 <span class="comment">%                     any of the Particle Filters (pf &amp; sppf).</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%       - statedim  : state dimension (this should be consistentent with the ffun</span>
+0056 <span class="comment">%                     and hfun subfunctions).</span>
+0057 <span class="comment">%       - obsdim    : observation dimension (this should be consistentent with</span>
+0058 <span class="comment">%                     the hfun subfunction).</span>
+0059 <span class="comment">%       - paramdim  : parameter dimension (number of free parameters in the</span>
+0060 <span class="comment">%                     system).</span>
+0061 <span class="comment">%       - U1dim     : dimension of exogenous input to ffun</span>
+0062 <span class="comment">%       - U2dim     : dimension of exogenous input to hfun</span>
+0063 <span class="comment">%       - pNoise    : process noise data structure  (this data structure is of</span>
+0064 <span class="comment">%                     type NoiseDS)</span>
+0065 <span class="comment">%       - oNoise    : observation noise data structure (this data structure is of</span>
+0066 <span class="comment">%                     type NoiseDS)</span>
+0067 <span class="comment">%       - params    : vector to hold all model parameters (must be of dimension</span>
+0068 <span class="comment">%                     [paramdim-by-1] )</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">%       - stateAngleCompIdxVec : &lt;&lt;optional&gt;&gt; Index vector idicating which (if</span>
+0071 <span class="comment">%                                any) of the state vector components are</span>
+0072 <span class="comment">%                                angular quantities (measured in radians) that</span>
+0073 <span class="comment">%                                has a discontinuety at +-Pi radians (this is</span>
+0074 <span class="comment">%                                needed by all SPKF based algorithms and derived</span>
+0075 <span class="comment">%                                hybrids)</span>
+0076 <span class="comment">%       - obsAngleCompIdxVec   : &lt;&lt;optional&gt;&gt; Index vector idicating which (if</span>
+0077 <span class="comment">%                                any) of the observation vector components are</span>
+0078 <span class="comment">%                                angular quantities (measured in radians) that</span>
+0079 <span class="comment">%                                has a discontinuety at +-Pi radians (this is</span>
+0080 <span class="comment">%                                needed by all SPKF based algorithms and</span>
+0081 <span class="comment">%                                derived hybrids)</span>
+0082 <span class="comment">%</span>
+0083 <span class="comment">%   3) MODEL = SETPARAMS(MODEL, PARAMS, IDXVECTOR) : This function unpacks a</span>
+0084 <span class="comment">%      column vector containing system parameters into specific forms needed by</span>
+0085 <span class="comment">%      FFUN, HFUN and possibly defined sub-functional objects. Both the</span>
+0086 <span class="comment">%      vectorized (packed) form of the parameters 'PARAMS' as well as the</span>
+0087 <span class="comment">%      unpacked forms are stored within the model data structure. 'IDXVECTOR' is</span>
+0088 <span class="comment">%      an optional argument which indicates which parameters should be updated.</span>
+0089 <span class="comment">%      This can be used to only modify a subset of the total system parameters.</span>
+0090 <span class="comment">%      'PARAMS' and 'IDXVECTOR' must have the same length.</span>
+0091 <span class="comment">%      Example :  model=setparams(model, [1 1 2 1 3]', [1 3 6:8])</span>
+0092 <span class="comment">%      &lt;&lt; THIS SUBFUNCTION IS REQUIRED &gt;&gt;</span>
+0093 <span class="comment">%</span>
+0094 <span class="comment">%   4) NEW_STATE = FFUN(MODEL, STATE, V, U1) : State transition function which</span>
+0095 <span class="comment">%      takes as input the current state of the system 'STATE', a process noise</span>
+0096 <span class="comment">%      vector 'V', an exogenous control input 'U1', and a gssm data structure</span>
+0097 <span class="comment">%      'MODEL', and calculates the system state at the next discrete time instant,</span>
+0098 <span class="comment">%      'NEW_STATE'. This function implements the system dynamics.</span>
+0099 <span class="comment">%      &lt;&lt; THIS SUBFUNCTION IS REQUIRED &gt;&gt;</span>
+0100 <span class="comment">%</span>
+0101 <span class="comment">%   5) OBSERV = HFUN(MODEL, STATE, N, U2) : State observation function which</span>
+0102 <span class="comment">%      takes as input the current state of the system 'STATE', an observation</span>
+0103 <span class="comment">%      noise vector 'N', an exogenous control input 'U2' and a gssm data</span>
+0104 <span class="comment">%      structure 'MODEL', and calculates the current observation vector of the</span>
+0105 <span class="comment">%      system, 'OBSERV'.</span>
+0106 <span class="comment">%      &lt;&lt; THIS SUBFUNCTION IS REQUIRED &gt;&gt;</span>
+0107 <span class="comment">%</span>
+0108 <span class="comment">%   6) TRAN_PRIOR = PRIOR(MODEL, NEXT_STATE, STATE, U1, PNOISEDS) : Calculates</span>
+0109 <span class="comment">%      the transition prior p(next_state|state) = p(state(k)|state(k-1)) =</span>
+0110 <span class="comment">%      p(x(k)|x(k-1)) given a gssm data structure 'MODEL', realizations of the</span>
+0111 <span class="comment">%      system state at time k and k-1, 'NEXT_STATE' and 'STATE' and the</span>
+0112 <span class="comment">%      exogeneous inputs to the process model, U1. The process noise data</span>
+0113 <span class="comment">%      structure 'PNOISEDS' specifies which noise model should be used to</span>
+0114 <span class="comment">%      calculate the likelihood. If this is ommitted, the default model defined</span>
+0115 <span class="comment">%      process noise data structure 'model.pNoise' is used.</span>
+0116 <span class="comment">%      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only required by particle filter</span>
+0117 <span class="comment">%         family of estimator &gt;&gt;</span>
+0118 <span class="comment">%</span>
+0119 <span class="comment">%   7) LLH = LIKELIHOOD(MODEL, OBS, STATE, U2, ONOISEDS) : Calculates the</span>
+0120 <span class="comment">%      likelihood of a 'real world' observation 'OBS' for a given realization</span>
+0121 <span class="comment">%      or instance of the state variable STATE. i.e. Calculates the value of</span>
+0122 <span class="comment">%      P(OBS|STATE). The measurement noise data structure 'ONOISEDS' specifies</span>
+0123 <span class="comment">%      which noise model should be used to calculate the likelihood. If this is</span>
+0124 <span class="comment">%      ommitted, the default model defined observation noise data structure</span>
+0125 <span class="comment">%      'model.pNoise' is used. 'U2' is the (optional) exogeneous input to the</span>
+0126 <span class="comment">%      state observation function 'hfun'.</span>
+0127 <span class="comment">%      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only required by particle filter</span>
+0128 <span class="comment">%         family of estimator &gt;&gt;</span>
+0129 <span class="comment">%</span>
+0130 <span class="comment">%   8) INNOV = INNOVATION(MODEL, OBS, OBSERV) : Calculates the innovation signal</span>
+0131 <span class="comment">%      (difference) between the output of HFUN, i.e. OBSERV=HFUN(STATE) (the</span>
+0132 <span class="comment">%      predicted system observation) and an actual 'real world' observation OBS.</span>
+0133 <span class="comment">%      This function might be as simple as INNOV = OBS - OBSERV, which is the</span>
+0134 <span class="comment">%      default case, but can also be more complex for complex measurement</span>
+0135 <span class="comment">%      processes where for example multiple (possibly false) observations can be</span>
+0136 <span class="comment">%      observed for a given hidden ground truth.</span>
+0137 <span class="comment">%      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only redefine if the default does not</span>
+0138 <span class="comment">%         reflect the true measurement process &gt;&gt;</span>
+0139 <span class="comment">%</span>
+0140 <span class="comment">%   9) OUT = LINEARIZE(MODEL, STATE, V, N, U1, U2, TERM, IDXVECTOR) generates a</span>
+0141 <span class="comment">%      linearized model of the nonlinear system described by the gssm data</span>
+0142 <span class="comment">%      structure MODEL at the current operating point, STATE, exogenous inputs U1</span>
+0143 <span class="comment">%      and U2. The linearized model is of the form:</span>
+0144 <span class="comment">%</span>
+0145 <span class="comment">%           state(k) = A*state(k-1) + B*u1(k-1) + G*v(k-1)</span>
+0146 <span class="comment">%               y(k) = C*state(k)   + D*u2(k)   + H*n(k)</span>
+0147 <span class="comment">%</span>
+0148 <span class="comment">%      for an arbitrary model defined by this GSSM file. The string TERM</span>
+0149 <span class="comment">%      specifies which of the model terms are returned, i.e.</span>
+0150 <span class="comment">%</span>
+0151 <span class="comment">%       A = linearize(model, state, v, n, u1, u2, 'A') or</span>
+0152 <span class="comment">%       H = linearize(model, state, v, n, u1, u2, 'H') etc.</span>
+0153 <span class="comment">%</span>
+0154 <span class="comment">%      TERM can be one of the following, 'A','B','C','D','G','H','JFW','JHW' ,</span>
+0155 <span class="comment">%      where 'JFW' and 'JHW' are the partial derivatives of FFUN and HFUN with</span>
+0156 <span class="comment">%      respect to the system parameters.</span>
+0157 <span class="comment">%</span>
+0158 <span class="comment">%      IDXVECTOR is an optional argument indicating which subset of the</span>
+0159 <span class="comment">%      independent vector should be used to calculate any specific derivative.</span>
+0160 <span class="comment">%      This will result in a Jacobian matrix with a reduced number of columns,</span>
+0161 <span class="comment">%      corresponding with the subvector as defined by 'IDXVECTOR'. The default</span>
+0162 <span class="comment">%      (when this argument is ommitted) is to use the full vector.</span>
+0163 <span class="comment">%</span>
+0164 <span class="comment">%      &lt;&lt; THIS SUBFUNCTION IS OPTIONAL : Only required for Kalman and Extended</span>
+0165 <span class="comment">%      Kalman filters &gt;&gt;</span>
+0166 <span class="comment">%</span>
+0167 <span class="comment">%     See also</span>
+0168 <span class="comment">%     CONSIST, GENINFDS, GENNOISEDS</span>
+0169 <span class="comment">%</span>
+0170 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0171 <span class="comment">%</span>
+0172 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0173 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0174 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0175 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0176 <span class="comment">%</span>
+0177 <span class="comment">%   See LICENSE.TXT (which should be part of the main toolkit distribution) for more</span>
+0178 <span class="comment">%   detail.</span>
+0179 
+0180 
+0181 <span class="comment">%===============================================================================================</span>
+0182 
+0183 <a name="_sub0" href="#_subfunctions" class="code">function [varargout] = model_interface(func, varargin)</a>
+0184 
+0185   <span class="keyword">switch</span> func
+0186 
+0187     <span class="comment">%--- Initialize GSSM data structure --------------------------------------------------------</span>
+0188     <span class="keyword">case</span> <span class="string">'init'</span>
+0189       model = <a href="#_sub1" class="code" title="subfunction model = init(init_args)">init</a>(varargin);
+0190       error(<a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>(model,<span class="string">'gssm'</span>));              <span class="comment">% check consistentency of initialized model</span>
+0191       varargout{1} = model;
+0192 
+0193     <span class="comment">%--------------------------------------------------------------------------------------------</span>
+0194     <span class="keyword">otherwise</span>
+0195 
+0196       error([<span class="string">'Function '''</span> func <span class="string">''' not supported.'</span>]);
+0197 
+0198   <span class="keyword">end</span>
+0199 
+0200 
+0201 <span class="comment">%===============================================================================================</span>
+0202 <a name="_sub1" href="#_subfunctions" class="code">function model = init(init_args)</a>
+0203 
+0204   model.type = <span class="string">'gssm'</span>;                       <span class="comment">% object type = generalized state space model</span>
+0205 
+0206   model.tag  = <span class="string">''</span>;                           <span class="comment">% ID tag</span>
+0207 
+0208   model.setparams = @<a href="#_sub2" class="code" title="subfunction model = setparams(model, params, idxVector)">setparams</a>;              <span class="comment">% function handle to SETPARAMS</span>
+0209   model.ffun      = @<a href="#_sub3" class="code" title="subfunction new_state = ffun(model, state, V, U1)">ffun</a>;                   <span class="comment">% function handle to FFUN</span>
+0210   model.hfun      = @<a href="#_sub5" class="code" title="subfunction observ = hfun(model, state, N, U2)">hfun</a>;                   <span class="comment">% function handle to HFUN</span>
+0211   <span class="comment">% model.prior = @prior;                    % function handle to PRIOR        (uncomment if 'prior' subfunction is defined)</span>
+0212   <span class="comment">% model.likelihood = @likelihood;          % function handle to LIKELIHOOD   (uncomment if 'likelihood' subfunction is defined)</span>
+0213   <span class="comment">% model.innovation = @innovation;          % function handle to INNOVATION   (uncomment if 'innovation' subfunction is defined)</span>
+0214   <span class="comment">% model.linearize = @linearize;            % function handle to LINEARIZE    (uncomment if 'linearize' subfunction is defined)</span>
+0215 
+0216   <span class="comment">% model.stateAngleCompIdxVec :             % &lt;&lt;optional&gt;&gt; Index vector idicating which (if</span>
+0217                                              <span class="comment">% any) of the state vector components are</span>
+0218                                              <span class="comment">% angular quantities (measured in radians) that</span>
+0219                                              <span class="comment">% has a discontinuety at +-Pi radians (this is</span>
+0220                                              <span class="comment">% needed by all SPKF based algorithms and derived</span>
+0221                                              <span class="comment">% hybrids)</span>
+0222   <span class="comment">% model.obsAngleCompIdxVec                 % &lt;&lt;optional&gt;&gt; Same as model.stateAngleCompIdxVec but</span>
+0223                                              <span class="comment">% used for the observation vector.</span>
+0224 
+0225   <span class="comment">%-- These dimensions have to be defined by the user</span>
+0226 
+0227   model.statedim   = 0;                      <span class="comment">% state dimension</span>
+0228   model.obsdim     = 0;                      <span class="comment">% observation dimension</span>
+0229   model.paramdim   = 0;                      <span class="comment">% total parameter dimension</span>
+0230   model.U1dim      = 0;                      <span class="comment">% exogenous control input 1 dimension</span>
+0231   model.U2dim      = 0;                      <span class="comment">% exogenous control input 2 dimension</span>
+0232   model.Vdim       = 0;                      <span class="comment">% process noise dimension</span>
+0233   model.Ndim       = 0;                      <span class="comment">% observation noise dimension</span>
+0234 
+0235 
+0236   <span class="comment">%-- Setup process noise source</span>
+0237 
+0238   Arg.type = <span class="string">'gaussian'</span>;                     <span class="comment">% noise source type : Gaussian</span>
+0239   Arg.cov_type = <span class="string">'full'</span>;                      <span class="comment">% Gaussian noise source cov_type (full covariance)</span>
+0240   Arg.tag = <span class="string">'GSSM process noise source'</span>;     <span class="comment">% Arbitrary ID tag (optional)</span>
+0241   Arg.dim = model.Vdim;                      <span class="comment">% noise dimension</span>
+0242   Arg.mu = 0;                                <span class="comment">% noise mean</span>
+0243   Arg.cov  = 1;                                <span class="comment">% noise covariance</span>
+0244   model.pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);            <span class="comment">% generate noise source</span>
+0245 
+0246 
+0247   <span class="comment">%-- Setup observation noise source</span>
+0248 
+0249   Arg.type = <span class="string">'gaussian'</span>;                     <span class="comment">% noise source type : Gaussian</span>
+0250   Arg.cov_type = <span class="string">'full'</span>;                      <span class="comment">% Gaussian noise source cov_type (full covariance)</span>
+0251   Arg.tag = <span class="string">'GSSM observation noise source'</span>; <span class="comment">% Arbitrary ID tag (optional)</span>
+0252   Arg.dim = model.Ndim;                      <span class="comment">% noise dimension</span>
+0253   Arg.mu = 0;                                <span class="comment">% noise mean</span>
+0254   Arg.cov  = 1;                                <span class="comment">% noise covariance</span>
+0255   model.oNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);            <span class="comment">% generate noise source</span>
+0256 
+0257 
+0258   model.params     = zeros(model.paramdim,1); <span class="comment">%  setup parameter vector buffer</span>
+0259 
+0260   model = <a href="#_sub2" class="code" title="subfunction model = setparams(model, params, idxVector)">setparams</a>(model, zeros(model.paramdim,1));   <span class="comment">% initialize model parameters and unpack if needed</span>
+0261 
+0262   <span class="comment">%-- The subsection of the init function below these comments should be used to define any other data structures, objects,</span>
+0263   <span class="comment">%-- functions, etc.which is needed by the internal implementation of the FFUN, HFUN, LINEARIZE, ETC. functions. These data</span>
+0264   <span class="comment">%-- structures should be saved within the GSSM 'model' data structure. The user can embed any other structures such as Netlab</span>
+0265   <span class="comment">%-- neural networks, etc. in this section.</span>
+0266 
+0267 
+0268 <span class="comment">%===============================================================================================</span>
+0269 <a name="_sub2" href="#_subfunctions" class="code">function model = setparams(model, params, idxVector)</a>
+0270 
+0271 <span class="comment">% Function to unpack a column vector containing system parameters into specific forms</span>
+0272 <span class="comment">% needed by FFUN, HFUN and possibly defined sub-functional objects. Both the vectorized (packed)</span>
+0273 <span class="comment">% form of the parameters as well as the unpacked forms are stored within the model data structure.</span>
+0274 <span class="comment">% INDEX_VECTOR is an optional argument which indicates which parameters should be updated. This can</span>
+0275 <span class="comment">% be used to only modify a subset of the total system parameters.</span>
+0276 <span class="comment">%</span>
+0277 <span class="comment">%   Example: model=setparams(model, [1 1 2 1 3]', [1 3 6:8]);</span>
+0278 
+0279   <span class="keyword">switch</span> nargin
+0280 
+0281   <span class="keyword">case</span> 2
+0282     <span class="comment">%------------  Set all system parameters ---------------------------------------------------</span>
+0283 
+0284     model.params = params;
+0285 
+0286     <span class="comment">%-- Add unpack code here if needed -----</span>
+0287     <span class="comment">%---------------------------------------</span>
+0288 
+0289 
+0290   <span class="keyword">case</span> 3
+0291     <span class="comment">%------------  Set a subset of system parameters -------------------------------------------</span>
+0292 
+0293     model.params(idxVector) = params;
+0294 
+0295     <span class="comment">%-- Add unpack code if needed here.</span>
+0296     <span class="comment">%---------------------------------------</span>
+0297 
+0298   <span class="keyword">otherwise</span>
+0299     error(<span class="string">'[ setparams ] Incorrect number of input arguments.'</span>);
+0300 
+0301   <span class="keyword">end</span>
+0302 
+0303 
+0304 <span class="comment">%===============================================================================================</span>
+0305 <a name="_sub3" href="#_subfunctions" class="code">function new_state = ffun(model, state, V, U1)</a>
+0306 
+0307 <span class="comment">% FFUN  State transition function (system dynamics).</span>
+0308 <span class="comment">%</span>
+0309 <span class="comment">%   Generates the next state of the system NEW_STATE given</span>
+0310 <span class="comment">%   the current STATE, exogenous input U1 and process noise term V. If STATE, U1 and V are matrices</span>
+0311 <span class="comment">%   then FFUN is calculated for each column vector of these matrices, resulting in an equal number</span>
+0312 <span class="comment">%   of columns in NEW_STATE. MODEL is a GSSM derived data structure describing the system</span>
+0313 
+0314 <span class="comment">%-- This function must be defined by the user!</span>
+0315 
+0316 
+0317 <span class="comment">%===============================================================================================</span>
+0318 <a name="_sub4" href="#_subfunctions" class="code">function  tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a>
+0319 
+0320 <span class="comment">% PRIOR  Transition prior function</span>
+0321 <span class="comment">%</span>
+0322 <span class="comment">%   Calculates P(nextstate|state). If you plan to run a particle filter on this mode, you should</span>
+0323 <span class="comment">%   define this.</span>
+0324 <span class="comment">%</span>
+0325 <span class="comment">%   INPUT</span>
+0326 <span class="comment">%         model          GSSM data structure</span>
+0327 <span class="comment">%         nextstate      state at time k</span>
+0328 <span class="comment">%         state          state at time k-1</span>
+0329 <span class="comment">%         U1             exogeneous input to FFUN at time k-1</span>
+0330 <span class="comment">%         pNoiseDS       (optional) process noise NoiseDS data structure to use for evaluation of</span>
+0331 <span class="comment">%                        transition prior. If this is ommitted, model.pNoise, is used.</span>
+0332 <span class="comment">%   OUTPUT</span>
+0333 <span class="comment">%         tranprior      p(x(k)|x(k-1))</span>
+0334 <span class="comment">%</span>
+0335 <span class="comment">%-- This function must be defined by the user!</span>
+0336 
+0337 <span class="comment">%===============================================================================================</span>
+0338 <a name="_sub5" href="#_subfunctions" class="code">function observ = hfun(model, state, N, U2)</a>
+0339 
+0340 <span class="comment">% HFUN  State observation function.</span>
+0341 <span class="comment">%</span>
+0342 <span class="comment">%   OBSERV = HFUN(MODEL, STATE, N, U2) generates the current possibly nonlinear observation of the</span>
+0343 <span class="comment">%   system state, OBSERV, given the current STATE, exogenous input U and observation noise term V.</span>
+0344 <span class="comment">%   If STATE, U2 and N are matrices then HFUN is calculated for each column vector of these matrices,</span>
+0345 <span class="comment">%   resulting in an equal number of columns in OBSERV. MODEL is a GSSM derived data structure describing</span>
+0346 <span class="comment">%   the system.</span>
+0347 
+0348 <span class="comment">%-- This function must be defined by the user!</span>
+0349 
+0350 
+0351 <span class="comment">%===============================================================================================</span>
+0352 <a name="_sub6" href="#_subfunctions" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a>
+0353 
+0354 <span class="comment">% LIKELIHOOD  Observation likelihood function</span>
+0355 <span class="comment">%</span>
+0356 <span class="comment">% Function-handle to the observation likelihood function that calculates p(y|x) for a</span>
+0357 <span class="comment">% given realization of the state variable 'state' and a particular observation instance 'obs'.</span>
+0358 <span class="comment">%</span>
+0359 <span class="comment">%   i.e. Calculates the value of P(OBS|STATE) = P(y|x)</span>
+0360 <span class="comment">%</span>
+0361 <span class="comment">%   INPUT</span>
+0362 <span class="comment">%         model          GSSM data structure</span>
+0363 <span class="comment">%         obs            observation at time k</span>
+0364 <span class="comment">%         state          state at time k</span>
+0365 <span class="comment">%         U2             exogeneous input to HFUN at time k</span>
+0366 <span class="comment">%         oNoiseDS       (optional) measurement noise NoiseDS data structure to use for evaluation of</span>
+0367 <span class="comment">%                        transition prior. If this is ommitted, model.oNoise, is used.</span>
+0368 <span class="comment">%   OUTPUT</span>
+0369 <span class="comment">%         llh            p(y(k)|x(k))</span>
+0370 <span class="comment">%</span>
+0371 <span class="comment">%-- This function must be defined by the user!</span>
+0372 
+0373 
+0374 <span class="comment">%===============================================================================================</span>
+0375 <a name="_sub7" href="#_subfunctions" class="code">function INNOV = innovation(model, obs, observ)</a>
+0376 
+0377 <span class="comment">% INNOVATION  Innovation model</span>
+0378 <span class="comment">%</span>
+0379 <span class="comment">%   INNOV = INNOVATION(MODEL, STATE, OBS, OBSERV) : Calculates the innovation signal (difference) between the</span>
+0380 <span class="comment">%   output of HFUN, i.e. OBSERV (the predicted system observation) and an actual 'real world' observation OBS.</span>
+0381 <span class="comment">%   This function might be as simple as INNOV = OBS - OBSERV, which is the default case, but can also be more</span>
+0382 <span class="comment">%   complex for complex measurement processes where for example multiple (possibly false) observations can be</span>
+0383 <span class="comment">%   observed for a given hidden ground truth.</span>
+0384 
+0385 <span class="comment">%-- This function must be redefined by the user if the specific real world observation process dictates it</span>
+0386 
+0387 
+0388 <span class="comment">%===============================================================================================</span>
+0389 <a name="_sub8" href="#_subfunctions" class="code">function out = linearize(model, state, V, N, U1, U2, term, idxVector)</a>
+0390 
+0391 <span class="comment">% LINEARIZE</span>
+0392 <span class="comment">%</span>
+0393 <span class="comment">%   OUT = LINEARIZE(MODEL, STATE, V, N, U1, U2, TERM, IDXVECTOR) returns a linearized model of the</span>
+0394 <span class="comment">%   form</span>
+0395 <span class="comment">%           state(k) = A*state(k-1) + B*u1(k-1) + G*v(k-1)</span>
+0396 <span class="comment">%               y(k) = C*state(k)   + D*u2(k)   + H*n(k)</span>
+0397 <span class="comment">%</span>
+0398 <span class="comment">%   for an arbitrary model defined by this GSSM file. The string TERM specifies which of the</span>
+0399 <span class="comment">%   model terms are returned, i.e.</span>
+0400 <span class="comment">%</span>
+0401 <span class="comment">%   A = linearize(model, state, v, n, u1, u2, 'A') or</span>
+0402 <span class="comment">%   O = linearize(model, state, v, n, u1, u2, 'H') etc.</span>
+0403 <span class="comment">%</span>
+0404 <span class="comment">%   TERM can be one of the following, 'A','B','C','D','G','H','JFW','JHW' , where 'JFW' and 'JHW'</span>
+0405 <span class="comment">%   are the partial derivatives of FFUN and HFUN with respect to the system parameters.</span>
+0406 <span class="comment">%</span>
+0407 <span class="comment">%   INDEX_VECTOR is an optional argument indicating which subset of the independent vector should be used to calculate</span>
+0408 <span class="comment">%   any specific derivative. This will result in a Jacobian matrix with a reduced number of columns,</span>
+0409 <span class="comment">%   corresponding with the subvector as defined by index_vector. The default (when this argument is ommitted)</span>
+0410 <span class="comment">%   is to use the full vector.</span>
+0411 <span class="comment">%</span>
+0412 <span class="comment">%   Generic perturbation based linearization subunits are provided. These can (and should) be replaced</span>
+0413 <span class="comment">%   by user defined analytical derivative code if available. If no linearization function is available</span>
+0414 <span class="comment">%   or is not needed, a call to this function should return an error message.</span>
+0415 <span class="comment">%</span>
+0416 
+0417   nia = nargin;                      <span class="comment">% number of input arguments</span>
+0418   <span class="keyword">if</span> (nia &lt; 7)
+0419     error(<span class="string">'[ linearize ] Not enough input arguments! '</span>);
+0420   <span class="keyword">end</span>
+0421 
+0422   epsilon = 1e-8;                    <span class="comment">% perturbation step size</span>
+0423 
+0424   <span class="keyword">switch</span> (term)
+0425 
+0426     <span class="keyword">case</span> <span class="string">'A'</span>
+0427       <span class="comment">%%%========================================================</span>
+0428       <span class="comment">%%%             Calculate A = dffun/dstate</span>
+0429       <span class="comment">%%%========================================================</span>
+0430       <span class="keyword">if</span> (nia==7), index_vector=[1:model.statedim]; <span class="keyword">end</span>
+0431       liv = length(index_vector);
+0432       A  = zeros(model.statedim, liv);
+0433       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0434       f1 = model.ffun(model,state,V,U1);
+0435       <span class="keyword">for</span> j=1:liv,
+0436         s = state;
+0437         k = index_vector(j);
+0438         s(k) = s(k) + epsilon;
+0439         f2 = model.ffun(model,s,V,U1);
+0440         A(:,j) = (f2-f1)/epsilon;
+0441       <span class="keyword">end</span>
+0442       <span class="comment">%%%--------------------------------------------------------</span>
+0443       out = A;
+0444 
+0445 
+0446     <span class="keyword">case</span> <span class="string">'B'</span>
+0447       <span class="comment">%%%========================================================</span>
+0448       <span class="comment">%%%             Calculate B = dffun/dU1</span>
+0449       <span class="comment">%%%========================================================</span>
+0450       <span class="keyword">if</span> (nia==7), index_vector=[1:model.U1dim]; <span class="keyword">end</span>
+0451       liv = length(index_vector);
+0452       B = zeros(model.statedim, liv);
+0453       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0454       f1 = model.ffun(model,state,V,U1);
+0455       <span class="keyword">for</span> j=1:liv,
+0456         Utemp = U1;
+0457         k = index_vector(j);
+0458         Utemp(k) = Utemp(k) + epsilon;
+0459         f2 = model.ffun(model,state,V,Utemp);
+0460         B(:,j) = (f2-f1)/epsilon;
+0461       <span class="keyword">end</span>
+0462       <span class="comment">%%%--------------------------------------------------------</span>
+0463       out = B;
+0464 
+0465 
+0466     <span class="keyword">case</span> <span class="string">'C'</span>
+0467       <span class="comment">%%%========================================================</span>
+0468       <span class="comment">%%%             Calculate C = dhfun/dx</span>
+0469       <span class="comment">%%%========================================================</span>
+0470       <span class="keyword">if</span> (nia==7), index_vector=[1:model.statedim]; <span class="keyword">end</span>
+0471       liv = length(index_vector);
+0472       C = zeros(model.obsdim, liv);
+0473       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0474       f3 = model.hfun(model,state,N,U2);
+0475       <span class="keyword">for</span> j=1:liv,
+0476         s = state;
+0477         k = index_vector(j);
+0478         s(k) = s(k) + epsilon;
+0479         f4 = model.hfun(model,s,N,U2);
+0480         C(:,j) = (f4-f3)/epsilon;
+0481       <span class="keyword">end</span>
+0482       <span class="comment">%%%--------------------------------------------------------</span>
+0483       out = C;
+0484 
+0485 
+0486     <span class="keyword">case</span> <span class="string">'D'</span>
+0487       <span class="comment">%%%========================================================</span>
+0488       <span class="comment">%%%             Calculate D = dhfun/dU2</span>
+0489       <span class="comment">%%%========================================================</span>
+0490       <span class="keyword">if</span> (nia==7), index_vector=[1:model.U2dim]; <span class="keyword">end</span>
+0491       liv = length(index_vector);
+0492       D = zeros(model.obsdim, liv);
+0493       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0494       f3 = model.hfun(model,state,N,U2);
+0495       <span class="keyword">for</span> j=1:liv,
+0496         Utemp = U2;
+0497         k = index_vector(j);
+0498         Utemp(k) = Utemp(k) + epsilon;
+0499         f4 = model.hfun(model,state,N,Utemp);
+0500         D(:,j) = (f4-f3)/epsilon;
+0501       <span class="keyword">end</span>
+0502       <span class="comment">%%%--------------------------------------------------------</span>
+0503       out = D;
+0504 
+0505 
+0506     <span class="keyword">case</span> <span class="string">'G'</span>
+0507       <span class="comment">%%%========================================================</span>
+0508       <span class="comment">%%%             Calculate G = dffun/dv</span>
+0509       <span class="comment">%%%========================================================</span>
+0510       <span class="keyword">if</span> (nia==7), index_vector=[1:model.Vdim]; <span class="keyword">end</span>
+0511       liv = length(index_vector);
+0512       G = zeros(model.statedim, liv);
+0513       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0514       f1 = model.ffun(model,state,V,U1);
+0515       <span class="keyword">for</span> j=1:liv,
+0516         Vtemp = V;
+0517         k = index_vector(j);
+0518         Vtemp(k) = Vtemp(k) + epsilon;
+0519         f5 = model.ffun(model,state,Vtemp,U1);
+0520         G(:,j) = (f5-f1)/epsilon;
+0521       <span class="keyword">end</span>
+0522       <span class="comment">%%%--------------------------------------------------------</span>
+0523       out = G;
+0524 
+0525 
+0526     <span class="keyword">case</span> <span class="string">'H'</span>
+0527       <span class="comment">%%%========================================================</span>
+0528       <span class="comment">%%%             Calculate H = dhfun/dn</span>
+0529       <span class="comment">%%%========================================================</span>
+0530       <span class="keyword">if</span> (nia==7), index_vector=[1:model.Ndim]; <span class="keyword">end</span>
+0531       liv = length(index_vector);
+0532       H = zeros(model.obsdim, liv);
+0533       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0534       f3 = model.hfun(model,state,N,U2);
+0535       <span class="keyword">for</span> j=1:liv,
+0536         Ntemp = N;
+0537         k = index_vector(j);
+0538         Ntemp(k) = Ntemp(k) + epsilon;
+0539         f6 = model.hfun(model,state,Ntemp,U2);
+0540         H(:,j) = (f6-f3)/epsilon;
+0541       <span class="keyword">end</span>
+0542       <span class="comment">%%%--------------------------------------------------------</span>
+0543       out = H;
+0544 
+0545 
+0546     <span class="keyword">case</span> <span class="string">'JFW'</span>
+0547       <span class="comment">%%%========================================================</span>
+0548       <span class="comment">%%%             Calculate  = dffun/dparameters</span>
+0549       <span class="comment">%%%========================================================</span>
+0550       <span class="keyword">if</span> (nia==7), index_vector=[1:model.paramdim]; <span class="keyword">end</span>
+0551       liv = length(index_vector);
+0552       JFW = zeros(model.statedim, liv);
+0553       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0554       f1 = model.ffun(model,state,V,U1);
+0555       old_params = model.params;                         <span class="comment">% save current model parameters</span>
+0556       <span class="keyword">for</span> j=1:liv,
+0557         params = old_params;
+0558         k = index_vector(j);
+0559         params(k) = params(k) + epsilon;
+0560         model = <a href="#_sub2" class="code" title="subfunction model = setparams(model, params, idxVector)">setparams</a>(model,params);
+0561         f7 = model.ffun(model,state,V,U1);
+0562         JFW(:,j) = (f7-f1)/epsilon;
+0563       <span class="keyword">end</span>
+0564       <span class="comment">%%%--------------------------------------------------------</span>
+0565       out = JFW;
+0566 
+0567 
+0568     <span class="keyword">case</span> <span class="string">'JHW'</span>
+0569       <span class="comment">%%%========================================================</span>
+0570       <span class="comment">%%%             Calculate  = dhfun/dparameters</span>
+0571       <span class="comment">%%%========================================================</span>
+0572       <span class="keyword">if</span> (nia==7), index_vector=[1:model.paramdim]; <span class="keyword">end</span>
+0573       liv = length(index_vector);
+0574       JHW = zeros(model.obsdim, liv);
+0575       <span class="comment">%%%---------- replace this section if needed --------------</span>
+0576       f3 = model.hfun(model,state,N,U2);
+0577       old_params = model.params;                         <span class="comment">% save current model parameters</span>
+0578       <span class="keyword">for</span> j=1:liv,
+0579         params = old_params;
+0580         k = index_vector(j);
+0581         params(k) = params(k) + epsilon;
+0582         model = <a href="#_sub2" class="code" title="subfunction model = setparams(model, params, idxVector)">setparams</a>(model,params);
+0583         f8 = model.hfun(model,state,N,U2);
+0584         JHW(:,j) = (f8-f3)/epsilon;
+0585       <span class="keyword">end</span>
+0586       <span class="comment">%%%--------------------------------------------------------</span>
+0587       out = JHW;
+0588 
+0589     <span class="keyword">otherwise</span>
+0590       error(<span class="string">'[ linearize ] Invalid linearization term requested!'</span>);
+0591 
+0592   <span class="keyword">end</span>
+0593 
+0594   <span class="comment">%--------------------------------------------------------------------------------------</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

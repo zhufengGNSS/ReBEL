@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mdn</title>
+  <meta name="keywords" content="mdn">
+  <meta name="description" content="MDN	Creates a Mixture Density Network with specified architecture.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mdn.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mdn
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MDN	Creates a Mixture Density Network with specified architecture.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = mdn(nin, nhidden, ncentres, dim_target, mix_type,prior, beta) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MDN    Creates a Mixture Density Network with specified architecture.
+
+    Description
+    NET = MDN(NIN, NHIDDEN, NCENTRES, DIMTARGET) takes the number of
+    inputs,  hidden units for a 2-layer feed-forward  network and the
+    number of centres and target dimension for the  mixture model whose
+    parameters are set from the outputs of the neural network. The fifth
+    argument MIXTYPE is used to define the type of mixture model.
+    (Currently there is only one type supported: a mixture of Gaussians
+    with a single covariance parameter for each component.) For this
+    model, the mixture coefficients are computed from a group of softmax
+    outputs, the centres are equal to a group of linear outputs, and the
+    variances are  obtained by applying the exponential function to a
+    third group of outputs.
+
+    The network is initialised by a call to MLP, and the arguments PRIOR,
+    and BETA have the same role as for that function. Weight
+    initialisation uses the Matlab function RANDN  and so the seed for
+    the random weight initialization can be  set using RANDN('STATE', S)
+    where S is the seed value. A specialised data structure (rather than
+    GMM) is used for the mixture model outputs to improve the efficiency
+    of error and gradient calculations in network training. The fields
+    are described in MDNFWD where they are set up.
+
+    The fields in NET are
+      
+      type = 'mdn'
+      nin = number of input variables
+      nout = dimension of target space (not number of network outputs)
+      nwts = total number of weights and biases
+      mdnmixes = data structure for mixture model output
+      mlp = data structure for MLP network
+
+    See also
+    <a href="mdnfwd.html" class="code" title="function [mixparams, y, z, a] = mdnfwd(net, x)">MDNFWD</a>, <a href="mdnerr.html" class="code" title="function e = mdnerr(net, x, t)">MDNERR</a>, <a href="mdn2gmm.html" class="code" title="function gmmmixes = mdn2gmm(mdnmixes)">MDN2GMM</a>, <a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">MDNGRAD</a>, <a href="mdnpak.html" class="code" title="function w = mdnpak(net)">MDNPAK</a>, <a href="mdnunpak.html" class="code" title="function net = mdnunpak(net, w)">MDNUNPAK</a>, <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>	MLP	Create a 2-layer feedforward network.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demmdn1.html" class="code" title="">demmdn1</a>	DEMMDN1 Demonstrate fitting a multi-valued function using a Mixture Density Network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = mdn(nin, nhidden, ncentres, dim_target, mix_type, </a><span class="keyword">...</span>
+0002     prior, beta)
+0003 <span class="comment">%MDN    Creates a Mixture Density Network with specified architecture.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    NET = MDN(NIN, NHIDDEN, NCENTRES, DIMTARGET) takes the number of</span>
+0007 <span class="comment">%    inputs,  hidden units for a 2-layer feed-forward  network and the</span>
+0008 <span class="comment">%    number of centres and target dimension for the  mixture model whose</span>
+0009 <span class="comment">%    parameters are set from the outputs of the neural network. The fifth</span>
+0010 <span class="comment">%    argument MIXTYPE is used to define the type of mixture model.</span>
+0011 <span class="comment">%    (Currently there is only one type supported: a mixture of Gaussians</span>
+0012 <span class="comment">%    with a single covariance parameter for each component.) For this</span>
+0013 <span class="comment">%    model, the mixture coefficients are computed from a group of softmax</span>
+0014 <span class="comment">%    outputs, the centres are equal to a group of linear outputs, and the</span>
+0015 <span class="comment">%    variances are  obtained by applying the exponential function to a</span>
+0016 <span class="comment">%    third group of outputs.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    The network is initialised by a call to MLP, and the arguments PRIOR,</span>
+0019 <span class="comment">%    and BETA have the same role as for that function. Weight</span>
+0020 <span class="comment">%    initialisation uses the Matlab function RANDN  and so the seed for</span>
+0021 <span class="comment">%    the random weight initialization can be  set using RANDN('STATE', S)</span>
+0022 <span class="comment">%    where S is the seed value. A specialised data structure (rather than</span>
+0023 <span class="comment">%    GMM) is used for the mixture model outputs to improve the efficiency</span>
+0024 <span class="comment">%    of error and gradient calculations in network training. The fields</span>
+0025 <span class="comment">%    are described in MDNFWD where they are set up.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%    The fields in NET are</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%      type = 'mdn'</span>
+0030 <span class="comment">%      nin = number of input variables</span>
+0031 <span class="comment">%      nout = dimension of target space (not number of network outputs)</span>
+0032 <span class="comment">%      nwts = total number of weights and biases</span>
+0033 <span class="comment">%      mdnmixes = data structure for mixture model output</span>
+0034 <span class="comment">%      mlp = data structure for MLP network</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%    See also</span>
+0037 <span class="comment">%    MDNFWD, MDNERR, MDN2GMM, MDNGRAD, MDNPAK, MDNUNPAK, MLP</span>
+0038 <span class="comment">%</span>
+0039 
+0040 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0041 <span class="comment">%    David J Evans (1998)</span>
+0042 
+0043 <span class="comment">% Currently ignore type argument: reserved for future use</span>
+0044 net.type = <span class="string">'mdn'</span>;
+0045 
+0046 <span class="comment">% Set up the mixture model part of the structure</span>
+0047 <span class="comment">% For efficiency we use a specialised data structure in place of GMM</span>
+0048 mdnmixes.type = <span class="string">'mdnmixes'</span>;
+0049 mdnmixes.ncentres = ncentres;
+0050 mdnmixes.dim_target = dim_target;
+0051 
+0052 <span class="comment">% This calculation depends on spherical variances</span>
+0053 mdnmixes.nparams = ncentres + ncentres*dim_target + ncentres;
+0054 
+0055 <span class="comment">% Make the weights in the mdnmixes structure null</span>
+0056 mdnmixes.mixcoeffs = [];
+0057 mdnmixes.centres = [];
+0058 mdnmixes.covars = [];
+0059 
+0060 <span class="comment">% Number of output nodes = number of parameters in mixture model</span>
+0061 nout = mdnmixes.nparams;
+0062 
+0063 <span class="comment">% Set up the MLP part of the network</span>
+0064 <span class="keyword">if</span> (nargin == 5)
+0065   mlpnet = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(nin, nhidden, nout, <span class="string">'linear'</span>);
+0066 <span class="keyword">elseif</span> (nargin == 6)
+0067   mlpnet = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(nin, nhidden, nout, <span class="string">'linear'</span>, prior);
+0068 <span class="keyword">elseif</span> (nargin == 7)
+0069   mlpnet = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(nin, nhidden, nout, <span class="string">'linear'</span>, prior, beta);
+0070 <span class="keyword">end</span>
+0071 
+0072 <span class="comment">% Create descriptor</span>
+0073 net.mdnmixes = mdnmixes;
+0074 net.mlp = mlpnet;
+0075 net.nin = nin;
+0076 net.nout = dim_target;
+0077 net.nwts = mlpnet.nwts;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

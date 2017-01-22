@@ -1,0 +1,109 @@
+Version 0.2.7 (bugfix)
+======================
+* Fixed a few small bugs in 'geninfds.m'. These only manifested themselves in 
+  certain rare circumstances. 
+
+* Added m2html documentation (provided by Alexei Ivanov)
+
+* Updated to Netlab version 3.3
+
+* rewrote feval calls as function calls
+
+* removed ffun_type and hfun_type from GSSM since they were unused
+
+Version 0.2.6 (bugfix)
+======================
+
+* Fixed a number of small bugs in 'geninfds.m'. These only manifested themselves in 
+  certain rare circumstances. 
+
+* Updated example code. Fixed bug in dual estimation demo, 'demspeech_dual.m'.
+
+
+Version 0.2.5 (bugfix)
+======================
+
+* Fixed bug in UKF and SRUKF which incorrectly calculated predicted
+  observations of angular state quantities. This was once again due
+  to a typo in the name of an intermediate variable.
+
+* Measurement update in all SPKF filters that dealt with angular state
+  components (i.e. that have discontinuities at +- pi radians) used the
+  wrong prior RV for the update. This was due to a typo which is now fixed
+  and tested to work correctly.
+
+* Fixed a bug in the Robbins-Monro and Annealing process noise covariance
+  adaptation routines in SRUKF and SRCDKF which over estimated the resulting
+  process noise covariance.
+
+* Minor updates in example code. Rechecked all examples to ensure 
+  compatibility with updated core routines.
+
+
+Version 0.2.4 (bugfix)
+======================
+
+* Converted data MAT files in examples/data directory to new Matlab 6.5 
+  (R13.1) format. This should fix the problem of Matlab under Windows 
+  reporting that the MAT files are corrupted. This problem was not 
+  evident under Linux.
+  
+* Corrected some out of date inline documentation in the GSSM template
+  file, 'gssm.m'. There were also a few errors in the argument lists of
+  one or two functions.
+  
+
+Version 0.2.3 (bugfix)
+======================
+
+* Typo/indexing bug causing run-time error in measurement update for parameter
+  estimation in 'srukf.m' fixed.
+
+* Typo/bug in 'ukf.m' and 'cdkf.m' in process noise adaptation method. Used
+  field 'InfDS.pNoise.adaptParams' in stead of 'pNoise.adaptParams'. This 
+  caused a runtime error. Fixed.
+
+
+Version 0.2.2 (bugfix)
+======================
+
+* Fixed typos in UKF, CDKF, SRCDKF and SRUKF for time and measurement 
+  updates of systems that have angular state or observation vector 
+  components (see below). A variable name was misspelled which caused a 
+  runtime error under certain conditions.
+  
+* Updated missing optional fields in gssm.m for angular components in state
+  or observation vectors
+       
+       model.stateAngleCompIdxVec
+       model.obsAngleCompIdxVec
+   
+  These two (optional) fields are index vectors indicating which of the system
+  state vector components and/or observation vector components are angular
+  quantities that have discontinuities at +- pi radians. This is needed for 
+  correct operation of all SPKF based inference algorithms.
+
+
+Version 0.2.1 (bugfix)
+======================
+
+* Fixed bug in examples/dual_estimation/demspeech_dual.m : State covariance
+  was not correctly reinitialized.
+	
+* Fixed bug in core/gssm.m : Passed wrong noise variable to state transition
+  function in generic perturbation based linearization function.
+
+
+Version 0.1.1 (bugfix)
+======================
+
+* A couple of files where missing from the distribution. These where
+  added.
+
+* Added 'addrelpath.m' and 'remrelpath.m'. These functions add and
+  remove relative paths from the current MATLABPATH. This is needed
+  since relative symbolic links does not work on Windows and cannot
+  be stored in CVS. Symbolic links where used (v 0.1) in the example
+  directories to point to the needed 'gssm' files and data
+  files. These where removed and there functionality where replaced by
+  using the above mentioned new functions.

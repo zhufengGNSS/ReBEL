@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of glmunpak</title>
+  <meta name="keywords" content="glmunpak">
+  <meta name="description" content="GLMUNPAK Separates weights vector into weight and bias matrices.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; glmunpak.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>glmunpak
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GLMUNPAK Separates weights vector into weight and bias matrices.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = glmunpak(net, w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GLMUNPAK Separates weights vector into weight and bias matrices. 
+
+    Description
+    NET = GLMUNPAK(NET, W) takes a glm network data structure NET and  a
+    weight vector W, and returns a network data structure identical to
+    the input network, except that the first-layer weight matrix W1 and
+    the first-layer bias vector B1 have been set to the corresponding
+    elements of W.
+
+    See also
+    <a href="glm.html" class="code" title="function net = glm(nin, nout, outfunc, prior, beta)">GLM</a>, <a href="glmpak.html" class="code" title="function w = glmpak(net)">GLMPAK</a>, <a href="glmfwd.html" class="code" title="function [y, a] = glmfwd(net, x)">GLMFWD</a>, <a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">GLMERR</a>, <a href="glmgrad.html" class="code" title="function [g, gdata, gprior] = glmgrad(net, x, t)">GLMGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="glminit.html" class="code" title="function net = glminit(net, prior)">glminit</a>	GLMINIT Initialise the weights in a generalized linear model.</li><li><a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">glmtrain</a>	GLMTRAIN Specialised training of generalized linear model</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = glmunpak(net, w)</a>
+0002 <span class="comment">%GLMUNPAK Separates weights vector into weight and bias matrices.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = GLMUNPAK(NET, W) takes a glm network data structure NET and  a</span>
+0006 <span class="comment">%    weight vector W, and returns a network data structure identical to</span>
+0007 <span class="comment">%    the input network, except that the first-layer weight matrix W1 and</span>
+0008 <span class="comment">%    the first-layer bias vector B1 have been set to the corresponding</span>
+0009 <span class="comment">%    elements of W.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    GLM, GLMPAK, GLMFWD, GLMERR, GLMGRAD</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 <span class="comment">% Check arguments for consistency</span>
+0018 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'glm'</span>);
+0019 <span class="keyword">if</span> ~errstring
+0020   error(errstring);
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="keyword">if</span> net.nwts ~= length(w)
+0024   error(<span class="string">'Invalid weight vector length'</span>)
+0025 <span class="keyword">end</span>
+0026 
+0027 nin = net.nin;
+0028 nout = net.nout;
+0029 net.w1 = reshape(w(1:nin*nout), nin, nout);
+0030 net.b1 = reshape(w(nin*nout + 1: (nin + 1)*nout), 1, nout);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

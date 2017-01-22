@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of eigdec</title>
+  <meta name="keywords" content="eigdec">
+  <meta name="description" content="EIGDEC	Sorted eigendecomposition">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; eigdec.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>eigdec
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>EIGDEC	Sorted eigendecomposition</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [evals, evec] = eigdec(x, N) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EIGDEC    Sorted eigendecomposition
+
+    Description
+     EVALS = EIGDEC(X, N computes the largest N eigenvalues of the
+    matrix X in descending order.  [EVALS, EVEC] = EIGDEC(X, N) also
+    computes the corresponding eigenvectors.
+
+    See also
+    <a href="pca.html" class="code" title="function [PCcoeff, PCvec] = pca(data, N)">PCA</a>, <a href="ppca.html" class="code" title="function [var, U, lambda] = ppca(x, ppca_dim)">PPCA</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="pca.html" class="code" title="function [PCcoeff, PCvec] = pca(data, N)">pca</a>	PCA	Principal Components Analysis</li><li><a href="ppca.html" class="code" title="function [var, U, lambda] = ppca(x, ppca_dim)">ppca</a>	PPCA	Probabilistic Principal Components Analysis</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [evals, evec] = eigdec(x, N)</a>
+0002 <span class="comment">%EIGDEC    Sorted eigendecomposition</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     EVALS = EIGDEC(X, N computes the largest N eigenvalues of the</span>
+0006 <span class="comment">%    matrix X in descending order.  [EVALS, EVEC] = EIGDEC(X, N) also</span>
+0007 <span class="comment">%    computes the corresponding eigenvectors.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    See also</span>
+0010 <span class="comment">%    PCA, PPCA</span>
+0011 <span class="comment">%</span>
+0012 
+0013 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0014 
+0015 <span class="keyword">if</span> nargout == 1
+0016    evals_only = logical(1);
+0017 <span class="keyword">else</span>
+0018    evals_only = logical(0);
+0019 <span class="keyword">end</span>
+0020 
+0021 <span class="keyword">if</span> N ~= round(N) | N &lt; 1 | N &gt; size(x, 2)
+0022    error(<span class="string">'Number of PCs must be integer, &gt;0, &lt; dim'</span>);
+0023 <span class="keyword">end</span>
+0024 
+0025 <span class="comment">% Find the eigenvalues of the data covariance matrix</span>
+0026 <span class="keyword">if</span> evals_only
+0027    <span class="comment">% Use eig function as always more efficient than eigs here</span>
+0028    temp_evals = eig(x);
+0029 <span class="keyword">else</span>
+0030    <span class="comment">% Use eig function unless fraction of eigenvalues required is tiny</span>
+0031    <span class="keyword">if</span> (N/size(x, 2)) &gt; 0.04
+0032       [temp_evec, temp_evals] = eig(x);
+0033    <span class="keyword">else</span>
+0034       options.disp = 0;
+0035       [temp_evec, temp_evals] = eigs(x, N, <span class="string">'LM'</span>, options);
+0036    <span class="keyword">end</span>
+0037    temp_evals = diag(temp_evals);
+0038 <span class="keyword">end</span>
+0039 
+0040 <span class="comment">% Eigenvalues nearly always returned in descending order, but just</span>
+0041 <span class="comment">% to make sure.....</span>
+0042 [evals perm] = sort(-temp_evals);
+0043 evals = -evals(1:N);
+0044 <span class="keyword">if</span> ~evals_only
+0045    <span class="keyword">if</span> evals == temp_evals(1:N)
+0046       <span class="comment">% Originals were in order</span>
+0047       evec = temp_evec(:, 1:N);
+0048       <span class="keyword">return</span>
+0049    <span class="keyword">else</span>
+0050       <span class="comment">% Need to reorder the eigenvectors</span>
+0051       <span class="keyword">for</span> i=1:N
+0052          evec(:,i) = temp_evec(:,perm(i));
+0053       <span class="keyword">end</span>
+0054    <span class="keyword">end</span>
+0055 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

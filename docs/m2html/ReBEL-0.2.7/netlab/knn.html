@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of knn</title>
+  <meta name="keywords" content="knn">
+  <meta name="description" content="KNN	Creates a K-nearest-neighbour classifier.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; knn.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>knn
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>KNN	Creates a K-nearest-neighbour classifier.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = knn(nin, nout, k, tr_in, tr_targets) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">KNN    Creates a K-nearest-neighbour classifier.
+
+    Description
+    NET = KNN(NIN, NOUT, K, TR_IN, TR_TARGETS) creates a KNN model NET
+    with input dimension NIN, output dimension NOUT and K neighbours.
+    The training data is also stored in the data structure and the
+    targets are assumed to be using a 1-of-N coding.
+
+    The fields in NET are
+      type = 'knn'
+      nin = number of inputs
+      nout = number of outputs
+      tr_in = training input data
+      tr_targets = training target data
+
+    See also
+    <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">KMEANS</a>, <a href="knnfwd.html" class="code" title="function [y, l] = knnfwd(net, x)">KNNFWD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demknn1.html" class="code" title="">demknn1</a>	DEMKNN1 Demonstrate nearest neighbour classifier.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = knn(nin, nout, k, tr_in, tr_targets)</a>
+0002 
+0003 <span class="comment">%KNN    Creates a K-nearest-neighbour classifier.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    NET = KNN(NIN, NOUT, K, TR_IN, TR_TARGETS) creates a KNN model NET</span>
+0007 <span class="comment">%    with input dimension NIN, output dimension NOUT and K neighbours.</span>
+0008 <span class="comment">%    The training data is also stored in the data structure and the</span>
+0009 <span class="comment">%    targets are assumed to be using a 1-of-N coding.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    The fields in NET are</span>
+0012 <span class="comment">%      type = 'knn'</span>
+0013 <span class="comment">%      nin = number of inputs</span>
+0014 <span class="comment">%      nout = number of outputs</span>
+0015 <span class="comment">%      tr_in = training input data</span>
+0016 <span class="comment">%      tr_targets = training target data</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    See also</span>
+0019 <span class="comment">%    KMEANS, KNNFWD</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0023 
+0024 
+0025 
+0026 net.type = <span class="string">'knn'</span>;
+0027 
+0028 net.nin = nin;
+0029 
+0030 net.nout = nout;
+0031 
+0032 net.k = k;
+0033 
+0034 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'knn'</span>, tr_in, tr_targets);
+0035 
+0036 <span class="keyword">if</span> ~isempty(errstring)
+0037 
+0038   error(errstring);
+0039 
+0040 <span class="keyword">end</span>
+0041 
+0042 net.tr_in = tr_in; 
+0043 
+0044 net.tr_targets = tr_targets;
+0045 
+0046 
+0047</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

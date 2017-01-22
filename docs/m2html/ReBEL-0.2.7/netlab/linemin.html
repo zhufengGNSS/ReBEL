@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of linemin</title>
+  <meta name="keywords" content="linemin">
+  <meta name="description" content="LINEMIN One dimensional minimization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; linemin.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>linemin
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>LINEMIN One dimensional minimization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x, options] = linemin(f, pt, dir, fpt, options,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">LINEMIN One dimensional minimization.
+
+    Description
+    [X, OPTIONS] = LINEMIN(F, PT, DIR, FPT, OPTIONS) uses Brent's
+    algorithm to find the minimum of the function F(X) along the line DIR
+    through the point PT.  The function value at the starting point is
+    FPT.  The point at which F has a local minimum is returned as X.  The
+    function value at that point is returned in OPTIONS(8).
+
+    LINEMIN(F, PT, DIR, FPT, OPTIONS, P1, P2, ...) allows  additional
+    arguments to be passed to F().
+
+    The optional parameters have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values.
+
+    OPTIONS(2) is a measure of the absolute precision required for the
+    value of X at the solution.
+
+    OPTIONS(3) is a measure of the precision required of the objective
+    function at the solution.  Both this and the previous condition must
+    be satisfied for termination.
+
+    OPTIONS(14) is the maximum number of iterations; default 100.
+
+    See also
+    <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="minbrack.html" class="code" title="function  [br_min, br_mid, br_max, num_evals] = minbrack(f, a, b, fa,varargin)">MINBRACK</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x, options] = linemin(f, pt, dir, fpt, options, </a><span class="keyword">...</span>
+0002     varargin)
+0003 <span class="comment">%LINEMIN One dimensional minimization.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    [X, OPTIONS] = LINEMIN(F, PT, DIR, FPT, OPTIONS) uses Brent's</span>
+0007 <span class="comment">%    algorithm to find the minimum of the function F(X) along the line DIR</span>
+0008 <span class="comment">%    through the point PT.  The function value at the starting point is</span>
+0009 <span class="comment">%    FPT.  The point at which F has a local minimum is returned as X.  The</span>
+0010 <span class="comment">%    function value at that point is returned in OPTIONS(8).</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    LINEMIN(F, PT, DIR, FPT, OPTIONS, P1, P2, ...) allows  additional</span>
+0013 <span class="comment">%    arguments to be passed to F().</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    The optional parameters have the following interpretations.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    OPTIONS(1) is set to 1 to display error values.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    OPTIONS(2) is a measure of the absolute precision required for the</span>
+0020 <span class="comment">%    value of X at the solution.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    OPTIONS(3) is a measure of the precision required of the objective</span>
+0023 <span class="comment">%    function at the solution.  Both this and the previous condition must</span>
+0024 <span class="comment">%    be satisfied for termination.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    OPTIONS(14) is the maximum number of iterations; default 100.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%    See also</span>
+0029 <span class="comment">%    CONJGRAD, MINBRACK, QUASINEW</span>
+0030 <span class="comment">%</span>
+0031 
+0032 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0033 
+0034 <span class="comment">% Set up the options.</span>
+0035 <span class="keyword">if</span>(options(14))
+0036   niters = options(14);
+0037 <span class="keyword">else</span>
+0038   niters = 100;
+0039 <span class="keyword">end</span>
+0040 options(10) = 0; <span class="comment">% Initialise count of function evaluations</span>
+0041 
+0042 display = options(1);
+0043 
+0044 <span class="comment">% Check function string</span>
+0045 f = fcnchk(f, length(varargin));
+0046 
+0047 <span class="comment">% Value of golden section (1 + sqrt(5))/2.0</span>
+0048 phi = 1.6180339887499;
+0049 cphi = 1 - 1/phi;
+0050 TOL = sqrt(eps);    <span class="comment">% Maximal fractional precision</span>
+0051 TINY = 1.0e-10;         <span class="comment">% Can't use fractional precision when minimum is at 0</span>
+0052 
+0053 <span class="comment">% Bracket the minimum</span>
+0054 [br_min, br_mid, br_max, num_evals] = feval(<span class="string">'minbrack'</span>, <span class="string">'linef'</span>, <span class="keyword">...</span>
+0055   0.0, 1.0, fpt, f, pt, dir, varargin{:});
+0056 options(10) = options(10) + num_evals;  <span class="comment">% Increment number of fn. evals</span>
+0057                     <span class="comment">% No gradient evals in minbrack</span>
+0058 
+0059 <span class="comment">% Use Brent's algorithm to find minimum</span>
+0060 <span class="comment">% Initialise the points and function values</span>
+0061 w = br_mid;       <span class="comment">% Where second from minimum is</span>
+0062 v = br_mid;       <span class="comment">% Previous value of w</span>
+0063 x = v;       <span class="comment">% Where current minimum is</span>
+0064 e = 0.0;     <span class="comment">% Distance moved on step before last</span>
+0065 fx = feval(<span class="string">'linef'</span>, x, f, pt, dir, varargin{:});
+0066 options(10) = options(10) + 1;
+0067 fv = fx; fw = fx;
+0068 
+0069 <span class="keyword">for</span> n = 1:niters
+0070   xm = 0.5.*(br_min+br_max);  <span class="comment">% Middle of bracket</span>
+0071   <span class="comment">% Make sure that tolerance is big enough</span>
+0072   tol1 = TOL * (max(abs(x))) + TINY;
+0073   <span class="comment">% Decide termination on absolute precision required by options(2)</span>
+0074   <span class="keyword">if</span> (max(abs(x - xm)) &lt;= options(2) &amp; br_max-br_min &lt; 4*options(2))
+0075     options(8) = fx;
+0076     <span class="keyword">return</span>;
+0077   <span class="keyword">end</span>
+0078   <span class="comment">% Check if step before last was big enough to try a parabolic step.</span>
+0079   <span class="comment">% Note that this will fail on first iteration, which must be a golden</span>
+0080   <span class="comment">% section step.</span>
+0081   <span class="keyword">if</span> (max(abs(e)) &gt; tol1)
+0082     <span class="comment">% Construct a trial parabolic fit through x, v and w</span>
+0083     r = (fx - fv) .* (x - w);
+0084     q = (fx - fw) .* (x - v);
+0085     p = (x - v).*q - (x - w).*r;
+0086     q = 2.0 .* (q - r);
+0087     <span class="keyword">if</span> (q &gt; 0.0) p = -p; <span class="keyword">end</span>
+0088     q = abs(q);
+0089     <span class="comment">% Test if the parabolic fit is OK</span>
+0090     <span class="keyword">if</span> (abs(p) &gt;= abs(0.5*q*e) | p &lt;= q*(br_min-x) | p &gt;= q*(br_max-x))
+0091       <span class="comment">% No it isn't, so take a golden section step</span>
+0092       <span class="keyword">if</span> (x &gt;= xm)
+0093         e = br_min-x;
+0094       <span class="keyword">else</span>
+0095         e = br_max-x;
+0096       <span class="keyword">end</span>
+0097       d = cphi*e;
+0098     <span class="keyword">else</span>
+0099       <span class="comment">% Yes it is, so take the parabolic step</span>
+0100       e = d;
+0101       d = p/q;
+0102       u = x+d;
+0103       <span class="keyword">if</span> (u-br_min &lt; 2*tol1 | br_max-u &lt; 2*tol1)
+0104         d = sign(xm-x)*tol1;
+0105       <span class="keyword">end</span>
+0106     <span class="keyword">end</span>
+0107   <span class="keyword">else</span>
+0108     <span class="comment">% Step before last not big enough, so take a golden section step</span>
+0109     <span class="keyword">if</span> (x &gt;= xm)
+0110       e = br_min - x;
+0111     <span class="keyword">else</span>
+0112       e = br_max - x;
+0113     <span class="keyword">end</span>
+0114     d = cphi*e;
+0115   <span class="keyword">end</span>
+0116   <span class="comment">% Make sure that step is big enough</span>
+0117   <span class="keyword">if</span> (abs(d) &gt;= tol1)
+0118     u = x+d;
+0119   <span class="keyword">else</span>
+0120     u = x + sign(d)*tol1;
+0121   <span class="keyword">end</span>
+0122   <span class="comment">% Evaluate function at u</span>
+0123   fu = feval(<span class="string">'linef'</span>, u, f, pt, dir, varargin{:});
+0124   options(10) = options(10) + 1;
+0125   <span class="comment">% Reorganise bracket</span>
+0126   <span class="keyword">if</span> (fu &lt;= fx)
+0127     <span class="keyword">if</span> (u &gt;= x)
+0128       br_min = x;
+0129     <span class="keyword">else</span>
+0130       br_max = x;
+0131     <span class="keyword">end</span>
+0132     v = w; w = x; x = u;
+0133     fv = fw; fw = fx; fx = fu;
+0134   <span class="keyword">else</span>
+0135     <span class="keyword">if</span> (u &lt; x)
+0136       br_min = u;   
+0137     <span class="keyword">else</span>
+0138       br_max = u;
+0139     <span class="keyword">end</span>
+0140     <span class="keyword">if</span> (fu &lt;= fw | w == x)
+0141       v = w; w = u;
+0142       fv = fw; fw = fu;
+0143     <span class="keyword">elseif</span> (fu &lt;= fv | v == x | v == w)
+0144       v = u;
+0145       fv = fu;
+0146     <span class="keyword">end</span>
+0147   <span class="keyword">end</span>
+0148   <span class="keyword">if</span> (display == 1)
+0149     fprintf(1, <span class="string">'Cycle %4d  Error %11.6f\n'</span>, n, fx);
+0150   <span class="keyword">end</span>
+0151 <span class="keyword">end</span>
+0152 options(8) = fx;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

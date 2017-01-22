@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlppak</title>
+  <meta name="keywords" content="mlppak">
+  <meta name="description" content="MLPPAK	Combines weights and biases into one weights vector.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlppak.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlppak
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPPAK	Combines weights and biases into one weights vector.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function w = mlppak(net) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPPAK    Combines weights and biases into one weights vector.
+
+    Description
+    W = MLPPAK(NET) takes a network data structure NET and combines the
+    component weight matrices bias vectors into a single row vector W.
+    The facility to switch between these two representations for the
+    network parameters is useful, for example, in training a network by
+    error function minimization, since a single vector of parameters can
+    be handled by general-purpose optimization routines.
+
+    The ordering of the paramters in W is defined by
+      w = [net.w1(:)', net.b1, net.w2(:)', net.b2];
+     where W1 is the first-layer weight matrix, B1 is the first-layer
+    bias vector, W2 is the second-layer weight matrix, and B2 is the
+    second-layer bias vector.
+
+    See also
+    <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mlpunpak.html" class="code" title="function net = mlpunpak(net, w)">MLPUNPAK</a>, <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">MLPFWD</a>, <a href="mlperr.html" class="code" title="function [e, edata, eprior, mse] = mlperr(net, x, t)">MLPERR</a>, <a href="mlpbkp.html" class="code" title="function g = mlpbkp(net, x, z, deltas)">MLPBKP</a>, <a href="mlpgrad.html" class="code" title="function [g, gdata, gprior] = mlpgrad(net, x, t)">MLPGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev1.html" class="code" title="">demev1</a>	DEMEV1	Demonstrate Bayesian regression for the MLP.</li><li><a href="demhmc2.html" class="code" title="">demhmc2</a>	DEMHMC2 Demonstrate Bayesian regression with Hybrid Monte Carlo sampling.</li><li><a href="demhmc3.html" class="code" title="">demhmc3</a>	DEMHMC3 Demonstrate Bayesian regression with Hybrid Monte Carlo sampling.</li><li><a href="mdnpak.html" class="code" title="function w = mdnpak(net)">mdnpak</a>	MDNPAK	Combines weights and biases into one weights vector.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = mlppak(net)</a>
+0002 <span class="comment">%MLPPAK    Combines weights and biases into one weights vector.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    W = MLPPAK(NET) takes a network data structure NET and combines the</span>
+0006 <span class="comment">%    component weight matrices bias vectors into a single row vector W.</span>
+0007 <span class="comment">%    The facility to switch between these two representations for the</span>
+0008 <span class="comment">%    network parameters is useful, for example, in training a network by</span>
+0009 <span class="comment">%    error function minimization, since a single vector of parameters can</span>
+0010 <span class="comment">%    be handled by general-purpose optimization routines.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    The ordering of the paramters in W is defined by</span>
+0013 <span class="comment">%      w = [net.w1(:)', net.b1, net.w2(:)', net.b2];</span>
+0014 <span class="comment">%     where W1 is the first-layer weight matrix, B1 is the first-layer</span>
+0015 <span class="comment">%    bias vector, W2 is the second-layer weight matrix, and B2 is the</span>
+0016 <span class="comment">%    second-layer bias vector.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    See also</span>
+0019 <span class="comment">%    MLP, MLPUNPAK, MLPFWD, MLPERR, MLPBKP, MLPGRAD</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0023 
+0024 <span class="comment">% Check arguments for consistency</span>
+0025 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'mlp'</span>);
+0026 <span class="keyword">if</span> ~isempty(errstring);
+0027   error(errstring);
+0028 <span class="keyword">end</span>
+0029 
+0030 w = [net.w1(:)', net.b1, net.w2(:)', net.b2];
+0031</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

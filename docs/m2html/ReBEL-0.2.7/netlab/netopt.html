@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of netopt</title>
+  <meta name="keywords" content="netopt">
+  <meta name="description" content="NETOPT	Optimize the weights in a network model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; netopt.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>netopt
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>NETOPT	Optimize the weights in a network model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [net, options, varargout] = netopt(net, options, x, t, alg); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">NETOPT    Optimize the weights in a network model. 
+
+    Description
+
+    NETOPT is a helper function which facilitates the training of
+    networks using the general purpose optimizers as well as sampling
+    from the posterior distribution of parameters using general purpose
+    Markov chain Monte Carlo sampling algorithms. It can be used with any
+    function that searches in parameter space using error and gradient
+    functions.
+
+    [NET, OPTIONS] = NETOPT(NET, OPTIONS, X, T, ALG) takes a network
+    data structure NET, together with a vector OPTIONS of parameters
+    governing the behaviour of the optimization algorithm, a matrix X of
+    input vectors and a matrix T of target vectors, and returns the
+    trained network as well as an updated OPTIONS vector. The string ALG
+    determines which optimization algorithm (CONJGRAD, QUASINEW, SCG,
+    etc.) or Monte Carlo algorithm (such as HMC) will be used.
+
+    [NET, OPTIONS, VARARGOUT] = NETOPT(NET, OPTIONS, X, T, ALG) also
+    returns any additional return values from the optimisation algorithm.
+
+    See also
+    <a href="netgrad.html" class="code" title="function g = netgrad(w, net, x, t)">NETGRAD</a>, BFGS, <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">GRADDESC</a>, <a href="hmc.html" class="code" title="function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin)">HMC</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>	NETPAK	Combines weights and biases into one weights vector.</li><li><a href="netunpak.html" class="code" title="function net = netunpak(net, w)">netunpak</a>	NETUNPAK Separates weights vector into weight and bias matrices.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demard.html" class="code" title="">demard</a>	DEMARD	Automatic relevance determination using the MLP.</li><li><a href="demev1.html" class="code" title="">demev1</a>	DEMEV1	Demonstrate Bayesian regression for the MLP.</li><li><a href="demev2.html" class="code" title="">demev2</a>	DEMEV2	Demonstrate Bayesian classification for the MLP.</li><li><a href="demev3.html" class="code" title="">demev3</a>	DEMEV3	Demonstrate Bayesian regression for the RBF.</li><li><a href="demgp.html" class="code" title="">demgp</a>	DEMGP	Demonstrate simple regression using a Gaussian Process.</li><li><a href="demgpard.html" class="code" title="">demgpard</a>	DEMGPARD Demonstrate ARD using a Gaussian Process.</li><li><a href="demmdn1.html" class="code" title="">demmdn1</a>	DEMMDN1 Demonstrate fitting a multi-valued function using a Mixture Density Network.</li><li><a href="demmlp1.html" class="code" title="">demmlp1</a>	DEMMLP1 Demonstrate simple regression using a multi-layer perceptron</li><li><a href="demmlp2.html" class="code" title="">demmlp2</a>	DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</li><li><a href="mlptrain.html" class="code" title="function [net, error] = mlptrain(net, x, t, its);">mlptrain</a>	MLPTRAIN Utility to train an MLP network for demtrain</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [net, options, varargout] = netopt(net, options, x, t, alg);</a>
+0002 <span class="comment">%NETOPT    Optimize the weights in a network model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    NETOPT is a helper function which facilitates the training of</span>
+0007 <span class="comment">%    networks using the general purpose optimizers as well as sampling</span>
+0008 <span class="comment">%    from the posterior distribution of parameters using general purpose</span>
+0009 <span class="comment">%    Markov chain Monte Carlo sampling algorithms. It can be used with any</span>
+0010 <span class="comment">%    function that searches in parameter space using error and gradient</span>
+0011 <span class="comment">%    functions.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    [NET, OPTIONS] = NETOPT(NET, OPTIONS, X, T, ALG) takes a network</span>
+0014 <span class="comment">%    data structure NET, together with a vector OPTIONS of parameters</span>
+0015 <span class="comment">%    governing the behaviour of the optimization algorithm, a matrix X of</span>
+0016 <span class="comment">%    input vectors and a matrix T of target vectors, and returns the</span>
+0017 <span class="comment">%    trained network as well as an updated OPTIONS vector. The string ALG</span>
+0018 <span class="comment">%    determines which optimization algorithm (CONJGRAD, QUASINEW, SCG,</span>
+0019 <span class="comment">%    etc.) or Monte Carlo algorithm (such as HMC) will be used.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%    [NET, OPTIONS, VARARGOUT] = NETOPT(NET, OPTIONS, X, T, ALG) also</span>
+0022 <span class="comment">%    returns any additional return values from the optimisation algorithm.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%    See also</span>
+0025 <span class="comment">%    NETGRAD, BFGS, CONJGRAD, GRADDESC, HMC, SCG</span>
+0026 <span class="comment">%</span>
+0027 
+0028 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0029 
+0030 optstring = [alg, <span class="string">'(''neterr'', w, options, ''netgrad'', net, x, t)'</span>];
+0031 
+0032 <span class="comment">% Extract weights from network as single vector</span>
+0033 w = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0034 
+0035 <span class="comment">% Carry out optimisation</span>
+0036 [s{1:nargout}] = eval(optstring);
+0037 w = s{1};
+0038 
+0039 <span class="keyword">if</span> nargout &gt; 1
+0040   options = s{2};
+0041 
+0042   <span class="comment">% If there are additional arguments, extract them</span>
+0043   nextra = nargout - 2;
+0044   <span class="keyword">if</span> nextra &gt; 0
+0045     <span class="keyword">for</span> i = 1:nextra
+0046       varargout{i} = s{i+2};
+0047     <span class="keyword">end</span>
+0048   <span class="keyword">end</span>
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="comment">% Pack the weights back into the network</span>
+0052 net = <a href="netunpak.html" class="code" title="function net = netunpak(net, w)">netunpak</a>(net, w);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

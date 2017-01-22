@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of consist</title>
+  <meta name="keywords" content="consist">
+  <meta name="description" content="CONSIST Check that arguments are consistent.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; consist.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>consist
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CONSIST Check that arguments are consistent.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function errstring = consist(model, type, inputs, outputs) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CONSIST Check that arguments are consistent.
+
+   Description
+
+   ERRSTRING = CONSIST(NET, TYPE, INPUTS) takes a network data structure
+   NET together with a string TYPE containing the correct network type,
+   a matrix INPUTS of input vectors and checks that the data structure
+   is consistent with the other arguments.  An empty string is returned
+   if there is no error, otherwise the string contains the relevant
+   error message.  If the TYPE string is empty, then any type of network
+   is allowed.
+
+   ERRSTRING = CONSIST(NET, TYPE) takes a network data structure NET
+   together with a string TYPE containing the correct  network type, and
+   checks that the two types match.
+
+   ERRSTRING = CONSIST(NET, TYPE, INPUTS, OUTPUTS) also checks that the
+   network has the correct number of outputs, and that the number of
+   patterns in the INPUTS and OUTPUTS is the same.  The fields in NET
+   that are used are
+     type
+     nin
+     nout
+
+   See also
+   <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">MLPFWD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li><li><a href="glmderiv.html" class="code" title="function g = glmderiv(net, x)">glmderiv</a>	GLMDERIV Evaluate derivatives of GLM outputs with respect to weights.</li><li><a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">glmerr</a>	GLMERR Evaluate error function for generalized linear model.</li><li><a href="glmfwd.html" class="code" title="function [y, a] = glmfwd(net, x)">glmfwd</a>	GLMFWD	Forward propagation through generalized linear model.</li><li><a href="glmgrad.html" class="code" title="function [g, gdata, gprior] = glmgrad(net, x, t)">glmgrad</a>	GLMGRAD Evaluate gradient of error function for generalized linear model.</li><li><a href="glmhess.html" class="code" title="function [h, hdata] = glmhess(net, x, t, hdata)">glmhess</a>	GLMHESS Evaluate the Hessian matrix for a generalised linear model.</li><li><a href="glminit.html" class="code" title="function net = glminit(net, prior)">glminit</a>	GLMINIT Initialise the weights in a generalized linear model.</li><li><a href="glmpak.html" class="code" title="function w = glmpak(net)">glmpak</a>	GLMPAK	Combines weights and biases into one weights vector.</li><li><a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">glmtrain</a>	GLMTRAIN Specialised training of generalized linear model</li><li><a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">glmunpak</a>	GLMUNPAK Separates weights vector into weight and bias matrices.</li><li><a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>	GMMACTIV Computes the activations of a Gaussian mixture model.</li><li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>	GMMINIT Initialises Gaussian mixture model from data</li><li><a href="gmmpak.html" class="code" title="function p = gmmpak(mix)">gmmpak</a>	GMMPAK	Combines all the parameters in a Gaussian mixture model into one vector.</li><li><a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>	GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</li><li><a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">gmmprob</a>	GMMPROB Computes the data probability for a Gaussian mixture model.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li><li><a href="gmmunpak.html" class="code" title="function mix = gmmunpak(mix, p)">gmmunpak</a>	GMMUNPAK Separates a vector of Gaussian mixture model parameters into its components.</li><li><a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>	GPCOVAR Calculate the covariance for a Gaussian Process.</li><li><a href="gpcovarf.html" class="code" title="function covf = gpcovarf(net, x1, x2)">gpcovarf</a>	GPCOVARF Calculate the covariance function for a Gaussian Process.</li><li><a href="gpcovarp.html" class="code" title="function [covp, covf] = gpcovarp(net, x1, x2)">gpcovarp</a>	GPCOVARP Calculate the prior covariance for a Gaussian Process.</li><li><a href="gperr.html" class="code" title="function [e, edata, eprior] = gperr(net, x, t)">gperr</a>	GPERR	Evaluate error function for Gaussian Process.</li><li><a href="gpfwd.html" class="code" title="function [y, sigsq] = gpfwd(net, x, cninv)">gpfwd</a>	GPFWD	Forward propagation through Gaussian Process.</li><li><a href="gpgrad.html" class="code" title="function g = gpgrad(net, x, t)">gpgrad</a>	GPGRAD	Evaluate error gradient for Gaussian Process.</li><li><a href="gpinit.html" class="code" title="function net = gpinit(net, tr_in, tr_targets, prior)">gpinit</a>	GPINIT	Initialise Gaussian Process model.</li><li><a href="gppak.html" class="code" title="function hp = gppak(net)">gppak</a>	GPPAK	Combines GP hyperparameters into one vector.</li><li><a href="gpunpak.html" class="code" title="function net = gpunpak(net, hp)">gpunpak</a>	GPUNPAK Separates hyperparameter vector into components.</li><li><a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">gtmem</a>	GTMEM	EM algorithm for Generative Topographic Mapping.</li><li><a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">gtminit</a>	GTMINIT Initialise the weights and latent sample in a GTM.</li><li><a href="gtmlmean.html" class="code" title="function means = gtmlmean(net, data)">gtmlmean</a>	GTMLMEAN Mean responsibility for data in a GTM.</li><li><a href="gtmlmode.html" class="code" title="function modes = gtmlmode(net, data)">gtmlmode</a>	GTMLMODE Mode responsibility for data in a GTM.</li><li><a href="gtmmag.html" class="code" title="function mags = gtmmag(net, latent_data)">gtmmag</a>	GTMMAG	Magnification factors for a GTM</li><li><a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">gtmpost</a>	GTMPOST Latent space responsibility for data in a GTM.</li><li><a href="gtmprob.html" class="code" title="function prob = gtmprob(net, data)">gtmprob</a>	GTMPROB Probability for data under a GTM.</li><li><a href="knn.html" class="code" title="function net = knn(nin, nout, k, tr_in, tr_targets)">knn</a>	KNN	Creates a K-nearest-neighbour classifier.</li><li><a href="knnfwd.html" class="code" title="function [y, l] = knnfwd(net, x)">knnfwd</a>	KNNFWD	Forward propagation through a K-nearest-neighbour classifier.</li><li><a href="mdn2gmm.html" class="code" title="function gmmmixes = mdn2gmm(mdnmixes)">mdn2gmm</a>	MDN2GMM Converts an MDN mixture data structure to array of GMMs.</li><li><a href="mdndist2.html" class="code" title="function n2 = mdndist2(mixparams, t)">mdndist2</a>	MDNDIST2 Calculates squared distance between centres of Gaussian kernels and data</li><li><a href="mdnerr.html" class="code" title="function e = mdnerr(net, x, t)">mdnerr</a>	MDNERR	Evaluate error function for Mixture Density Network.</li><li><a href="mdnfwd.html" class="code" title="function [mixparams, y, z, a] = mdnfwd(net, x)">mdnfwd</a>	MDNFWD	Forward propagation through Mixture Density Network.</li><li><a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">mdngrad</a>	MDNGRAD Evaluate gradient of error function for Mixture Density Network.</li><li><a href="mdnpak.html" class="code" title="function w = mdnpak(net)">mdnpak</a>	MDNPAK	Combines weights and biases into one weights vector.</li><li><a href="mdnprob.html" class="code" title="function [prob,a] = mdnprob(mixparams, t)">mdnprob</a>	MDNPROB Computes the data probability likelihood for an MDN mixture structure.</li><li><a href="mdnunpak.html" class="code" title="function net = mdnunpak(net, w)">mdnunpak</a>	MDNUNPAK Separates weights vector into weight and bias matrices.</li><li><a href="mlpderiv.html" class="code" title="function g = mlpderiv(net, x)">mlpderiv</a>	MLPDERIV Evaluate derivatives of network outputs with respect to weights.</li><li><a href="mlperr.html" class="code" title="function [e, edata, eprior, mse] = mlperr(net, x, t)">mlperr</a>	MLPERR Evaluate error function for 2-layer network.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li><li><a href="mlpgrad.html" class="code" title="function [g, gdata, gprior] = mlpgrad(net, x, t)">mlpgrad</a>	MLPGRAD Evaluate gradient of error function for 2-layer network.</li><li><a href="mlphdotv.html" class="code" title="function hdv = mlphdotv(net, x, t, v)">mlphdotv</a>	MLPHDOTV Evaluate the product of the data Hessian with a vector.</li><li><a href="mlphess.html" class="code" title="function [h, hdata] = mlphess(net, x, t, hdata)">mlphess</a>	MLPHESS Evaluate the Hessian matrix for a multi-layer perceptron network.</li><li><a href="mlppak.html" class="code" title="function w = mlppak(net)">mlppak</a>	MLPPAK	Combines weights and biases into one weights vector.</li><li><a href="mlpunpak.html" class="code" title="function net = mlpunpak(net, w)">mlpunpak</a>	MLPUNPAK Separates weights vector into weight and bias matrices.</li><li><a href="rbfderiv.html" class="code" title="function g = rbfderiv(net, x)">rbfderiv</a>	RBFDERIV Evaluate derivatives of RBF network outputs with respect to weights.</li><li><a href="rbferr.html" class="code" title="function [e, edata, eprior] = rbferr(net, x, t)">rbferr</a>	RBFERR	Evaluate error function for RBF network.</li><li><a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>	RBFFWD	Forward propagation through RBF network with linear outputs.</li><li><a href="rbfgrad.html" class="code" title="function [g, gdata, gprior] = rbfgrad(net, x, t)">rbfgrad</a>	RBFGRAD Evaluate gradient of error function for RBF network.</li><li><a href="rbfhess.html" class="code" title="function [h, hdata] = rbfhess(net, x, t, hdata)">rbfhess</a>	RBFHESS Evaluate the Hessian matrix for RBF network.</li><li><a href="rbfjacob.html" class="code" title="function jac = rbfjacob(net, x)">rbfjacob</a>	RBFJACOB Evaluate derivatives of RBF network outputs with respect to inputs.</li><li><a href="rbfpak.html" class="code" title="function w = rbfpak(net)">rbfpak</a>	RBFPAK	Combines all the parameters in an RBF network into one weights vector.</li><li><a href="rbfsetbf.html" class="code" title="function net = rbfsetbf(net, options, x)">rbfsetbf</a>	RBFSETBF Set basis functions of RBF from data.</li><li><a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">rbftrain</a>	RBFTRAIN Two stage training of RBF network.</li><li><a href="rbfunpak.html" class="code" title="function net = rbfunpak(net, w)">rbfunpak</a>	RBFUNPAK Separates a vector of RBF weights into its components.</li><li><a href="somfwd.html" class="code" title="function [d2, win_nodes] = somfwd(net, x)">somfwd</a>	SOMFWD	Forward propagation through a Self-Organising Map.</li><li><a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>	SOMPAK	Combines node weights into one weights matrix.</li><li><a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">somtrain</a>	SOMTRAIN Kohonen training algorithm for SOM.</li><li><a href="somunpak.html" class="code" title="function net = somunpak(net, w)">somunpak</a>	SOMUNPAK Replaces node weights in SOM.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function errstring = consist(model, type, inputs, outputs)</a>
+0002 <span class="comment">%CONSIST Check that arguments are consistent.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   ERRSTRING = CONSIST(NET, TYPE, INPUTS) takes a network data structure</span>
+0007 <span class="comment">%   NET together with a string TYPE containing the correct network type,</span>
+0008 <span class="comment">%   a matrix INPUTS of input vectors and checks that the data structure</span>
+0009 <span class="comment">%   is consistent with the other arguments.  An empty string is returned</span>
+0010 <span class="comment">%   if there is no error, otherwise the string contains the relevant</span>
+0011 <span class="comment">%   error message.  If the TYPE string is empty, then any type of network</span>
+0012 <span class="comment">%   is allowed.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   ERRSTRING = CONSIST(NET, TYPE) takes a network data structure NET</span>
+0015 <span class="comment">%   together with a string TYPE containing the correct  network type, and</span>
+0016 <span class="comment">%   checks that the two types match.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   ERRSTRING = CONSIST(NET, TYPE, INPUTS, OUTPUTS) also checks that the</span>
+0019 <span class="comment">%   network has the correct number of outputs, and that the number of</span>
+0020 <span class="comment">%   patterns in the INPUTS and OUTPUTS is the same.  The fields in NET</span>
+0021 <span class="comment">%   that are used are</span>
+0022 <span class="comment">%     type</span>
+0023 <span class="comment">%     nin</span>
+0024 <span class="comment">%     nout</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%   See also</span>
+0027 <span class="comment">%   MLPFWD</span>
+0028 <span class="comment">%</span>
+0029 
+0030 <span class="comment">%   Copyright (c) Ian T Nabney (1996-2001)</span>
+0031 
+0032 <span class="comment">% Assume that all is OK as default</span>
+0033 errstring = <span class="string">''</span>;
+0034 
+0035 <span class="comment">% If type string is not empty</span>
+0036 <span class="keyword">if</span> ~isempty(type)
+0037   <span class="comment">% First check that model has type field</span>
+0038   <span class="keyword">if</span> ~isfield(model, <span class="string">'type'</span>)
+0039     errstring = <span class="string">'Data structure does not contain type field'</span>;
+0040     <span class="keyword">return</span>
+0041   <span class="keyword">end</span>
+0042   <span class="comment">% Check that model has the correct type</span>
+0043   s = model.type;
+0044   <span class="keyword">if</span> ~strcmp(s, type)
+0045     errstring = [<span class="string">'Model type '''</span>, s, <span class="string">''' does not match expected type '''</span>,<span class="keyword">...</span>
+0046     type, <span class="string">''''</span>];
+0047     <span class="keyword">return</span>
+0048   <span class="keyword">end</span>
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="comment">% If inputs are present, check that they have correct dimension</span>
+0052 <span class="keyword">if</span> nargin &gt; 2
+0053   <span class="keyword">if</span> ~isfield(model, <span class="string">'nin'</span>)
+0054     errstring = <span class="string">'Data structure does not contain nin field'</span>;
+0055     <span class="keyword">return</span>
+0056   <span class="keyword">end</span>
+0057 
+0058   data_nin = size(inputs, 2);
+0059   <span class="keyword">if</span> model.nin ~= data_nin
+0060     errstring = [<span class="string">'Dimension of inputs '</span>, num2str(data_nin), <span class="keyword">...</span>
+0061     <span class="string">' does not match number of model inputs '</span>, num2str(model.nin)];
+0062     <span class="keyword">return</span>
+0063   <span class="keyword">end</span>
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="comment">% If outputs are present, check that they have correct dimension</span>
+0067 <span class="keyword">if</span> nargin &gt; 3
+0068   <span class="keyword">if</span> ~isfield(model, <span class="string">'nout'</span>)
+0069     errstring = <span class="string">'Data structure does not conatin nout field'</span>;
+0070     <span class="keyword">return</span>
+0071   <span class="keyword">end</span>
+0072   data_nout = size(outputs, 2);
+0073   <span class="keyword">if</span> model.nout ~= data_nout
+0074     errstring = [<span class="string">'Dimension of outputs '</span>, num2str(data_nout), <span class="keyword">...</span>
+0075     <span class="string">' does not match number of model outputs '</span>, num2str(model.nout)];
+0076     <span class="keyword">return</span>
+0077   <span class="keyword">end</span>
+0078 
+0079 <span class="comment">% Also check that number of data points in inputs and outputs is the same</span>
+0080   num_in = size(inputs, 1);
+0081   num_out = size(outputs, 1);
+0082   <span class="keyword">if</span> num_in ~= num_out
+0083     errstring = [<span class="string">'Number of input patterns '</span>, num2str(num_in), <span class="keyword">...</span>
+0084     <span class="string">' does not match number of output patterns '</span>, num2str(num_out)];
+0085     <span class="keyword">return</span>
+0086   <span class="keyword">end</span>
+0087 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

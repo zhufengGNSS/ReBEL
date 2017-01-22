@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demard</title>
+  <meta name="keywords" content="demard">
+  <meta name="description" content="DEMARD	Automatic relevance determination using the MLP.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demard.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demard
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMARD	Automatic relevance determination using the MLP.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMARD    Automatic relevance determination using the MLP.
+
+    Description
+    This script demonstrates the technique of automatic relevance
+    determination (ARD) using a synthetic problem having three input
+    variables: X1 is sampled uniformly from the range (0,1) and has a low
+    level of added Gaussian noise, X2 is a copy of X1 with a higher level
+    of added noise, and X3 is sampled randomly from a Gaussian
+    distribution. The single target variable is determined by
+    SIN(2*PI*X1) with additive Gaussian noise. Thus X1 is very relevant
+    for determining the target value, X2 is of some relevance, while X3
+    is irrelevant. The prior over weights is given by the ARD Gaussian
+    prior with a separate hyper-parameter for the group of weights
+    associated with each input. A multi-layer perceptron is trained on
+    this data, with re-estimation of the hyper-parameters using EVIDENCE.
+    The final values for the hyper-parameters reflect the relative
+    importance of the three inputs.
+
+    See also
+    <a href="demmlp1.html" class="code" title="">DEMMLP1</a>, <a href="demev1.html" class="code" title="">DEMEV1</a>, <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">EVIDENCE</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li><li><a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>	MLP	Create a 2-layer feedforward network.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li><li><a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">mlpprior</a>	MLPPRIOR Create Gaussian prior for mlp.</li><li><a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>	NETOPT	Optimize the weights in a network model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMARD    Automatic relevance determination using the MLP.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    This script demonstrates the technique of automatic relevance</span>
+0005 <span class="comment">%    determination (ARD) using a synthetic problem having three input</span>
+0006 <span class="comment">%    variables: X1 is sampled uniformly from the range (0,1) and has a low</span>
+0007 <span class="comment">%    level of added Gaussian noise, X2 is a copy of X1 with a higher level</span>
+0008 <span class="comment">%    of added noise, and X3 is sampled randomly from a Gaussian</span>
+0009 <span class="comment">%    distribution. The single target variable is determined by</span>
+0010 <span class="comment">%    SIN(2*PI*X1) with additive Gaussian noise. Thus X1 is very relevant</span>
+0011 <span class="comment">%    for determining the target value, X2 is of some relevance, while X3</span>
+0012 <span class="comment">%    is irrelevant. The prior over weights is given by the ARD Gaussian</span>
+0013 <span class="comment">%    prior with a separate hyper-parameter for the group of weights</span>
+0014 <span class="comment">%    associated with each input. A multi-layer perceptron is trained on</span>
+0015 <span class="comment">%    this data, with re-estimation of the hyper-parameters using EVIDENCE.</span>
+0016 <span class="comment">%    The final values for the hyper-parameters reflect the relative</span>
+0017 <span class="comment">%    importance of the three inputs.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also</span>
+0020 <span class="comment">%    DEMMLP1, DEMEV1, MLP, EVIDENCE</span>
+0021 <span class="comment">%</span>
+0022 
+0023 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0024 
+0025 clc;
+0026 disp(<span class="string">'This demonstration illustrates the technique of automatic relevance'</span>)
+0027 disp(<span class="string">'determination (ARD) using a multi-layer perceptron.'</span>)
+0028 disp(<span class="string">' '</span>);
+0029 disp(<span class="string">'First, we set up a synthetic data set involving three input variables:'</span>)
+0030 disp(<span class="string">'x1 is sampled uniformly from the range (0,1) and has a low level of'</span>)
+0031 disp(<span class="string">'added Gaussian noise, x2 is a copy of x1 with a higher level of added'</span>)
+0032 disp(<span class="string">'noise, and x3 is sampled randomly from a Gaussian distribution. The'</span>)
+0033 disp(<span class="string">'single target variable is given by t = sin(2*pi*x1) with additive'</span>)
+0034 disp(<span class="string">'Gaussian noise. Thus x1 is very relevant for determining the target'</span>)
+0035 disp(<span class="string">'value, x2 is of some relevance, while x3 should in principle be'</span>)
+0036 disp(<span class="string">'irrelevant.'</span>)
+0037 disp(<span class="string">' '</span>);
+0038 disp(<span class="string">'Press any key to see a plot of t against x1.'</span>)
+0039 pause;
+0040 
+0041 <span class="comment">% Generate the data set.</span>
+0042 randn(<span class="string">'state'</span>, 0); 
+0043 rand(<span class="string">'state'</span>, 0); 
+0044 ndata = 100;
+0045 noise = 0.05;
+0046 x1 = rand(ndata, 1) + 0.002*randn(ndata, 1);
+0047 x2 = x1 + 0.02*randn(ndata, 1);
+0048 x3 = 0.5 + 0.2*randn(ndata, 1);
+0049 x = [x1, x2, x3];
+0050 t = sin(2*pi*x1) + noise*randn(ndata, 1);
+0051 
+0052 <span class="comment">% Plot the data and the original function.</span>
+0053 h = figure;
+0054 plotvals = linspace(0, 1, 200)';
+0055 plot(x1, t, <span class="string">'ob'</span>)
+0056 hold on
+0057 axis([0 1 -1.5 1.5])
+0058 [fx, fy] = fplot(<span class="string">'sin(2*pi*x)'</span>, [0 1]);
+0059 plot(fx, fy, <span class="string">'-g'</span>, <span class="string">'LineWidth'</span>, 2);
+0060 legend(<span class="string">'data'</span>, <span class="string">'function'</span>);
+0061 
+0062 disp(<span class="string">' '</span>);
+0063 disp(<span class="string">'Press any key to continue'</span>)
+0064 pause; clc;
+0065 
+0066 disp(<span class="string">'The prior over weights is given by the ARD Gaussian prior with a'</span>)
+0067 disp(<span class="string">'separate hyper-parameter for the group of weights associated with each'</span>)
+0068 disp(<span class="string">'input. This prior is set up using the utility MLPPRIOR. The network is'</span>)
+0069 disp(<span class="string">'trained by error minimization using scaled conjugate gradient function'</span>)
+0070 disp(<span class="string">'SCG. There are two cycles of training, and at the end of each cycle'</span>)
+0071 disp(<span class="string">'the hyper-parameters are re-estimated using EVIDENCE.'</span>)
+0072 disp(<span class="string">' '</span>);
+0073 disp(<span class="string">'Press any key to create and train the network.'</span>)
+0074 disp(<span class="string">' '</span>);
+0075 pause;
+0076 
+0077 <span class="comment">% Set up network parameters.</span>
+0078 nin = 3;            <span class="comment">% Number of inputs.</span>
+0079 nhidden = 2;            <span class="comment">% Number of hidden units.</span>
+0080 nout = 1;            <span class="comment">% Number of outputs.</span>
+0081 aw1 = 0.01*ones(1, nin);    <span class="comment">% First-layer ARD hyperparameters.</span>
+0082 ab1 = 0.01;            <span class="comment">% Hyperparameter for hidden unit biases.</span>
+0083 aw2 = 0.01;            <span class="comment">% Hyperparameter for second-layer weights.</span>
+0084 ab2 = 0.01;            <span class="comment">% Hyperparameter for output unit biases.</span>
+0085 beta = 50.0;            <span class="comment">% Coefficient of data error.</span>
+0086 
+0087 <span class="comment">% Create and initialize network.</span>
+0088 prior = <a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">mlpprior</a>(nin, nhidden, nout, aw1, ab1, aw2, ab2);
+0089 net = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(nin, nhidden, nout, <span class="string">'linear'</span>, prior, beta);
+0090 
+0091 <span class="comment">% Set up vector of options for the optimiser.</span>
+0092 nouter = 2;            <span class="comment">% Number of outer loops</span>
+0093 ninner = 10;                <span class="comment">% Number of inner loops</span>
+0094 options = zeros(1,18);        <span class="comment">% Default options vector.</span>
+0095 options(1) = 1;            <span class="comment">% This provides display of error values.</span>
+0096 options(2) = 1.0e-7;    <span class="comment">% This ensures that convergence must occur</span>
+0097 options(3) = 1.0e-7;
+0098 options(14) = 300;        <span class="comment">% Number of training cycles in inner loop.</span>
+0099 
+0100 <span class="comment">% Train using scaled conjugate gradients, re-estimating alpha and beta.</span>
+0101 <span class="keyword">for</span> k = 1:nouter
+0102   net = <a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>(net, options, x, t, <span class="string">'scg'</span>);
+0103   [net, gamma] = <a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>(net, x, t, ninner);
+0104   fprintf(1, <span class="string">'\n\nRe-estimation cycle %d:\n'</span>, k);
+0105   disp(<span class="string">'The first three alphas are the hyperparameters for the corresponding'</span>);
+0106   disp(<span class="string">'input to hidden unit weights.  The remainder are the hyperparameters'</span>);
+0107   disp(<span class="string">'for the hidden unit biases, second layer weights and output unit'</span>)
+0108   disp(<span class="string">'biases, respectively.'</span>)
+0109   fprintf(1, <span class="string">'  alpha =  %8.5f\n'</span>, net.alpha);
+0110   fprintf(1, <span class="string">'  beta  =  %8.5f\n'</span>, net.beta);
+0111   fprintf(1, <span class="string">'  gamma =  %8.5f\n\n'</span>, gamma);
+0112   disp(<span class="string">' '</span>)
+0113   disp(<span class="string">'Press any key to continue.'</span>)
+0114   pause
+0115 <span class="keyword">end</span>
+0116 
+0117 <span class="comment">% Plot the function corresponding to the trained network.</span>
+0118 figure(h); hold on;
+0119 [y, z] = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, plotvals*ones(1,3));
+0120 plot(plotvals, y, <span class="string">'-r'</span>, <span class="string">'LineWidth'</span>, 2)
+0121 legend(<span class="string">'data'</span>, <span class="string">'function'</span>, <span class="string">'network'</span>);
+0122 
+0123 disp(<span class="string">'Press any key to continue.'</span>);
+0124 pause; clc;
+0125 
+0126 disp(<span class="string">'We can now read off the hyperparameter values corresponding to the'</span>)
+0127 disp(<span class="string">'three inputs x1, x2 and x3:'</span>)
+0128 disp(<span class="string">' '</span>);
+0129 fprintf(1, <span class="string">'    alpha1: %8.5f\n'</span>, net.alpha(1));
+0130 fprintf(1, <span class="string">'    alpha2: %8.5f\n'</span>, net.alpha(2));
+0131 fprintf(1, <span class="string">'    alpha3: %8.5f\n'</span>, net.alpha(3));
+0132 disp(<span class="string">' '</span>);
+0133 disp(<span class="string">'Since each alpha corresponds to an inverse variance, we see that the'</span>)
+0134 disp(<span class="string">'posterior variance for weights associated with input x1 is large, that'</span>)
+0135 disp(<span class="string">'of x2 has an intermediate value and the variance of weights associated'</span>)
+0136 disp(<span class="string">'with x3 is small.'</span>)
+0137 disp(<span class="string">' '</span>)
+0138 disp(<span class="string">'Press any key to continue.'</span>)
+0139 disp(<span class="string">' '</span>)
+0140 pause
+0141 disp(<span class="string">'This is confirmed by looking at the corresponding weight values:'</span>)
+0142 disp(<span class="string">' '</span>);
+0143 fprintf(1, <span class="string">'    %8.5f    %8.5f\n'</span>, net.w1');
+0144 disp(<span class="string">' '</span>);
+0145 disp(<span class="string">'where the three rows correspond to weights asssociated with x1, x2 and'</span>)
+0146 disp(<span class="string">'x3 respectively. We see that the network is giving greatest emphasis'</span>)
+0147 disp(<span class="string">'to x1 and least emphasis to x3, with intermediate emphasis on'</span>)
+0148 disp(<span class="string">'x2. Since the target t is statistically independent of x3 we might'</span>)
+0149 disp(<span class="string">'expect the weights associated with this input would go to'</span>)
+0150 disp(<span class="string">'zero. However, for any finite data set there may be some chance'</span>)
+0151 disp(<span class="string">'correlation between x3 and t, and so the corresponding alpha remains'</span>)
+0152 disp(<span class="string">'finite.'</span>)
+0153 
+0154 disp(<span class="string">' '</span>);
+0155 disp(<span class="string">'Press any key to end.'</span>)
+0156 pause; clc; close(h); clear all
+0157</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

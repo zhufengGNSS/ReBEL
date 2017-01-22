@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlppack</title>
+  <meta name="keywords" content="mlppack">
+  <meta name="description" content="MLPPACK  ReBEL MLP neural network weight matrices vectorizer.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; mlppack.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlppack
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPPACK  ReBEL MLP neural network weight matrices vectorizer.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [wh, nodes] = mlppack(W1, B1, W2, B2, W3, B3, W4, B4) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> MLPPACK  ReBEL MLP neural network weight matrices vectorizer.
+
+  This function packs the parameters (weights and biases) of ReBEL MLP neural network
+  into a single vector. The network can have between 2, 3 or 4 layers.
+
+   [wh, nodes] = mlppack(W1, B1, W2, B2, W3, B3, W4, B4)
+
+ INPUT
+        W1       :   layer 1 weights
+        B1       :   layer 1 biases
+        W2       :   layer 2 weights
+        B2       :   layer 2 biases
+        W3       :   (optional) layer 3 weights
+        B3       :   (optional) layer 3 biases
+        W4       :   (optional) layer 4 weights
+        B4       :   (optional) layer 4 biases
+
+ OUTPUT
+        wh       :   vector of 'vectorized' neural network weights
+        nodes    :   MLP neural network layer descriptor vector
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mlpweightinit.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpweightinit(nodes)">mlpweightinit</a>	MLPWEIGHTINIT   Initializes the weights of a ReBEL MLP feedforward neural network</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [wh, nodes] = mlppack(W1, B1, W2, B2, W3, B3, W4, B4)</a>
+0002 
+0003 <span class="comment">% MLPPACK  ReBEL MLP neural network weight matrices vectorizer.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  This function packs the parameters (weights and biases) of ReBEL MLP neural network</span>
+0006 <span class="comment">%  into a single vector. The network can have between 2, 3 or 4 layers.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   [wh, nodes] = mlppack(W1, B1, W2, B2, W3, B3, W4, B4)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% INPUT</span>
+0011 <span class="comment">%        W1       :   layer 1 weights</span>
+0012 <span class="comment">%        B1       :   layer 1 biases</span>
+0013 <span class="comment">%        W2       :   layer 2 weights</span>
+0014 <span class="comment">%        B2       :   layer 2 biases</span>
+0015 <span class="comment">%        W3       :   (optional) layer 3 weights</span>
+0016 <span class="comment">%        B3       :   (optional) layer 3 biases</span>
+0017 <span class="comment">%        W4       :   (optional) layer 4 weights</span>
+0018 <span class="comment">%        B4       :   (optional) layer 4 biases</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% OUTPUT</span>
+0021 <span class="comment">%        wh       :   vector of 'vectorized' neural network weights</span>
+0022 <span class="comment">%        nodes    :   MLP neural network layer descriptor vector</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0027 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0028 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0029 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0032 <span class="comment">%   detail.</span>
+0033 
+0034 <span class="comment">%=============================================================================================</span>
+0035 
+0036 nIN = nargin;
+0037 
+0038 <span class="keyword">if</span> (nIN &lt; 4) error(<span class="string">' [ mlppack ] Not enough input arguments. Minimum number of layers is 2.'</span>); <span class="keyword">end</span>
+0039 
+0040 nLayers = nIN/2;
+0041 
+0042 nodes = zeros(1,nLayers+1);
+0043 
+0044 <span class="keyword">switch</span> nLayers
+0045 
+0046  <span class="keyword">case</span> 2
+0047 
+0048    [nodes(2) nodes(1)] = size(W1);
+0049    nodes(3) = size(W2,1);
+0050    numParams = nodes(1)*nodes(2) + nodes(2) + nodes(2)*nodes(3) + nodes(3);
+0051 
+0052    wh=[W1(:) ; B1(:) ; W2(:) ; B2(:)];
+0053 
+0054  <span class="keyword">case</span> 3
+0055 
+0056    [nodes(2) nodes(1)] = size(W1);
+0057    nodes(3) = size(W2,1);
+0058    nodes(4) = size(W3,1);
+0059 
+0060    numParams = nodes(1)*nodes(2) + nodes(2) + nodes(2)*nodes(3) + nodes(3) + nodes(3)*nodes(4) + nodes(4);
+0061 
+0062    wh=[W1(:) ; B1(:) ; W2(:) ; B2(:) ; W3(:) ; B3(:)];
+0063 
+0064  <span class="keyword">case</span> 4
+0065 
+0066    [nodes(2) nodes(1)] = size(W1);
+0067    nodes(3) = size(W2,1);
+0068    nodes(4) = size(W3,1);
+0069    nodes(5) = size(W4,1);
+0070 
+0071    numParams = nodes(1)*nodes(2) + nodes(2) + nodes(2)*nodes(3) + nodes(3) + nodes(3)*nodes(4) + nodes(4) + nodes(4)*nodes(5) + <span class="keyword">...</span>
+0072        nodes(5);
+0073 
+0074    wh=[W1(:) ; B1(:) ; W2(:) ; B2(:) ; W3(:) ; B3(:); W4(:); B4(:)];
+0075 
+0076  <span class="keyword">otherwise</span>
+0077 
+0078   error(<span class="string">' [ mlppack ] MLP neural networks with more than 4 layers are not supported.'</span>);
+0079 
+0080 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

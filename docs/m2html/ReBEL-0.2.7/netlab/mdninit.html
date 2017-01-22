@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mdninit</title>
+  <meta name="keywords" content="mdninit">
+  <meta name="description" content="MDNINIT Initialise the weights in a Mixture Density Network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mdninit.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mdninit
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MDNINIT Initialise the weights in a Mixture Density Network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = mdninit(net, prior, t, options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MDNINIT Initialise the weights in a Mixture Density Network.
+
+    Description
+
+    NET = MDNINIT(NET, PRIOR) takes a Mixture Density Network NET and
+    sets the weights and biases by sampling from a Gaussian distribution.
+    It calls MLPINIT for the MLP component of NET.
+
+    NET = MDNINIT(NET, PRIOR, T, OPTIONS) uses the target data T to
+    initialise the biases for the output units after initialising the
+    other weights as above.  It calls GMMINIT, with T and OPTIONS as
+    arguments, to obtain a model of the unconditional density of T.  The
+    biases are then set so that NET will output the values in the
+    Gaussian  mixture model.
+
+    See also
+    <a href="mdn.html" class="code" title="function net = mdn(nin, nhidden, ncentres, dim_target, mix_type,prior, beta)">MDN</a>, <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">MLPINIT</a>, <a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">GMMINIT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>	GMMINIT Initialises Gaussian mixture model from data</li><li><a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">mlpinit</a>	MLPINIT Initialise the weights in a 2-layer feedforward network.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demmdn1.html" class="code" title="">demmdn1</a>	DEMMDN1 Demonstrate fitting a multi-valued function using a Mixture Density Network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = mdninit(net, prior, t, options)</a>
+0002 <span class="comment">%MDNINIT Initialise the weights in a Mixture Density Network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    NET = MDNINIT(NET, PRIOR) takes a Mixture Density Network NET and</span>
+0007 <span class="comment">%    sets the weights and biases by sampling from a Gaussian distribution.</span>
+0008 <span class="comment">%    It calls MLPINIT for the MLP component of NET.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    NET = MDNINIT(NET, PRIOR, T, OPTIONS) uses the target data T to</span>
+0011 <span class="comment">%    initialise the biases for the output units after initialising the</span>
+0012 <span class="comment">%    other weights as above.  It calls GMMINIT, with T and OPTIONS as</span>
+0013 <span class="comment">%    arguments, to obtain a model of the unconditional density of T.  The</span>
+0014 <span class="comment">%    biases are then set so that NET will output the values in the</span>
+0015 <span class="comment">%    Gaussian  mixture model.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    See also</span>
+0018 <span class="comment">%    MDN, MLP, MLPINIT, GMMINIT</span>
+0019 <span class="comment">%</span>
+0020 
+0021 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0022 <span class="comment">%    David J Evans (1998)</span>
+0023 
+0024 <span class="comment">% Initialise network weights from prior: this gives noise around values</span>
+0025 <span class="comment">% determined later</span>
+0026 net.mlp = <a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">mlpinit</a>(net.mlp, prior);
+0027 
+0028 <span class="keyword">if</span> nargin &gt; 2
+0029   <span class="comment">% Initialise priors, centres and variances from target data</span>
+0030   temp_mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(net.mdnmixes.dim_target, net.mdnmixes.ncentres, <span class="string">'spherical'</span>);
+0031   temp_mix = <a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>(temp_mix, t, options);
+0032   
+0033   ncentres = net.mdnmixes.ncentres;
+0034   dim_target = net.mdnmixes.dim_target;
+0035 
+0036   <span class="comment">% Now set parameters in MLP to yield the right values.</span>
+0037   <span class="comment">% This involves setting the biases correctly.</span>
+0038   
+0039   <span class="comment">% Priors</span>
+0040   net.mlp.b2(1:ncentres) = temp_mix.priors;
+0041   
+0042   <span class="comment">% Centres are arranged in mlp such that we have</span>
+0043   <span class="comment">% u11, u12, u13, ..., u1c, ... , uj1, uj2, uj3, ..., ujc, ..., um1, uM2,</span>
+0044   <span class="comment">% ..., uMc</span>
+0045   <span class="comment">% This is achieved by transposing temp_mix.centres before reshaping</span>
+0046   end_centres = ncentres*(dim_target+1);
+0047   net.mlp.b2(ncentres+1:end_centres) = <span class="keyword">...</span>
+0048     reshape(temp_mix.centres', 1, ncentres*dim_target);
+0049   
+0050   <span class="comment">% Variances</span>
+0051   net.mlp.b2((end_centres+1):net.mlp.nout) = <span class="keyword">...</span>
+0052     log(temp_mix.covars);
+0053 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

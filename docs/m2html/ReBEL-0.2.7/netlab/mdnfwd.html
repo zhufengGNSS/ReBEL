@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mdnfwd</title>
+  <meta name="keywords" content="mdnfwd">
+  <meta name="description" content="MDNFWD	Forward propagation through Mixture Density Network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mdnfwd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mdnfwd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MDNFWD	Forward propagation through Mixture Density Network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [mixparams, y, z, a] = mdnfwd(net, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MDNFWD    Forward propagation through Mixture Density Network.
+
+    Description
+     MIXPARAMS = MDNFWD(NET, X) takes a mixture density network data
+    structure NET and a matrix X of input vectors, and forward propagates
+    the inputs through the network to generate a structure MIXPARAMS
+    which contains the parameters of several mixture models.   Each row
+    of X represents one input vector and the corresponding row of the
+    matrices in MIXPARAMS  represents the parameters of a mixture model
+    for the conditional probability of target vectors given the input
+    vector.  This is not represented as an array of GMM structures to
+    improve the efficiency of MDN training.
+
+    The fields in MIXPARAMS are
+      type = 'mdnmixes'
+      ncentres = number of mixture components
+      dimtarget = dimension of target space
+      mixcoeffs = mixing coefficients
+      centres = means of Gaussians: stored as one row per pattern
+      covars = covariances of Gaussians
+      nparams = number of parameters
+
+    [MIXPARAMS, Y, Z] = MDNFWD(NET, X) also generates a matrix Y of the
+    outputs of the MLP and a matrix Z of the hidden unit activations
+    where each row corresponds to one pattern.
+
+    [MIXPARAMS, Y, Z, A] = MLPFWD(NET, X) also returns a matrix A  giving
+    the summed inputs to each output unit, where each row  corresponds to
+    one pattern.
+
+    See also
+    <a href="mdn.html" class="code" title="function net = mdn(nin, nhidden, ncentres, dim_target, mix_type,prior, beta)">MDN</a>, <a href="mdn2gmm.html" class="code" title="function gmmmixes = mdn2gmm(mdnmixes)">MDN2GMM</a>, <a href="mdnerr.html" class="code" title="function e = mdnerr(net, x, t)">MDNERR</a>, <a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">MDNGRAD</a>, <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">MLPFWD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demmdn1.html" class="code" title="">demmdn1</a>	DEMMDN1 Demonstrate fitting a multi-valued function using a Mixture Density Network.</li><li><a href="mdnerr.html" class="code" title="function e = mdnerr(net, x, t)">mdnerr</a>	MDNERR	Evaluate error function for Mixture Density Network.</li><li><a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">mdngrad</a>	MDNGRAD Evaluate gradient of error function for Mixture Density Network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [mixparams, y, z, a] = mdnfwd(net, x)</a>
+0002 <span class="comment">%MDNFWD    Forward propagation through Mixture Density Network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     MIXPARAMS = MDNFWD(NET, X) takes a mixture density network data</span>
+0006 <span class="comment">%    structure NET and a matrix X of input vectors, and forward propagates</span>
+0007 <span class="comment">%    the inputs through the network to generate a structure MIXPARAMS</span>
+0008 <span class="comment">%    which contains the parameters of several mixture models.   Each row</span>
+0009 <span class="comment">%    of X represents one input vector and the corresponding row of the</span>
+0010 <span class="comment">%    matrices in MIXPARAMS  represents the parameters of a mixture model</span>
+0011 <span class="comment">%    for the conditional probability of target vectors given the input</span>
+0012 <span class="comment">%    vector.  This is not represented as an array of GMM structures to</span>
+0013 <span class="comment">%    improve the efficiency of MDN training.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    The fields in MIXPARAMS are</span>
+0016 <span class="comment">%      type = 'mdnmixes'</span>
+0017 <span class="comment">%      ncentres = number of mixture components</span>
+0018 <span class="comment">%      dimtarget = dimension of target space</span>
+0019 <span class="comment">%      mixcoeffs = mixing coefficients</span>
+0020 <span class="comment">%      centres = means of Gaussians: stored as one row per pattern</span>
+0021 <span class="comment">%      covars = covariances of Gaussians</span>
+0022 <span class="comment">%      nparams = number of parameters</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%    [MIXPARAMS, Y, Z] = MDNFWD(NET, X) also generates a matrix Y of the</span>
+0025 <span class="comment">%    outputs of the MLP and a matrix Z of the hidden unit activations</span>
+0026 <span class="comment">%    where each row corresponds to one pattern.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%    [MIXPARAMS, Y, Z, A] = MLPFWD(NET, X) also returns a matrix A  giving</span>
+0029 <span class="comment">%    the summed inputs to each output unit, where each row  corresponds to</span>
+0030 <span class="comment">%    one pattern.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%    See also</span>
+0033 <span class="comment">%    MDN, MDN2GMM, MDNERR, MDNGRAD, MLPFWD</span>
+0034 <span class="comment">%</span>
+0035 
+0036 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0037 <span class="comment">%    David J Evans (1998)</span>
+0038 
+0039 <span class="comment">% Check arguments for consistency</span>
+0040 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'mdn'</span>, x);
+0041 <span class="keyword">if</span> ~isempty(errstring)
+0042   error(errstring);
+0043 <span class="keyword">end</span>
+0044 
+0045 <span class="comment">% Extract mlp and mixture model descriptors</span>
+0046 mlpnet = net.mlp;
+0047 mixes = net.mdnmixes;
+0048 
+0049 ncentres = mixes.ncentres;    <span class="comment">% Number of components in mixture model</span>
+0050 dim_target = mixes.dim_target;    <span class="comment">% Dimension of targets</span>
+0051 nparams = mixes.nparams;    <span class="comment">% Number of parameters in mixture model</span>
+0052 
+0053 <span class="comment">% Propagate forwards through MLP</span>
+0054 [y, z, a] = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(mlpnet, x);
+0055 
+0056 <span class="comment">% Compute the postion for each parameter in the whole</span>
+0057 <span class="comment">% matrix.  Used to define the mixparams structure</span>
+0058 mixcoeff  = [1:1:ncentres];
+0059 centres   = [ncentres+1:1:(ncentres*(1+dim_target))];
+0060 variances = [(ncentres*(1+dim_target)+1):1:nparams];
+0061 
+0062 <span class="comment">% Convert output values into mixture model parameters</span>
+0063 
+0064 <span class="comment">% Use softmax to calculate priors</span>
+0065 <span class="comment">% Prevent overflow and underflow: use same bounds as glmfwd</span>
+0066 <span class="comment">% Ensure that sum(exp(y), 2) does not overflow</span>
+0067 maxcut = log(realmax) - log(ncentres);
+0068 <span class="comment">% Ensure that exp(y) &gt; 0</span>
+0069 mincut = log(realmin);
+0070 temp = min(y(:,1:ncentres), maxcut);
+0071 temp = max(temp, mincut);
+0072 temp = exp(temp);
+0073 mixpriors = temp./(sum(temp, 2)*ones(1,ncentres));
+0074 
+0075 <span class="comment">% Centres are just copies of network outputs</span>
+0076 mixcentres =  y(:,(ncentres+1):ncentres*(1+dim_target));
+0077 
+0078 <span class="comment">% Variances are exp of network outputs</span>
+0079 mixwidths = exp(y(:,(ncentres*(1+dim_target)+1):nparams));
+0080 
+0081 <span class="comment">% Now build up all the mixture model weight vectors</span>
+0082 ndata = size(x, 1);
+0083 
+0084 <span class="comment">% Return parameters</span>
+0085 mixparams.type = mixes.type;
+0086 mixparams.ncentres = mixes.ncentres;
+0087 mixparams.dim_target = mixes.dim_target;
+0088 mixparams.nparams = mixes.nparams;
+0089 
+0090 mixparams.mixcoeffs = mixpriors;
+0091 mixparams.centres   = mixcentres;
+0092 mixparams.covars      = mixwidths;
+0093</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

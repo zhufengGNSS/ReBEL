@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rbffwd</title>
+  <meta name="keywords" content="rbffwd">
+  <meta name="description" content="RBFFWD	Forward propagation through RBF network with linear outputs.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; rbffwd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>rbffwd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>RBFFWD	Forward propagation through RBF network with linear outputs.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [a, z, n2] = rbffwd(net, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RBFFWD    Forward propagation through RBF network with linear outputs.
+
+    Description
+    A = RBFFWD(NET, X) takes a network data structure NET and a matrix X
+    of input vectors and forward propagates the inputs through the
+    network to generate a matrix A of output vectors. Each row of X
+    corresponds to one input vector and each row of A contains the
+    corresponding output vector. The activation function that is used is
+    determined by NET.ACTFN.
+
+    [A, Z, N2] = RBFFWD(NET, X) also generates a matrix Z of the hidden
+    unit activations where each row corresponds to one pattern. These
+    hidden unit activations represent the design matrix for the RBF.  The
+    matrix N2 is the squared distances between each basis function centre
+    and each pattern in which each row corresponds to a data point.
+
+    See also
+    <a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">RBF</a>, <a href="rbferr.html" class="code" title="function [e, edata, eprior] = rbferr(net, x, t)">RBFERR</a>, <a href="rbfgrad.html" class="code" title="function [g, gdata, gprior] = rbfgrad(net, x, t)">RBFGRAD</a>, <a href="rbfpak.html" class="code" title="function w = rbfpak(net)">RBFPAK</a>, <a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">RBFTRAIN</a>, <a href="rbfunpak.html" class="code" title="function net = rbfunpak(net, w)">RBFUNPAK</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev3.html" class="code" title="">demev3</a>	DEMEV3	Demonstrate Bayesian regression for the RBF.</li><li><a href="demns1.html" class="code" title="">demns1</a>	DEMNS1	Demonstrate Neuroscale for visualisation.</li><li><a href="demrbf1.html" class="code" title="">demrbf1</a>	DEMRBF1 Demonstrate simple regression using a radial basis function network.</li><li><a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">gtmem</a>	GTMEM	EM algorithm for Generative Topographic Mapping.</li><li><a href="gtmfwd.html" class="code" title="function mix = gtmfwd(net)">gtmfwd</a>	GTMFWD	Forward propagation through GTM.</li><li><a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">gtminit</a>	GTMINIT Initialise the weights and latent sample in a GTM.</li><li><a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">gtmpost</a>	GTMPOST Latent space responsibility for data in a GTM.</li><li><a href="gtmprob.html" class="code" title="function prob = gtmprob(net, data)">gtmprob</a>	GTMPROB Probability for data under a GTM.</li><li><a href="rbfderiv.html" class="code" title="function g = rbfderiv(net, x)">rbfderiv</a>	RBFDERIV Evaluate derivatives of RBF network outputs with respect to weights.</li><li><a href="rbferr.html" class="code" title="function [e, edata, eprior] = rbferr(net, x, t)">rbferr</a>	RBFERR	Evaluate error function for RBF network.</li><li><a href="rbfevfwd.html" class="code" title="function [y, extra, invhess] = rbfevfwd(net, x, t, x_test, invhess)">rbfevfwd</a>	RBFEVFWD Forward propagation with evidence for RBF</li><li><a href="rbfgrad.html" class="code" title="function [g, gdata, gprior] = rbfgrad(net, x, t)">rbfgrad</a>	RBFGRAD Evaluate gradient of error function for RBF network.</li><li><a href="rbfhess.html" class="code" title="function [h, hdata] = rbfhess(net, x, t, hdata)">rbfhess</a>	RBFHESS Evaluate the Hessian matrix for RBF network.</li><li><a href="rbfjacob.html" class="code" title="function jac = rbfjacob(net, x)">rbfjacob</a>	RBFJACOB Evaluate derivatives of RBF network outputs with respect to inputs.</li><li><a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">rbftrain</a>	RBFTRAIN Two stage training of RBF network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [a, z, n2] = rbffwd(net, x)</a>
+0002 <span class="comment">%RBFFWD    Forward propagation through RBF network with linear outputs.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    A = RBFFWD(NET, X) takes a network data structure NET and a matrix X</span>
+0006 <span class="comment">%    of input vectors and forward propagates the inputs through the</span>
+0007 <span class="comment">%    network to generate a matrix A of output vectors. Each row of X</span>
+0008 <span class="comment">%    corresponds to one input vector and each row of A contains the</span>
+0009 <span class="comment">%    corresponding output vector. The activation function that is used is</span>
+0010 <span class="comment">%    determined by NET.ACTFN.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    [A, Z, N2] = RBFFWD(NET, X) also generates a matrix Z of the hidden</span>
+0013 <span class="comment">%    unit activations where each row corresponds to one pattern. These</span>
+0014 <span class="comment">%    hidden unit activations represent the design matrix for the RBF.  The</span>
+0015 <span class="comment">%    matrix N2 is the squared distances between each basis function centre</span>
+0016 <span class="comment">%    and each pattern in which each row corresponds to a data point.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    See also</span>
+0019 <span class="comment">%    RBF, RBFERR, RBFGRAD, RBFPAK, RBFTRAIN, RBFUNPAK</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0023 
+0024 <span class="comment">% Check arguments for consistency</span>
+0025 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'rbf'</span>, x);
+0026 <span class="keyword">if</span> ~isempty(errstring);
+0027   error(errstring);
+0028 <span class="keyword">end</span>
+0029 
+0030 [ndata, data_dim] = size(x);
+0031 
+0032 <span class="comment">% Calculate squared norm matrix, of dimension (ndata, ncentres)</span>
+0033 n2 = <a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(x, net.c);
+0034 
+0035 <span class="comment">% Switch on activation function type</span>
+0036 <span class="keyword">switch</span> net.actfn
+0037 
+0038   <span class="keyword">case</span> <span class="string">'gaussian'</span>    <span class="comment">% Gaussian</span>
+0039     <span class="comment">% Calculate width factors: net.wi contains squared widths</span>
+0040     wi2 = ones(ndata, 1) * (2 .* net.wi);
+0041 
+0042     <span class="comment">% Now compute the activations</span>
+0043     z = exp(-(n2./wi2));
+0044 
+0045   <span class="keyword">case</span> <span class="string">'tps'</span>        <span class="comment">% Thin plate spline</span>
+0046     z = n2.*log(n2+(n2==0));
+0047 
+0048   <span class="keyword">case</span> <span class="string">'r4logr'</span>        <span class="comment">% r^4 log r</span>
+0049     z = n2.*n2.*log(n2+(n2==0));
+0050 
+0051   <span class="keyword">otherwise</span>
+0052     error(<span class="string">'Unknown activation function in rbffwd'</span>)
+0053 <span class="keyword">end</span>
+0054 
+0055 a = z*net.w2 + ones(ndata, 1)*net.b2;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

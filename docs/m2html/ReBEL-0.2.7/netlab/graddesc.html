@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of graddesc</title>
+  <meta name="keywords" content="graddesc">
+  <meta name="description" content="GRADDESC Gradient descent optimization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; graddesc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>graddesc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GRADDESC Gradient descent optimization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GRADDESC Gradient descent optimization.
+
+    Description
+    [X, OPTIONS, FLOG, POINTLOG] = GRADDESC(F, X, OPTIONS, GRADF) uses
+    batch gradient descent to find a local minimum of the function  F(X)
+    whose gradient is given by GRADF(X). A log of the function values
+    after each cycle is (optionally) returned in ERRLOG, and a log of the
+    points visited is (optionally) returned in POINTLOG.
+
+    Note that X is a row vector and F returns a scalar value.  The point
+    at which F has a local minimum is returned as X.  The function value
+    at that point is returned in OPTIONS(8).
+
+    GRADDESC(F, X, OPTIONS, GRADF, P1, P2, ...) allows  additional
+    arguments to be passed to F() and GRADF().
+
+    The optional parameters have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs error
+    values in the return argument ERRLOG, and the points visited in the
+    return argument POINTSLOG. If OPTIONS(1) is set to 0, then only
+    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is
+    displayed.
+
+    OPTIONS(2) is the absolute precision required for the value of X at
+    the solution.  If the absolute difference between the values of X
+    between two successive steps is less than OPTIONS(2), then this
+    condition is satisfied.
+
+    OPTIONS(3) is a measure of the precision required of the objective
+    function at the solution.  If the absolute difference between the
+    objective function values between two successive steps is less than
+    OPTIONS(3), then this condition is satisfied. Both this and the
+    previous condition must be satisfied for termination.
+
+    OPTIONS(7) determines the line minimisation method used.  If it is
+    set to 1 then a line minimiser is used (in the direction of the
+    negative gradient).  If it is 0 (the default), then each parameter
+    update is a fixed multiple (the learning rate) of the negative
+    gradient added to a fixed multiple (the momentum) of the previous
+    parameter update.
+
+    OPTIONS(9) should be set to 1 to check the user defined gradient
+    function GRADF with GRADCHEK.  This is carried out at the initial
+    parameter vector X.
+
+    OPTIONS(10) returns the total number of function evaluations
+    (including those in any line searches).
+
+    OPTIONS(11) returns the total number of gradient evaluations.
+
+    OPTIONS(14) is the maximum number of iterations; default 100.
+
+    OPTIONS(15) is the precision in parameter space of the line search;
+    default FOPTIONS(2).
+
+    OPTIONS(17) is the momentum; default 0.5.  It should be scaled by the
+    inverse of the number of data points.
+
+    OPTIONS(18) is the learning rate; default 0.01.  It should be scaled
+    by the inverse of the number of data points.
+
+    See also
+    <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="linemin.html" class="code" title="function [x, options] = linemin(f, pt, dir, fpt, options,varargin)">LINEMIN</a>, <a href="olgd.html" class="code" title="function [net, options, errlog, pointlog] = olgd(net, options, x, t)">OLGD</a>, <a href="minbrack.html" class="code" title="function  [br_min, br_mid, br_max, num_evals] = minbrack(f, a, b, fa,varargin)">MINBRACK</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demopt1.html" class="code" title="function demopt1(xinit)">demopt1</a>	DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x, options, flog, pointlog] = graddesc(f, x, options, gradf, </a><span class="keyword">...</span>
+0002             varargin)
+0003 <span class="comment">%GRADDESC Gradient descent optimization.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    [X, OPTIONS, FLOG, POINTLOG] = GRADDESC(F, X, OPTIONS, GRADF) uses</span>
+0007 <span class="comment">%    batch gradient descent to find a local minimum of the function  F(X)</span>
+0008 <span class="comment">%    whose gradient is given by GRADF(X). A log of the function values</span>
+0009 <span class="comment">%    after each cycle is (optionally) returned in ERRLOG, and a log of the</span>
+0010 <span class="comment">%    points visited is (optionally) returned in POINTLOG.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    Note that X is a row vector and F returns a scalar value.  The point</span>
+0013 <span class="comment">%    at which F has a local minimum is returned as X.  The function value</span>
+0014 <span class="comment">%    at that point is returned in OPTIONS(8).</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    GRADDESC(F, X, OPTIONS, GRADF, P1, P2, ...) allows  additional</span>
+0017 <span class="comment">%    arguments to be passed to F() and GRADF().</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    The optional parameters have the following interpretations.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs error</span>
+0022 <span class="comment">%    values in the return argument ERRLOG, and the points visited in the</span>
+0023 <span class="comment">%    return argument POINTSLOG. If OPTIONS(1) is set to 0, then only</span>
+0024 <span class="comment">%    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is</span>
+0025 <span class="comment">%    displayed.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%    OPTIONS(2) is the absolute precision required for the value of X at</span>
+0028 <span class="comment">%    the solution.  If the absolute difference between the values of X</span>
+0029 <span class="comment">%    between two successive steps is less than OPTIONS(2), then this</span>
+0030 <span class="comment">%    condition is satisfied.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%    OPTIONS(3) is a measure of the precision required of the objective</span>
+0033 <span class="comment">%    function at the solution.  If the absolute difference between the</span>
+0034 <span class="comment">%    objective function values between two successive steps is less than</span>
+0035 <span class="comment">%    OPTIONS(3), then this condition is satisfied. Both this and the</span>
+0036 <span class="comment">%    previous condition must be satisfied for termination.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%    OPTIONS(7) determines the line minimisation method used.  If it is</span>
+0039 <span class="comment">%    set to 1 then a line minimiser is used (in the direction of the</span>
+0040 <span class="comment">%    negative gradient).  If it is 0 (the default), then each parameter</span>
+0041 <span class="comment">%    update is a fixed multiple (the learning rate) of the negative</span>
+0042 <span class="comment">%    gradient added to a fixed multiple (the momentum) of the previous</span>
+0043 <span class="comment">%    parameter update.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%    OPTIONS(9) should be set to 1 to check the user defined gradient</span>
+0046 <span class="comment">%    function GRADF with GRADCHEK.  This is carried out at the initial</span>
+0047 <span class="comment">%    parameter vector X.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%    OPTIONS(10) returns the total number of function evaluations</span>
+0050 <span class="comment">%    (including those in any line searches).</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">%    OPTIONS(11) returns the total number of gradient evaluations.</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">%    OPTIONS(14) is the maximum number of iterations; default 100.</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">%    OPTIONS(15) is the precision in parameter space of the line search;</span>
+0057 <span class="comment">%    default FOPTIONS(2).</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">%    OPTIONS(17) is the momentum; default 0.5.  It should be scaled by the</span>
+0060 <span class="comment">%    inverse of the number of data points.</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">%    OPTIONS(18) is the learning rate; default 0.01.  It should be scaled</span>
+0063 <span class="comment">%    by the inverse of the number of data points.</span>
+0064 <span class="comment">%</span>
+0065 <span class="comment">%    See also</span>
+0066 <span class="comment">%    CONJGRAD, LINEMIN, OLGD, MINBRACK, QUASINEW, SCG</span>
+0067 <span class="comment">%</span>
+0068 
+0069 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0070 
+0071 <span class="comment">%  Set up the options.</span>
+0072 <span class="keyword">if</span> length(options) &lt; 18
+0073   error(<span class="string">'Options vector too short'</span>)
+0074 <span class="keyword">end</span>
+0075 
+0076 <span class="keyword">if</span> (options(14))
+0077   niters = options(14);
+0078 <span class="keyword">else</span>
+0079   niters = 100;
+0080 <span class="keyword">end</span>
+0081 
+0082 line_min_flag = 0; <span class="comment">% Flag for line minimisation option</span>
+0083 <span class="keyword">if</span> (round(options(7)) == 1)
+0084   <span class="comment">% Use line minimisation</span>
+0085   line_min_flag = 1;
+0086   <span class="comment">% Set options for line minimiser</span>
+0087   line_options = foptions;
+0088   <span class="keyword">if</span> options(15) &gt; 0
+0089     line_options(2) = options(15);
+0090   <span class="keyword">end</span>
+0091 <span class="keyword">else</span>
+0092   <span class="comment">% Learning rate: must be positive</span>
+0093   <span class="keyword">if</span> (options(18) &gt; 0)
+0094     eta = options(18);
+0095   <span class="keyword">else</span>
+0096     eta = 0.01;
+0097   <span class="keyword">end</span>
+0098   <span class="comment">% Momentum term: allow zero momentum</span>
+0099   <span class="keyword">if</span> (options(17) &gt;= 0)
+0100     mu = options(17);
+0101   <span class="keyword">else</span>
+0102     mu = 0.5;
+0103   <span class="keyword">end</span>
+0104 <span class="keyword">end</span>
+0105 
+0106 <span class="comment">% Check function string</span>
+0107 f = fcnchk(f, length(varargin));
+0108 gradf = fcnchk(gradf, length(varargin));
+0109 
+0110 <span class="comment">% Display information if options(1) &gt; 0</span>
+0111 display = options(1) &gt; 0;
+0112 
+0113 <span class="comment">% Work out if we need to compute f at each iteration.</span>
+0114 <span class="comment">% Needed if using line search or if display results or if termination</span>
+0115 <span class="comment">% criterion requires it.</span>
+0116 fcneval = (options(7) | display | options(3));
+0117 
+0118 <span class="comment">%  Check gradients</span>
+0119 <span class="keyword">if</span> (options(9) &gt; 0)
+0120   feval(<span class="string">'gradchek'</span>, x, f, gradf, varargin{:});
+0121 <span class="keyword">end</span>
+0122 
+0123 dxold = zeros(1, size(x, 2));
+0124 xold = x;
+0125 fold = 0; <span class="comment">% Must be initialised so that termination test can be performed</span>
+0126 <span class="keyword">if</span> fcneval
+0127   fnew = feval(f, x, varargin{:});
+0128   options(10) = options(10) + 1;
+0129   fold = fnew;
+0130 <span class="keyword">end</span>
+0131 
+0132 <span class="comment">%  Main optimization loop.</span>
+0133 <span class="keyword">for</span> j = 1:niters
+0134   xold = x;
+0135   grad = feval(gradf, x, varargin{:});
+0136   options(11) = options(11) + 1;  <span class="comment">% Increment gradient evaluation counter</span>
+0137   <span class="keyword">if</span> (line_min_flag ~= 1)
+0138     dx = mu*dxold - eta*grad;
+0139     x =  x + dx;
+0140     dxold = dx;
+0141     <span class="keyword">if</span> fcneval
+0142       fold = fnew;
+0143       fnew = feval(f, x, varargin{:});
+0144       options(10) = options(10) + 1;
+0145     <span class="keyword">end</span>
+0146   <span class="keyword">else</span>
+0147     sd = - grad./norm(grad);    <span class="comment">% New search direction.</span>
+0148     fold = fnew;
+0149     <span class="comment">% Do a line search: normalise search direction to have length 1</span>
+0150     [lmin, line_options] = feval(<span class="string">'linemin'</span>, f, x, sd, fold, <span class="keyword">...</span>
+0151       line_options, varargin{:});
+0152     options(10) = options(10) + line_options(10);
+0153     x = xold + lmin*sd;
+0154     fnew = line_options(8);
+0155   <span class="keyword">end</span>
+0156   <span class="keyword">if</span> nargout &gt;= 3
+0157     flog(j) = fnew;
+0158     <span class="keyword">if</span> nargout &gt;= 4
+0159       pointlog(j, :) = x;
+0160     <span class="keyword">end</span>
+0161   <span class="keyword">end</span>
+0162   <span class="keyword">if</span> display
+0163     fprintf(1, <span class="string">'Cycle  %5d  Function %11.8f\n'</span>, j, fnew);
+0164   <span class="keyword">end</span>
+0165   <span class="keyword">if</span> (max(abs(x - xold)) &lt; options(2) &amp; abs(fnew - fold) &lt; options(3))
+0166     <span class="comment">% Termination criteria are met</span>
+0167     options(8) = fnew;
+0168     <span class="keyword">return</span>;
+0169   <span class="keyword">end</span>
+0170 <span class="keyword">end</span>
+0171 
+0172 <span class="keyword">if</span> fcneval
+0173   options(8) = fnew;
+0174 <span class="keyword">else</span>
+0175   options(8) = feval(f, x, varargin{:});
+0176   options(10) = options(10) + 1;
+0177 <span class="keyword">end</span>
+0178 <span class="keyword">if</span> (options(1) &gt;= 0)
+0179   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0180 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

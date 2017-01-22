@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlperr</title>
+  <meta name="keywords" content="mlperr">
+  <meta name="description" content="MLPERR Evaluate error function for 2-layer network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlperr.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlperr
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPERR Evaluate error function for 2-layer network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [e, edata, eprior, mse] = mlperr(net, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPERR Evaluate error function for 2-layer network.
+
+   Description
+   E = MLPERR(NET, X, T) takes a network data structure NET together
+   with a matrix X of input vectors and a matrix T of target vectors,
+   and evaluates the error function E. The choice of error function
+   corresponds to the output unit activation function. Each row of X
+   corresponds to one input vector and each row of T corresponds to one
+   target vector.
+
+   [E, EDATA, EPRIOR, MSE] = MLPERR(NET, X, T) additionally returns the data
+   and prior components of the error, assuming a zero mean Gaussian
+   prior on the weights with inverse variance parameters ALPHA and BETA
+   taken from the network data structure NET. MSE is simply the raw MSE
+   (non Bayes) of the network on the dataset
+
+   See also
+   <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mlppak.html" class="code" title="function w = mlppak(net)">MLPPAK</a>, <a href="mlpunpak.html" class="code" title="function net = mlpunpak(net, w)">MLPUNPAK</a>, <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">MLPFWD</a>, <a href="mlpbkp.html" class="code" title="function g = mlpbkp(net, x, z, deltas)">MLPBKP</a>, <a href="mlpgrad.html" class="code" title="function [g, gdata, gprior] = mlpgrad(net, x, t)">MLPGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="errbayes.html" class="code" title="function [e, edata, eprior] = errbayes(net, edata)">errbayes</a>	ERRBAYES Evaluate Bayesian error function for network.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demtrain.html" class="code" title="function demtrain(action);">demtrain</a>	DEMTRAIN Demonstrate training of MLP network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [e, edata, eprior, mse] = mlperr(net, x, t)</a>
+0002 <span class="comment">%MLPERR Evaluate error function for 2-layer network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Description</span>
+0005 <span class="comment">%   E = MLPERR(NET, X, T) takes a network data structure NET together</span>
+0006 <span class="comment">%   with a matrix X of input vectors and a matrix T of target vectors,</span>
+0007 <span class="comment">%   and evaluates the error function E. The choice of error function</span>
+0008 <span class="comment">%   corresponds to the output unit activation function. Each row of X</span>
+0009 <span class="comment">%   corresponds to one input vector and each row of T corresponds to one</span>
+0010 <span class="comment">%   target vector.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   [E, EDATA, EPRIOR, MSE] = MLPERR(NET, X, T) additionally returns the data</span>
+0013 <span class="comment">%   and prior components of the error, assuming a zero mean Gaussian</span>
+0014 <span class="comment">%   prior on the weights with inverse variance parameters ALPHA and BETA</span>
+0015 <span class="comment">%   taken from the network data structure NET. MSE is simply the raw MSE</span>
+0016 <span class="comment">%   (non Bayes) of the network on the dataset</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   See also</span>
+0019 <span class="comment">%   MLP, MLPPAK, MLPUNPAK, MLPFWD, MLPBKP, MLPGRAD</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">%   Copyright (c) Ian T Nabney (1996-2001)</span>
+0023 
+0024 <span class="comment">% Check arguments for consistency</span>
+0025 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'mlp'</span>, x, t);
+0026 <span class="keyword">if</span> ~isempty(errstring);
+0027   error(errstring);
+0028 <span class="keyword">end</span>
+0029 [y, z, a] = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, x);
+0030 
+0031 <span class="keyword">switch</span> net.outfn
+0032 
+0033   <span class="keyword">case</span> <span class="string">'linear'</span>        <span class="comment">% Linear outputs</span>
+0034     edata = 0.5*sum(sum((y - t).^2));
+0035 
+0036   <span class="keyword">case</span> <span class="string">'logistic'</span>      <span class="comment">% Logistic outputs</span>
+0037     <span class="comment">% Ensure that log(1-y) is computable: need exp(a) &gt; eps</span>
+0038     maxcut = -log(eps);
+0039     <span class="comment">% Ensure that log(y) is computable</span>
+0040     mincut = -log(1/realmin - 1);
+0041     a = min(a, maxcut);
+0042     a = max(a, mincut);
+0043     y = 1./(1 + exp(-a));
+0044     edata = - sum(sum(t.*log(y) + (1 - t).*log(1 - y)));
+0045 
+0046   <span class="keyword">case</span> <span class="string">'softmax'</span>       <span class="comment">% Softmax outputs</span>
+0047     nout = size(a,2);
+0048     <span class="comment">% Ensure that sum(exp(a), 2) does not overflow</span>
+0049     maxcut = log(realmax) - log(nout);
+0050     <span class="comment">% Ensure that exp(a) &gt; 0</span>
+0051     mincut = log(realmin);
+0052     a = min(a, maxcut);
+0053     a = max(a, mincut);
+0054     temp = exp(a);
+0055     y = temp./(sum(temp, 2)*ones(1,nout));
+0056     <span class="comment">% Ensure that log(y) is computable</span>
+0057     y(y&lt;realmin) = realmin;
+0058     edata = - sum(sum(t.*log(y)));
+0059 
+0060   <span class="keyword">otherwise</span>
+0061     error([<span class="string">'Unknown activation function '</span>, net.outfn]);
+0062 <span class="keyword">end</span>
+0063 
+0064 mse = (2*edata) / size(t,1);
+0065 
+0066 [e, edata, eprior] = <a href="errbayes.html" class="code" title="function [e, edata, eprior] = errbayes(net, edata)">errbayes</a>(net, edata);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

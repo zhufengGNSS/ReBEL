@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demmet1</title>
+  <meta name="keywords" content="demmet1">
+  <meta name="description" content="DEMMET1 Demonstrate Markov Chain Monte Carlo sampling on a Gaussian.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demmet1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demmet1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMMET1 Demonstrate Markov Chain Monte Carlo sampling on a Gaussian.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function demmet1(plot_wait) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMMET1 Demonstrate Markov Chain Monte Carlo sampling on a Gaussian.
+
+    Description
+    The problem consists of generating data from a Gaussian in two
+    dimensions using a Markov Chain Monte Carlo algorithm. The points are
+    plotted one after another to show the path taken by the chain.
+
+    DEMMET1(PLOTWAIT) allows the user to set the time (in a whole number
+    of seconds) between the plotting of points.  This is passed to PAUSE
+
+    See also
+    <a href="demhmc1.html" class="code" title="">DEMHMC1</a>, <a href="metrop.html" class="code" title="function [samples, energies, diagn] = metrop(f, x, options, gradf, varargin)">METROP</a>, <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a>, <a href="dempot.html" class="code" title="function e = dempot(x, mix)">DEMPOT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="metrop.html" class="code" title="function [samples, energies, diagn] = metrop(f, x, options, gradf, varargin)">metrop</a>	METROP	Markov Chain Monte Carlo sampling with Metropolis algorithm.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function demmet1(plot_wait)</a>
+0002 <span class="comment">%DEMMET1 Demonstrate Markov Chain Monte Carlo sampling on a Gaussian.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    The problem consists of generating data from a Gaussian in two</span>
+0006 <span class="comment">%    dimensions using a Markov Chain Monte Carlo algorithm. The points are</span>
+0007 <span class="comment">%    plotted one after another to show the path taken by the chain.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    DEMMET1(PLOTWAIT) allows the user to set the time (in a whole number</span>
+0010 <span class="comment">%    of seconds) between the plotting of points.  This is passed to PAUSE</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    See also</span>
+0013 <span class="comment">%    DEMHMC1, METROP, GMM, DEMPOT</span>
+0014 <span class="comment">%</span>
+0015 
+0016 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0017 
+0018 <span class="keyword">if</span> nargin == 0 | plot_wait &lt; 0
+0019   plot_wait = 0; <span class="comment">% No wait if not specified or incorrect</span>
+0020 <span class="keyword">end</span>
+0021 dim = 2;                <span class="comment">% Data dimension</span>
+0022 ncentres = 1;        <span class="comment">% Number of centres in mixture model</span>
+0023 
+0024 seed = 42;              <span class="comment">% Seed for random weight initialization.</span>
+0025 randn(<span class="string">'state'</span>, seed);
+0026 rand(<span class="string">'state'</span>, seed);
+0027 
+0028 clc
+0029 disp(<span class="string">'This demonstration illustrates the use of the Markov chain Monte Carlo'</span>)
+0030 disp(<span class="string">'algorithm to sample from a Gaussian distribution.'</span>)
+0031 disp(<span class="string">'The mean is at [0 0].'</span>)
+0032 disp(<span class="string">' '</span>)
+0033 disp(<span class="string">'First we set up the parameters of the mixture model we are sampling'</span>)
+0034 disp(<span class="string">'from.'</span>)
+0035 disp(<span class="string">' '</span>)
+0036 disp(<span class="string">'Press any key to continue.'</span>)
+0037 pause
+0038 
+0039 <span class="comment">% Set up mixture model to sample from</span>
+0040 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(dim, ncentres, <span class="string">'spherical'</span>);
+0041 mix.centres(1, :) = [0 0];
+0042 x = [0 4];  <span class="comment">% Start vector</span>
+0043 
+0044 <span class="comment">% Set up vector of options for hybrid Monte Carlo.</span>
+0045 
+0046 nsamples = 150;        <span class="comment">% Number of retained samples.</span>
+0047 
+0048 options = foptions;     <span class="comment">% Default options vector.</span>
+0049 options(1) = 0;        <span class="comment">% Switch off diagnostics.</span>
+0050 options(14) = nsamples;    <span class="comment">% Number of Monte Carlo samples returned.</span>
+0051 options(18) = 0.1;
+0052 
+0053 clc
+0054 disp(<span class="string">'Next we take 150 samples from the distribution.'</span>)
+0055 disp(<span class="string">'Sampling starts at the point [0 4].'</span>)
+0056 disp(<span class="string">'The new state is accepted if the threshold value is greater than'</span>)
+0057 disp(<span class="string">'a random number between 0 and 1.'</span>)
+0058 disp(<span class="string">' '</span>)
+0059 disp(<span class="string">'Press any key to continue.'</span>)
+0060 pause
+0061 
+0062 [samples, energies] = <a href="metrop.html" class="code" title="function [samples, energies, diagn] = metrop(f, x, options, gradf, varargin)">metrop</a>(<span class="string">'dempot'</span>, x, options, <span class="string">''</span>, mix);
+0063 
+0064 clc
+0065 disp(<span class="string">'The plot shows the samples generated by the MCMC function in order'</span>)
+0066 disp(<span class="string">'as an animation to show the path taken by the Markov chain.'</span>)
+0067 disp(<span class="string">'The different colours are used to show that the first few samples'</span>)
+0068 disp(<span class="string">'should be discarded as they lie too far from the mean.'</span>)
+0069 disp(<span class="string">' '</span>)
+0070 disp(<span class="string">'Press any key to continue.'</span>)
+0071 pause
+0072 probs = exp(-energies);
+0073 fh1 = figure;
+0074 g1end = floor(nsamples/4);
+0075 
+0076 <span class="keyword">for</span> n = 1:nsamples
+0077   
+0078   <span class="keyword">if</span> n &lt; g1end
+0079     Marker = <span class="string">'k.'</span>;
+0080     p1 = plot(samples(n,1), samples(n,2), Marker, <span class="keyword">...</span>
+0081       <span class="string">'EraseMode'</span>, <span class="string">'none'</span>, <span class="string">'MarkerSize'</span>, 12);
+0082     <span class="keyword">if</span> n == 1
+0083       axis([-3 5 -2 5])
+0084     <span class="keyword">end</span>
+0085   <span class="keyword">else</span>
+0086     Marker = <span class="string">'r.'</span>;
+0087     p2 = plot(samples(n,1), samples(n,2), Marker, <span class="keyword">...</span>
+0088       <span class="string">'EraseMode'</span>, <span class="string">'none'</span>, <span class="string">'MarkerSize'</span>, 12);
+0089   <span class="keyword">end</span>
+0090   hold on
+0091   drawnow;  <span class="comment">% Force drawing immediately</span>
+0092   pause(plot_wait);
+0093 <span class="keyword">end</span>
+0094 lstrings = char([<span class="string">'Samples 1-'</span> int2str(g1end)], <span class="keyword">...</span>
+0095   [<span class="string">'Samples '</span> int2str(g1end+1) <span class="string">'-'</span> int2str(nsamples)]);
+0096 legend([p1 p2], lstrings, 1);
+0097 
+0098 disp(<span class="string">' '</span>)
+0099 disp(<span class="string">'Press any key to exit.'</span>)
+0100 pause
+0101 close(fh1);
+0102 clear all;
+0103</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

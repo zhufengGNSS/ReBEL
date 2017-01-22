@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of checkdups</title>
+  <meta name="keywords" content="checkdups">
+  <meta name="description" content="CHECKDUPS  Checks for the presence of duplicate entries in an array">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; checkdups.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>checkdups
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CHECKDUPS  Checks for the presence of duplicate entries in an array</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function dups = checkdups(x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CHECKDUPS  Checks for the presence of duplicate entries in an array
+
+     dups = CHECKDUPS(x)
+
+     dups = number_of_duplicates if there are duplicate entries in x
+     otherwise dups = 0</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>	GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dups = checkdups(x)</a>
+0002 
+0003 <span class="comment">% CHECKDUPS  Checks for the presence of duplicate entries in an array</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%     dups = CHECKDUPS(x)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%     dups = number_of_duplicates if there are duplicate entries in x</span>
+0008 <span class="comment">%     otherwise dups = 0</span>
+0009 
+0010 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0013 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0014 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0015 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0018 <span class="comment">%   detail.</span>
+0019 
+0020 <span class="comment">%=============================================================================================</span>
+0021 
+0022 x=x(:);
+0023 
+0024 <span class="keyword">if</span> (length(x)&gt;1)
+0025 
+0026   x = sort(x);
+0027   y = [x(end); x(1:end-1)];
+0028   d = x-y;
+0029 
+0030   dups = sum(d==0);
+0031 
+0032 <span class="keyword">else</span>
+0033 
+0034   dups = 0;
+0035 
+0036 <span class="keyword">end</span>
+0037</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

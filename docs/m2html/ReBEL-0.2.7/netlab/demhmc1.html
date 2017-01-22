@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demhmc1</title>
+  <meta name="keywords" content="demhmc1">
+  <meta name="description" content="DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demhmc1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demhmc1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.
+
+    Description
+    The problem consists of generating data from a mixture of two
+    Gaussians in two dimensions using a hybrid Monte Carlo algorithm with
+    persistence. A mixture model is then fitted to the sample to compare
+    it with the  true underlying generator.
+
+    See also
+    <a href="demhmc3.html" class="code" title="">DEMHMC3</a>, <a href="hmc.html" class="code" title="function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin)">HMC</a>, <a href="dempot.html" class="code" title="function e = dempot(x, mix)">DEMPOT</a>, <a href="demgpot.html" class="code" title="function g = demgpot(x, mix)">DEMGPOT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>	GMMINIT Initialises Gaussian mixture model from data</li><li><a href="hmc.html" class="code" title="function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin)">hmc</a>	HMC	Hybrid Monte Carlo sampling.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    The problem consists of generating data from a mixture of two</span>
+0005 <span class="comment">%    Gaussians in two dimensions using a hybrid Monte Carlo algorithm with</span>
+0006 <span class="comment">%    persistence. A mixture model is then fitted to the sample to compare</span>
+0007 <span class="comment">%    it with the  true underlying generator.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    See also</span>
+0010 <span class="comment">%    DEMHMC3, HMC, DEMPOT, DEMGPOT</span>
+0011 <span class="comment">%</span>
+0012 
+0013 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0014 
+0015 
+0016 dim = 2;                <span class="comment">% Data dimension</span>
+0017 ncentres = 2;        <span class="comment">% Number of centres in mixture model</span>
+0018 
+0019 seed = 42;              <span class="comment">% Seed for random weight initialization.</span>
+0020 randn(<span class="string">'state'</span>, seed);
+0021 rand(<span class="string">'state'</span>, seed);
+0022 
+0023 clc
+0024 disp(<span class="string">'This demonstration illustrates the use of the hybrid Monte Carlo'</span>)
+0025 disp(<span class="string">'algorithm to sample from a mixture of two Gaussians.'</span>)
+0026 disp(<span class="string">'The means of the two components are [0 0] and [2 2].'</span>)
+0027 disp(<span class="string">' '</span>)
+0028 disp(<span class="string">'First we set up the parameters of the mixture model we are sampling'</span>)
+0029 disp(<span class="string">'from.'</span>)
+0030 disp(<span class="string">' '</span>)
+0031 disp(<span class="string">'Press any key to continue.'</span>)
+0032 pause
+0033 
+0034 <span class="comment">% Set up mixture model to sample from</span>
+0035 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(dim, ncentres, <span class="string">'spherical'</span>);
+0036 mix.centres(1, :) = [0 0];
+0037 mix.centres(2, :) = [2 2];
+0038 x = [0 1];  <span class="comment">% Start vector</span>
+0039 
+0040 <span class="comment">% Set up vector of options for hybrid Monte Carlo.</span>
+0041 
+0042 nsamples = 160;        <span class="comment">% Number of retained samples.</span>
+0043 
+0044 options = foptions;     <span class="comment">% Default options vector.</span>
+0045 options(1) = 1;        <span class="comment">% Switch on diagnostics.</span>
+0046 options(5) = 1;        <span class="comment">% Use persistence</span>
+0047 options(7) = 50;    <span class="comment">% Number of steps in trajectory.</span>
+0048 options(14) = nsamples;    <span class="comment">% Number of Monte Carlo samples returned.</span>
+0049 options(15) = 30;    <span class="comment">% Number of samples omitted at start of chain.</span>
+0050 options(18) = 0.02;
+0051 
+0052 clc
+0053 disp([<span class="string">'Next we take '</span>, num2str(nsamples),<span class="string">' samples from the distribution.'</span><span class="keyword">...</span>
+0054     , <span class="string">'The first '</span>, num2str(options(15))])
+0055 disp(<span class="string">'samples at the start of the chain are omitted.  As persistence'</span>)
+0056 disp(<span class="string">'is used, the momentum has a small random component added at each step.'</span>)
+0057 disp([num2str(options(7)), <span class="keyword">...</span>
+0058     <span class="string">' iterations are used at each step and the step size is '</span>,<span class="keyword">...</span>
+0059     num2str(options(18))])
+0060 disp(<span class="string">'Sampling starts at the point [0 1].'</span>)
+0061 disp(<span class="string">'The new state is accepted if the threshold value is greater than'</span>)
+0062 disp(<span class="string">'a random number between 0 and 1.'</span>)
+0063 disp(<span class="string">' '</span>)
+0064 disp(<span class="string">'Negative step numbers indicate samples discarded from the start of the'</span>)
+0065 disp(<span class="string">'chain.'</span>)
+0066 disp(<span class="string">' '</span>)
+0067 disp(<span class="string">'Press any key to continue.'</span>)
+0068 pause
+0069 
+0070 [samples, energies] = <a href="hmc.html" class="code" title="function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin)">hmc</a>(<span class="string">'dempot'</span>, x, options, <span class="string">'demgpot'</span>, mix);
+0071 
+0072 disp(<span class="string">' '</span>)
+0073 disp(<span class="string">'Press any key to continue.'</span>)
+0074 pause
+0075 clc
+0076 disp(<span class="string">'The plot shows the samples generated by the HMC function.'</span>)
+0077 disp(<span class="string">'The different colours are used to show how the samples move from'</span>)
+0078 disp(<span class="string">'one component to the other over time.'</span>)
+0079 disp(<span class="string">' '</span>)
+0080 disp(<span class="string">'Press any key to continue.'</span>)
+0081 pause
+0082 probs = exp(-energies);
+0083 fh1 = figure;
+0084 <span class="comment">% Plot data in 4 groups</span>
+0085 ngroups = 4;
+0086 g1end = floor(nsamples/ngroups);
+0087 g2end = floor(2*nsamples/ngroups);
+0088 g3end = floor(3*nsamples/ngroups);
+0089 p1 = plot(samples(1:g1end,1), samples(1:g1end,2), <span class="string">'k.'</span>, <span class="string">'MarkerSize'</span>, 12);
+0090 hold on
+0091 lstrings = char([<span class="string">'Samples 1-'</span> int2str(g1end)], <span class="keyword">...</span>
+0092   [<span class="string">'Samples '</span> int2str(g1end+1) <span class="string">'-'</span> int2str(g2end)], <span class="keyword">...</span>
+0093   [<span class="string">'Samples '</span> int2str(g2end+1) <span class="string">'-'</span> int2str(g3end)], <span class="keyword">...</span>
+0094   [<span class="string">'Samples '</span> int2str(g3end+1) <span class="string">'-'</span> int2str(nsamples)]);
+0095 p2 = plot(samples(g1end+1:g2end,1), samples(g1end+1:g2end,2), <span class="keyword">...</span>
+0096   <span class="string">'r.'</span>, <span class="string">'MarkerSize'</span>, 12);
+0097 p3 = plot(samples(g2end+1:g3end,1), samples(g2end+1:g3end,2), <span class="keyword">...</span>
+0098   <span class="string">'g.'</span>, <span class="string">'MarkerSize'</span>, 12);
+0099 p4 = plot(samples(g3end+1:nsamples,1), samples(g3end+1:nsamples,2), <span class="keyword">...</span>
+0100   <span class="string">'b.'</span>, <span class="string">'MarkerSize'</span>, 12);
+0101 legend([p1 p2 p3 p4], lstrings, 2);
+0102 
+0103 clc
+0104 disp(<span class="string">'We now fit a Gaussian mixture model to the sampled data.'</span>)
+0105 disp(<span class="string">'The model has spherical covariance structure and the correct'</span>)
+0106 disp(<span class="string">'number of components.'</span>)
+0107 disp(<span class="string">' '</span>)
+0108 disp(<span class="string">'Press any key to continue.'</span>)
+0109 pause
+0110 <span class="comment">% Fit a mixture model to the sample</span>
+0111 newmix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(dim, ncentres, <span class="string">'spherical'</span>);
+0112 options = foptions;
+0113 options(1) = -1;    <span class="comment">% Switch off all diagnostics</span>
+0114 options(14) = 5;    <span class="comment">% Just use 5 iterations of k-means in initialisation</span>
+0115 <span class="comment">% Initialise the model parameters from the samples</span>
+0116 newmix = <a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>(newmix, samples, options);
+0117 
+0118 <span class="comment">% Set up vector of options for EM trainer</span>
+0119 options = zeros(1, 18);
+0120 options(1)  = 1;        <span class="comment">% Prints out error values.</span>
+0121 options(14) = 15;        <span class="comment">% Max. Number of iterations.</span>
+0122 
+0123 disp(<span class="string">'We now train the model using the EM algorithm for 15 iterations'</span>)
+0124 disp(<span class="string">' '</span>)
+0125 disp(<span class="string">'Press any key to continue'</span>)
+0126 pause
+0127 [newmix, options, errlog] = <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>(newmix, samples, options);
+0128 
+0129 <span class="comment">% Print out model</span>
+0130 disp(<span class="string">' '</span>)
+0131 disp(<span class="string">'The trained model has parameters '</span>)
+0132 disp(<span class="string">'    Priors        Centres         Variances'</span>)
+0133 disp([newmix.priors' newmix.centres newmix.covars'])
+0134 disp(<span class="string">'Note the close correspondence between these parameters and those'</span>)
+0135 disp(<span class="string">'of the distribution used to generate the data'</span>)
+0136 disp(<span class="string">' '</span>)
+0137 disp(<span class="string">'    Priors        Centres         Variances'</span>)
+0138 disp([mix.priors' mix.centres mix.covars'])
+0139 disp(<span class="string">' '</span>)
+0140 disp(<span class="string">'Press any key to exit'</span>)
+0141 pause
+0142 
+0143 close(fh1);
+0144 clear all;
+0145</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

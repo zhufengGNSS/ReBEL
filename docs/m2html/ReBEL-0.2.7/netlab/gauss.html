@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gauss</title>
+  <meta name="keywords" content="gauss">
+  <meta name="description" content="GAUSS	Evaluate a Gaussian distribution.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gauss.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gauss
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GAUSS	Evaluate a Gaussian distribution.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function y = gauss(mu, covar, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GAUSS    Evaluate a Gaussian distribution.
+
+    Description
+
+    Y = GAUSS(MU, COVAR, X) evaluates a multi-variate Gaussian  density
+    in D-dimensions at a set of points given by the rows of the matrix X.
+    The Gaussian density has mean vector MU and covariance matrix COVAR.
+
+    See also
+    <a href="gsamp.html" class="code" title="function x = gsamp(mu, covar, nsamp)">GSAMP</a>, <a href="demgauss.html" class="code" title="">DEMGAUSS</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgauss.html" class="code" title="">demgauss</a>	DEMGAUSS Demonstrate sampling from Gaussian distributions.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function y = gauss(mu, covar, x)</a>
+0002 <span class="comment">%GAUSS    Evaluate a Gaussian distribution.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    Y = GAUSS(MU, COVAR, X) evaluates a multi-variate Gaussian  density</span>
+0007 <span class="comment">%    in D-dimensions at a set of points given by the rows of the matrix X.</span>
+0008 <span class="comment">%    The Gaussian density has mean vector MU and covariance matrix COVAR.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    See also</span>
+0011 <span class="comment">%    GSAMP, DEMGAUSS</span>
+0012 <span class="comment">%</span>
+0013 
+0014 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0015 
+0016 [n, d] = size(x);
+0017 
+0018 [j, k] = size(covar);
+0019 
+0020 <span class="comment">% Check that the covariance matrix is the correct dimension</span>
+0021 <span class="keyword">if</span> ((j ~= d) | (k ~=d))
+0022   error(<span class="string">'Dimension of the covariance matrix and data should match'</span>);
+0023 <span class="keyword">end</span>
+0024    
+0025 invcov = inv(covar);
+0026 mu = reshape(mu, 1, d);    <span class="comment">% Ensure that mu is a row vector</span>
+0027 
+0028 x = x - ones(n, 1)*mu;
+0029 fact = sum(((x*invcov).*x), 2);
+0030 
+0031 y = exp(-0.5*fact);
+0032 
+0033 y = y./sqrt((2*pi)^d*det(covar));</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

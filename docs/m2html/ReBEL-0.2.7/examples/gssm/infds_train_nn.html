@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of infds_train_nn</title>
+  <meta name="keywords" content="infds_train_nn">
+  <meta name="description" content="INFDS_TRAIN_NN  Demonstrate how the ReBEL toolkit is used to train a neural network">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">gssm</a> &gt; infds_train_nn.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\gssm&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>infds_train_nn
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>INFDS_TRAIN_NN  Demonstrate how the ReBEL toolkit is used to train a neural network</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function InferenceDS = infds_train_nn </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> INFDS_TRAIN_NN  Demonstrate how the ReBEL toolkit is used to train a neural network
+                 in efficient &quot;low-level&quot; mode.
+
+   Direct (InferenceDS level) description of a parameter estimation inference data
+   structure needed to train a 2 layer MLP on the standard XOR classification problem
+   using a Sigma-Point Kalman Filter (ukf, cdkf, srcdkf or srukf). Only the minimum
+   amount of needed InferenceDS fields are defined.
+
+   --- NOTE  :  This file is needed by 'train_nn.m'. See discussion in 'train_nn.m&quot;
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/mlpff.html" class="code" title="function Y = mlpff(olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpff</a>	MLPFF  Calculates the output of a ReBEL feed-forward MLP neural network with 2,3 or 4 layers</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/examples/parameter_estimation/dempe2.html" class="code" title="">dempe2</a>	DEMPE2  Demonstrate how the ReBEL toolkit is used to train a neural network</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function new_state = ffun(InfDS, state, V, U1)</a></li><li><a href="#_sub2" class="code">function observ = hfun(InfDS, state, N, U2)</a></li><li><a href="#_sub3" class="code">function innov = innovation(InferenceDS, obs, observ)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% INFDS_TRAIN_NN  Demonstrate how the ReBEL toolkit is used to train a neural network</span>
+0002 <span class="comment">%                 in efficient &quot;low-level&quot; mode.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Direct (InferenceDS level) description of a parameter estimation inference data</span>
+0005 <span class="comment">%   structure needed to train a 2 layer MLP on the standard XOR classification problem</span>
+0006 <span class="comment">%   using a Sigma-Point Kalman Filter (ukf, cdkf, srcdkf or srukf). Only the minimum</span>
+0007 <span class="comment">%   amount of needed InferenceDS fields are defined.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   --- NOTE  :  This file is needed by 'train_nn.m'. See discussion in 'train_nn.m&quot;</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0014 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0015 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0016 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0019 <span class="comment">%   detail.</span>
+0020 
+0021 <span class="comment">%=============================================================================================</span>
+0022 
+0023 <a name="_sub0" href="#_subfunctions" class="code">function InferenceDS = infds_train_nn</a>
+0024 
+0025     <span class="comment">%--- Setup InferenceDS fields needed by inference algorithms</span>
+0026 
+0027     InferenceDS.type    = <span class="string">'InferenceDS'</span>;          <span class="comment">% data structure type identifier tag</span>
+0028     InferenceDS.inftype = <span class="string">'parameter'</span>;            <span class="comment">% this InferenceDS data structure will be used for parameter estimation</span>
+0029 
+0030     InferenceDS.statedim  = (2*4+4 + 4*1+1);      <span class="comment">% number of free parameters in 2-2-1 neural network</span>
+0031     InferenceDS.obsdim    = 1;
+0032     InferenceDS.U1dim     = 0;
+0033     InferenceDS.U2dim     = 2;
+0034     InferenceDS.Vdim      = InferenceDS.statedim;
+0035     InferenceDS.Ndim      = InferenceDS.obsdim;
+0036     InferenceDS.ffun      = @<a href="#_sub1" class="code" title="subfunction new_state = ffun(InfDS, state, V, U1)">ffun</a>;
+0037     InferenceDS.hfun      = @<a href="#_sub2" class="code" title="subfunction observ = hfun(InfDS, state, N, U2)">hfun</a>;
+0038     InferenceDS.innovation = @<a href="#_sub3" class="code" title="subfunction innov = innovation(InferenceDS, obs, observ)">innovation</a>;
+0039 
+0040 
+0041     <span class="comment">%--- Store some extra problem specific info in InferenceDS to speed up later calculation</span>
+0042 
+0043     InferenceDS.nodes  = [2 4 1];       <span class="comment">% simple 2 layer ReBEL MLP neural net with 2 inputs, 2 hidden layers and 1 output unit</span>
+0044     InferenceDS.olType = <span class="string">'tanh'</span>;        <span class="comment">% sigmoidal (hyperbolic tangent) output unit activation.. .works well for clasification</span>
+0045                                         <span class="comment">% problems.</span>
+0046 
+0047 <span class="comment">%============================================================================================</span>
+0048 <span class="comment">% Generic State transition function for parameter estimation. Basically a random walk driven</span>
+0049 <span class="comment">% by artificial process noise (this speeds up convergence). Remember to adapt (anneal) the</span>
+0050 <span class="comment">% process noise covariance by setting 'pNoiseDS.adaptMethod' to something useful in the main</span>
+0051 <span class="comment">% calling script.</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%  Input</span>
+0054 <span class="comment">%          InfDS       :     stripped down InferenceDS datastructure as defined above</span>
+0055 <span class="comment">%          state       :     current state of system (in this case the parameters become the</span>
+0056 <span class="comment">%                            new state variable</span>
+0057 <span class="comment">%          V           :     process noise vector (all SPKFs need this)</span>
+0058 <span class="comment">%          U1          :     exogenous input to state transition function (not needed for</span>
+0059 <span class="comment">%                            parameter estimation, but we must comply with the interface</span>
+0060 <span class="comment">%                            expected by all estimation algorithms).</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">%  Output</span>
+0063 <span class="comment">%          new_state   :     system state at next time instant</span>
+0064 <span class="comment">%</span>
+0065 
+0066 <a name="_sub1" href="#_subfunctions" class="code">function new_state = ffun(InfDS, state, V, U1)</a>
+0067 
+0068 
+0069     new_state      = state;
+0070 
+0071     <span class="keyword">if</span> isempty(V)
+0072         new_state = state;
+0073     <span class="keyword">else</span>
+0074         new_state = state + V;
+0075     <span class="keyword">end</span>
+0076 
+0077 <span class="comment">%============================================================================================</span>
+0078 <span class="comment">% Problem specific state observation function. This is where the actual 'parameterised' function</span>
+0079 <span class="comment">% mapping takes place as a nonlinear observation on the state vector (which is the parameters</span>
+0080 <span class="comment">% of this mapping function). This can easily be adapted to ANY functional form (i.e. Netlab</span>
+0081 <span class="comment">% neural networks, Mathworks NN toolbox neural nets, etc. etc.)</span>
+0082 <span class="comment">%</span>
+0083 <span class="comment">%  Input</span>
+0084 <span class="comment">%          InfDS       :     stripped down InferenceDS datastructure as defined above</span>
+0085 <span class="comment">%          state       :     current state of system (in this case the parameters become the</span>
+0086 <span class="comment">%                            new state variable</span>
+0087 <span class="comment">%          N           :     observation noise vector (all SPKFs need this)</span>
+0088 <span class="comment">%          U2          :     exogenous input to state observation function. This is where you</span>
+0089 <span class="comment">%                            pass in the original clean inputs to the neural network.</span>
+0090 <span class="comment">%</span>
+0091 <span class="comment">%  Output</span>
+0092 <span class="comment">%          observ      :     output generated by neural network for current state (parameters) and</span>
+0093 <span class="comment">%                            current input (U2)</span>
+0094 <span class="comment">%</span>
+0095 
+0096 <a name="_sub2" href="#_subfunctions" class="code">function observ = hfun(InfDS, state, N, U2)</a>
+0097 
+0098 
+0099     numInputs = size(state,2);            <span class="comment">% These functions must be able to operate on more than</span>
+0100                                           <span class="comment">% one input vector (i.e. block mode). This is a requirement</span>
+0101                                           <span class="comment">% in order to use any of the SPKF based algorithms.</span>
+0102 
+0103     observ = zeros(InfDS.obsdim,numInputs); <span class="comment">% preallocate output buffer</span>
+0104 
+0105     <span class="keyword">for</span> k=1:numInputs
+0106 
+0107         <span class="comment">% Call 'mlpff' to calculate the NN output for the current parameter vector 'state(:,k)' and</span>
+0108         <span class="comment">% NN input 'U2(:,k)'. 'mlpff' unpacks the parameter vector internally. This operation can further</span>
+0109         <span class="comment">% be speeded up by unpacking the parameters and calculating the network output directly (in-place)</span>
+0110         <span class="comment">% here without calling any functions.</span>
+0111 
+0112         observ(:,k) = <a href="../../.././ReBEL-0.2.7/core/mlpff.html" class="code" title="function Y = mlpff(olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpff</a>(InfDS.olType, InfDS.nodes, U2(:,k), state(:,k));
+0113 
+0114     <span class="keyword">end</span>
+0115 
+0116     <span class="comment">%-- Add measurement noise if present       (needed by all SPKF based algorithms)</span>
+0117     <span class="keyword">if</span> ~isempty(N)
+0118         observ = observ + N;
+0119     <span class="keyword">end</span>
+0120 
+0121 
+0122 <span class="comment">%======================================================================================================</span>
+0123 <a name="_sub3" href="#_subfunctions" class="code">function innov = innovation(InferenceDS, obs, observ)</a>
+0124 
+0125     <span class="comment">%  Calculates the innovation signal (difference) between the</span>
+0126     <span class="comment">%  output of HFUN, i.e. OBSERV (the predicted system observation) and an actual</span>
+0127     <span class="comment">%  'real world' observation OBS.</span>
+0128 
+0129     innov = obs - observ;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

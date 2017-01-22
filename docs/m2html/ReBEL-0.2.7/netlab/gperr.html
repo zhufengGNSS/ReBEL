@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gperr</title>
+  <meta name="keywords" content="gperr">
+  <meta name="description" content="GPERR	Evaluate error function for Gaussian Process.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gperr.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gperr
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GPERR	Evaluate error function for Gaussian Process.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [e, edata, eprior] = gperr(net, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GPERR    Evaluate error function for Gaussian Process.
+
+    Description
+    E = GPERR(NET, X, T) takes a Gaussian Process data structure NET
+    together  with a matrix X of input vectors and a matrix T of target
+    vectors, and evaluates the error function E. Each row of X
+    corresponds to one input vector and each row of T corresponds to one
+    target vector.
+
+    [E, EDATA, EPRIOR] = GPERR(NET, X, T) additionally returns the data
+    and hyperprior components of the error, assuming a Gaussian prior on
+    the weights with mean and variance parameters PRMEAN and PRVARIANCE
+    taken from the network data structure NET.
+
+    See also
+    <a href="gp.html" class="code" title="function net = gp(nin, covar_fn, prior)">GP</a>, <a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">GPCOVAR</a>, <a href="gpfwd.html" class="code" title="function [y, sigsq] = gpfwd(net, x, cninv)">GPFWD</a>, <a href="gpgrad.html" class="code" title="function g = gpgrad(net, x, t)">GPGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>	GPCOVAR Calculate the covariance for a Gaussian Process.</li><li><a href="gppak.html" class="code" title="function hp = gppak(net)">gppak</a>	GPPAK	Combines GP hyperparameters into one vector.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [e, edata, eprior] = gperr(net, x, t)</a>
+0002 <span class="comment">%GPERR    Evaluate error function for Gaussian Process.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    E = GPERR(NET, X, T) takes a Gaussian Process data structure NET</span>
+0006 <span class="comment">%    together  with a matrix X of input vectors and a matrix T of target</span>
+0007 <span class="comment">%    vectors, and evaluates the error function E. Each row of X</span>
+0008 <span class="comment">%    corresponds to one input vector and each row of T corresponds to one</span>
+0009 <span class="comment">%    target vector.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    [E, EDATA, EPRIOR] = GPERR(NET, X, T) additionally returns the data</span>
+0012 <span class="comment">%    and hyperprior components of the error, assuming a Gaussian prior on</span>
+0013 <span class="comment">%    the weights with mean and variance parameters PRMEAN and PRVARIANCE</span>
+0014 <span class="comment">%    taken from the network data structure NET.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    See also</span>
+0017 <span class="comment">%    GP, GPCOVAR, GPFWD, GPGRAD</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0021 
+0022 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gp'</span>, x, t);
+0023 <span class="keyword">if</span> ~isempty(errstring);
+0024   error(errstring);
+0025 <span class="keyword">end</span>
+0026 
+0027 cn = <a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>(net, x);
+0028 
+0029 edata = 0.5*(sum(log(eig(cn, <span class="string">'nobalance'</span>))) + t'*inv(cn)*t);
+0030 
+0031 <span class="comment">% Evaluate the hyperprior contribution to the error.</span>
+0032 <span class="comment">% The hyperprior is Gaussian with mean pr_mean and variance</span>
+0033 <span class="comment">% pr_variance</span>
+0034 <span class="keyword">if</span> isfield(net, <span class="string">'pr_mean'</span>)
+0035   w = <a href="gppak.html" class="code" title="function hp = gppak(net)">gppak</a>(net);
+0036   m = repmat(net.pr_mean, size(w));
+0037   <span class="keyword">if</span> size(net.pr_mean) == [1 1]
+0038     eprior = 0.5*((w-m)*(w-m)');
+0039     e2 = eprior/net.pr_var;
+0040   <span class="keyword">else</span>
+0041     wpr = repmat(w, size(net.pr_mean, 1), 1)';
+0042     eprior = 0.5*(((wpr - m').^2).*net.index);
+0043     e2 = (sum(eprior, 1))*(1./net.pr_var);
+0044   <span class="keyword">end</span>
+0045 <span class="keyword">else</span>
+0046   e2 = 0;
+0047   eprior = 0;
+0048 <span class="keyword">end</span>
+0049 
+0050 e = edata + e2;
+0051</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

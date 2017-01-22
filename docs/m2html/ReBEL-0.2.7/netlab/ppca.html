@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ppca</title>
+  <meta name="keywords" content="ppca">
+  <meta name="description" content="PPCA	Probabilistic Principal Components Analysis">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; ppca.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>ppca
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PPCA	Probabilistic Principal Components Analysis</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [var, U, lambda] = ppca(x, ppca_dim) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PPCA    Probabilistic Principal Components Analysis
+
+    Description
+     [VAR, U, LAMBDA] = PPCA(X, PPCA_DIM) computes the principal
+    component subspace U of dimension PPCA_DIM using a centred covariance
+    matrix X. The variable VAR contains the off-subspace variance (which
+    is assumed to be spherical), while the vector LAMBDA contains the
+    variances of each of the principal components.  This is computed
+    using the eigenvalue and eigenvector  decomposition of X.
+
+    See also
+    <a href="eigdec.html" class="code" title="function [evals, evec] = eigdec(x, N)">EIGDEC</a>, <a href="pca.html" class="code" title="function [PCcoeff, PCvec] = pca(data, N)">PCA</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="eigdec.html" class="code" title="function [evals, evec] = eigdec(x, N)">eigdec</a>	EIGDEC	Sorted eigendecomposition</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">gmminit</a>	GMMINIT Initialises Gaussian mixture model from data</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [var, U, lambda] = ppca(x, ppca_dim)</a>
+0002 
+0003 <span class="comment">%PPCA    Probabilistic Principal Components Analysis</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%     [VAR, U, LAMBDA] = PPCA(X, PPCA_DIM) computes the principal</span>
+0007 <span class="comment">%    component subspace U of dimension PPCA_DIM using a centred covariance</span>
+0008 <span class="comment">%    matrix X. The variable VAR contains the off-subspace variance (which</span>
+0009 <span class="comment">%    is assumed to be spherical), while the vector LAMBDA contains the</span>
+0010 <span class="comment">%    variances of each of the principal components.  This is computed</span>
+0011 <span class="comment">%    using the eigenvalue and eigenvector  decomposition of X.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    See also</span>
+0014 <span class="comment">%    EIGDEC, PCA</span>
+0015 <span class="comment">%</span>
+0016 
+0017 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0018 
+0019 
+0020 
+0021 <span class="keyword">if</span> ppca_dim ~= round(ppca_dim) | ppca_dim &lt; 1 | ppca_dim &gt; size(x, 2)
+0022 
+0023    error(<span class="string">'Number of PCs must be integer, &gt;0, &lt; dim'</span>);
+0024 
+0025 <span class="keyword">end</span>
+0026 
+0027 
+0028 
+0029 [ndata, data_dim] = size(x);
+0030 
+0031 <span class="comment">% Assumes that x is centred and responsibility weighted</span>
+0032 
+0033 <span class="comment">% covariance matrix</span>
+0034 
+0035 [l Utemp] = <a href="eigdec.html" class="code" title="function [evals, evec] = eigdec(x, N)">eigdec</a>(x, data_dim);
+0036 
+0037 <span class="comment">% Zero any negative eigenvalues (caused by rounding)</span>
+0038 
+0039 l(l&lt;0) = 0;
+0040 
+0041 <span class="comment">% Now compute the sigma squared values for all possible values</span>
+0042 
+0043 <span class="comment">% of q</span>
+0044 
+0045 s2_temp = cumsum(l(end:-1:1))./[1:data_dim]';
+0046 
+0047 <span class="comment">% If necessary, reduce the value of q so that var is at least</span>
+0048 
+0049 <span class="comment">% eps * largest eigenvalue</span>
+0050 
+0051 q_temp = min([ppca_dim; data_dim-min(find(s2_temp/l(1) &gt; eps))]);
+0052 
+0053 <span class="keyword">if</span> q_temp ~= ppca_dim
+0054 
+0055   wstringpart = <span class="string">'Covariance matrix ill-conditioned: extracted'</span>;
+0056 
+0057   wstring = sprintf(<span class="string">'%s %d/%d PCs'</span>, <span class="keyword">...</span>
+0058 
+0059       wstringpart, q_temp, ppca_dim);
+0060 
+0061   warning(wstring);
+0062 
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="keyword">if</span> q_temp == 0
+0066 
+0067   <span class="comment">% All the latent dimensions have disappeared, so we are</span>
+0068 
+0069   <span class="comment">% just left with the noise model</span>
+0070 
+0071   var = l(1)/data_dim;
+0072 
+0073   lambda = var*ones(1, ppca_dim);
+0074 
+0075 <span class="keyword">else</span>
+0076 
+0077   var = mean(l(q_temp+1:end));
+0078 
+0079 <span class="keyword">end</span>  
+0080 
+0081 U = Utemp(:, 1:q_temp);
+0082 
+0083 lambda(1:q_temp) = l(1:q_temp);
+0084 
+0085 
+0086 
+0087 
+0088</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

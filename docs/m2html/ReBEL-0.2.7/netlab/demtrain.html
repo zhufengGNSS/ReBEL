@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demtrain</title>
+  <meta name="keywords" content="demtrain">
+  <meta name="description" content="DEMTRAIN Demonstrate training of MLP network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demtrain.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demtrain
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMTRAIN Demonstrate training of MLP network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function demtrain(action); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMTRAIN Demonstrate training of MLP network.
+
+   Description
+   DEMTRAIN brings up a simple GUI to show the training of an MLP
+   network on classification and regression problems.  The user should
+   load in a dataset (which should be in Netlab format: see  DATREAD),
+   select the output activation function, the  number of cycles and
+   hidden units and then train the network. The scaled conjugate
+   gradient algorithm is used. A graph shows the evolution of the error:
+   the value is shown  MAX(CEIL(ITERATIONS / 50), 5) cycles.
+
+   Once the network is trained, it is saved to the file MLPTRAIN.NET.
+   The results can then be viewed as a confusion matrix (for
+   classification problems) or a plot of output versus target (for
+   regression problems).
+
+   See also
+   <a href="confmat.html" class="code" title="function [C,rate]=confmat(Y,T)">CONFMAT</a>, <a href="datread.html" class="code" title="function [x, t, nin, nout, ndata] = datread(filename)">DATREAD</a>, <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">NETOPT</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="conffig.html" class="code" title="function fh=conffig(y, t)">conffig</a>	CONFFIG Display a confusion matrix.</li><li><a href="datread.html" class="code" title="function [x, t, nin, nout, ndata] = datread(filename)">datread</a>	DATREAD Read data from an ascii file.</li><li><a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>	MLP	Create a 2-layer feedforward network.</li><li><a href="mlperr.html" class="code" title="function [e, edata, eprior, mse] = mlperr(net, x, t)">mlperr</a>	MLPERR Evaluate error function for 2-layer network.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li><li><a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">mlpinit</a>	MLPINIT Initialise the weights in a 2-layer feedforward network.</li><li><a href="mlptrain.html" class="code" title="function [net, error] = mlptrain(net, x, t, its);">mlptrain</a>	MLPTRAIN Utility to train an MLP network for demtrain</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function demtrain(action);</a>
+0002 <span class="comment">%DEMTRAIN Demonstrate training of MLP network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Description</span>
+0005 <span class="comment">%   DEMTRAIN brings up a simple GUI to show the training of an MLP</span>
+0006 <span class="comment">%   network on classification and regression problems.  The user should</span>
+0007 <span class="comment">%   load in a dataset (which should be in Netlab format: see  DATREAD),</span>
+0008 <span class="comment">%   select the output activation function, the  number of cycles and</span>
+0009 <span class="comment">%   hidden units and then train the network. The scaled conjugate</span>
+0010 <span class="comment">%   gradient algorithm is used. A graph shows the evolution of the error:</span>
+0011 <span class="comment">%   the value is shown  MAX(CEIL(ITERATIONS / 50), 5) cycles.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Once the network is trained, it is saved to the file MLPTRAIN.NET.</span>
+0014 <span class="comment">%   The results can then be viewed as a confusion matrix (for</span>
+0015 <span class="comment">%   classification problems) or a plot of output versus target (for</span>
+0016 <span class="comment">%   regression problems).</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   See also</span>
+0019 <span class="comment">%   CONFMAT, DATREAD, MLP, NETOPT, SCG</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">%   Copyright (c) Ian T Nabney (1996-2001)</span>
+0023 
+0024 <span class="comment">% If run without parameters, initialise gui.</span>
+0025 <span class="keyword">if</span> nargin&lt;1,
+0026   action=<span class="string">'initialise'</span>;
+0027 <span class="keyword">end</span>;
+0028 
+0029 <span class="comment">% Global variable to reference GUI figure</span>
+0030 <span class="keyword">global</span> DEMTRAIN_FIG
+0031 <span class="comment">% Global array to reference sub-figures for results plots</span>
+0032 <span class="keyword">global</span> DEMTRAIN_RES_FIGS
+0033 <span class="keyword">global</span> NUM_DEMTRAIN_RES_FIGS
+0034 
+0035 <span class="keyword">if</span> strcmp(action,<span class="string">'initialise'</span>),
+0036 
+0037   file = <span class="string">''</span>;
+0038   path = <span class="string">'.'</span>;
+0039 
+0040   <span class="comment">% Create FIGURE</span>
+0041   fig = figure( <span class="keyword">...</span>
+0042     <span class="string">'Name'</span>, <span class="string">'Netlab Demo'</span>, <span class="keyword">...</span>
+0043     <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0044     <span class="string">'Menubar'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+0045     <span class="string">'Color'</span>, [0.7529 0.7529 0.7529], <span class="keyword">...</span>
+0046     <span class="string">'Visible'</span>, <span class="string">'on'</span>);
+0047   <span class="comment">% Initialise the globals</span>
+0048   DEMTRAIN_FIG = fig;
+0049   DEMTRAIN_RES_FIGS = 0;
+0050   NUM_DEMTRAIN_RES_FIGS = 0;
+0051 
+0052   <span class="comment">% Create GROUP for buttons</span>
+0053   uicontrol(fig, <span class="keyword">...</span>
+0054     <span class="string">'Style'</span>, <span class="string">'frame'</span>, <span class="keyword">...</span>
+0055     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0056     <span class="string">'Position'</span>, [0.03 0.08 0.94 0.22], <span class="keyword">...</span>
+0057     <span class="string">'BackgroundColor'</span>, [0.5 0.5 0.5]);
+0058 
+0059   <span class="comment">% Create MAIN axis</span>
+0060   hMain = axes( <span class="keyword">...</span>
+0061     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0062     <span class="string">'Position'</span>, [0.10 0.5 0.80 0.40], <span class="keyword">...</span>
+0063     <span class="string">'XColor'</span>, [0 0 0], <span class="keyword">...</span>
+0064     <span class="string">'YColor'</span>, [0 0 0], <span class="keyword">...</span>
+0065     <span class="string">'Visible'</span>, <span class="string">'on'</span>);
+0066 
+0067   <span class="comment">% Create static text for FILENAME and PATH</span>
+0068   hFilename = uicontrol(fig, <span class="keyword">...</span>
+0069     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0070     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0071     <span class="string">'BackgroundColor'</span>, [0.7529 0.7529 0.7529], <span class="keyword">...</span>
+0072     <span class="string">'Position'</span>, [0.05 0.32 0.90 0.05], <span class="keyword">...</span>
+0073     <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="keyword">...</span>
+0074     <span class="string">'String'</span>, <span class="string">'Please load data file.'</span>, <span class="keyword">...</span>
+0075     <span class="string">'Visible'</span>, <span class="string">'on'</span>);
+0076   hPath = uicontrol(fig, <span class="keyword">...</span>
+0077     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0078     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0079     <span class="string">'BackgroundColor'</span>, [0.7529 0.7529 0.7529], <span class="keyword">...</span>
+0080     <span class="string">'Position'</span>, [0.05 0.37 0.90 0.05], <span class="keyword">...</span>
+0081     <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="keyword">...</span>
+0082     <span class="string">'String'</span>, <span class="string">''</span>, <span class="keyword">...</span>
+0083     <span class="string">'Visible'</span>, <span class="string">'on'</span>);
+0084 
+0085   <span class="comment">% Create NO OF HIDDEN UNITS slider and text</span>
+0086   hSliderText = uicontrol(fig, <span class="keyword">...</span>
+0087     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0088     <span class="string">'BackgroundColor'</span>, [0.5 0.5 0.5], <span class="keyword">...</span>
+0089     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0090     <span class="string">'Position'</span>, [0.27 0.12 0.17 0.04], <span class="keyword">...</span>
+0091     <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>, <span class="keyword">...</span>
+0092     <span class="string">'String'</span>, <span class="string">'Hidden Units: 5'</span>);
+0093   hSlider = uicontrol(fig, <span class="keyword">...</span>
+0094     <span class="string">'Style'</span>, <span class="string">'slider'</span>, <span class="keyword">...</span>
+0095     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0096     <span class="string">'Position'</span>, [0.45 0.12 0.26 0.04], <span class="keyword">...</span>
+0097     <span class="string">'String'</span>, <span class="string">'Slider'</span>, <span class="keyword">...</span>
+0098     <span class="string">'Min'</span>, 1, <span class="string">'Max'</span>, 25, <span class="keyword">...</span>
+0099     <span class="string">'Value'</span>, 5, <span class="keyword">...</span>
+0100     <span class="string">'Callback'</span>, <span class="string">'demtrain slider_moved'</span>);
+0101 
+0102   <span class="comment">% Create ITERATIONS slider and text</span>
+0103   hIterationsText = uicontrol(fig, <span class="keyword">...</span>
+0104     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0105     <span class="string">'BackgroundColor'</span>, [0.5 0.5 0.5], <span class="keyword">...</span>
+0106     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0107     <span class="string">'Position'</span>, [0.27 0.21 0.17 0.04], <span class="keyword">...</span>
+0108     <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>, <span class="keyword">...</span>
+0109     <span class="string">'String'</span>, <span class="string">'Iterations: 50'</span>);
+0110   hIterations = uicontrol(fig, <span class="keyword">...</span>
+0111     <span class="string">'Style'</span>, <span class="string">'slider'</span>, <span class="keyword">...</span>
+0112     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0113     <span class="string">'Position'</span>, [0.45 0.21 0.26 0.04], <span class="keyword">...</span>
+0114     <span class="string">'String'</span>, <span class="string">'Slider'</span>, <span class="keyword">...</span>
+0115     <span class="string">'Min'</span>, 10, <span class="string">'Max'</span>, 500, <span class="keyword">...</span>
+0116     <span class="string">'Value'</span>, 50, <span class="keyword">...</span>
+0117     <span class="string">'Callback'</span>, <span class="string">'demtrain iterations_moved'</span>);
+0118 
+0119   <span class="comment">% Create ACTIVATION FUNCTION popup and text</span>
+0120   uicontrol(fig, <span class="keyword">...</span>
+0121     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0122     <span class="string">'BackgroundColor'</span>, [0.5 0.5 0.5], <span class="keyword">...</span>
+0123     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0124     <span class="string">'Position'</span>, [0.05 0.20 0.20 0.04], <span class="keyword">...</span>
+0125     <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="keyword">...</span>
+0126     <span class="string">'String'</span>, <span class="string">'Activation Function:'</span>);
+0127   hPopup = uicontrol(fig, <span class="keyword">...</span>
+0128     <span class="string">'Style'</span>, <span class="string">'popup'</span>, <span class="keyword">...</span>
+0129     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0130     <span class="string">'Position'</span> , [0.05 0.10 0.20 0.08], <span class="keyword">...</span>
+0131     <span class="string">'String'</span>, <span class="string">'Linear|Logistic|Softmax'</span>, <span class="keyword">...</span>
+0132     <span class="string">'Callback'</span>, <span class="string">''</span>);
+0133 
+0134   <span class="comment">% Create MENU</span>
+0135   hMenu1 = uimenu(<span class="string">'Label'</span>, <span class="string">'Load Data file...'</span>, <span class="string">'Callback'</span>, <span class="string">''</span>);
+0136   uimenu(hMenu1, <span class="string">'Label'</span>, <span class="string">'Select training data file'</span>, <span class="keyword">...</span>
+0137     <span class="string">'Callback'</span>, <span class="string">'demtrain get_ip_file'</span>);
+0138   hMenu2 = uimenu(<span class="string">'Label'</span>, <span class="string">'Show Results...'</span>, <span class="string">'Callback'</span>, <span class="string">''</span>);
+0139   uimenu(hMenu2, <span class="string">'Label'</span>, <span class="string">'Show classification results'</span>, <span class="keyword">...</span>
+0140     <span class="string">'Callback'</span>, <span class="string">'demtrain classify'</span>);
+0141   uimenu(hMenu2, <span class="string">'Label'</span>, <span class="string">'Show regression results'</span>, <span class="keyword">...</span>
+0142     <span class="string">'Callback'</span>, <span class="string">'demtrain predict'</span>);
+0143 
+0144   <span class="comment">% Create START button</span>
+0145   hStart = uicontrol(fig, <span class="keyword">...</span>
+0146     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0147     <span class="string">'Position'</span> , [0.75 0.2 0.20 0.08], <span class="keyword">...</span>
+0148     <span class="string">'String'</span>, <span class="string">'Start Training'</span>, <span class="keyword">...</span>
+0149     <span class="string">'Enable'</span>, <span class="string">'off'</span>,<span class="keyword">...</span>
+0150     <span class="string">'Callback'</span>, <span class="string">'demtrain start'</span>);
+0151 
+0152   <span class="comment">% Create CLOSE button</span>
+0153   uicontrol(fig, <span class="keyword">...</span>
+0154     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0155     <span class="string">'Position'</span> , [0.75 0.1 0.20 0.08], <span class="keyword">...</span>
+0156     <span class="string">'String'</span>, <span class="string">'Close'</span>, <span class="keyword">...</span>
+0157     <span class="string">'Callback'</span>, <span class="string">'demtrain close'</span>);
+0158 
+0159   <span class="comment">% Save handles of important UI objects</span>
+0160   hndlList = [hSlider hSliderText hFilename hPath hPopup <span class="keyword">...</span>
+0161       hIterations hIterationsText hStart];
+0162   set(fig, <span class="string">'UserData'</span>, hndlList);
+0163   <span class="comment">% Hide window from command line</span>
+0164   set(fig, <span class="string">'HandleVisibility'</span>, <span class="string">'callback'</span>);
+0165 
+0166 
+0167 <span class="keyword">elseif</span> strcmp(action, <span class="string">'slider_moved'</span>),
+0168 
+0169   <span class="comment">% Slider has been moved.</span>
+0170 
+0171   hndlList = get(gcf, <span class="string">'UserData'</span>);
+0172   hSlider = hndlList(1);
+0173   hSliderText = hndlList(2);
+0174 
+0175   val = get(hSlider, <span class="string">'Value'</span>);
+0176   <span class="keyword">if</span> rem(val, 1) &lt; 0.5,  <span class="comment">% Force up and down arrows to work!</span>
+0177     val = ceil(val);
+0178   <span class="keyword">else</span>
+0179     val = floor(val);
+0180   <span class="keyword">end</span>;
+0181   set(hSlider, <span class="string">'Value'</span>, val);
+0182   set(hSliderText, <span class="string">'String'</span>, [<span class="string">'Hidden Units: '</span> int2str(val)]);
+0183 
+0184 
+0185 <span class="keyword">elseif</span> strcmp(action, <span class="string">'iterations_moved'</span>),
+0186 
+0187   <span class="comment">% Slider has been moved.</span>
+0188 
+0189   hndlList = get(gcf, <span class="string">'UserData'</span>);
+0190   hSlider = hndlList(6);
+0191   hSliderText = hndlList(7);
+0192 
+0193   val = get(hSlider, <span class="string">'Value'</span>);
+0194   set(hSliderText, <span class="string">'String'</span>, [<span class="string">'Iterations: '</span> int2str(val)]);
+0195 
+0196 <span class="keyword">elseif</span> strcmp(action, <span class="string">'get_ip_file'</span>),
+0197 
+0198   <span class="comment">% Get data file button pressed.</span>
+0199 
+0200   hndlList = get(gcf, <span class="string">'UserData'</span>);
+0201 
+0202   [file, path] = uigetfile(<span class="string">'*.dat'</span>, <span class="string">'Get Data File'</span>, 50, 50);
+0203 
+0204   <span class="keyword">if</span> strcmp(file, <span class="string">''</span>) | file == 0,
+0205     set(hndlList(3), <span class="string">'String'</span>, <span class="string">'No data file loaded.'</span>);
+0206     set(hndlList(4), <span class="string">'String'</span>, <span class="string">''</span>);
+0207   <span class="keyword">else</span>
+0208     set(hndlList(3), <span class="string">'String'</span>, file);
+0209     set(hndlList(4), <span class="string">'String'</span>, path);
+0210   <span class="keyword">end</span>;
+0211 
+0212   <span class="comment">% Enable training button</span>
+0213   set(hndlList(8), <span class="string">'Enable'</span>, <span class="string">'on'</span>);
+0214 
+0215   set(gcf, <span class="string">'UserData'</span>, hndlList);
+0216 
+0217 <span class="keyword">elseif</span> strcmp(action, <span class="string">'start'</span>),
+0218 
+0219   <span class="comment">% Start training</span>
+0220 
+0221   <span class="comment">% Get handles of and values from UI objects</span>
+0222   hndlList = get(gcf, <span class="string">'UserData'</span>);
+0223   hSlider = hndlList(1); <span class="comment">%              No of hidden units</span>
+0224   hIterations = hndlList(6);
+0225   iterations = get(hIterations, <span class="string">'Value'</span>);
+0226 
+0227   hFilename = hndlList(3);  <span class="comment">%           Data file name</span>
+0228   filename = get(hFilename, <span class="string">'String'</span>);
+0229 
+0230   hPath = hndlList(4);  <span class="comment">%               Data file path</span>
+0231   path = get(hPath, <span class="string">'String'</span>);
+0232 
+0233   hPopup = hndlList(5);     <span class="comment">%           Activation function</span>
+0234   <span class="keyword">if</span> get(hPopup, <span class="string">'Value'</span>) == 1,
+0235     act_fn = <span class="string">'linear'</span>;
+0236   <span class="keyword">elseif</span> get(hPopup, <span class="string">'Value'</span>) == 2,
+0237     act_fn = <span class="string">'logistic'</span>;
+0238   <span class="keyword">else</span>
+0239     act_fn = <span class="string">'softmax'</span>;
+0240   <span class="keyword">end</span>;
+0241   nhidden = get(hSlider, <span class="string">'Value'</span>);
+0242 
+0243   <span class="comment">% Check data file exists</span>
+0244   <span class="keyword">if</span> fopen([path <span class="string">'/'</span> filename]) == -1,
+0245     errordlg(<span class="string">'Training data file has not been selected.'</span>, <span class="string">'Error'</span>);
+0246   <span class="keyword">else</span>
+0247     <span class="comment">% Load data file</span>
+0248     [x,t,nin,nout,ndata] = <a href="datread.html" class="code" title="function [x, t, nin, nout, ndata] = datread(filename)">datread</a>([path filename]);
+0249 
+0250     <span class="comment">% Call MLPTRAIN function repeatedly, while drawing training graph.</span>
+0251     figure(DEMTRAIN_FIG);
+0252     hold on;
+0253 
+0254     title(<span class="string">'Training - please wait.'</span>);
+0255 
+0256     <span class="comment">% Create net and find initial error</span>
+0257     net = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(size(x, 2), nhidden, size(t, 2), act_fn);
+0258     <span class="comment">% Initialise network with inverse variance of 10</span>
+0259     net = <a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">mlpinit</a>(net, 10);
+0260     error = <a href="mlperr.html" class="code" title="function [e, edata, eprior, mse] = mlperr(net, x, t)">mlperr</a>(net, x, t);
+0261     <span class="comment">% Work out reporting step: should be sufficiently big to let training</span>
+0262     <span class="comment">% algorithm have a chance</span>
+0263     step = max(ceil(iterations / 50), 5);
+0264 
+0265     <span class="comment">% Refresh and rescale axis.</span>
+0266     cla;
+0267     mmax = error;
+0268     min = mmax/10;
+0269     set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>);
+0270     ylabel(<span class="string">'log Error'</span>);
+0271     xlabel(<span class="string">'No. iterations'</span>);
+0272     axis([0 iterations min mmax+1]);
+0273     iold = 0;
+0274     errold = error;
+0275     <span class="comment">% Plot circle to show error of last iteration</span>
+0276     <span class="comment">% Setting erase mode to none prevents screen flashing during</span>
+0277     <span class="comment">% training</span>
+0278     plot(0, error, <span class="string">'ro'</span>, <span class="string">'EraseMode'</span>, <span class="string">'none'</span>);
+0279     hold on
+0280     drawnow; <span class="comment">% Force redraw</span>
+0281     <span class="keyword">for</span> i = step-1:step:iterations,
+0282       [net, error] = <a href="mlptrain.html" class="code" title="function [net, error] = mlptrain(net, x, t, its);">mlptrain</a>(net, x, t, step);
+0283       <span class="comment">% Plot line from last point to new point.</span>
+0284       line([iold i], [errold error], <span class="string">'Color'</span>, <span class="string">'r'</span>, <span class="string">'EraseMode'</span>, <span class="string">'none'</span>);
+0285       iold = i;
+0286       errold = error;
+0287 
+0288       <span class="comment">% If new point off scale, redraw axes.</span>
+0289       <span class="keyword">if</span> error &gt; mmax,
+0290         mmax = error;
+0291         axis([0 iterations min mmax+1]);
+0292       <span class="keyword">end</span>;
+0293       <span class="keyword">if</span> error &lt; min
+0294         min = error/10;
+0295         axis([0 iterations min mmax+1]);
+0296       <span class="keyword">end</span>
+0297       <span class="comment">% Plot circle to show error of last iteration</span>
+0298       plot(i, error, <span class="string">'ro'</span>, <span class="string">'EraseMode'</span>, <span class="string">'none'</span>);
+0299       drawnow; <span class="comment">% Force redraw</span>
+0300     <span class="keyword">end</span>;
+0301     save mlptrain.net net
+0302     zoom on;
+0303 
+0304     title([<span class="string">'Training complete. Final error='</span>, num2str(error)]);
+0305 
+0306   <span class="keyword">end</span>;
+0307 
+0308 <span class="keyword">elseif</span> strcmp(action, <span class="string">'close'</span>),
+0309 
+0310   <span class="comment">% Close all the figures we have created</span>
+0311   close(DEMTRAIN_FIG);
+0312   <span class="keyword">for</span> n = 1:NUM_DEMTRAIN_RES_FIGS
+0313     <span class="keyword">if</span> ishandle(DEMTRAIN_RES_FIGS(n))
+0314       close(DEMTRAIN_RES_FIGS(n));
+0315     <span class="keyword">end</span>
+0316   <span class="keyword">end</span>
+0317 
+0318 <span class="keyword">elseif</span> strcmp(action, <span class="string">'classify'</span>),
+0319 
+0320   <span class="keyword">if</span> fopen(<span class="string">'mlptrain.net'</span>) == -1,
+0321     errordlg(<span class="string">'You have not yet trained the network.'</span>, <span class="string">'Error'</span>);
+0322   <span class="keyword">else</span>
+0323 
+0324     hndlList = get(gcf, <span class="string">'UserData'</span>);
+0325     filename = get(hndlList(3), <span class="string">'String'</span>);
+0326     path = get(hndlList(4), <span class="string">'String'</span>);
+0327     [x,t,nin,nout,ndata] = <a href="datread.html" class="code" title="function [x, t, nin, nout, ndata] = datread(filename)">datread</a>([path filename]);
+0328     load mlptrain.net net -mat
+0329     y = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, x);
+0330 
+0331     <span class="comment">% Save results figure so that it can be closed later</span>
+0332     NUM_DEMTRAIN_RES_FIGS = NUM_DEMTRAIN_RES_FIGS + 1;
+0333     DEMTRAIN_RES_FIGS(NUM_DEMTRAIN_RES_FIGS)=<a href="conffig.html" class="code" title="function fh=conffig(y, t)">conffig</a>(y,t);
+0334 
+0335   <span class="keyword">end</span>;
+0336 
+0337 <span class="keyword">elseif</span> strcmp(action, <span class="string">'predict'</span>),
+0338 
+0339   <span class="keyword">if</span> fopen(<span class="string">'mlptrain.net'</span>) == -1,
+0340     errordlg(<span class="string">'You have not yet trained the network.'</span>, <span class="string">'Error'</span>);
+0341   <span class="keyword">else</span>
+0342 
+0343     hndlList = get(gcf, <span class="string">'UserData'</span>);
+0344     filename = get(hndlList(3), <span class="string">'String'</span>);
+0345     path = get(hndlList(4), <span class="string">'String'</span>);
+0346     [x,t,nin,nout,ndata] = <a href="datread.html" class="code" title="function [x, t, nin, nout, ndata] = datread(filename)">datread</a>([path filename]);
+0347     load mlptrain.net net -mat
+0348     y = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, x);
+0349 
+0350     <span class="keyword">for</span> i = 1:size(y,2),
+0351       <span class="comment">% Save results figure so that it can be closed later</span>
+0352       NUM_DEMTRAIN_RES_FIGS = NUM_DEMTRAIN_RES_FIGS + 1;
+0353       DEMTRAIN_RES_FIGS(NUM_DEMTRAIN_RES_FIGS) = figure;
+0354       hold on;
+0355       title([<span class="string">'Output no '</span> num2str(i)]);
+0356       plot([0 1], [0 1], <span class="string">'r:'</span>);
+0357       plot(y(:,i),t(:,i), <span class="string">'o'</span>);
+0358       hold off;
+0359     <span class="keyword">end</span>;
+0360   <span class="keyword">end</span>;
+0361 
+0362 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

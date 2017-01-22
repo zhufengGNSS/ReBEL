@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gpunpak</title>
+  <meta name="keywords" content="gpunpak">
+  <meta name="description" content="GPUNPAK Separates hyperparameter vector into components.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gpunpak.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gpunpak
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GPUNPAK Separates hyperparameter vector into components.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = gpunpak(net, hp) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GPUNPAK Separates hyperparameter vector into components. 
+
+    Description
+    NET = GPUNPAK(NET, HP) takes an Gaussian Process data structure NET
+    and  a hyperparameter vector HP, and returns a Gaussian Process data
+    structure  identical to the input model, except that the covariance
+    bias BIAS, output noise NOISE, the input weight vector INWEIGHTS and
+    the vector of covariance function specific parameters  FPAR have all
+    been set to the corresponding elements of HP.
+
+    See also
+    <a href="gp.html" class="code" title="function net = gp(nin, covar_fn, prior)">GP</a>, <a href="gppak.html" class="code" title="function hp = gppak(net)">GPPAK</a>, <a href="gpfwd.html" class="code" title="function [y, sigsq] = gpfwd(net, x, cninv)">GPFWD</a>, <a href="gperr.html" class="code" title="function [e, edata, eprior] = gperr(net, x, t)">GPERR</a>, <a href="gpgrad.html" class="code" title="function g = gpgrad(net, x, t)">GPGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gpinit.html" class="code" title="function net = gpinit(net, tr_in, tr_targets, prior)">gpinit</a>	GPINIT	Initialise Gaussian Process model.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = gpunpak(net, hp)</a>
+0002 <span class="comment">%GPUNPAK Separates hyperparameter vector into components.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = GPUNPAK(NET, HP) takes an Gaussian Process data structure NET</span>
+0006 <span class="comment">%    and  a hyperparameter vector HP, and returns a Gaussian Process data</span>
+0007 <span class="comment">%    structure  identical to the input model, except that the covariance</span>
+0008 <span class="comment">%    bias BIAS, output noise NOISE, the input weight vector INWEIGHTS and</span>
+0009 <span class="comment">%    the vector of covariance function specific parameters  FPAR have all</span>
+0010 <span class="comment">%    been set to the corresponding elements of HP.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    See also</span>
+0013 <span class="comment">%    GP, GPPAK, GPFWD, GPERR, GPGRAD</span>
+0014 <span class="comment">%</span>
+0015 
+0016 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0017 
+0018 <span class="comment">% Check arguments for consistency</span>
+0019 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gp'</span>);
+0020 <span class="keyword">if</span> ~isempty(errstring);
+0021   error(errstring);
+0022 <span class="keyword">end</span>
+0023 <span class="keyword">if</span> net.nwts ~= length(hp)
+0024   error(<span class="string">'Invalid weight vector length'</span>);
+0025 <span class="keyword">end</span>
+0026 
+0027 net.bias = hp(1);
+0028 net.noise = hp(2);
+0029 
+0030 <span class="comment">% Unpack input weights</span>
+0031 mark1 = 2 + net.nin;
+0032 net.inweights = hp(3:mark1);
+0033 
+0034 <span class="comment">% Unpack function specific parameters</span>
+0035 net.fpar = hp(mark1 + 1:size(hp, 2));
+0036</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

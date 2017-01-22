@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlptrain</title>
+  <meta name="keywords" content="mlptrain">
+  <meta name="description" content="MLPTRAIN Utility to train an MLP network for demtrain">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlptrain.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlptrain
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPTRAIN Utility to train an MLP network for demtrain</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [net, error] = mlptrain(net, x, t, its); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPTRAIN Utility to train an MLP network for demtrain
+
+    Description
+
+    [NET, ERROR] = MLPTRAIN(NET, X, T, ITS) trains a network data
+    structure NET using the scaled conjugate gradient algorithm  for ITS
+    cycles with input data X, target data T.
+
+    See also
+    <a href="demtrain.html" class="code" title="function demtrain(action);">DEMTRAIN</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a>, <a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">NETOPT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>	NETOPT	Optimize the weights in a network model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demtrain.html" class="code" title="function demtrain(action);">demtrain</a>	DEMTRAIN Demonstrate training of MLP network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [net, error] = mlptrain(net, x, t, its);</a>
+0002 <span class="comment">%MLPTRAIN Utility to train an MLP network for demtrain</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    [NET, ERROR] = MLPTRAIN(NET, X, T, ITS) trains a network data</span>
+0007 <span class="comment">%    structure NET using the scaled conjugate gradient algorithm  for ITS</span>
+0008 <span class="comment">%    cycles with input data X, target data T.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    See also</span>
+0011 <span class="comment">%    DEMTRAIN, SCG, NETOPT</span>
+0012 <span class="comment">%</span>
+0013 
+0014 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0015 
+0016 options = zeros(1,18);
+0017 options(1) = -1;    <span class="comment">% To prevent any messages at all</span>
+0018 options(9) = 0;
+0019 options(14) = its;
+0020 
+0021 [net, options] = <a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>(net, options, x, t, <span class="string">'scg'</span>);
+0022 
+0023 error = options(8);
+0024</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

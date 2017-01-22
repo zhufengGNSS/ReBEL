@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gssm_mackey_glass</title>
+  <meta name="keywords" content="gssm_mackey_glass">
+  <meta name="description" content="GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">gssm</a> &gt; gssm_mackey_glass.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\gssm&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>gssm_mackey_glass
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [varargout] = model_interface(func, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series
+
+  The Mackey-Glass time-delay differential equation is defined by
+
+            dx(t)/dt = 0.2x(t-tau)/(1+x(t-tau)^10) - 0.1x(t)
+
+  When x(0) = 1.2 and tau = 17, we have a non-periodic and non-convergent time series that
+  is very sensitive to initial conditions. (We assume x(t) = 0 when t &lt; 0.)
+
+  We assume that the chaotic time series is generated with by a nonlinear autoregressive
+  model where the nonlinear functional unit is a feedforward neural network. We use a
+  tap length of 6 and a 6-4-1 MLP neural network with hyperbolic tangent activation functions
+  in the hidden layer and a linear output activation.
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>	CONSISTENT   Check ReBEL data structures for consistentency.</li><li><a href="../../.././ReBEL-0.2.7/core/cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>	CVECREP  Column vector replicate</li><li><a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="../../.././ReBEL-0.2.7/core/mlpindexgen.html" class="code" title="function [idxW1, idxB1, idxW2, idxB2, idxW3, idxB3, idxW4, idxB4] = mlpindexgen(nodes)">mlpindexgen</a>	MLPINDEXGEN  ReBEL MLP neural network parameter matrices de-vectorizing index generator</li><li><a href="../../.././ReBEL-0.2.7/core/mlpjacobian.html" class="code" title="function [J1,J2] = mlpjacobian(jacType, olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpjacobian</a>	MLPJACOBIAN   Calculates the Jacobian (first partial derivative matrix)</li><li><a href="../../.././ReBEL-0.2.7/core/mlpunpack.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpunpack(nodes, wh)">mlpunpack</a>	MLPUNPACK  ReBEL MLP neural network weight matrices de-vectorizer.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/examples/joint_estimation/demje2.html" class="code" title="">demje2</a>	DEMJE2 Demonstrate nonlinear time series joint estimation for Mackey-Glass chaotic time series</li><li><a href="../../.././ReBEL-0.2.7/examples/state_estimation/demse3.html" class="code" title="">demse3</a>	DEMSE3  Demonstrate nonlinear time series state estimation for Mackey-Glass chaotic time series</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function model = init(init_args)</a></li><li><a href="#_sub2" class="code">function model = setparams(model, params, paramIdxVec)</a></li><li><a href="#_sub3" class="code">function new_state = ffun(model, state, V, U1)</a></li><li><a href="#_sub4" class="code">function observ = hfun(model, state, N, U2)</a></li><li><a href="#_sub5" class="code">function tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a></li><li><a href="#_sub6" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub7" class="code">function out = linearize(model, state, V, N, U1, U2, term, index_vector)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%  The Mackey-Glass time-delay differential equation is defined by</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%            dx(t)/dt = 0.2x(t-tau)/(1+x(t-tau)^10) - 0.1x(t)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%  When x(0) = 1.2 and tau = 17, we have a non-periodic and non-convergent time series that</span>
+0008 <span class="comment">%  is very sensitive to initial conditions. (We assume x(t) = 0 when t &lt; 0.)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  We assume that the chaotic time series is generated with by a nonlinear autoregressive</span>
+0011 <span class="comment">%  model where the nonlinear functional unit is a feedforward neural network. We use a</span>
+0012 <span class="comment">%  tap length of 6 and a 6-4-1 MLP neural network with hyperbolic tangent activation functions</span>
+0013 <span class="comment">%  in the hidden layer and a linear output activation.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0018 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0019 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0020 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0023 <span class="comment">%   detail.</span>
+0024 
+0025 <span class="comment">%===============================================================================================</span>
+0026 <a name="_sub0" href="#_subfunctions" class="code">function [varargout] = model_interface(func, varargin)</a>
+0027 
+0028   <span class="keyword">switch</span> func
+0029 
+0030     <span class="comment">%--- Initialize GSSM data structure --------------------------------------------------------</span>
+0031     <span class="keyword">case</span> <span class="string">'init'</span>
+0032       model = <a href="#_sub1" class="code" title="subfunction model = init(init_args)">init</a>(varargin);
+0033         error(<a href="../../.././ReBEL-0.2.7/core/consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>(model,<span class="string">'gssm'</span>));               <span class="comment">% check consistentency of initialized model</span>
+0034       varargout{1} = model;
+0035 
+0036     <span class="comment">%--------------------------------------------------------------------------------------------</span>
+0037     <span class="keyword">otherwise</span>
+0038 
+0039       error([<span class="string">'Function '''</span> func <span class="string">''' not supported.'</span>]);
+0040 
+0041   <span class="keyword">end</span>
+0042 
+0043 
+0044 <span class="comment">%===============================================================================================</span>
+0045 <a name="_sub1" href="#_subfunctions" class="code">function model = init(init_args)</a>
+0046 
+0047   load mg30_6-4-1_model.mat;            <span class="comment">% load ReBEL neural network model from Matlab MAT file</span>
+0048                                         <span class="comment">% This loads a NeuralNetDS data structure, i.e.</span>
+0049                                         <span class="comment">% NeuralNet.type = 'NeuralNetDS'</span>
+0050                                         <span class="comment">% NeuralNet.subtype = 'MLP'</span>
+0051                                         <span class="comment">% NeuralNet.nodes   : MLP structure descriptor vector</span>
+0052                                         <span class="comment">% NeuralNet.olType  : output layer type</span>
+0053                                         <span class="comment">% NeuralNet.weights : neural network parameters</span>
+0054                                         <span class="comment">% NeuralNet.pnVar   : inovation variance</span>
+0055 
+0056   model.type = <span class="string">'gssm'</span>;                  <span class="comment">% object type = generalized state space model</span>
+0057   model.tag  = <span class="string">'GSSM_Mackey-Glas-30'</span>;   <span class="comment">% ID tag</span>
+0058 
+0059   model.ffun      = @<a href="#_sub3" class="code" title="subfunction new_state = ffun(model, state, V, U1)">ffun</a>;              <span class="comment">% functionhandle to FFUN</span>
+0060   model.hfun      = @<a href="#_sub4" class="code" title="subfunction observ = hfun(model, state, N, U2)">hfun</a>;              <span class="comment">% functionhandle to HFUN</span>
+0061   model.linearize = @<a href="#_sub7" class="code" title="subfunction out = linearize(model, state, V, N, U1, U2, term, index_vector)">linearize</a>;         <span class="comment">% functionhandle to LINEARIZE</span>
+0062   model.setparams = @<a href="#_sub2" class="code" title="subfunction model = setparams(model, params, paramIdxVec)">setparams</a>;         <span class="comment">% functionhandle to SETPARAMS</span>
+0063   model.likelihood = @<a href="#_sub6" class="code" title="subfunction llh = likelihood(model, obs, state, U2, oNoiseDS)">likelihood</a>;       <span class="comment">% functionhandle to LIKELIHOOD</span>
+0064   model.prior = @<a href="#_sub5" class="code" title="subfunction tranprior = prior(model, nextstate, state, U1, pNoiseDS)">prior</a>;                 <span class="comment">% functionhandle to PRIOR function</span>
+0065 
+0066   model.statedim   = 6;                 <span class="comment">% state dimension</span>
+0067   model.obsdim     = 1;                 <span class="comment">% observation dimension</span>
+0068   model.paramdim   = length(NeuralNet.weights);   <span class="comment">% parameter dimension   [should equal 6*4+4 + 4*1 + 1 ]</span>
+0069   model.U1dim      = 0;                 <span class="comment">% exogenous control input 1 dimension</span>
+0070   model.U2dim      = 0;                 <span class="comment">% exogenous control input 2 dimension</span>
+0071   model.Vdim       = 1;                 <span class="comment">% process noise dimension</span>
+0072   model.Ndim       = 1;                 <span class="comment">% observation noise dimension</span>
+0073 
+0074 
+0075   Arg.type = <span class="string">'gaussian'</span>;                <span class="comment">% process noise source</span>
+0076   Arg.cov_type = <span class="string">'full'</span>;
+0077   Arg.dim = model.Vdim;
+0078   Arg.mu = 0;
+0079   Arg.cov  = NeuralNet.pnVar;                      <span class="comment">% process noise variance</span>
+0080   model.pNoise = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);       <span class="comment">% process noise : zero mean white Gaussian noise</span>
+0081 
+0082   Arg.type = <span class="string">'gaussian'</span>;
+0083   Arg.cov_type = <span class="string">'full'</span>;
+0084   Arg.dim = model.Ndim;
+0085   Arg.mu = 0;
+0086   Arg.cov  = 1;                           <span class="comment">% This will be set in the main program, depending on the experiment</span>
+0087   model.oNoise = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);
+0088 
+0089   model.params = zeros(model.paramdim,1);  <span class="comment">% setup model parameter vector buffer (this is required by ReBEL)</span>
+0090 
+0091   <span class="comment">% Problem/model specific parameters are saved here to speed up subsequent access to these values. One can also</span>
+0092   <span class="comment">% just save the whole neural network data structure, i.e. model.NeuralNetwork = NeuralNetwork, but this adds another</span>
+0093   <span class="comment">% layer of dereferencing, which will slow down the code. This is up to the user to decide.</span>
+0094 
+0095   model.nodes = NeuralNet.nodes;
+0096   model.olType = NeuralNet.olType;
+0097   model.trueWeights = NeuralNet.weights;
+0098 
+0099   <span class="comment">% pre-allocate parameter buffers</span>
+0100   [model.W1, model.B1, model.W2, model.B2] = <a href="../../.././ReBEL-0.2.7/core/mlpunpack.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpunpack(nodes, wh)">mlpunpack</a>(model.nodes, model.trueWeights);
+0101 
+0102   <span class="comment">% Generate NN parameter devectorizing indexes to allow for self-contained 'setparams' function. This</span>
+0103   <span class="comment">% speeds up the code for parameter and joint estimation</span>
+0104   [model.idxW1, model.idxB1, model.idxW2, model.idxB2] = <a href="../../.././ReBEL-0.2.7/core/mlpindexgen.html" class="code" title="function [idxW1, idxB1, idxW2, idxB2, idxW3, idxB3, idxW4, idxB4] = mlpindexgen(nodes)">mlpindexgen</a>(model.nodes);
+0105 
+0106 
+0107   <span class="comment">% Call setparam function (required)</span>
+0108   model = <a href="#_sub2" class="code" title="subfunction model = setparams(model, params, paramIdxVec)">setparams</a>(model, model.trueWeights, 1:model.paramdim);    <span class="comment">% set/store the model parameters</span>
+0109 
+0110 
+0111 <span class="comment">%===============================================================================================</span>
+0112 <a name="_sub2" href="#_subfunctions" class="code">function model = setparams(model, params, paramIdxVec)</a>
+0113 
+0114   <span class="keyword">switch</span> nargin
+0115    <span class="keyword">case</span> 2
+0116      model.params = params;
+0117    <span class="keyword">case</span> 3
+0118      model.params(paramIdxVec) = params;
+0119   <span class="keyword">end</span>
+0120 
+0121   <span class="comment">% Unpack ReBEL MLP Neural Net parameters 'inline'. This can also be accomplished with a call</span>
+0122   <span class="comment">% to 'mlpunpack', but this way speeds up the code.</span>
+0123 
+0124   tparams = model.params;
+0125 
+0126   model.W1(:) = tparams(model.idxW1);
+0127   model.B1    = tparams(model.idxB1);
+0128   model.W2(:) = tparams(model.idxW2);
+0129   model.B2    = tparams(model.idxB2);
+0130 
+0131 
+0132 <span class="comment">%===============================================================================================</span>
+0133 <a name="_sub3" href="#_subfunctions" class="code">function new_state = ffun(model, state, V, U1)</a>
+0134 
+0135   nov = size(state,2);
+0136   new_state = zeros(model.statedim,nov);
+0137 
+0138   <span class="comment">% direct implementation of ReBEL MLP neural network call ... 'nnet2' can also be called, but this is faster</span>
+0139   new_state(1,:) = model.W2 * tanh(model.W1*state + <a href="../../.././ReBEL-0.2.7/core/cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(model.B1,nov)) + <a href="../../.././ReBEL-0.2.7/core/cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(model.B2,nov);
+0140   new_state(2:<span class="keyword">end</span>,:) = state(1:end-1,:);
+0141 
+0142   <span class="keyword">if</span> ~isempty(V)
+0143     new_state(1,:) = new_state(1,:) + V(1,:);
+0144   <span class="keyword">end</span>
+0145 
+0146 <span class="comment">%===============================================================================================</span>
+0147 <a name="_sub4" href="#_subfunctions" class="code">function observ = hfun(model, state, N, U2)</a>
+0148 
+0149   observ = state(1,:);
+0150 
+0151   <span class="keyword">if</span> ~isempty(N)
+0152     observ = state(1,:) + N(1,:);
+0153   <span class="keyword">end</span>
+0154 
+0155 
+0156 <span class="comment">%===============================================================================================</span>
+0157 <a name="_sub5" href="#_subfunctions" class="code">function tranprior = prior(model, nextstate, state, U1, pNoiseDS)</a>
+0158 
+0159   X = nextstate - <a href="#_sub3" class="code" title="subfunction new_state = ffun(model, state, V, U1)">ffun</a>(model, state, [], U1);
+0160 
+0161   tranprior = pNoiseDS.likelihood( pNoiseDS, X(1,:));
+0162 
+0163 
+0164 <span class="comment">%===============================================================================================</span>
+0165 <a name="_sub6" href="#_subfunctions" class="code">function llh = likelihood(model, obs, state, U2, oNoiseDS)</a>
+0166 
+0167   X = obs - <a href="#_sub4" class="code" title="subfunction observ = hfun(model, state, N, U2)">hfun</a>(model, state, [], U2);
+0168 
+0169   llh = oNoiseDS.likelihood( oNoiseDS, X);
+0170 
+0171 
+0172 <span class="comment">%===============================================================================================</span>
+0173 <a name="_sub7" href="#_subfunctions" class="code">function out = linearize(model, state, V, N, U1, U2, term, index_vector)</a>
+0174 
+0175   <span class="keyword">if</span> (nargin&lt;7)
+0176     error(<span class="string">'[ linearize ] Not enough input arguments!'</span>);
+0177   <span class="keyword">end</span>
+0178 
+0179   <span class="comment">%--------------------------------------------------------------------------------------</span>
+0180   <span class="keyword">switch</span> (term)
+0181 
+0182     <span class="keyword">case</span> <span class="string">'A'</span>
+0183       <span class="comment">%%%========================================================</span>
+0184       <span class="comment">%%%             Calculate A = df/dstate</span>
+0185       <span class="comment">%%%========================================================</span>
+0186 
+0187       A=zeros(model.statedim);                                          <span class="comment">% quick init to zeros</span>
+0188       A(2:model.statedim,1:model.statedim-1) = eye(model.statedim-1);
+0189       A(1,1:model.statedim) = <a href="../../.././ReBEL-0.2.7/core/mlpjacobian.html" class="code" title="function [J1,J2] = mlpjacobian(jacType, olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpjacobian</a>(<span class="string">'dydx'</span>, model.olType, model.nodes, state, model.W1, model.B1, model.W2, model.B2);
+0190       out = A;
+0191 
+0192     <span class="keyword">case</span> <span class="string">'B'</span>
+0193       <span class="comment">%%%========================================================</span>
+0194       <span class="comment">%%%             Calculate B = df/dU1</span>
+0195       <span class="comment">%%%========================================================</span>
+0196 
+0197       out = [];
+0198 
+0199     <span class="keyword">case</span> <span class="string">'C'</span>
+0200       <span class="comment">%%%========================================================</span>
+0201       <span class="comment">%%%             Calculate C = dh/dx</span>
+0202       <span class="comment">%%%========================================================</span>
+0203 
+0204       C = zeros(model.obsdim, model.statedim);
+0205       C(1,1) = 1;
+0206       out = C;
+0207 
+0208    <span class="keyword">case</span> <span class="string">'D'</span>
+0209       <span class="comment">%%%========================================================</span>
+0210       <span class="comment">%%%             Calculate D = dh/dU2</span>
+0211       <span class="comment">%%%========================================================</span>
+0212       out = [];
+0213 
+0214     <span class="keyword">case</span> <span class="string">'G'</span>
+0215       <span class="comment">%%%========================================================</span>
+0216       <span class="comment">%%%             Calculate G = df/dv</span>
+0217       <span class="comment">%%%========================================================</span>
+0218       G = zeros(model.statedim,1);
+0219       G(1,1) = 1;
+0220       out = G;
+0221 
+0222     <span class="keyword">case</span> <span class="string">'H'</span>
+0223       <span class="comment">%%%========================================================</span>
+0224       <span class="comment">%%%             Calculate H = dh/dn</span>
+0225       <span class="comment">%%%========================================================</span>
+0226       H = zeros(model.obsdim,1);
+0227       H(1,1) = 1;
+0228       out = H;
+0229 
+0230     <span class="keyword">case</span> <span class="string">'JFW'</span>
+0231       <span class="comment">%%%========================================================</span>
+0232       <span class="comment">%%%             Calculate  = dffun/dparameters</span>
+0233       <span class="comment">%%%========================================================</span>
+0234       JFW = zeros(model.statedim, model.paramdim);
+0235       JFW(1,:) = <a href="../../.././ReBEL-0.2.7/core/mlpjacobian.html" class="code" title="function [J1,J2] = mlpjacobian(jacType, olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpjacobian</a>(<span class="string">'dydw'</span>, model.olType, model.nodes, state, model.W1, model.B1, model.W2, model.B2);
+0236       out = JFW;
+0237 
+0238 
+0239     <span class="keyword">case</span> <span class="string">'JHW'</span>
+0240       <span class="comment">%%%========================================================</span>
+0241       <span class="comment">%%%             Calculate  = dhfun/dparameters</span>
+0242       <span class="comment">%%%========================================================</span>
+0243       out = zeros(model.obsdim,model.paramdim);
+0244 
+0245     <span class="keyword">otherwise</span>
+0246       error(<span class="string">'[ linearize ] Invalid model term requested!'</span>);
+0247 
+0248   <span class="keyword">end</span>
+0249 
+0250   <span class="keyword">if</span> (nargin==8), out = out(:,index_vector); <span class="keyword">end</span>
+0251 
+0252   <span class="comment">%--------------------------------------------------------------------------------------</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

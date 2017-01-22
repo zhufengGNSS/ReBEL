@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of netpak</title>
+  <meta name="keywords" content="netpak">
+  <meta name="description" content="NETPAK	Combines weights and biases into one weights vector.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; netpak.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>netpak
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>NETPAK	Combines weights and biases into one weights vector.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function w = netpak(net) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">NETPAK    Combines weights and biases into one weights vector.
+
+    Description
+    W = NETPAK(NET) takes a network data structure NET and combines the
+    component weight matrices  into a single row vector W. The facility
+    to switch between these two representations for the network
+    parameters is useful, for example, in training a network by error
+    function minimization, since a single vector of parameters can be
+    handled by general-purpose optimization routines.  This function also
+    takes into account a MASK defined as a field in NET by removing any
+    weights that correspond to entries of 0 in the mask.
+
+    See also
+    NET, <a href="netunpak.html" class="code" title="function net = netunpak(net, w)">NETUNPAK</a>, NETFWD, <a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">NETERR</a>, <a href="netgrad.html" class="code" title="function g = netgrad(w, net, x, t)">NETGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev3.html" class="code" title="">demev3</a>	DEMEV3	Demonstrate Bayesian regression for the RBF.</li><li><a href="errbayes.html" class="code" title="function [e, edata, eprior] = errbayes(net, edata)">errbayes</a>	ERRBAYES Evaluate Bayesian error function for network.</li><li><a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li><li><a href="fevbayes.html" class="code" title="function [extra, invhess] = fevbayes(net, y, a, x, t, x_test, invhess)">fevbayes</a>	FEVBAYES Evaluate Bayesian regularisation for network forward propagation.</li><li><a href="gbayes.html" class="code" title="function [g, gdata, gprior] = gbayes(net, gdata)">gbayes</a>	GBAYES	Evaluate gradient of Bayesian error function for network.</li><li><a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">glmtrain</a>	GLMTRAIN Specialised training of generalized linear model</li><li><a href="hesschek.html" class="code" title="function h = hesschek(net, x, t)">hesschek</a>	HESSCHEK Use central differences to confirm correct evaluation of Hessian matrix.</li><li><a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>	NETOPT	Optimize the weights in a network model.</li><li><a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">rbftrain</a>	RBFTRAIN Two stage training of RBF network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = netpak(net)</a>
+0002 <span class="comment">%NETPAK    Combines weights and biases into one weights vector.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    W = NETPAK(NET) takes a network data structure NET and combines the</span>
+0006 <span class="comment">%    component weight matrices  into a single row vector W. The facility</span>
+0007 <span class="comment">%    to switch between these two representations for the network</span>
+0008 <span class="comment">%    parameters is useful, for example, in training a network by error</span>
+0009 <span class="comment">%    function minimization, since a single vector of parameters can be</span>
+0010 <span class="comment">%    handled by general-purpose optimization routines.  This function also</span>
+0011 <span class="comment">%    takes into account a MASK defined as a field in NET by removing any</span>
+0012 <span class="comment">%    weights that correspond to entries of 0 in the mask.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also</span>
+0015 <span class="comment">%    NET, NETUNPAK, NETFWD, NETERR, NETGRAD</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0019 
+0020 pakstr = [net.type, <span class="string">'pak'</span>];
+0021 w = feval(pakstr, net);
+0022 <span class="comment">% Return masked subset of weights</span>
+0023 <span class="keyword">if</span> (isfield(net, <span class="string">'mask'</span>))
+0024    w = w(logical(net.mask));
+0025 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

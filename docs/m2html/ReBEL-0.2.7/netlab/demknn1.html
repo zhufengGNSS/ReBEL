@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demknn1</title>
+  <meta name="keywords" content="demknn1">
+  <meta name="description" content="DEMKNN1 Demonstrate nearest neighbour classifier.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demknn1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demknn1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMKNN1 Demonstrate nearest neighbour classifier.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMKNN1 Demonstrate nearest neighbour classifier.
+
+    Description
+    The problem consists of data in a two-dimensional space.  The data is
+    drawn from three spherical Gaussian distributions with priors 0.3,
+    0.5 and 0.2; centres (2, 3.5), (0, 0) and (0,2); and standard
+    deviations 0.2, 0.5 and 1.0. The first figure contains a scatter plot
+    of the data.  The data is the same as in DEMGMM1.
+
+    The second figure shows the data labelled with the corresponding
+    class given by the classifier.
+
+    See also
+    <a href="dem2ddat.html" class="code" title="function [data, c, prior, sd] = dem2ddat(ndata)">DEM2DDAT</a>, <a href="demgmm1.html" class="code" title="">DEMGMM1</a>, <a href="knn.html" class="code" title="function net = knn(nin, nout, k, tr_in, tr_targets)">KNN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="dem2ddat.html" class="code" title="function [data, c, prior, sd] = dem2ddat(ndata)">dem2ddat</a>	DEM2DDAT Generates two dimensional data for demos.</li><li><a href="knn.html" class="code" title="function net = knn(nin, nout, k, tr_in, tr_targets)">knn</a>	KNN	Creates a K-nearest-neighbour classifier.</li><li><a href="knnfwd.html" class="code" title="function [y, l] = knnfwd(net, x)">knnfwd</a>	KNNFWD	Forward propagation through a K-nearest-neighbour classifier.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMKNN1 Demonstrate nearest neighbour classifier.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    The problem consists of data in a two-dimensional space.  The data is</span>
+0005 <span class="comment">%    drawn from three spherical Gaussian distributions with priors 0.3,</span>
+0006 <span class="comment">%    0.5 and 0.2; centres (2, 3.5), (0, 0) and (0,2); and standard</span>
+0007 <span class="comment">%    deviations 0.2, 0.5 and 1.0. The first figure contains a scatter plot</span>
+0008 <span class="comment">%    of the data.  The data is the same as in DEMGMM1.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    The second figure shows the data labelled with the corresponding</span>
+0011 <span class="comment">%    class given by the classifier.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    See also</span>
+0014 <span class="comment">%    DEM2DDAT, DEMGMM1, KNN</span>
+0015 <span class="comment">%</span>
+0016 
+0017 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0018 
+0019 clc
+0020 disp(<span class="string">'This program demonstrates the use of the K nearest neighbour algorithm.'</span>)
+0021 disp(<span class="string">' '</span>)
+0022 disp(<span class="string">'Press any key to continue.'</span>)
+0023 pause
+0024 <span class="comment">% Generate the test data</span>
+0025 ndata = 250;
+0026 
+0027 randn(<span class="string">'state'</span>, 42);
+0028 
+0029 rand(<span class="string">'state'</span>, 42);
+0030 
+0031 
+0032 [data, c] = <a href="dem2ddat.html" class="code" title="function [data, c, prior, sd] = dem2ddat(ndata)">dem2ddat</a>(ndata);
+0033 
+0034 <span class="comment">% Randomise data order</span>
+0035 data = data(randperm(ndata),:);
+0036 
+0037 clc
+0038 disp(<span class="string">'We generate the data in two-dimensional space from a mixture of'</span>)
+0039 disp(<span class="string">'three spherical Gaussians. The centres are shown as black crosses'</span>)
+0040 disp(<span class="string">'in the plot.'</span>)
+0041 disp(<span class="string">' '</span>)
+0042 disp(<span class="string">'Press any key to continue.'</span>)
+0043 pause
+0044 fh1 = figure;
+0045 plot(data(:, 1), data(:, 2), <span class="string">'o'</span>)
+0046 set(gca, <span class="string">'Box'</span>, <span class="string">'on'</span>)
+0047 hold on
+0048 title(<span class="string">'Data'</span>)
+0049 hp1 = plot(c(:, 1), c(:,2), <span class="string">'k+'</span>)
+0050 <span class="comment">% Increase size of crosses</span>
+0051 set(hp1, <span class="string">'MarkerSize'</span>, 8);
+0052 set(hp1, <span class="string">'LineWidth'</span>, 2);
+0053 hold off
+0054 
+0055 clc
+0056 disp(<span class="string">'We next use the centres as training examplars for the K nearest'</span>)
+0057 disp(<span class="string">'neighbour algorithm.'</span>)
+0058 disp(<span class="string">' '</span>)
+0059 disp(<span class="string">'Press any key to continue.'</span>)
+0060 pause
+0061 
+0062 <span class="comment">% Use centres as training data</span>
+0063 train_labels = [1, 0, 0; 0, 1, 0; 0, 0, 1];
+0064 
+0065 <span class="comment">% Label the test data up to kmax neighbours</span>
+0066 
+0067 kmax = 1;
+0068 net = <a href="knn.html" class="code" title="function net = knn(nin, nout, k, tr_in, tr_targets)">knn</a>(2, 3, kmax, c, train_labels);
+0069 [y, l] = <a href="knnfwd.html" class="code" title="function [y, l] = knnfwd(net, x)">knnfwd</a>(net, data);
+0070 
+0071 clc
+0072 disp(<span class="string">'We now plot each data point coloured according to its classification.'</span>)
+0073 disp(<span class="string">' '</span>)
+0074 disp(<span class="string">'Press any key to continue.'</span>)
+0075 pause
+0076 <span class="comment">% Plot the result</span>
+0077 fh2 = figure;
+0078 colors = [<span class="string">'b.'</span>; <span class="string">'r.'</span>; <span class="string">'g.'</span>];
+0079 <span class="keyword">for</span> i = 1:3
+0080   thisX = data(l == i,1);
+0081   thisY = data(l == i,2);
+0082   hp(i) = plot(thisX, thisY, colors(i,:));
+0083   set(hp(i), <span class="string">'MarkerSize'</span>, 12);
+0084   <span class="keyword">if</span> i == 1
+0085     hold on
+0086   <span class="keyword">end</span>
+0087 <span class="keyword">end</span>
+0088 set(gca, <span class="string">'Box'</span>, <span class="string">'on'</span>);
+0089 legend(<span class="string">'Class 1'</span>, <span class="string">'Class 2'</span>, <span class="string">'Class 3'</span>, 2)
+0090 
+0091 hold on
+0092 labels = [<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>];
+0093 hp2 = plot(c(:, 1), c(:,2), <span class="string">'k+'</span>);
+0094 <span class="comment">% Increase size of crosses</span>
+0095 set(hp2, <span class="string">'MarkerSize'</span>, 8);
+0096 set(hp2, <span class="string">'LineWidth'</span>, 2);
+0097 
+0098 test_labels = labels(l(:,1));
+0099 
+0100 title(<span class="string">'Training data and data labels'</span>)
+0101 hold off
+0102 
+0103 disp(<span class="string">'The demonstration is now complete: press any key to exit.'</span>)
+0104 pause
+0105 close(fh1);
+0106 close(fh2);
+0107 clear all; 
+0108</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

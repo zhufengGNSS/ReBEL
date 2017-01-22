@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gtmpost</title>
+  <meta name="keywords" content="gtmpost">
+  <meta name="description" content="GTMPOST Latent space responsibility for data in a GTM.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gtmpost.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gtmpost
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GTMPOST Latent space responsibility for data in a GTM.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [post, a] = gtmpost(net, data) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GTMPOST Latent space responsibility for data in a GTM.
+
+    Description
+     POST = GTMPOST(NET, DATA) takes a GTM structure NET, and computes
+    the  responsibility at each latent space sample point NET.X for each
+    data point in DATA.
+
+    [POST, A] = GTMPOST(NET, DATA) also returns the activations A of the
+    GMM NET.GMMNET as computed by GMMPOST.
+
+    See also
+    <a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">GTM</a>, <a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">GTMEM</a>, <a href="gtmlmean.html" class="code" title="function means = gtmlmean(net, data)">GTMLMEAN</a>, GMLMODE, <a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">GMMPROB</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>	GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</li><li><a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>	RBFFWD	Forward propagation through RBF network with linear outputs.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgtm2.html" class="code" title="">demgtm2</a>	DEMGTM2 Demonstrate GTM for visualisation.</li><li><a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">gtmem</a>	GTMEM	EM algorithm for Generative Topographic Mapping.</li><li><a href="gtmlmean.html" class="code" title="function means = gtmlmean(net, data)">gtmlmean</a>	GTMLMEAN Mean responsibility for data in a GTM.</li><li><a href="gtmlmode.html" class="code" title="function modes = gtmlmode(net, data)">gtmlmode</a>	GTMLMODE Mode responsibility for data in a GTM.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [post, a] = gtmpost(net, data)</a>
+0002 <span class="comment">%GTMPOST Latent space responsibility for data in a GTM.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     POST = GTMPOST(NET, DATA) takes a GTM structure NET, and computes</span>
+0006 <span class="comment">%    the  responsibility at each latent space sample point NET.X for each</span>
+0007 <span class="comment">%    data point in DATA.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    [POST, A] = GTMPOST(NET, DATA) also returns the activations A of the</span>
+0010 <span class="comment">%    GMM NET.GMMNET as computed by GMMPOST.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    See also</span>
+0013 <span class="comment">%    GTM, GTMEM, GTMLMEAN, GMLMODE, GMMPROB</span>
+0014 <span class="comment">%</span>
+0015 
+0016 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0017 
+0018 <span class="comment">% Check for consistency</span>
+0019 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gtm'</span>, data);
+0020 <span class="keyword">if</span> ~isempty(errstring)
+0021   error(errstring);
+0022 <span class="keyword">end</span>
+0023 
+0024 net.gmmnet.centres = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net.rbfnet, net.X);
+0025 
+0026 [post, a] = <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>(net.gmmnet, data);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

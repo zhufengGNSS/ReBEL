@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlphess</title>
+  <meta name="keywords" content="mlphess">
+  <meta name="description" content="MLPHESS Evaluate the Hessian matrix for a multi-layer perceptron network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlphess.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlphess
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPHESS Evaluate the Hessian matrix for a multi-layer perceptron network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [h, hdata] = mlphess(net, x, t, hdata) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPHESS Evaluate the Hessian matrix for a multi-layer perceptron network.
+
+    Description
+    H = MLPHESS(NET, X, T) takes an MLP network data structure NET, a
+    matrix X of input values, and a matrix T of target values and returns
+    the full Hessian matrix H corresponding to the second derivatives of
+    the negative log posterior distribution, evaluated for the current
+    weight and bias values as defined by NET.
+
+    [H, HDATA] = MLPHESS(NET, X, T) returns both the Hessian matrix H and
+    the contribution HDATA arising from the data dependent term in the
+    Hessian.
+
+    H = MLPHESS(NET, X, T, HDATA) takes a network data structure NET, a
+    matrix X of input values, and a matrix T of  target values, together
+    with the contribution HDATA arising from the data dependent term in
+    the Hessian, and returns the full Hessian matrix H corresponding to
+    the second derivatives of the negative log posterior distribution.
+    This version saves computation time if HDATA has already been
+    evaluated for the current weight and bias values.
+
+    See also
+    <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="hesschek.html" class="code" title="function h = hesschek(net, x, t)">HESSCHEK</a>, <a href="mlphdotv.html" class="code" title="function hdv = mlphdotv(net, x, t, v)">MLPHDOTV</a>, <a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">EVIDENCE</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="hbayes.html" class="code" title="function [h, hdata] = hbayes(net, hdata)">hbayes</a>	HBAYES	Evaluate Hessian of Bayesian error function for network.</li><li><a href="mlphdotv.html" class="code" title="function hdv = mlphdotv(net, x, t, v)">mlphdotv</a>	MLPHDOTV Evaluate the product of the data Hessian with a vector.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function hdata = datahess(net, x, t)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [h, hdata] = mlphess(net, x, t, hdata)</a>
+0002 <span class="comment">%MLPHESS Evaluate the Hessian matrix for a multi-layer perceptron network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    H = MLPHESS(NET, X, T) takes an MLP network data structure NET, a</span>
+0006 <span class="comment">%    matrix X of input values, and a matrix T of target values and returns</span>
+0007 <span class="comment">%    the full Hessian matrix H corresponding to the second derivatives of</span>
+0008 <span class="comment">%    the negative log posterior distribution, evaluated for the current</span>
+0009 <span class="comment">%    weight and bias values as defined by NET.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    [H, HDATA] = MLPHESS(NET, X, T) returns both the Hessian matrix H and</span>
+0012 <span class="comment">%    the contribution HDATA arising from the data dependent term in the</span>
+0013 <span class="comment">%    Hessian.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    H = MLPHESS(NET, X, T, HDATA) takes a network data structure NET, a</span>
+0016 <span class="comment">%    matrix X of input values, and a matrix T of  target values, together</span>
+0017 <span class="comment">%    with the contribution HDATA arising from the data dependent term in</span>
+0018 <span class="comment">%    the Hessian, and returns the full Hessian matrix H corresponding to</span>
+0019 <span class="comment">%    the second derivatives of the negative log posterior distribution.</span>
+0020 <span class="comment">%    This version saves computation time if HDATA has already been</span>
+0021 <span class="comment">%    evaluated for the current weight and bias values.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%    See also</span>
+0024 <span class="comment">%    MLP, HESSCHEK, MLPHDOTV, EVIDENCE</span>
+0025 <span class="comment">%</span>
+0026 
+0027 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0028 
+0029 <span class="comment">% Check arguments for consistency</span>
+0030 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'mlp'</span>, x, t);
+0031 <span class="keyword">if</span> ~isempty(errstring);
+0032   error(errstring);
+0033 <span class="keyword">end</span>
+0034 
+0035 <span class="keyword">if</span> nargin == 3
+0036   <span class="comment">% Data term in Hessian needs to be computed</span>
+0037   hdata = <a href="#_sub1" class="code" title="subfunction hdata = datahess(net, x, t)">datahess</a>(net, x, t);
+0038 <span class="keyword">end</span>
+0039 
+0040 [h, hdata] = <a href="hbayes.html" class="code" title="function [h, hdata] = hbayes(net, hdata)">hbayes</a>(net, hdata);
+0041 
+0042 <span class="comment">% Sub-function to compute data part of Hessian</span>
+0043 <a name="_sub1" href="#_subfunctions" class="code">function hdata = datahess(net, x, t)</a>
+0044 
+0045 hdata = zeros(net.nwts, net.nwts);
+0046 
+0047 <span class="keyword">for</span> v = eye(net.nwts);
+0048   hdata(find(v),:) = <a href="mlphdotv.html" class="code" title="function hdv = mlphdotv(net, x, t, v)">mlphdotv</a>(net, x, t, v);
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

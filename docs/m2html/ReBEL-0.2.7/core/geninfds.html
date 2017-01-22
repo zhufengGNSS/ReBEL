@@ -1,0 +1,1953 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of geninfds</title>
+  <meta name="keywords" content="geninfds">
+  <meta name="description" content="GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; geninfds.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>geninfds
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function InferenceDS = geninfds(ArgDS) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.
+
+   InferenceDS = geninfds(ArgDS)
+
+   This function generates a ReBEL inference data structure from a generalized state space model (gssm) data
+   structure. This inference data structure is used by all ReBEL estimation algorithms. All the parameters and
+   information needed to build the data structures are passed into the function by means of a user defined argument
+   data structure, ArgDS. The specifics of the input and output parameters are given
+   below.
+
+   INPUT ARGUMENT DATA STRUCTURE FIELDS  : ArgDS._______
+
+     .type               : (string)      Inference (estimation) type : 'state', 'parameter' or 'joint'
+     .tag                : (string)      Arbitrary user defined ID tag string
+     .model              : (gssm)        Generalized state space model descriptor (see gssm.m)
+
+     .paramParamIdxVec   : (r-vector)   &lt;&lt;OPTIONAL for parameter and joint estimation, not used by state estimation&gt;&gt;
+                                         Index vector containing indices of a subset of parameters which must be
+                                         estimated. Default (if ommitted) is to estimate all parameters.
+     .paramFunSelect     : (string)     &lt;&lt;OPTIONAL for parameter estimation, not used by state and joint estimation&gt;&gt;
+                                         String indicating which of the state-transition 'ffun' or state-observation
+                                         'hfun' functions should be used as the functional unit for parameter estimation.
+                                         The default value for this field (if ommitted) is 'both' which uses both functions,
+                                         i.e. obs=hfun(ffun(x)). One can also specify 'both-p' which uses both functions
+                                         in a parallel combination, i.e. obs = [ffun(x)]
+                                                                               [hfun(x)]
+     .paramFFunOutIdxVec : (r-vector)   &lt;&lt;OPTIONAL for parameter estimation, not used by state and joint estimation&gt;&gt;
+                                         Index vector containing indices of a subset of the output of FFUN which must be
+                                         used for parameter estimation observations. This argument is only used if
+                                         .paramFunSelect = 'both' or 'ffun'. The default is to use all FFUN outputs.
+     .paramHFunOutIdxVec : (r-vector)   &lt;&lt;OPTIONAL for parameter estimation, not used by state and joint estimation&gt;&gt;
+                                         Index vector containing indices of a subset of the output of HFUN which must be
+                                         used for parameter estimation observations. This argument is only used if
+                                         .paramFunSelect = 'both' or 'hfun'. The default is to use all HFUN outputs.
+
+
+   OUTPUT ARGUMENTS
+
+     InferenceDS         : inference data structure
+
+     See also
+     <a href="gssm.html" class="code" title="function [varargout] = model_interface(func, varargin)">GSSM</a>, <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">GENNOISEDS</a>, <a href="gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">GENSYSNOISEDS</a>, CONSIST
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="checkdups.html" class="code" title="function dups = checkdups(x)">checkdups</a>	CHECKDUPS  Checks for the presence of duplicate entries in an array</li><li><a href="checkstructfields.html" class="code" title="function errstring = checkstructfields(ds,varargin)">checkstructfields</a>	CHECKSTRUCTFIELDS Checks if a data structure has the required fields.</li><li><a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>	CONSISTENT   Check ReBEL data structures for consistentency.</li><li><a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>	CVECREP  Column vector replicate</li><li><a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>	STRINGMATCH  Returns match > 0 if string1 and string2 match (string2 can be a cell array of</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././ReBEL-0.2.7/examples/dual_estimation/demspeech_dual.html" class="code" title="">demspeech_dual</a>	DEMSPEECH_DUAL  Sigma-Point Kalman Filter based Speech Enhancement Demonstration.</li><li><a href="../.././ReBEL-0.2.7/examples/joint_estimation/demje1.html" class="code" title="">demje1</a>	DEMJE1  Demonstrate joint estimation on a 2nd order LTI system.</li><li><a href="../.././ReBEL-0.2.7/examples/joint_estimation/demje2.html" class="code" title="">demje2</a>	DEMJE2 Demonstrate nonlinear time series joint estimation for Mackey-Glass chaotic time series</li><li><a href="../.././ReBEL-0.2.7/examples/parameter_estimation/dempe1.html" class="code" title="">dempe1</a>	DEMPE1  Demonstrate parameter estimation on a simple 2nd order LTI system.</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse1.html" class="code" title="">demse1</a>	DEMSE1  Demonstrate state estimation on a simple 2nd order LTI system.</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse2.html" class="code" title="">demse2</a>	DEMSE2  Demonstrate state estimation on a simple scalar nonlinear (time variant) problem</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse3.html" class="code" title="">demse3</a>	DEMSE3  Demonstrate nonlinear time series state estimation for Mackey-Glass chaotic time series</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse4.html" class="code" title="">demse4</a>	DEMSE4  Bearing Only Tracking Example</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse5.html" class="code" title="">demse5</a>	DEMSE4  Bearing and Frequency Tracking Example</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function new_state = ffun_state(InferenceDS, state, V, U1)</a></li><li><a href="#_sub2" class="code">function observ = hfun_state(InferenceDS, state, N, U2)</a></li><li><a href="#_sub3" class="code">function tran_prior = prior_state(InferenceDS, nextstate, state, U1, pNoiseDS)</a></li><li><a href="#_sub4" class="code">function llh = likelihood_state(InferenceDS, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub5" class="code">function innov = innovation_state(InferenceDS, obs, observ)</a></li><li><a href="#_sub6" class="code">function varargout = linearize_state(InferenceDS, state, V, N, U1, U2, varargin)</a></li><li><a href="#_sub7" class="code">function new_state = ffun_parameter(InferenceDS, state, V, U1)</a></li><li><a href="#_sub8" class="code">function tran_prior = prior_parameter(InferenceDS, nextstate, state, U1, pNoiseDS)</a></li><li><a href="#_sub9" class="code">function observ = hfun_parameter_bothp(InferenceDS, state, N, U2)</a></li><li><a href="#_sub10" class="code">function innov = innovation_parameter_bothp(InferenceDS, obs, observ)</a></li><li><a href="#_sub11" class="code">function llh = likelihood_parameter_bothp(InferenceDS, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub12" class="code">function observ = hfun_parameter_f(InferenceDS, state, N, U2)</a></li><li><a href="#_sub13" class="code">function observ = hfun_parameter_h(InferenceDS, state, N, U2)</a></li><li><a href="#_sub14" class="code">function observ = hfun_parameter_both(InferenceDS, state, N, U2)</a></li><li><a href="#_sub15" class="code">function llh = likelihood_parameter_f(InferenceDS, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub16" class="code">function llh = likelihood_parameter_h(InferenceDS, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub17" class="code">function llh = likelihood_parameter_both(InferenceDS, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub18" class="code">function varargout = linearize_parameter_both(InferenceDS, state, V, N, U1, U2, varargin)</a></li><li><a href="#_sub19" class="code">function varargout = linearize_parameter_bothp(InferenceDS, state, V, N, U1, U2, varargin)</a></li><li><a href="#_sub20" class="code">function varargout = linearize_parameter_f(InferenceDS, state, V, N, U1, U2, varargin)</a></li><li><a href="#_sub21" class="code">function varargout = linearize_parameter_h(InferenceDS, state, V, N, U1, U2, varargin)</a></li><li><a href="#_sub22" class="code">function new_state = ffun_joint(InferenceDS, state, V, U1)</a></li><li><a href="#_sub23" class="code">function tran_prior = prior_joint(InferenceDS, nextstate, state, U1, pNoiseDS)</a></li><li><a href="#_sub24" class="code">function observ = hfun_joint(InferenceDS, state, N, U2)</a></li><li><a href="#_sub25" class="code">function llh = likelihood_joint(InferenceDS, obs, state, U2, oNoiseDS)</a></li><li><a href="#_sub26" class="code">function varargout = linearize_joint(InferenceDS, state, V, N, U1, U2, varargin)</a></li><li><a href="#_sub27" class="code">function innov = innovation_generic(InferenceDS, obs, observ)</a></li><li><a href="#_sub28" class="code">function varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function InferenceDS = geninfds(ArgDS)</a>
+0002 
+0003 <span class="comment">% GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   InferenceDS = geninfds(ArgDS)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   This function generates a ReBEL inference data structure from a generalized state space model (gssm) data</span>
+0008 <span class="comment">%   structure. This inference data structure is used by all ReBEL estimation algorithms. All the parameters and</span>
+0009 <span class="comment">%   information needed to build the data structures are passed into the function by means of a user defined argument</span>
+0010 <span class="comment">%   data structure, ArgDS. The specifics of the input and output parameters are given</span>
+0011 <span class="comment">%   below.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   INPUT ARGUMENT DATA STRUCTURE FIELDS  : ArgDS._______</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%     .type               : (string)      Inference (estimation) type : 'state', 'parameter' or 'joint'</span>
+0016 <span class="comment">%     .tag                : (string)      Arbitrary user defined ID tag string</span>
+0017 <span class="comment">%     .model              : (gssm)        Generalized state space model descriptor (see gssm.m)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%     .paramParamIdxVec   : (r-vector)   &lt;&lt;OPTIONAL for parameter and joint estimation, not used by state estimation&gt;&gt;</span>
+0020 <span class="comment">%                                         Index vector containing indices of a subset of parameters which must be</span>
+0021 <span class="comment">%                                         estimated. Default (if ommitted) is to estimate all parameters.</span>
+0022 <span class="comment">%     .paramFunSelect     : (string)     &lt;&lt;OPTIONAL for parameter estimation, not used by state and joint estimation&gt;&gt;</span>
+0023 <span class="comment">%                                         String indicating which of the state-transition 'ffun' or state-observation</span>
+0024 <span class="comment">%                                         'hfun' functions should be used as the functional unit for parameter estimation.</span>
+0025 <span class="comment">%                                         The default value for this field (if ommitted) is 'both' which uses both functions,</span>
+0026 <span class="comment">%                                         i.e. obs=hfun(ffun(x)). One can also specify 'both-p' which uses both functions</span>
+0027 <span class="comment">%                                         in a parallel combination, i.e. obs = [ffun(x)]</span>
+0028 <span class="comment">%                                                                               [hfun(x)]</span>
+0029 <span class="comment">%     .paramFFunOutIdxVec : (r-vector)   &lt;&lt;OPTIONAL for parameter estimation, not used by state and joint estimation&gt;&gt;</span>
+0030 <span class="comment">%                                         Index vector containing indices of a subset of the output of FFUN which must be</span>
+0031 <span class="comment">%                                         used for parameter estimation observations. This argument is only used if</span>
+0032 <span class="comment">%                                         .paramFunSelect = 'both' or 'ffun'. The default is to use all FFUN outputs.</span>
+0033 <span class="comment">%     .paramHFunOutIdxVec : (r-vector)   &lt;&lt;OPTIONAL for parameter estimation, not used by state and joint estimation&gt;&gt;</span>
+0034 <span class="comment">%                                         Index vector containing indices of a subset of the output of HFUN which must be</span>
+0035 <span class="comment">%                                         used for parameter estimation observations. This argument is only used if</span>
+0036 <span class="comment">%                                         .paramFunSelect = 'both' or 'hfun'. The default is to use all HFUN outputs.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%   OUTPUT ARGUMENTS</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%     InferenceDS         : inference data structure</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%     See also</span>
+0044 <span class="comment">%     GSSM, GENNOISEDS, GENSYSNOISEDS, CONSIST</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0049 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0050 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0051 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0054 <span class="comment">%   detail.</span>
+0055 
+0056 <span class="comment">%========================================================================================================</span>
+0057 
+0058 
+0059 <span class="comment">%--- ERROR CHECKING -------------------------------------------------------------------------------------</span>
+0060 
+0061 <span class="keyword">if</span> (nargin &lt; 1)
+0062     error(<span class="string">' [ geninfds ] Not enough inputs.'</span>);
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="keyword">if</span> ~isstruct(ArgDS)
+0066     error(<span class="string">' [ geninfds ] Input argument must be an argument data structure ArgDS.'</span>);
+0067 <span class="keyword">end</span>
+0068 
+0069 mf = <a href="checkstructfields.html" class="code" title="function errstring = checkstructfields(ds,varargin)">checkstructfields</a>(ArgDS,<span class="string">'type'</span>,<span class="string">'model'</span>);  <span class="comment">% Check existence of required data structure fields</span>
+0070 <span class="keyword">if</span> ~isempty(mf)
+0071     error([<span class="string">' [ geninfds ] Argument data structure does not contain the following required fields : '</span> mf]);
+0072 <span class="keyword">end</span>
+0073 
+0074 <span class="keyword">if</span> ~ischar(ArgDS.type)
+0075     error(<span class="string">' [ geninfds ] ArgDS.type must be a string indicating the inference type, i.e. ''state'', ''parameter'' or ''joint''.'</span>);
+0076 <span class="keyword">end</span>
+0077 
+0078 
+0079 <span class="comment">%--- BUILD INFERENCE DATA STRUCTURE ----------------------------------------------------------------------</span>
+0080 
+0081 InferenceDS.type    = <span class="string">'InferenceDS'</span>;   <span class="comment">% data structure type</span>
+0082 InferenceDS.inftype = ArgDS.type;      <span class="comment">% inference type</span>
+0083 
+0084 
+0085 <span class="keyword">if</span> isfield(ArgDS,<span class="string">'tag'</span>),
+0086     InferenceDS.tag  = ArgDS.tag;                         <span class="comment">% ID tag</span>
+0087 <span class="keyword">else</span>
+0088     InferenceDS.tag  = <span class="string">''</span>;
+0089 <span class="keyword">end</span>
+0090 
+0091 <span class="keyword">if</span> ~isempty(<a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>(ArgDS.model,<span class="string">'gssm'</span>));                 <span class="comment">% check for consistentency of GSSM data structure</span>
+0092     error([<span class="string">' [ geninfds ] There is an inconsistentency with the supplied GSSM data structure subfield. Please use '</span> <span class="keyword">...</span>
+0093            <span class="string">'the CONSIST function on the GSSM model to determine the exact problem.'</span>]);
+0094 <span class="keyword">else</span>
+0095     model = ArgDS.model;
+0096     InferenceDS.model = model;                            <span class="comment">% embed GSSM model</span>
+0097 <span class="keyword">end</span>
+0098 
+0099 
+0100 
+0101 <span class="keyword">switch</span> ArgDS.type
+0102 
+0103     <span class="comment">%---</span>
+0104     <span class="comment">%--- STATE ESTIMATION  --------------------------------------------------------------------------------</span>
+0105     <span class="comment">%---</span>
+0106     <span class="keyword">case</span> <span class="string">'state'</span>
+0107 
+0108         <span class="comment">%--- dimensions &amp; other detail ---</span>
+0109         InferenceDS.statedim = model.statedim;                <span class="comment">% state dimension</span>
+0110         InferenceDS.obsdim   = model.obsdim;                  <span class="comment">% observation dimension</span>
+0111         InferenceDS.U1dim    = model.U1dim;                   <span class="comment">% exogenous input 1 dimension</span>
+0112         InferenceDS.U2dim    = model.U2dim;                   <span class="comment">% exogenous input 2 dimension</span>
+0113         InferenceDS.Vdim = model.pNoise.dim;                  <span class="comment">% process noise dimension</span>
+0114         InferenceDS.Ndim = model.oNoise.dim;                  <span class="comment">% observation noise dimension</span>
+0115 
+0116         <span class="comment">%--- function handles ---</span>
+0117         InferenceDS.ffun = @<a href="#_sub1" class="code" title="subfunction new_state = ffun_state(InferenceDS, state, V, U1)">ffun_state</a>;
+0118         InferenceDS.hfun = @<a href="#_sub2" class="code" title="subfunction observ = hfun_state(InferenceDS, state, N, U2)">hfun_state</a>;
+0119         <span class="keyword">if</span> isfield(model, <span class="string">'prior'</span>),
+0120             InferenceDS.prior = @<a href="#_sub3" class="code" title="subfunction tran_prior = prior_state(InferenceDS, nextstate, state, U1, pNoiseDS)">prior_state</a>;
+0121         <span class="keyword">end</span>
+0122         <span class="keyword">if</span> isfield(model,<span class="string">'likelihood'</span>),
+0123             InferenceDS.likelihood = @<a href="#_sub4" class="code" title="subfunction llh = likelihood_state(InferenceDS, obs, state, U2, oNoiseDS)">likelihood_state</a>;
+0124         <span class="keyword">end</span>
+0125         <span class="keyword">if</span> isfield(model,<span class="string">'innovation'</span>),
+0126             InferenceDS.innovation = @<a href="#_sub5" class="code" title="subfunction innov = innovation_state(InferenceDS, obs, observ)">innovation_state</a>;
+0127         <span class="keyword">else</span>
+0128             InferenceDS.innovation = [];
+0129         <span class="keyword">end</span>
+0130         <span class="keyword">if</span> isfield(model,<span class="string">'linearize'</span>),
+0131             InferenceDS.linearize = @<a href="#_sub6" class="code" title="subfunction varargout = linearize_state(InferenceDS, state, V, N, U1, U2, varargin)">linearize_state</a>;             <span class="comment">% linearization function functionhandle</span>
+0132         <span class="keyword">else</span>
+0133             InferenceDS.linearize = @<a href="#_sub28" class="code" title="subfunction varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)">linearize_generic</a>;           <span class="comment">% generic (perturbation based linearization)</span>
+0134         <span class="keyword">end</span>
+0135 
+0136         <span class="comment">%--- other stuff ---</span>
+0137         <span class="comment">% Index vectors indicating the presence of angular components in the state and observation vectors</span>
+0138         <span class="keyword">if</span> isfield(model,<span class="string">'stateAngleCompIdxVec'</span>),
+0139             InferenceDS.stateAngleCompIdxVec = model.stateAngleCompIdxVec;
+0140         <span class="keyword">else</span>
+0141             InferenceDS.stateAngleCompIdxVec = [];
+0142         <span class="keyword">end</span>
+0143         <span class="keyword">if</span> isfield(model,<span class="string">'obsAngleCompIdxVec'</span>),
+0144             InferenceDS.obsAngleCompIdxVec = model.obsAngleCompIdxVec;
+0145         <span class="keyword">else</span>
+0146             InferenceDS.obsAngleCompIdxVec = [];
+0147         <span class="keyword">end</span>
+0148 
+0149 
+0150     <span class="comment">%---</span>
+0151     <span class="comment">%--- PARAMETER ESTIMATION ----------------------------------------------------------------------------</span>
+0152     <span class="comment">%---</span>
+0153     <span class="keyword">case</span> <span class="string">'parameter'</span>
+0154 
+0155         <span class="comment">% Check parameter index vector</span>
+0156         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'paramParamIdxVec'</span>)
+0157             paramParamIdxVec = 1:model.paramdim;
+0158         <span class="keyword">else</span>
+0159             paramParamIdxVec = ArgDS.paramParamIdxVec;
+0160             <span class="comment">% Check vector entries</span>
+0161             <span class="keyword">if</span> ((max(paramParamIdxVec) &gt; model.paramdim) | (min(paramParamIdxVec) &lt; 1))
+0162                 error(<span class="string">' [ geninfds::parameter ] Parameter index vector has illegal entries'</span>);
+0163             <span class="keyword">end</span>
+0164             <span class="comment">% Check for duplicate index entries</span>
+0165             <span class="keyword">if</span> <a href="checkdups.html" class="code" title="function dups = checkdups(x)">checkdups</a>(paramParamIdxVec)
+0166                 error(<span class="string">' [ geninfds::parameter ] Duplicate parameter index vector entries not allowed.'</span>);
+0167             <span class="keyword">end</span>
+0168         <span class="keyword">end</span>
+0169         InferenceDS.paramParamIdxVec = paramParamIdxVec;                      <span class="comment">% copy index vector in InferenceDS</span>
+0170 
+0171         <span class="comment">% Check parameter function select argument</span>
+0172         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'paramFunSelect'</span>)
+0173             paramFunSelect = <span class="string">'both'</span>;
+0174         <span class="keyword">elseif</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(ArgDS.paramFunSelect,{<span class="string">'ffun'</span>,<span class="string">'hfun'</span>,<span class="string">'both-p'</span>,<span class="string">'both'</span>})
+0175             paramFunSelect = ArgDS.paramFunSelect;
+0176         <span class="keyword">else</span>
+0177             error(<span class="string">' [ geninfds::parameter ] Unknown value used for paramFunSelect'</span>);
+0178         <span class="keyword">end</span>
+0179         InferenceDS.paramFunSelect = paramFunSelect;                          <span class="comment">% copy parameter function select string</span>
+0180 
+0181         <span class="comment">% Check ffun and hfun output index vectors</span>
+0182         <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(paramFunSelect,{<span class="string">'both-p'</span>,<span class="string">'ffun'</span>})
+0183             <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'paramFFunOutIdxVec'</span>)
+0184                 paramFFunOutIdxVec = 1:model.statedim;
+0185             <span class="keyword">else</span>
+0186                 paramFFunOutIdxVec = ArgDS.paramFFunOutIdxVec;
+0187                 <span class="comment">% Check vector entries</span>
+0188                 <span class="keyword">if</span> ((max(paramFFunOutIdxVec) &gt; model.statedim) | (min(paramFFunOutIdxVec) &lt; 1))
+0189                     error(<span class="string">' [ geninfds::parameter ] FFUN output index vector has illegal entries'</span>);
+0190                 <span class="keyword">end</span>
+0191                 <span class="comment">% Check for duplicate index entries</span>
+0192                 <span class="keyword">if</span> <a href="checkdups.html" class="code" title="function dups = checkdups(x)">checkdups</a>(paramFFunOutIdxVec)
+0193                     error(<span class="string">' [ geninfds::parameter ] Duplicate FFUN output index vector entries not allowed.'</span>);
+0194                 <span class="keyword">end</span>
+0195             <span class="keyword">end</span>
+0196             InferenceDS.paramFFunOutIdxVec = paramFFunOutIdxVec;                  <span class="comment">% copy ffun output</span>
+0197         <span class="keyword">end</span>
+0198         <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(paramFunSelect,{<span class="string">'both'</span>,<span class="string">'hfun'</span>,<span class="string">'both-p'</span>})
+0199             <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'paramHFunOutIdxVec'</span>)
+0200                 paramHFunOutIdxVec = 1:model.obsdim;
+0201             <span class="keyword">else</span>
+0202                 paramHFunOutIdxVec = ArgDS.paramHFunOutIdxVec;
+0203                 <span class="comment">% Check vector entries</span>
+0204                 <span class="keyword">if</span> ((max(paramHFunOutIdxVec) &gt; model.obsdim) | (min(paramHFunOutIdxVec) &lt; 1))
+0205                     error(<span class="string">' [ geninfds::parameter ] HFUN output index vector has illegal entries'</span>);
+0206                 <span class="keyword">end</span>
+0207                 <span class="comment">% Check for duplicate index entries</span>
+0208                 <span class="keyword">if</span> <a href="checkdups.html" class="code" title="function dups = checkdups(x)">checkdups</a>(paramHFunIdxVec)
+0209                     error(<span class="string">' [ geninfds::parameter ] Duplicate HFUN output index vector entries not allowed.'</span>);
+0210                 <span class="keyword">end</span>
+0211             <span class="keyword">end</span>
+0212             InferenceDS.paramHFunOutIdxVec = paramHFunOutIdxVec;                  <span class="comment">% copy ffun output</span>
+0213         <span class="keyword">end</span>
+0214 
+0215 
+0216 
+0217         <span class="comment">%-- Setup rest of structure</span>
+0218 
+0219         <span class="keyword">switch</span> paramFunSelect
+0220 
+0221         <span class="comment">%...................................................................................................................</span>
+0222         <span class="keyword">case</span> <span class="string">'both'</span>
+0223 
+0224             <span class="comment">%--- dimensions &amp; other detail ---</span>
+0225             InferenceDS.statedim = length(paramParamIdxVec);                 <span class="comment">% state dimension</span>
+0226             InferenceDS.obsdim = length(paramHFunOutIdxVec);                 <span class="comment">% observation dimension</span>
+0227             InferenceDS.U1dim = 0;                                           <span class="comment">% expgenous input 1 dimension</span>
+0228             InferenceDS.U2dim = model.U1dim + model.statedim + model.U2dim;  <span class="comment">% exogenous input 2 dimension</span>
+0229             InferenceDS.Vdim = InferenceDS.statedim;                         <span class="comment">% process noise dimension</span>
+0230             InferenceDS.Ndim = model.Vdim + model.Ndim;                      <span class="comment">% observation noise dimension</span>
+0231 
+0232             <span class="comment">%--- functions ---</span>
+0233             InferenceDS.ffun = @<a href="#_sub7" class="code" title="subfunction new_state = ffun_parameter(InferenceDS, state, V, U1)">ffun_parameter</a>;                             <span class="comment">% state transition function functionhandle</span>
+0234             InferenceDS.hfun = @<a href="#_sub14" class="code" title="subfunction observ = hfun_parameter_both(InferenceDS, state, N, U2)">hfun_parameter_both</a>;                        <span class="comment">% state observation function functionhandle</span>
+0235             <span class="keyword">if</span> isfield(model,<span class="string">'linearize'</span>)
+0236                 InferenceDS.linearize = @<a href="#_sub18" class="code" title="subfunction varargout = linearize_parameter_both(InferenceDS, state, V, N, U1, U2, varargin)">linearize_parameter_both</a>;          <span class="comment">% linearization function functionhandle</span>
+0237             <span class="keyword">else</span>
+0238                 InferenceDS.linearize = @<a href="#_sub28" class="code" title="subfunction varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)">linearize_generic</a>;
+0239             <span class="keyword">end</span>
+0240             InferenceDS.prior = @<a href="#_sub8" class="code" title="subfunction tran_prior = prior_parameter(InferenceDS, nextstate, state, U1, pNoiseDS)">prior_parameter</a>;
+0241             <span class="keyword">if</span> isfield(model,<span class="string">'likelihood'</span>),
+0242                 InferenceDS.likelihood = @<a href="#_sub17" class="code" title="subfunction llh = likelihood_parameter_both(InferenceDS, obs, state, U2, oNoiseDS)">likelihood_parameter_both</a>;
+0243             <span class="keyword">end</span>
+0244             <span class="keyword">if</span> isfield(model,<span class="string">'innovation'</span>),
+0245                 InferenceDS.innovation = @<a href="#_sub5" class="code" title="subfunction innov = innovation_state(InferenceDS, obs, observ)">innovation_state</a>;
+0246             <span class="keyword">else</span>
+0247                 InferenceDS.innovation = [];
+0248             <span class="keyword">end</span>
+0249 
+0250             <span class="comment">%--- copy/setup fixed linear model parameters ---</span>
+0251             InferenceDS.A = eye(InferenceDS.statedim);
+0252             InferenceDS.B = [];
+0253             InferenceDS.G = eye(InferenceDS.statedim);
+0254 
+0255             <span class="comment">%--- other stuff ---</span>
+0256             <span class="comment">% Index vectors indicating the presence of angular components in the state and observation vectors</span>
+0257             InferenceDS.stateAngleCompIdxVec = [];
+0258             InferenceDS.obsAngleCompIdxVec = [];
+0259             <span class="keyword">if</span> isfield(model,<span class="string">'obsAngleCompIdxVec'</span>),
+0260                <span class="keyword">for</span> k=1:length(model.obsAngleCompIdxVec),
+0261                  idx = find(InferenceDS.paramHFunOutIdxVec == model.obsAngleCompIdxVec(k));
+0262                  InferenceDS.obsAngleCompIdxVec = [InferenceDS.obsAngleCompIdxVec idx];
+0263                <span class="keyword">end</span>
+0264             <span class="keyword">end</span>
+0265 
+0266 
+0267         <span class="comment">%...................................................................................................................</span>
+0268         <span class="keyword">case</span> <span class="string">'both-p'</span>
+0269 
+0270             <span class="comment">%--- dimensions &amp; other detail ---</span>
+0271             InferenceDS.statedim = length(paramParamIdxVec);                        <span class="comment">% state dimension</span>
+0272             InferenceDS.obsdim = length(paramFFunOutIdxVec) + length(paramHFunOutIdxVec); <span class="comment">% observation dimension</span>
+0273             InferenceDS.U1dim = 0;                                                  <span class="comment">% exogenous input 1 dimension</span>
+0274             InferenceDS.U2dim = model.U1dim + 2*model.statedim + model.U2dim;       <span class="comment">% exogenous input 2 dimension</span>
+0275             InferenceDS.Vdim = InferenceDS.statedim;                                <span class="comment">% process noise dimension</span>
+0276             InferenceDS.Ndim = model.Vdim+model.Ndim;                               <span class="comment">% observation noise dimension</span>
+0277 
+0278             <span class="comment">%--- functions ---</span>
+0279             InferenceDS.ffun = @<a href="#_sub7" class="code" title="subfunction new_state = ffun_parameter(InferenceDS, state, V, U1)">ffun_parameter</a>;                               <span class="comment">% state transition function functionhandle</span>
+0280             InferenceDS.hfun = @<a href="#_sub9" class="code" title="subfunction observ = hfun_parameter_bothp(InferenceDS, state, N, U2)">hfun_parameter_bothp</a>;                         <span class="comment">% state observation function functionhandle</span>
+0281             <span class="keyword">if</span> isfield(model,<span class="string">'linearize'</span>)
+0282                 InferenceDS.linearize = @<a href="#_sub19" class="code" title="subfunction varargout = linearize_parameter_bothp(InferenceDS, state, V, N, U1, U2, varargin)">linearize_parameter_bothp</a>;           <span class="comment">% linearization function functionhandle</span>
+0283             <span class="keyword">else</span>
+0284                 InferenceDS.linearize = @<a href="#_sub28" class="code" title="subfunction varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)">linearize_generic</a>;
+0285             <span class="keyword">end</span>
+0286             InferenceDS.prior = @<a href="#_sub8" class="code" title="subfunction tran_prior = prior_parameter(InferenceDS, nextstate, state, U1, pNoiseDS)">prior_parameter</a>;
+0287             <span class="keyword">if</span> (isfield(model,<span class="string">'likelihood'</span>) &amp; isfield(model,<span class="string">'prior'</span>)),
+0288                 InferenceDS.likelihood = @<a href="#_sub11" class="code" title="subfunction llh = likelihood_parameter_bothp(InferenceDS, obs, state, U2, oNoiseDS)">likelihood_parameter_bothp</a>;
+0289             <span class="keyword">end</span>
+0290             InferenceDS.innovation = [];
+0291 
+0292             <span class="comment">%--- copy/setup fixed linear model parameters ---</span>
+0293             InferenceDS.A = eye(InferenceDS.statedim);
+0294             InferenceDS.B = [];
+0295             InferenceDS.G = eye(InferenceDS.statedim);
+0296 
+0297             <span class="comment">%--- other stuff ---</span>
+0298             <span class="comment">% Index vectors indicating the presence of angular components in the state and observation vectors</span>
+0299             InferenceDS.stateAngleCompIdxVec = [];
+0300             InferenceDS.obsAngleCompIdxVec = [];
+0301             <span class="keyword">if</span> isfield(model,<span class="string">'stateAngleCompIdxVec'</span>),
+0302                <span class="keyword">for</span> k=1:length(model.stateAngleCompIdxVec),
+0303                  idx = find(InferenceDS.paramFFunOutIdxVec == model.stateAngleCompIdxVec(k));
+0304                  InferenceDS.obsAngleCompIdxVec = [InferenceDS.obsAngleCompIdxVec idx];
+0305                <span class="keyword">end</span>
+0306             <span class="keyword">end</span>
+0307             <span class="keyword">if</span> isfield(model,<span class="string">'obsAngleCompIdxVec'</span>),
+0308                <span class="keyword">for</span> k=1:length(model.obsAngleCompIdxVec),
+0309                  idx = find(InferenceDS.paramHFunOutIdxVec == model.obsAngleCompIdxVec(k));
+0310                  InferenceDS.obsAngleCompIdxVec = [InferenceDS.obsAngleCompIdxVec idx];
+0311                <span class="keyword">end</span>
+0312             <span class="keyword">end</span>
+0313 
+0314 
+0315         <span class="comment">%...................................................................................................................</span>
+0316         <span class="keyword">case</span> <span class="string">'ffun'</span>
+0317 
+0318             <span class="comment">%--- parameter dimensions ---</span>
+0319             InferenceDS.statedim = length(paramParamIdxVec);                  <span class="comment">% state dimension</span>
+0320             InferenceDS.obsdim = length(paramFFunOutIdxVec);                  <span class="comment">% observation dimension</span>
+0321             InferenceDS.U1dim = 0;                                            <span class="comment">% exogenous input 1 dimension</span>
+0322             InferenceDS.U2dim = model.U1dim + model.statedim;                 <span class="comment">% exogenous input 2 dimension</span>
+0323             InferenceDS.Vdim = InferenceDS.statedim;                          <span class="comment">% process noise dimension</span>
+0324             InferenceDS.Ndim = model.Vdim;                                    <span class="comment">% observation noise dimension</span>
+0325 
+0326             <span class="comment">%--- functions ---</span>
+0327             InferenceDS.ffun = @<a href="#_sub7" class="code" title="subfunction new_state = ffun_parameter(InferenceDS, state, V, U1)">ffun_parameter</a>;                               <span class="comment">% state transition function functionhandle</span>
+0328             InferenceDS.hfun = @<a href="#_sub12" class="code" title="subfunction observ = hfun_parameter_f(InferenceDS, state, N, U2)">hfun_parameter_f</a>;                             <span class="comment">% state observation function functionhandle</span>
+0329             <span class="keyword">if</span> isfield(model,<span class="string">'linearize'</span>)
+0330                 InferenceDS.linearize = @<a href="#_sub20" class="code" title="subfunction varargout = linearize_parameter_f(InferenceDS, state, V, N, U1, U2, varargin)">linearize_parameter_f</a>;               <span class="comment">% linearization function functionhandle</span>
+0331             <span class="keyword">else</span>
+0332                 InferenceDS.linearize = @<a href="#_sub28" class="code" title="subfunction varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)">linearize_generic</a>;
+0333             <span class="keyword">end</span>
+0334             InferenceDS.prior = @<a href="#_sub8" class="code" title="subfunction tran_prior = prior_parameter(InferenceDS, nextstate, state, U1, pNoiseDS)">prior_parameter</a>;
+0335             <span class="keyword">if</span> isfield(model,<span class="string">'prior'</span>),
+0336                 InferenceDS.likelihood = @<a href="#_sub15" class="code" title="subfunction llh = likelihood_parameter_f(InferenceDS, obs, state, U2, oNoiseDS)">likelihood_parameter_f</a>;
+0337             <span class="keyword">end</span>
+0338             InferenceDS.innovation = [];
+0339 
+0340             <span class="comment">%--- copy/setup fixed linear model parameters ---</span>
+0341             InferenceDS.A         = eye(InferenceDS.statedim);
+0342             InferenceDS.B         = [];
+0343             InferenceDS.G         = eye(InferenceDS.statedim);
+0344 
+0345             <span class="comment">%--- other stuff ---</span>
+0346             <span class="comment">% Index vectors indicating the presence of angular components in the state and observation vectors</span>
+0347             InferenceDS.stateAngleCompIdxVec = [];
+0348             InferenceDS.obsAngleCompIdxVec = [];
+0349             <span class="keyword">if</span> isfield(model,<span class="string">'stateAngleCompIdxVec'</span>),
+0350                <span class="keyword">for</span> k=1:length(model.stateAngleCompIdxVec),
+0351                  idx = find(InferenceDS.paramFFunOutIdxVec == model.stateAngleCompIdxVec(k));
+0352                  InferenceDS.obsAngleCompIdxVec = [InferenceDS.obsAngleCompIdxVec idx];
+0353                <span class="keyword">end</span>
+0354             <span class="keyword">end</span>
+0355 
+0356 
+0357         <span class="comment">%...................................................................................................................</span>
+0358         <span class="keyword">case</span> <span class="string">'hfun'</span>
+0359 
+0360             <span class="comment">%--- parameter dimensions ---</span>
+0361             InferenceDS.statedim = length(paramParamIdxVec);                  <span class="comment">% state dimension</span>
+0362             InferenceDS.obsdim = length(paramHFunOutIdxVec);                  <span class="comment">% observation dimension</span>
+0363             InferenceDS.U1dim = 0;                                            <span class="comment">% exogenous input 1 dimension</span>
+0364             InferenceDS.U2dim = model.U2dim + model.statedim;                 <span class="comment">% exogenous input 2 dimension</span>
+0365             InferenceDS.Vdim = InferenceDS.statedim;                          <span class="comment">% process noise dimension</span>
+0366             InferenceDS.Ndim = model.Ndim;                                    <span class="comment">% observation noise dimension</span>
+0367 
+0368             <span class="comment">%--- functions ---</span>
+0369             InferenceDS.ffun      = @<a href="#_sub7" class="code" title="subfunction new_state = ffun_parameter(InferenceDS, state, V, U1)">ffun_parameter</a>;                          <span class="comment">% state transition function functionhandle</span>
+0370             InferenceDS.hfun      = @<a href="#_sub13" class="code" title="subfunction observ = hfun_parameter_h(InferenceDS, state, N, U2)">hfun_parameter_h</a>;                        <span class="comment">% state observation function functionhandle</span>
+0371             <span class="keyword">if</span> isfield(model,<span class="string">'linearize'</span>)
+0372                 InferenceDS.linearize = @<a href="#_sub21" class="code" title="subfunction varargout = linearize_parameter_h(InferenceDS, state, V, N, U1, U2, varargin)">linearize_parameter_h</a>;               <span class="comment">% linearization function functionhandle</span>
+0373             <span class="keyword">else</span>
+0374                 InferenceDS.linearize = @<a href="#_sub28" class="code" title="subfunction varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)">linearize_generic</a>;
+0375             <span class="keyword">end</span>
+0376             InferenceDS.prior = @<a href="#_sub8" class="code" title="subfunction tran_prior = prior_parameter(InferenceDS, nextstate, state, U1, pNoiseDS)">prior_parameter</a>;
+0377             <span class="keyword">if</span> isfield(model,<span class="string">'likelihood'</span>),
+0378                 InferenceDS.likelihood = @<a href="#_sub16" class="code" title="subfunction llh = likelihood_parameter_h(InferenceDS, obs, state, U2, oNoiseDS)">likelihood_parameter_h</a>;
+0379             <span class="keyword">end</span>
+0380             InferenceDS.innovation = [];
+0381 
+0382             <span class="comment">%--- copy/setup fixed linear model parameters ---</span>
+0383             InferenceDS.A         = eye(InferenceDS.statedim);
+0384             InferenceDS.B         = [];
+0385             InferenceDS.G         = eye(InferenceDS.statedim);
+0386 
+0387 
+0388             <span class="comment">%--- other stuff ---</span>
+0389             <span class="comment">% Index vectors indicating the presence of angular components in the state and observation vectors</span>
+0390             InferenceDS.stateAngleCompIdxVec = [];
+0391             InferenceDS.obsAngleCompIdxVec = [];
+0392             <span class="keyword">if</span> isfield(model,<span class="string">'obsAngleCompIdxVec'</span>),
+0393                <span class="keyword">for</span> k=1:length(model.obsAngleCompIdxVec),
+0394                  idx = find(InferenceDS.paramHFunOutIdxVec == model.obsAngleCompIdxVec(k));
+0395                  InferenceDS.obsAngleCompIdxVec = [InferenceDS.obsAngleCompIdxVec idx];
+0396                <span class="keyword">end</span>
+0397             <span class="keyword">end</span>
+0398 
+0399 
+0400         <span class="keyword">otherwise</span>
+0401             error(<span class="string">' The only valid values for the funselect field are : ''both'' , ''ffun'' and ''hfun''.'</span>);
+0402 
+0403         <span class="keyword">end</span>
+0404 
+0405 
+0406 
+0407     <span class="comment">%---</span>
+0408     <span class="comment">%--- JOINT ESTIMATION --------------------------------------------------------------------------------</span>
+0409     <span class="comment">%---</span>
+0410     <span class="keyword">case</span> <span class="string">'joint'</span>
+0411 
+0412         <span class="comment">% Check parameter index vector</span>
+0413         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'paramParamIdxVec'</span>)
+0414             paramParamIdxVec = 1:model.paramdim;
+0415         <span class="keyword">else</span>
+0416             paramParamIdxVec = ArgDS.paramParamIdxVec;
+0417             <span class="comment">% Check vector entries</span>
+0418             <span class="keyword">if</span> ((max(paramParamIdxVec) &gt; model.paramdim) | (min(paramParamIdxVec) &lt; 1))
+0419                 error(<span class="string">' [ geninfds::parameter ] Parameter index vector has illegal entries'</span>);
+0420             <span class="keyword">end</span>
+0421             <span class="comment">% Check for duplicate index entries</span>
+0422             <span class="keyword">if</span> <a href="checkdups.html" class="code" title="function dups = checkdups(x)">checkdups</a>(paramParamIdxVec)
+0423                 error(<span class="string">' [ geninfds::parameter ] Duplicate parameter index vector entries not allowed.'</span>);
+0424             <span class="keyword">end</span>
+0425         <span class="keyword">end</span>
+0426         InferenceDS.paramParamIdxVec = paramParamIdxVec;                  <span class="comment">% copy index vector in InferenceDS</span>
+0427 
+0428         <span class="comment">%--- dimensions ---</span>
+0429         pdim = length(paramParamIdxVec);
+0430         InferenceDS.paramParamIdxVec = paramParamIdxVec;                  <span class="comment">% save index vector in InferenceDS</span>
+0431         InferenceDS.statedim  = model.statedim + pdim;                    <span class="comment">% state dimension</span>
+0432         InferenceDS.obsdim    = model.obsdim;                             <span class="comment">% observation dimension</span>
+0433         InferenceDS.U1dim     = model.U1dim;                              <span class="comment">% exogenous input 1 dimension</span>
+0434         InferenceDS.U2dim     = model.U2dim;                              <span class="comment">% exogenous input 2 dimension</span>
+0435         InferenceDS.Vdim      = model.Vdim + pdim;                        <span class="comment">% process noise dimension</span>
+0436         InferenceDS.Ndim      = model.Ndim;                               <span class="comment">% observation noise dimension</span>
+0437 
+0438         <span class="comment">%--- functions ---</span>
+0439         InferenceDS.ffun      = @<a href="#_sub22" class="code" title="subfunction new_state = ffun_joint(InferenceDS, state, V, U1)">ffun_joint</a>;                              <span class="comment">% state transition function functionhandle</span>
+0440         InferenceDS.hfun      = @<a href="#_sub24" class="code" title="subfunction observ = hfun_joint(InferenceDS, state, N, U2)">hfun_joint</a>;                              <span class="comment">% state observation function functionhandle</span>
+0441         <span class="keyword">if</span> isfield(model, <span class="string">'prior'</span>),
+0442             InferenceDS.prior = @<a href="#_sub23" class="code" title="subfunction tran_prior = prior_joint(InferenceDS, nextstate, state, U1, pNoiseDS)">prior_joint</a>;
+0443         <span class="keyword">end</span>
+0444         <span class="keyword">if</span> isfield(model, <span class="string">'likelihood'</span>)
+0445             InferenceDS.likelihood = @<a href="#_sub25" class="code" title="subfunction llh = likelihood_joint(InferenceDS, obs, state, U2, oNoiseDS)">likelihood_joint</a>;
+0446         <span class="keyword">end</span>
+0447         <span class="keyword">if</span> isfield(model, <span class="string">'innovation'</span>)
+0448             InferenceDS.innovation = @<a href="#_sub5" class="code" title="subfunction innov = innovation_state(InferenceDS, obs, observ)">innovation_state</a>;
+0449         <span class="keyword">else</span>
+0450             InferenceDS.innovation = [];
+0451         <span class="keyword">end</span>
+0452         <span class="keyword">if</span> isfield(model, <span class="string">'linearize'</span>)
+0453             InferenceDS.linearize = @<a href="#_sub26" class="code" title="subfunction varargout = linearize_joint(InferenceDS, state, V, N, U1, U2, varargin)">linearize_joint</a>;                     <span class="comment">% linearization function functionhandle</span>
+0454         <span class="keyword">else</span>
+0455             InferenceDS.linearize = @<a href="#_sub28" class="code" title="subfunction varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)">linearize_generic</a>;
+0456         <span class="keyword">end</span>
+0457 
+0458         <span class="comment">%--- other stuff ---</span>
+0459         <span class="comment">% Index vectors indicating the presence of angular components in the state and observation vectors</span>
+0460         <span class="keyword">if</span> isfield(model,<span class="string">'stateAngleCompIdxVec'</span>),
+0461             InferenceDS.stateAngleCompIdxVec = model.stateAngleCompIdxVec;
+0462         <span class="keyword">else</span>
+0463             InferenceDS.stateAngleCompIdxVec = [];
+0464         <span class="keyword">end</span>
+0465         <span class="keyword">if</span> isfield(model,<span class="string">'obsAngleCompIdxVec'</span>),
+0466             InferenceDS.obsAngleCompIdxVec = model.obsAngleCompIdxVec;
+0467         <span class="keyword">else</span>
+0468             InferenceDS.obsAngleCompIdxVec = [];
+0469         <span class="keyword">end</span>
+0470 
+0471 
+0472 <span class="comment">%-----------------------------------------------------------------------------------------------------------------------------------------------</span>
+0473 <span class="keyword">otherwise</span>
+0474 
+0475   error([<span class="string">' [ geninfds ] Inference type '''</span> ArgDS.type <span class="string">''' not supported.'</span>]);
+0476 
+0477 <span class="keyword">end</span>
+0478 
+0479 
+0480 <span class="comment">% add misc. default data fields</span>
+0481 
+0482 InferenceDS.uType = <span class="string">'TMU'</span>;             <span class="comment">% Update type : Time-and-Measurement Update is the default</span>
+0483                                        <span class="comment">% Other options are : TU - time update only or MU - measurement update only.</span>
+0484 
+0485 
+0486 
+0487 <span class="keyword">return</span>;
+0488 
+0489 
+0490 
+0491 <span class="comment">%***********************************************************************************************</span>
+0492 <span class="comment">%***                                                                                         ***</span>
+0493 <span class="comment">%***                               SUB FUNCTION BLOCK                                        ***</span>
+0494 <span class="comment">%***                                                                                         ***</span>
+0495 <span class="comment">%***********************************************************************************************</span>
+0496 
+0497 
+0498 <span class="comment">%===============================================================================================</span>
+0499 <span class="comment">%================================== STATE ESTIMATION FUNCTIONS =================================</span>
+0500 
+0501 <a name="_sub1" href="#_subfunctions" class="code">function new_state = ffun_state(InferenceDS, state, V, U1)</a>
+0502 
+0503     <span class="comment">%  FFUN_STATE  State transition function of meta system for state estimation</span>
+0504     <span class="comment">%</span>
+0505     <span class="comment">%    new_state = ffun_state(InferenceDS, state, V, U1)</span>
+0506     <span class="comment">%</span>
+0507     <span class="comment">%    INPUT</span>
+0508     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0509     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+0510     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+0511     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+0512     <span class="comment">%    OUTPUT</span>
+0513     <span class="comment">%         new_state       : (c-vector) updated meta system state vector</span>
+0514 
+0515     new_state = InferenceDS.model.ffun( InferenceDS.model, state, V, U1);
+0516 
+0517 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0518 <a name="_sub2" href="#_subfunctions" class="code">function observ = hfun_state(InferenceDS, state, N, U2)</a>
+0519 
+0520     <span class="comment">%  HFUN_STATE  State observation function of meta system for state estimation</span>
+0521     <span class="comment">%</span>
+0522     <span class="comment">%    observ = hfun_state(InferenceDS, state, N, U2)</span>
+0523     <span class="comment">%</span>
+0524     <span class="comment">%    INPUT</span>
+0525     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0526     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+0527     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+0528     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+0529     <span class="comment">%    OUTPUT</span>
+0530     <span class="comment">%         observ          : (c-vector)  meta system observation vector</span>
+0531 
+0532     observ = InferenceDS.model.hfun( InferenceDS.model, state, N, U2);
+0533 
+0534 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0535 <a name="_sub3" href="#_subfunctions" class="code">function tran_prior = prior_state(InferenceDS, nextstate, state, U1, pNoiseDS)</a>
+0536 
+0537     <span class="comment">%  PRIOR_STATE  Calculates the transition prior probability P(x_k|x_(k-1))</span>
+0538     <span class="comment">%</span>
+0539     <span class="comment">%    tranprior = prior_state(InferenceDS, nextstate, state, pNoiseDS)</span>
+0540     <span class="comment">%</span>
+0541     <span class="comment">%    INPUT</span>
+0542     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0543     <span class="comment">%         nextstate       : (c-vector)  system state at time k</span>
+0544     <span class="comment">%         state           : (c-vector)  system state at time k-1</span>
+0545     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+0546     <span class="comment">%         pNoiseDS        : (NoiseDS)   process noise data structure</span>
+0547     <span class="comment">%    OUTPUT</span>
+0548     <span class="comment">%         tranprior       : scalar probability P(x_k|x_(k-1))</span>
+0549 
+0550     tran_prior = InferenceDS.model.prior( InferenceDS.model, nextstate, state, U1, pNoiseDS);
+0551 
+0552 
+0553 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0554 <a name="_sub4" href="#_subfunctions" class="code">function llh = likelihood_state(InferenceDS, obs, state, U2, oNoiseDS)</a>
+0555 
+0556     <span class="comment">%  LIKELIHOOD_STATE  Calculates the likelood of a real-world observation obs given</span>
+0557     <span class="comment">%                    a realization of the predicted observation for a given state,</span>
+0558     <span class="comment">%                    i.e. p(y|x) = p(obs|state)</span>
+0559     <span class="comment">%</span>
+0560     <span class="comment">%    llh = likelihood_state(InferenceDS, obs, observ)</span>
+0561     <span class="comment">%</span>
+0562     <span class="comment">%    INPUT</span>
+0563     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0564     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+0565     <span class="comment">%         state           : (c-vector)  meta system state vector</span>
+0566     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+0567     <span class="comment">%         oNoiseDS        : (NoiseDS)   observation noise data structure</span>
+0568     <span class="comment">%    OUTPUT</span>
+0569     <span class="comment">%         llh             : scalar  likelihood</span>
+0570 
+0571     llh = InferenceDS.model.likelihood( InferenceDS.model, obs, state, U2, oNoiseDS);
+0572 
+0573 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0574 <a name="_sub5" href="#_subfunctions" class="code">function innov = innovation_state(InferenceDS, obs, observ)</a>
+0575 
+0576     <span class="comment">%  INNOVATION_STATE  Calculates the innovation signal (difference) between the</span>
+0577     <span class="comment">%   output of HFUN, i.e. OBSERV (the predicted system observation) and an actual</span>
+0578     <span class="comment">%   'real world' observation OBS. This function might be as simple as</span>
+0579     <span class="comment">%   INNOV = OBS - OBSERV, which is the default case, but can also be more</span>
+0580     <span class="comment">%   complex for complex measurement processes where for example multiple (possibly false)</span>
+0581     <span class="comment">%   observations can be observed for a given hidden ground truth.</span>
+0582     <span class="comment">%</span>
+0583     <span class="comment">%    innov = innovation_state(InferenceDS, obs, observ)</span>
+0584     <span class="comment">%</span>
+0585     <span class="comment">%    INPUT</span>
+0586     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0587     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+0588     <span class="comment">%         observ          : (c-vector)  meta system observation vector</span>
+0589     <span class="comment">%    OUTPUT</span>
+0590     <span class="comment">%         inov            : (c-vector) innovation sequence</span>
+0591 
+0592     innov = InferenceDS.model.innovation( InferenceDS.model, obs, observ);
+0593 
+0594 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0595 <a name="_sub6" href="#_subfunctions" class="code">function varargout = linearize_state(InferenceDS, state, V, N, U1, U2, varargin)</a>
+0596 
+0597     <span class="comment">%  LINEARIZE_STATE  Linearization function of meta system for state estimation</span>
+0598     <span class="comment">%</span>
+0599     <span class="comment">%    varargout = linearize_state(InferenceDS, state, V, N, U1, U2, varargin)</span>
+0600     <span class="comment">%</span>
+0601     <span class="comment">%    INPUT</span>
+0602     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0603     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+0604     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+0605     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+0606     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+0607     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+0608     <span class="comment">%         varargin        : (strings) linearization terms wanted, e.g. 'A','B','G',....</span>
+0609     <span class="comment">%    OUTPUT</span>
+0610     <span class="comment">%         varargout       : (matrices) linearization terms corresponding with varargin strings</span>
+0611 
+0612   nop = length(varargin);
+0613 
+0614   <span class="keyword">for</span> k=1:nop,
+0615     varargout{k} = InferenceDS.model.linearize( InferenceDS.model, state, V, N, U1, U2, varargin{k});
+0616   <span class="keyword">end</span>
+0617 
+0618 
+0619 <span class="comment">%===========================================================================================================</span>
+0620 <span class="comment">%================================ PARAMETER ESTIMATION FUNCTIONS ===========================================</span>
+0621 
+0622 <a name="_sub7" href="#_subfunctions" class="code">function new_state = ffun_parameter(InferenceDS, state, V, U1)</a>
+0623 
+0624     <span class="comment">%  FFUN_PARAMETER  State transition function of meta system for parameter estimation</span>
+0625     <span class="comment">%</span>
+0626     <span class="comment">%    new_state = ffun_parameter(InferenceDS, state, V, U1)</span>
+0627     <span class="comment">%</span>
+0628     <span class="comment">%    INPUT</span>
+0629     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0630     <span class="comment">%         state           : (c-vector) meta system system state vector</span>
+0631     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+0632     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+0633     <span class="comment">%    OUTPUT</span>
+0634     <span class="comment">%         new_state       : (c-vector) updated meta system state vector</span>
+0635     <span class="comment">%</span>
+0636     <span class="comment">% Relationship between input arguments and external model (GSSM) variables</span>
+0637     <span class="comment">%</span>
+0638     <span class="comment">%   state -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof.</span>
+0639     <span class="comment">%   U1    -&gt; this is usually an empty matrix</span>
+0640     <span class="comment">%   V     -&gt; synthetic process noise (speeds up convergence)</span>
+0641     <span class="comment">%</span>
+0642 
+0643     new_state = state + V;
+0644 
+0645 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0646 <a name="_sub8" href="#_subfunctions" class="code">function tran_prior = prior_parameter(InferenceDS, nextstate, state, U1, pNoiseDS)</a>
+0647 
+0648     <span class="comment">%  PRIOR_STATE  Calculates the transition prior probability P(x_k|x_(k-1))</span>
+0649     <span class="comment">%</span>
+0650     <span class="comment">%    tranprior = prior_parameter(InferenceDS, nextstate, state, pNoiseDS)</span>
+0651     <span class="comment">%</span>
+0652     <span class="comment">%    INPUT</span>
+0653     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0654     <span class="comment">%         nextstate       : (c-vector)  system state at time k</span>
+0655     <span class="comment">%         state           : (c-vector)  system state at time k-1</span>
+0656     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+0657     <span class="comment">%         pNoiseDS        : (NoiseDS)   process noise data structure</span>
+0658     <span class="comment">%    OUTPUT</span>
+0659     <span class="comment">%         tranprior       : scalar probability P(x_k|x_(k-1))</span>
+0660 
+0661     X = nextstate - state;
+0662 
+0663     tran_prior = pNoiseDS.likelihood( pNoiseDS, X);
+0664 
+0665 
+0666 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0667 <a name="_sub9" href="#_subfunctions" class="code">function observ = hfun_parameter_bothp(InferenceDS, state, N, U2)</a>
+0668 
+0669     <span class="comment">%  HFUN_PARAMETER_BOTHP  State observation function of meta system for parameter estimation using both ffun and hfun</span>
+0670     <span class="comment">%                     from the underlying GSSM.</span>
+0671     <span class="comment">%</span>
+0672     <span class="comment">%    observ = hfun_parameter_bothp(InferenceDS, state, N, U2)</span>
+0673     <span class="comment">%</span>
+0674     <span class="comment">%    INPUT</span>
+0675     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0676     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+0677     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+0678     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+0679     <span class="comment">%    OUTPUT</span>
+0680     <span class="comment">%         observ          : (c-vector) meta system observation vector</span>
+0681     <span class="comment">%</span>
+0682     <span class="comment">% Relationship arguments and external model (GSSM) variables</span>
+0683     <span class="comment">%</span>
+0684     <span class="comment">%   state  -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+0685     <span class="comment">%   U2     -&gt; [external_state(k-1) external_U1(k-1) external_state(k) external_U2(k)]'</span>
+0686     <span class="comment">%   N      -&gt; [external_process_noise(k-1) external_observation_noise(k)]'</span>
+0687     <span class="comment">%   observ -&gt; [external_state(k) external_observation(k)]'</span>
+0688 
+0689     [dim,nov] = size(state);
+0690 
+0691     observ = zeros(InferenceDS.obsdim,nov);
+0692 
+0693     dimX  = InferenceDS.model.statedim;
+0694 <span class="comment">%    dimO  = InferenceDS.model.obsdim;</span>
+0695     dimV  = InferenceDS.model.Vdim;
+0696     dimN  = InferenceDS.model.Ndim;
+0697     dimU1 = InferenceDS.model.U1dim;
+0698 <span class="comment">%    dimU2 = InferenceDS.model.U2dim;</span>
+0699 
+0700     ext_state_1     = U2(1:dimX,:);
+0701     ext_proc_noise  = N(1:dimV,:);
+0702     ext_U1          = U2(dimX+1:dimX+dimU1,:);
+0703     ext_state_2     = U2(dimX+dimU1+1:dimX+dimU1+dimX,:);
+0704     ext_obs_noise   = N(dimV+1:dimV+dimN,:);
+0705     ext_U2          = U2(dimX+dimU1+dimX+1:<span class="keyword">end</span>,:);
+0706 
+0707     ffun_idx = InferenceDS.paramFFunOutIdxVec;
+0708     hfun_idx = InferenceDS.paramHFunOutIdxVec;
+0709 
+0710     dimF0 = length(ffun_idx);
+0711     dimH0 = length(hfun_idx);
+0712 
+0713     <span class="comment">% loop over all input vectors</span>
+0714     <span class="keyword">for</span> k=1:nov,
+0715         <span class="comment">% set model parameter vector</span>
+0716         InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+0717         <span class="comment">% FFUN part of observation</span>
+0718         FFunOut = InferenceDS.model.ffun( InferenceDS.model, ext_state_1(:,k), ext_proc_noise(:,k), ext_U1(:,k));
+0719         <span class="comment">% HFUN part of observation</span>
+0720         HFunOut = InferenceDS.model.hfun( InferenceDS.model, ext_state_2(:,k), ext_obs_noise(:,k), ext_U2(:,k));
+0721         observ(1:dimF0,k) = FFunOut(ffun_idx);
+0722         observ(dimF0+1:dimF0+dimH0,k) = HFunOut(hfun_idx);
+0723     <span class="keyword">end</span>
+0724 
+0725 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0726 <a name="_sub10" href="#_subfunctions" class="code">function innov = innovation_parameter_bothp(InferenceDS, obs, observ)</a>
+0727 
+0728     <span class="comment">%  INNOVATION_PARAMETER_BOTHP  Calculates the innovation signal (difference) between the</span>
+0729     <span class="comment">%   output of HFUN, i.e. OBSERV (the predicted system observation) and an actual</span>
+0730     <span class="comment">%   'real world' observation OBS.</span>
+0731     <span class="comment">%</span>
+0732     <span class="comment">%    innov = innovation_parameter_bothp(InferenceDS, obs, observ)</span>
+0733     <span class="comment">%</span>
+0734     <span class="comment">%    INPUT</span>
+0735     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0736     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+0737     <span class="comment">%         observ          : (c-vector)  meta system observation vector</span>
+0738     <span class="comment">%    OUTPUT</span>
+0739     <span class="comment">%         inov            : (c-vector) innovation sequence</span>
+0740 
+0741     [dim,nov] = size(observ);
+0742 
+0743     ffun_idx = InferenceDS.paramFFunOutIdxVec;
+0744 
+0745     dimF0 = length(ffun_idx);
+0746 
+0747     innov=zeros(InferenceDS.obsdim*nov);
+0748 
+0749     innov(1:dimF0,:) = obs(1:dimF0,:) - observ(1:dimF0,:);
+0750     innov(dimF0+1:obsdim,:) = InferenceDS.model.innovation( InferenceDS.model, obs(dimF0+1:obsdim,:), <span class="keyword">...</span>
+0751                                     observ(dimF0+1:obsdim,:));
+0752 
+0753 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0754 <a name="_sub11" href="#_subfunctions" class="code">function llh = likelihood_parameter_bothp(InferenceDS, obs, state, U2, oNoiseDS)</a>
+0755 
+0756     <span class="comment">%  LIKELIHOOD_PARAMETER_BOTHP  Calculates the likelood of a real-world observation obs given</span>
+0757     <span class="comment">%                           a realization of the predicted observation for a given state,</span>
+0758     <span class="comment">%                           i.e. p(y|x) = p(obs|state)</span>
+0759     <span class="comment">%</span>
+0760     <span class="comment">%    llh = likelihood_parameter_bothp(InferenceDS, obs, observ)</span>
+0761     <span class="comment">%</span>
+0762     <span class="comment">%    INPUT</span>
+0763     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0764     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+0765     <span class="comment">%         state           : (c-vector)  meta system state vector</span>
+0766     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+0767     <span class="comment">%         oNoiseDS        : (NoiseDS)   observation noise data structure</span>
+0768     <span class="comment">%    OUTPUT</span>
+0769     <span class="comment">%         llh             : scalar  likelihood</span>
+0770 
+0771     [dim,nov] = size(state);
+0772 
+0773     llh = zeros(1,nov);
+0774 
+0775     dimX  = InferenceDS.model.statedim;
+0776 <span class="comment">%    dimO  = InferenceDS.model.obsdim;</span>
+0777     dimU1 = InferenceDS.model.U1dim;
+0778 <span class="comment">%    dimU2 = InferenceDS.model.U2dim;</span>
+0779 
+0780     ext_state_1     = U2(1:dimX,:);
+0781 <span class="comment">%    ext_U1          = U2(dimX+1:dimX+dimU1,:);</span>
+0782     ext_state_2     = U2(dimX+dimU1+1:dimX+dimU1+dimX,:);
+0783     ext_U2          = U2(dimX+dimU1+dimX+1:<span class="keyword">end</span>,:);
+0784 
+0785     ffun_idx = InferenceDS.paramFFunOutIdxVec;
+0786     hfun_idx = InferenceDS.paramHFunOutIdxVec;
+0787 
+0788     dimF0 = length(ffun_idx);
+0789     dimH0 = length(hfun_idx);
+0790 
+0791     ext_nextstate = obs(1:dimF0,:);
+0792     ext_obs = obs(dimF0+1:dimF0+dimH0,:);
+0793 
+0794     <span class="comment">% loop over all input vectors</span>
+0795     <span class="keyword">for</span> k=1:nov,
+0796 
+0797         <span class="comment">% set model parameter vector</span>
+0798         InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+0799 
+0800         <span class="comment">% FFUN part of likelihood</span>
+0801         llh_f = InferenceDS.model.prior( InferenceDS.model, ext_nextstate(:,k), ext_state_1(:,k), oNoiseDS.noiseSources{1});
+0802 
+0803         <span class="comment">% HFUN part of likelihood</span>
+0804         llh_h = InferenceDS.model.likelihood( InferenceDS.model, ext_obs(:,k), ext_state_2(:,k), ext_U2(:,k), oNoiseDS.noiseSources{2});
+0805 
+0806         llh(k) = llh_f * llh_h;       <span class="comment">% we assume independence</span>
+0807 
+0808     <span class="keyword">end</span>
+0809 
+0810 
+0811 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0812 <a name="_sub12" href="#_subfunctions" class="code">function observ = hfun_parameter_f(InferenceDS, state, N, U2)</a>
+0813 
+0814     <span class="comment">%  HFUN_PARAMETER_F   State observation function of meta system for parameter estimation using only ffun</span>
+0815     <span class="comment">%                     from the underlying GSSM.</span>
+0816     <span class="comment">%</span>
+0817     <span class="comment">%    observ = hfun_parameter_f(InferenceDS, state, N, U2)</span>
+0818     <span class="comment">%</span>
+0819     <span class="comment">%    INPUT</span>
+0820     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0821     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+0822     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+0823     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+0824     <span class="comment">%    OUTPUT</span>
+0825     <span class="comment">%         observ          : (c-vector) meta system observation vector</span>
+0826     <span class="comment">%</span>
+0827     <span class="comment">% Relationship between arguments and external model (GSSM) variables</span>
+0828     <span class="comment">%</span>
+0829     <span class="comment">%   state  -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+0830     <span class="comment">%   U2     -&gt; [external_state(k-1) external_U1(k-1)]'</span>
+0831     <span class="comment">%   N      -&gt; [external_process_noise(k-1)]'</span>
+0832     <span class="comment">%   observ -&gt; [external_state(k)]'</span>
+0833 
+0834     [dim,nov] = size(state);
+0835 
+0836     observ = zeros(InferenceDS.obsdim,nov);
+0837 
+0838     dimX  = InferenceDS.model.statedim;
+0839     dimV  = InferenceDS.model.Vdim;
+0840     dimU1 = InferenceDS.model.U1dim;
+0841 
+0842     ext_state_1     = U2(1:dimX,:);
+0843     ext_proc_noise  = N(1:dimV,:);
+0844     ext_U1          = U2(dimX+1:dimX+dimU1,:);
+0845 
+0846     ffun_idx = InferenceDS.paramFFunOutIdxVec;
+0847 
+0848 <span class="comment">%    dimF0 = length(ffun_idx);</span>
+0849 
+0850     <span class="comment">% loop over all input vectors</span>
+0851     <span class="keyword">for</span> k=1:nov,
+0852         <span class="comment">% set model parameter vector</span>
+0853         InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+0854         FFunOut  = InferenceDS.model.ffun( InferenceDS.model, ext_state_1(:,k), ext_proc_noise(:,k), ext_U1(:,k));
+0855         observ(:,k) = FFunOut(ffun_idx);
+0856     <span class="keyword">end</span>
+0857 
+0858 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0859 <a name="_sub13" href="#_subfunctions" class="code">function observ = hfun_parameter_h(InferenceDS, state, N, U2)</a>
+0860 
+0861     <span class="comment">%  HFUN_PARAMETER_H   State observation function of meta system for parameter estimation using only hfun</span>
+0862     <span class="comment">%                     from the underlying GSSM.</span>
+0863     <span class="comment">%</span>
+0864     <span class="comment">%    observ = hfun_parameter_h(InferenceDS, state, N, U2)</span>
+0865     <span class="comment">%</span>
+0866     <span class="comment">%    INPUT</span>
+0867     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0868     <span class="comment">%         state           : (c-vector) system state vector</span>
+0869     <span class="comment">%         N               : (c-vector) observation noise vector</span>
+0870     <span class="comment">%         U2              : (c-vector) exogenous input 2</span>
+0871     <span class="comment">%    OUTPUT</span>
+0872     <span class="comment">%         observ          : (c-vector) observation vector</span>
+0873     <span class="comment">%</span>
+0874     <span class="comment">% Relationship between input arguments and external model (GSSM) variables</span>
+0875     <span class="comment">%</span>
+0876     <span class="comment">%   state  -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+0877     <span class="comment">%   U2     -&gt; [external_state(k) external_U2(k)]'</span>
+0878     <span class="comment">%   N      -&gt; [external_observation_noise(k)]'</span>
+0879     <span class="comment">%   observ -&gt; [external_observation(k)]'</span>
+0880 
+0881     [dim,nov] = size(state);
+0882 
+0883     observ = zeros(InferenceDS.obsdim,nov);
+0884 
+0885     dimX  = InferenceDS.model.statedim;
+0886 <span class="comment">%    dimO  = InferenceDS.model.obsdim;</span>
+0887     dimN  = InferenceDS.model.Ndim;
+0888     dimU2 = InferenceDS.model.U2dim;
+0889 
+0890     ext_state_2     = U2(1:dimX,:);
+0891     ext_U2          = U2(dimX+1:dimX+dimU2,:);
+0892     ext_obs_noise   = N(1:dimN,:);
+0893 
+0894     hfun_idx = InferenceDS.paramHFunOutIdxVec;
+0895 
+0896 <span class="comment">%    dimH0 = length(hfun_idx);</span>
+0897 
+0898     <span class="comment">% loop over all input vectors</span>
+0899     <span class="keyword">for</span> k=1:nov,
+0900        <span class="comment">% set model parameter vector</span>
+0901        InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+0902        HFunOut = InferenceDS.model.hfun( InferenceDS.model, ext_state_2(:,k), ext_obs_noise(:,k), ext_U2(:,k));
+0903        observ(:,k) = HFunOut(hfun_idx);
+0904     <span class="keyword">end</span>
+0905 
+0906 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0907 <a name="_sub14" href="#_subfunctions" class="code">function observ = hfun_parameter_both(InferenceDS, state, N, U2)</a>
+0908 
+0909     <span class="comment">%  HFUN_PARAMETER_BOTH   State observation function of meta system for parameter estimation using the full system</span>
+0910     <span class="comment">%                        dynamics of the underlying GSSM as observation, i.e. observ=hfun(ffun(x))</span>
+0911     <span class="comment">%</span>
+0912     <span class="comment">%</span>
+0913     <span class="comment">%    observ = hfun_parameter_both(InferenceDS, state, N, U2)</span>
+0914     <span class="comment">%</span>
+0915     <span class="comment">%    INPUT</span>
+0916     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0917     <span class="comment">%         state           : (c-vector) system state vector</span>
+0918     <span class="comment">%         N               : (c-vector) observation noise vector</span>
+0919     <span class="comment">%         U2              : (c-vector) exogenous input 2</span>
+0920     <span class="comment">%    OUTPUT</span>
+0921     <span class="comment">%         observ          : (c-vector) observation vector</span>
+0922     <span class="comment">%</span>
+0923     <span class="comment">% Relationship between input arguments and external model (GSSM) variables</span>
+0924     <span class="comment">%</span>
+0925     <span class="comment">%   state  -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+0926     <span class="comment">%   U2     -&gt; [external_state(k-1) external_U1(k-1) external_U2(k)]'</span>
+0927     <span class="comment">%   N      -&gt; [external_observation_noise(k)]'</span>
+0928     <span class="comment">%   observ -&gt; [external_observation(k)]'</span>
+0929 
+0930     [dim,nov] = size(state);
+0931 
+0932     observ = zeros(InferenceDS.obsdim,nov);
+0933 
+0934     dimX  = InferenceDS.model.statedim;
+0935     dimV  = InferenceDS.model.Vdim;
+0936     dimN  = InferenceDS.model.Ndim;
+0937     dimU1 = InferenceDS.model.U1dim;
+0938     dimU2 = InferenceDS.model.U2dim;
+0939 
+0940     ext_state_1     = U2(1:dimX,:);
+0941     ext_U1          = U2(dimX+1:dimX+dimU1,:);
+0942     ext_U2          = U2(dimX+dimU1+1:dimX+dimU1+dimU2,:);
+0943     ext_obs_noise   = N(dimV+1:dimV+dimN,:);
+0944     ext_proc_noise = N(1:dimV,:);
+0945     
+0946     hfun_idx = InferenceDS.paramHFunOutIdxVec;
+0947 
+0948 <span class="comment">%    dimH0 = length(hfun_idx);</span>
+0949 
+0950     <span class="comment">% loop over all input vectors</span>
+0951     <span class="keyword">for</span> k=1:nov,
+0952        <span class="comment">% set model parameter vector</span>
+0953        InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+0954        <span class="comment">% calculate X(k)=ffun(X(k-1))</span>
+0955        ext_state_2 = InferenceDS.model.ffun( InferenceDS.model, ext_state_1(:,k), ext_proc_noise(:,k), ext_U1(:,k));
+0956        HFunOut = InferenceDS.model.hfun( InferenceDS.model, ext_state_2, ext_obs_noise(:,k), ext_U2(:,k));
+0957        observ(:,k) = HFunOut(hfun_idx);
+0958     <span class="keyword">end</span>
+0959 
+0960 
+0961 
+0962 <span class="comment">%-------------------------------------------------------------------------------------</span>
+0963 <a name="_sub15" href="#_subfunctions" class="code">function llh = likelihood_parameter_f(InferenceDS, obs, state, U2, oNoiseDS)</a>
+0964 
+0965     <span class="comment">%  LIKELIHOOD_PARAMETER_F  Calculates the likelood of a real-world observation obs given</span>
+0966     <span class="comment">%                           a realization of the predicted observation for a given state,</span>
+0967     <span class="comment">%                           i.e. p(y|x) = p(obs|state)</span>
+0968     <span class="comment">%</span>
+0969     <span class="comment">%    llh = likelihood_parameter_f(InferenceDS, obs, observ)</span>
+0970     <span class="comment">%</span>
+0971     <span class="comment">%    INPUT</span>
+0972     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+0973     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+0974     <span class="comment">%         state           : (c-vector)  meta system state vector</span>
+0975     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+0976     <span class="comment">%         oNoiseDS        : (NoiseDS)   observation noise data structure</span>
+0977     <span class="comment">%    OUTPUT</span>
+0978     <span class="comment">%         llh             : scalar  likelihood</span>
+0979 
+0980     [dim,nov] = size(state);
+0981 
+0982     llh = zeros(1,nov);
+0983 
+0984     dimX  = InferenceDS.model.statedim;
+0985     dimO  = InferenceDS.model.obsdim;
+0986     dimU1 = InferenceDS.model.U1dim;
+0987 
+0988     ext_state_1     = U2(1:dimX,:);
+0989     ext_U1          = U2(dimX+1:dimX+dimU1,:);
+0990 
+0991     ffun_idx = InferenceDS.paramFFunOutIdxVec;
+0992 
+0993     dimF0 = length(ffun_idx);
+0994 
+0995     ext_nextstate = obs(1:dimF0,:);
+0996 
+0997     <span class="comment">% loop over all input vectors</span>
+0998     <span class="keyword">for</span> k=1:nov,
+0999 
+1000         <span class="comment">% set model parameter vector</span>
+1001         InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+1002 
+1003         <span class="comment">% FFUN part of likelihood</span>
+1004         llh(k) = InferenceDS.model.prior( InferenceDS.model, ext_nextstate(:,k), ext_state_1(:,k), ext_U1, oNoiseDS);
+1005 
+1006     <span class="keyword">end</span>
+1007 
+1008 
+1009 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1010 <a name="_sub16" href="#_subfunctions" class="code">function llh = likelihood_parameter_h(InferenceDS, obs, state, U2, oNoiseDS)</a>
+1011 
+1012     <span class="comment">%  LIKELIHOOD_PARAMETER_H  Calculates the likelood of a real-world observation obs given</span>
+1013     <span class="comment">%                           a realization of the predicted observation for a given state,</span>
+1014     <span class="comment">%                           i.e. p(y|x) = p(obs|state)</span>
+1015     <span class="comment">%</span>
+1016     <span class="comment">%    llh = likelihood_parameter_h(InferenceDS, obs, observ)</span>
+1017     <span class="comment">%</span>
+1018     <span class="comment">%    INPUT</span>
+1019     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1020     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+1021     <span class="comment">%         state           : (c-vector)  meta system state vector</span>
+1022     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1023     <span class="comment">%         oNoiseDS        : (NoiseDS)   observation noise data structure</span>
+1024     <span class="comment">%    OUTPUT</span>
+1025     <span class="comment">%         llh             : scalar  likelihood</span>
+1026 
+1027     [dim,nov] = size(state);
+1028 
+1029     llh = zeros(1,nov);
+1030 
+1031     dimX  = InferenceDS.model.statedim;
+1032 <span class="comment">%    dimO  = InferenceDS.model.obsdim;</span>
+1033 <span class="comment">%    dimU2 = InferenceDS.model.U2dim;</span>
+1034 
+1035     ext_state_2     = U2(1:dimX,:);
+1036     ext_U2          = U2(dimX+1:<span class="keyword">end</span>,:);
+1037 
+1038 <span class="comment">%    hfun_idx = InferenceDS.paramHFunOutIdxVec;</span>
+1039 
+1040 <span class="comment">%    dimH0 = length(hfun_idx);</span>
+1041 
+1042     <span class="comment">% loop over all input vectors</span>
+1043     <span class="keyword">for</span> k=1:nov,
+1044 
+1045         <span class="comment">% set model parameter vector</span>
+1046         InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+1047 
+1048         llh(k) = InferenceDS.model.likelihood( InferenceDS.model, obs(:,k), ext_state_2(:,k), ext_U2(:,k), oNoiseDS);
+1049 
+1050     <span class="keyword">end</span>
+1051 
+1052 
+1053 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1054 <a name="_sub17" href="#_subfunctions" class="code">function llh = likelihood_parameter_both(InferenceDS, obs, state, U2, oNoiseDS)</a>
+1055 
+1056     <span class="comment">%  LIKELIHOOD_PARAMETER_BOTH  Calculates the likelood of a real-world observation obs given</span>
+1057     <span class="comment">%                             a realization of the predicted observation for a given state,</span>
+1058     <span class="comment">%                             i.e. p(y|x) = p(obs|state)</span>
+1059     <span class="comment">%</span>
+1060     <span class="comment">%    llh = likelihood_parameter_both(InferenceDS, obs, observ)</span>
+1061     <span class="comment">%</span>
+1062     <span class="comment">%    INPUT</span>
+1063     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1064     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+1065     <span class="comment">%         state           : (c-vector)  meta system state vector</span>
+1066     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1067     <span class="comment">%         oNoiseDS        : (NoiseDS)   observation noise data structure</span>
+1068     <span class="comment">%    OUTPUT</span>
+1069     <span class="comment">%         llh             : scalar  likelihood</span>
+1070 
+1071     [dim,nov] = size(state);
+1072 
+1073     llh = zeros(1,nov);
+1074 
+1075     dimX  = InferenceDS.model.statedim;
+1076 <span class="comment">%    dimO  = InferenceDS.model.obsdim;</span>
+1077     dimU1 = InferenceDS.model.U1dim;
+1078 <span class="comment">%    dimU2 = InferenceDS.model.U2dim;</span>
+1079 
+1080     ext_state_1     = U2(1:dimX,:);
+1081     ext_U1          = U2(dimX+1:dimX+dimU1,:);
+1082     ext_U2          = U2(dimX+dimU1+1:<span class="keyword">end</span>,:);
+1083 
+1084 <span class="comment">%    hfun_idx = InferenceDS.paramHFunOutIdxVec;</span>
+1085 
+1086 <span class="comment">%    dimH0 = length(hfun_idx);</span>
+1087 
+1088         <span class="comment">% loop over all input vectors</span>
+1089     <span class="keyword">for</span> k=1:nov,
+1090 
+1091         <span class="comment">% set model parameter vector</span>
+1092         InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(:,k), InferenceDS.paramParamIdxVec);
+1093 
+1094         ext_state_2 = InferenceDS.model.ffun( InferenceDS.model, ext_state_1(:,k), [], ext_U1(:,k));
+1095 
+1096         llh(k) = InferenceDS.model.likelihood( InferenceDS.model, obs(:,k), ext_state_2, ext_U2(:,k), oNoiseDS);
+1097 
+1098     <span class="keyword">end</span>
+1099 
+1100 <span class="comment">%--------------------------------------------------------------------------------------</span>
+1101 <a name="_sub18" href="#_subfunctions" class="code">function varargout = linearize_parameter_both(InferenceDS, state, V, N, U1, U2, varargin)</a>
+1102 
+1103     <span class="comment">%  LINEARIZE_PARAMETER_BOTH  Linearization function of meta system for parameter estimation using both ffun</span>
+1104     <span class="comment">%                            and hfun from the underlying GSSM in a</span>
+1105     <span class="comment">%                            cascading (i.e. y=hfun(ffun(state,U1,V),U2,N))</span>
+1106     <span class="comment">%</span>
+1107     <span class="comment">%    varargout = linearize_parameter_both(InferenceDS, state, V, N, U1, U2, varargin)</span>
+1108     <span class="comment">%</span>
+1109     <span class="comment">%    INPUT</span>
+1110     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1111     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1112     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+1113     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+1114     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1115     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1116     <span class="comment">%         varargin        : (strings) linearization terms wanted, e.g. 'A','B','G',....</span>
+1117     <span class="comment">%    OUTPUT</span>
+1118     <span class="comment">%         varargout       : (matrices) linearization terms corresponding with varargin strings</span>
+1119     <span class="comment">%</span>
+1120     <span class="comment">% Relationship between input arguments and external model (GSSM) variables</span>
+1121     <span class="comment">%</span>
+1122     <span class="comment">%   state -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+1123     <span class="comment">%   U1    -&gt; this is usually an empty matrix</span>
+1124     <span class="comment">%   U2     -&gt; [external_state(k-1) external_U1(k-1) external_U2(k)]'</span>
+1125     <span class="comment">%   V     -&gt; synthetic process noise (speeds up convergence)</span>
+1126     <span class="comment">%   N     -&gt; [external_process_noise(k-1) external_observation_noise(k)]'</span>
+1127 
+1128 
+1129     <span class="comment">% Setup temporary model to use for linearization purposes</span>
+1130     model = InferenceDS.model;                                                      <span class="comment">% copy existing model</span>
+1131     <span class="keyword">if</span> ~isempty(state),
+1132         model = model.setparams( model, state, InferenceDS.paramParamIdxVec);   <span class="comment">% set parameters acording to state variable</span>
+1133     <span class="keyword">end</span>
+1134 
+1135     dimX  = model.statedim;
+1136 <span class="comment">%    dimO  = model.obsdim;</span>
+1137     dimV  = model.Vdim;
+1138     dimN  = model.Ndim;
+1139     dimU1 = model.U1dim;
+1140 <span class="comment">%    dimU2 = model.U2dim;</span>
+1141 
+1142     ext_state_1     = U2(1:dimX);
+1143     ext_proc_noise  = N(1:dimV);
+1144     ext_U1          = U2(dimX+1:dimX+dimU1);
+1145     ext_obs_noise   = N(dimV+1:dimV+dimN);
+1146     ext_U2          = U2(dimX+dimU1+1:end);
+1147 
+1148 <span class="comment">%    ffun_idx = InferenceDS.paramFFunOutIdxVec;</span>
+1149     hfun_idx = InferenceDS.paramHFunOutIdxVec;
+1150 
+1151 <span class="comment">%    dimF0 = length(ffun_idx);</span>
+1152     dimH0 = length(hfun_idx);
+1153 
+1154     <span class="keyword">for</span> k=1:length(varargin)
+1155 
+1156         <span class="keyword">switch</span> varargin{k}
+1157 
+1158         <span class="comment">%--- A = dffun/dstate</span>
+1159         <span class="keyword">case</span> <span class="string">'A'</span>
+1160             varargout{k} = InferenceDS.A;
+1161 
+1162         <span class="comment">%--- B = dffun/dU1</span>
+1163         <span class="keyword">case</span> <span class="string">'B'</span>
+1164             varargout{k} = InferenceDS.B;
+1165 
+1166         <span class="comment">%--- G = dffun/dv</span>
+1167         <span class="keyword">case</span> <span class="string">'G'</span>
+1168             varargout{k} = InferenceDS.G;
+1169 
+1170         <span class="comment">%--- C = dhfun/dstate</span>
+1171         <span class="keyword">case</span> <span class="string">'C'</span>
+1172             C = zeros(InferenceDS.obsdim, InferenceDS.statedim);
+1173             ext_state_2 = model.ffun( model, ext_state_1, ext_proc_noise, ext_U1);
+1174             extC = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'C'</span>);
+1175             extJFW = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'JFW'</span>, InferenceDS.paramParamIdxVec);
+1176             extJHW = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'JHW'</span>, InferenceDS.paramParamIdxVec);
+1177             Ctemp = extC*extJFW + extJHW;
+1178             C(1:dimH0,:) = Ctemp(hfun_idx,:);
+1179             varargout{k} = C;
+1180 
+1181         <span class="comment">%--- D = dhfun/dU2</span>
+1182         <span class="keyword">case</span> <span class="string">'D'</span>
+1183             D = zeros(InferenceDS.obsdim, InferenceDS.U2dim);
+1184             ext_state_2 = model.ffun( model, ext_state_1, ext_proc_noise, ext_U1);
+1185             extA = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'A'</span>);
+1186             extB = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'B'</span>);
+1187             extC = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'C'</span>);
+1188             extD = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'D'</span>);
+1189             tempCA = extC*extA;
+1190             tempCB = extC*extB;
+1191             D(1:dimH0,1:dimX) = tempCA(hfun_idx,:);
+1192             D(1:dimH0,dimX+1:dimX+dimU1) = tempCB(hfun_idx,:);
+1193             D(1:dimH0,dimX+dimU1+1:end) = extD(hfun_idx,:);
+1194             varargout{k} = D;
+1195 
+1196         <span class="comment">%--- H = dhfun/dn</span>
+1197         <span class="keyword">case</span> <span class="string">'H'</span>
+1198             H = zeros(InferenceDS.obsdim, InferenceDS.Ndim);
+1199             ext_state_2 = model.ffun( model, ext_state_1, ext_proc_noise, ext_U1);
+1200             extC = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'C'</span>);
+1201             extG = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'G'</span>);
+1202             extH = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'H'</span>);
+1203             tempCG = extC*extG;
+1204             H(1:dimH0,1:dimV) = tempCG(hfun_idx,:);
+1205             H(1:dimH0,dimV+1:end) = extH(hfun_idx,:);
+1206             varargout{k} = H;
+1207 
+1208         <span class="comment">%----</span>
+1209         <span class="keyword">otherwise</span>
+1210             error(<span class="string">'[ InferenceDS.linearize ] Unknown linearization term.'</span>);
+1211 
+1212         <span class="keyword">end</span>
+1213 
+1214     <span class="keyword">end</span>
+1215 
+1216 
+1217 <span class="comment">%--------------------------------------------------------------------------------------</span>
+1218 <a name="_sub19" href="#_subfunctions" class="code">function varargout = linearize_parameter_bothp(InferenceDS, state, V, N, U1, U2, varargin)</a>
+1219 
+1220     <span class="comment">%  LINEARIZE_PARAMETER_BOTHP  Linearization function of meta system for parameter estimation using both ffun</span>
+1221     <span class="comment">%                          and hfun from the underlying GSSM.</span>
+1222     <span class="comment">%</span>
+1223     <span class="comment">%    varargout = linearize_parameter_bothp(InferenceDS, state, V, N, U1, U2, varargin)</span>
+1224     <span class="comment">%</span>
+1225     <span class="comment">%    INPUT</span>
+1226     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1227     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1228     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+1229     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+1230     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1231     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1232     <span class="comment">%         varargin        : (strings) linearization terms wanted, e.g. 'A','B','G',....</span>
+1233     <span class="comment">%    OUTPUT</span>
+1234     <span class="comment">%         varargout       : (matrices) linearization terms corresponding with varargin strings</span>
+1235     <span class="comment">%</span>
+1236     <span class="comment">% Relationship between input arguments and external model (GSSM) variables</span>
+1237     <span class="comment">%</span>
+1238     <span class="comment">%   state -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+1239     <span class="comment">%   U1    -&gt; this is usually an empty matrix</span>
+1240     <span class="comment">%   U2    -&gt; [external_state(k-1) external_U1(k-1) external_state(k) external_U2(k)]'</span>
+1241     <span class="comment">%   V     -&gt; synthetic process noise (speeds up convergence)</span>
+1242     <span class="comment">%   N     -&gt; [external_process_noise(k-1) external_observation_noise(k)]'</span>
+1243 
+1244 
+1245     <span class="comment">% Setup temporary model to use for linearization purposes</span>
+1246     model = InferenceDS.model;                                                      <span class="comment">% copy existing model</span>
+1247     <span class="keyword">if</span> ~isempty(state),
+1248         model = model.setparams( model, state, InferenceDS.paramParamIdxVec);   <span class="comment">% set parameters according to state variable</span>
+1249     <span class="keyword">end</span>
+1250 
+1251     dimX  = model.statedim;
+1252 <span class="comment">%    dimO  = model.obsdim;</span>
+1253     dimV  = model.Vdim;
+1254     dimN  = model.Ndim;
+1255     dimU1 = model.U1dim;
+1256 <span class="comment">%    dimU2 = model.U2dim;</span>
+1257 
+1258     ext_state_1     = U2(1:dimX);
+1259     ext_proc_noise  = N(1:dimV);
+1260     ext_U1          = U2(dimX+1:dimX+dimU1);
+1261     ext_state_2     = U2(dimX+dimU1+1:dimX+dimU1+dimX);
+1262     ext_obs_noise   = N(dimV+1:dimV+dimN);
+1263     ext_U2          = U2(dimX+dimU1+dimX+1:end);
+1264 
+1265     ffun_idx = InferenceDS.paramFFunOutIdxVec;
+1266     hfun_idx = InferenceDS.paramHFunOutIdxVec;
+1267 
+1268     dimF0 = length(ffun_idx);
+1269     dimH0 = length(hfun_idx);
+1270 
+1271     <span class="keyword">for</span> k=1:length(varargin)
+1272 
+1273         <span class="keyword">switch</span> varargin{k}
+1274 
+1275         <span class="comment">%--- A = dffun/dstate</span>
+1276         <span class="keyword">case</span> <span class="string">'A'</span>
+1277             varargout{k} = InferenceDS.A;
+1278 
+1279         <span class="comment">%--- B = dffun/dU1</span>
+1280         <span class="keyword">case</span> <span class="string">'B'</span>
+1281             varargout{k} = InferenceDS.B;
+1282 
+1283         <span class="comment">%--- G = dffun/dv</span>
+1284         <span class="keyword">case</span> <span class="string">'G'</span>
+1285             varargout{k} = InferenceDS.G;
+1286 
+1287         <span class="comment">%--- C = dhfun/dstate</span>
+1288         <span class="keyword">case</span> <span class="string">'C'</span>
+1289             C = zeros(InferenceDS.obsdim, InferenceDS.statedim);
+1290             extJFW = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'JFW'</span>, InferenceDS.paramParamIdxVec);
+1291             extJHW = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'JHW'</span>, InferenceDS.paramParamIdxVec);
+1292             C(1:dimF0,:) = extJFW(ffun_idx,:);
+1293             C(dimF0+1:dimF0+dimH0,:) = extJHW(hfun_idx,:);
+1294             varargout{k} = C;
+1295 
+1296         <span class="comment">%--- D = dhfun/dU2</span>
+1297         <span class="keyword">case</span> <span class="string">'D'</span>
+1298             D = zeros(InferenceDS.obsdim, InferenceDS.U2dim);
+1299             extA = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'A'</span>);
+1300             extB = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'B'</span>);
+1301             extC = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'C'</span>);
+1302             extD = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'D'</span>);
+1303             D(1:dimF0,1:dimX) = extA(ffun_idx,:);
+1304             D(1:dimF0,dimX+1:dimX+dimU1) = extB(ffun_idx,:);
+1305             D(dimF0+1:dimF0+dimH0,dimX+dimU1+1:dimX+dimU1+dimX) = extC(hfun_idx,:);
+1306             D(dimF0+1:dimF0+dimH0,dimX+dimU1+dimX+1:end) = extD(hfun_idx,:);
+1307             varargout{k} = D;
+1308 
+1309         <span class="comment">%--- H = dhfun/dn</span>
+1310         <span class="keyword">case</span> <span class="string">'H'</span>
+1311             H = zeros(InferenceDS.obsdim, InferenceDS.Ndim);
+1312             extG = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'G'</span>);
+1313             extH = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'H'</span>);
+1314             H(1:dimF0,1:dimV) = extG(ffun_idx,:);
+1315             H(dimF0+1:dimF0+dimH0,dimV+1:end) = extH(hfun_idx,:);
+1316             varargout{k} = H;
+1317 
+1318         <span class="comment">%----</span>
+1319         <span class="keyword">otherwise</span>
+1320             error(<span class="string">'[ InferenceDS.linearize ] Unknown linearization term.'</span>);
+1321 
+1322         <span class="keyword">end</span>
+1323 
+1324     <span class="keyword">end</span>
+1325 
+1326 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1327 <a name="_sub20" href="#_subfunctions" class="code">function varargout = linearize_parameter_f(InferenceDS, state, V, N, U1, U2, varargin)</a>
+1328 
+1329     <span class="comment">%  LINEARIZE_PARAMETER_F  Linearization function of meta system for parameter estimation using only</span>
+1330     <span class="comment">%                         ffun from the underlying GSSM.</span>
+1331     <span class="comment">%</span>
+1332     <span class="comment">%    varargout = linearize_parameter_f(InferenceDS, state, V, N, U1, U2, varargin)</span>
+1333     <span class="comment">%</span>
+1334     <span class="comment">%    INPUT</span>
+1335     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1336     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1337     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+1338     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+1339     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1340     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1341     <span class="comment">%         varargin        : (strings) linearization terms wanted, e.g. 'A','B','G',....</span>
+1342     <span class="comment">%    OUTPUT</span>
+1343     <span class="comment">%         varargout       : (matrices) linearization terms corresponding with varargin strings</span>
+1344     <span class="comment">%</span>
+1345     <span class="comment">% Relationship between input arguments and external model (GSSM) variables</span>
+1346     <span class="comment">%</span>
+1347     <span class="comment">%   state -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+1348     <span class="comment">%   U1    -&gt; this is usually an empty matrix</span>
+1349     <span class="comment">%   U2    -&gt; [external_state(k-1) external_U1(k-1)]'</span>
+1350     <span class="comment">%   V     -&gt; synthetic process noise (speeds up convergence)</span>
+1351     <span class="comment">%   N     -&gt; [external_process_noise(k-1)]'</span>
+1352 
+1353 
+1354     <span class="comment">% Setup temporary model to use for linearization purposes</span>
+1355     model = InferenceDS.model;                                                        <span class="comment">% copy existing model</span>
+1356     <span class="keyword">if</span> ~isempty(state),
+1357         model = model.setparams( model, state, InferenceDS.paramParamIdxVec);   <span class="comment">% set parameters acording to state variable</span>
+1358     <span class="keyword">end</span>
+1359 
+1360     dimX  = model.statedim;
+1361     dimV  = model.Vdim;
+1362     dimU1 = model.U1dim;
+1363 
+1364     <span class="keyword">if</span> isempty(U2)
+1365         ext_state_1     = [];
+1366         ext_U1          = [];
+1367     <span class="keyword">else</span>
+1368         ext_state_1     = U2(1:dimX);
+1369         ext_U1          = U2(dimX+1:dimX+dimU1);
+1370     <span class="keyword">end</span>
+1371     <span class="keyword">if</span> isempty(N),
+1372         ext_proc_noise  = [];
+1373     <span class="keyword">else</span>
+1374         ext_proc_noise  = N(1:dimV);
+1375     <span class="keyword">end</span>
+1376 
+1377     ffun_idx = InferenceDS.paramFFunOutIdxVec;
+1378 
+1379     dimF0 = length(ffun_idx);
+1380 
+1381 
+1382     <span class="keyword">for</span> k=1:length(varargin)
+1383 
+1384         <span class="keyword">switch</span> varargin{k}
+1385 
+1386         <span class="comment">%--- A = dffun/dstate</span>
+1387         <span class="keyword">case</span> <span class="string">'A'</span>
+1388             varargout{k} = InferenceDS.A;
+1389 
+1390         <span class="comment">%--- B = dffun/dU1</span>
+1391         <span class="keyword">case</span> <span class="string">'B'</span>
+1392             varargout{k} = InferenceDS.B;
+1393 
+1394         <span class="comment">%--- G = dffun/dv</span>
+1395         <span class="keyword">case</span> <span class="string">'G'</span>
+1396             varargout{k} = InferenceDS.G;
+1397 
+1398         <span class="comment">%--- C = dhfun/dstate</span>
+1399         <span class="keyword">case</span> <span class="string">'C'</span>
+1400             C = zeros(InferenceDS.obsdim, InferenceDS.statedim);
+1401             extJFW = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'JFW'</span>, InferenceDS.paramParamIdxVec);
+1402             C = extJFW(ffun_idx,:);
+1403             varargout{k} = C;
+1404 
+1405         <span class="comment">%--- D = dhfun/dU2</span>
+1406         <span class="keyword">case</span> <span class="string">'D'</span>
+1407             D = zeros(InferenceDS.obsdim, InferenceDS.U2dim);
+1408             extA = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'A'</span>);
+1409             extB = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'B'</span>);
+1410             D(1:dimF0,1:dimX) = extA(ffun_idx,:);
+1411             D(1:dimF0,dimX+1:dimX+dimU1) = extB(ffun_idx,:);
+1412             varargout{k} = D;
+1413 
+1414         <span class="comment">%--- H = dhfun/dn</span>
+1415         <span class="keyword">case</span> <span class="string">'H'</span>
+1416             H = zeros(InferenceDS.obsdim, InferenceDS.Ndim);
+1417             extG = model.linearize( model, ext_state_1, ext_proc_noise, [], ext_U1, [], <span class="string">'G'</span>);
+1418             H(1:dimF0,1:dimV) = extG(ffun_idx,:);
+1419             varargout{k} = H;
+1420 
+1421         <span class="comment">%---</span>
+1422         <span class="keyword">otherwise</span>
+1423             error(<span class="string">'[ InferenceDS.linearize ] Unknown linearization term.'</span>);
+1424 
+1425         <span class="keyword">end</span>
+1426 
+1427     <span class="keyword">end</span>
+1428 
+1429 
+1430 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1431 <a name="_sub21" href="#_subfunctions" class="code">function varargout = linearize_parameter_h(InferenceDS, state, V, N, U1, U2, varargin)</a>
+1432 
+1433     <span class="comment">%  LINEARIZE_PARAMETER_H  Linearization function of meta system for parameter estimation using</span>
+1434     <span class="comment">%                         only hfun from the underlying GSSM.</span>
+1435     <span class="comment">%</span>
+1436     <span class="comment">%    varargout = linearize_parameter_h(InferenceDS, state, V, N, U1, U2, varargin)</span>
+1437     <span class="comment">%</span>
+1438     <span class="comment">%    INPUT</span>
+1439     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1440     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1441     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+1442     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+1443     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1444     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1445     <span class="comment">%         varargin        : (strings) linearization terms wanted, e.g. 'A','B','G',....</span>
+1446     <span class="comment">%    OUTPUT</span>
+1447     <span class="comment">%         varargout       : (matrices) linearization terms corresponding with varargin strings</span>
+1448     <span class="comment">%</span>
+1449     <span class="comment">% Relationship between input arguments and external model (GSSM) variables</span>
+1450     <span class="comment">%</span>
+1451     <span class="comment">%   state -&gt; external model parameters or a subset (specified by InferenceDS.paramParamIdxVec) thereof</span>
+1452     <span class="comment">%   U1    -&gt; this is usually an empty matrix</span>
+1453     <span class="comment">%   U2    -&gt; [external_state(k) external_U2(k)]'</span>
+1454     <span class="comment">%   V     -&gt; synthetic process noise (speeds up convergence)</span>
+1455     <span class="comment">%   N     -&gt; [external_observation_noise(k)]'</span>
+1456 
+1457 
+1458     <span class="comment">% Setup temporary model to use for linearization purposes</span>
+1459     model = InferenceDS.model;                                                     <span class="comment">% copy existing model</span>
+1460     model = model.setparams( model, state, InferenceDS.paramParamIdxVec);       <span class="comment">% set parameters acording to state variable</span>
+1461 
+1462     dimX  = model.statedim;
+1463 <span class="comment">%    dimO  = model.obsdim;</span>
+1464     dimN  = model.Ndim;
+1465     dimU2 = model.U2dim;
+1466 
+1467     ext_state_2     = U2(1:dimX);
+1468     ext_obs_noise   = N(1:dimN);
+1469     ext_U2          = U2(dimX+1:dimX+dimU2);
+1470 
+1471     hfun_idx = InferenceDS.paramHFunOutIdxVec;
+1472 
+1473     dimH0 = length(hfun_idx);
+1474 
+1475 
+1476     <span class="keyword">for</span> k=1:length(varargin),
+1477 
+1478         <span class="keyword">switch</span> varargin{k}
+1479 
+1480         <span class="comment">%--- A = dffun/dstate</span>
+1481         <span class="keyword">case</span> <span class="string">'A'</span>
+1482             varargout{k} = InferenceDS.A;
+1483 
+1484         <span class="comment">%--- B = dffun/dU1</span>
+1485         <span class="keyword">case</span> <span class="string">'B'</span>
+1486             varargout{k} = InferenceDS.B;
+1487 
+1488         <span class="comment">%--- G = dffun/dv</span>
+1489         <span class="keyword">case</span> <span class="string">'G'</span>
+1490             varargout{k} = InferenceDS.G;
+1491 
+1492 
+1493         <span class="comment">%--- C = dhfun/dstate</span>
+1494         <span class="keyword">case</span> <span class="string">'C'</span>
+1495 <span class="comment">%            C = zeros(InferenceDS.obsdim, InferenceDS.statedim);</span>
+1496             extJHW = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'JHW'</span>, InferenceDS.paramParamIdxVec);
+1497             varargout{k} = extJHW(hfun_idx,:);
+1498 
+1499 
+1500         <span class="comment">%--- D = dhfun/dU2</span>
+1501         <span class="keyword">case</span> <span class="string">'D'</span>
+1502             D = zeros(InferenceDS.obsdim, InferenceDS.U2dim);
+1503             extC = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'C'</span>);
+1504             extD = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'D'</span>);
+1505             D(1:dimH0,1:dimX) = extC(hfun_idx,:);
+1506             D(1:dimH0,dimX+1:dimX+dimU2) = extD(hfun_idx,:);
+1507             varargout{k} = D;
+1508 
+1509 
+1510         <span class="comment">%--- H = dhfun/dn</span>
+1511         <span class="keyword">case</span> <span class="string">'H'</span>
+1512             H = zeros(InferenceDS.obsdim, InferenceDS.Ndim);
+1513             extH = model.linearize( model, ext_state_2, [], ext_obs_noise, [], ext_U2, <span class="string">'H'</span>);
+1514             H(1:dimH0,1:dimN) = extH(hfun_idx,:);
+1515             varargout{k} = H;
+1516 
+1517         <span class="comment">%---</span>
+1518         <span class="keyword">otherwise</span>
+1519             error(<span class="string">'[ InferenceDS.linearize ] Unknown linearization term.'</span>);
+1520 
+1521         <span class="keyword">end</span>
+1522 
+1523     <span class="keyword">end</span>
+1524 
+1525 
+1526 <span class="comment">%===================================================================================================</span>
+1527 <span class="comment">%================================= JOINT ESTIMATION FUNCTIONS ======================================</span>
+1528 
+1529 <a name="_sub22" href="#_subfunctions" class="code">function new_state = ffun_joint(InferenceDS, state, V, U1)</a>
+1530 
+1531     <span class="comment">%  FFUN_JOINT  State transition function of meta system for joint estimation</span>
+1532     <span class="comment">%</span>
+1533     <span class="comment">%    new_state = ffun_joint(InferenceDS, state, V, U1)</span>
+1534     <span class="comment">%</span>
+1535     <span class="comment">%    INPUT</span>
+1536     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1537     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1538     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+1539     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1540     <span class="comment">%    OUTPUT</span>
+1541     <span class="comment">%         new_state       : (c-vector) updated meta system state vector</span>
+1542 
+1543     [dim,nov] = size(state);
+1544 
+1545     new_state = zeros(dim,nov);
+1546 
+1547     dimX  = InferenceDS.model.statedim;
+1548     dimV  = InferenceDS.model.Vdim;
+1549 
+1550     <span class="keyword">for</span> k=1:nov,
+1551       InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(dimX+1:<span class="keyword">end</span>,k), InferenceDS.paramParamIdxVec);    <span class="comment">% set model parameter vector</span>
+1552       new_state(1:dimX,k) = InferenceDS.model.ffun( InferenceDS.model, state(1:dimX,k), V(1:dimV,k), U1(:,k));
+1553       new_state(dimX+1:<span class="keyword">end</span>,k) = state(dimX+1:<span class="keyword">end</span>,k) + V(dimV+1:<span class="keyword">end</span>,k);
+1554     <span class="keyword">end</span>
+1555 
+1556 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1557 <a name="_sub23" href="#_subfunctions" class="code">function tran_prior = prior_joint(InferenceDS, nextstate, state, U1, pNoiseDS)</a>
+1558 
+1559     <span class="comment">%  PRIOR_JOINT  Calculates the transition prior probability P(x_k|x_(k-1))</span>
+1560     <span class="comment">%</span>
+1561     <span class="comment">%    tranprior = prior_joint(InferenceDS, nextstate, state, pNoiseDS)</span>
+1562     <span class="comment">%</span>
+1563     <span class="comment">%    INPUT</span>
+1564     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1565     <span class="comment">%         nextstate       : (c-vector)  system state at time k</span>
+1566     <span class="comment">%         state           : (c-vector)  system state at time k-1</span>
+1567     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1568     <span class="comment">%         pNoiseDS        : (NoiseDS)   process noise data structure</span>
+1569     <span class="comment">%    OUTPUT</span>
+1570     <span class="comment">%         tranprior       : scalar probability P(x_k|x_(k-1))</span>
+1571 
+1572 
+1573     [dim,nov] = size(state);
+1574 
+1575     tran_prior = zeros(1,nov);
+1576 
+1577     dimX  = InferenceDS.model.statedim;
+1578 
+1579     paramState = state(dimX+1:<span class="keyword">end</span>,:);
+1580     paramNextState = nextstate(dimX+1:<span class="keyword">end</span>,:);
+1581 
+1582     stateState = state(1:dimX,:);
+1583     stateNextState = nextstate(1:dimX,:);
+1584 
+1585     dX = paramNextState - paramState;
+1586 
+1587     tran_prior = pNoiseDS.likelihood( pNoiseDS, dX, pNoiseDS.N);
+1588 
+1589     <span class="keyword">for</span> k=1:nov,
+1590         InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, paramState(:,k), InferenceDS.paramParamIdxVec); <span class="comment">% set model parameter vector</span>
+1591         tran_prior(k) = tran_prior(k) * InferenceDS.model.prior( InferenceDS.model, stateNextState(:,k), stateState(:,k), U1(:,k), pNoiseDS.noiseSources{1});
+1592     <span class="keyword">end</span>
+1593 
+1594 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1595 <a name="_sub24" href="#_subfunctions" class="code">function observ = hfun_joint(InferenceDS, state, N, U2)</a>
+1596 
+1597     <span class="comment">%  HFUN_JOINT  State observation function of meta system for joint estimation</span>
+1598     <span class="comment">%</span>
+1599     <span class="comment">%    observ = hfun_joint(InferenceDS, state, N, U2)</span>
+1600     <span class="comment">%</span>
+1601     <span class="comment">%    INPUT</span>
+1602     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1603     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1604     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+1605     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1606     <span class="comment">%    OUTPUT</span>
+1607     <span class="comment">%         observ          : (c-vector)  meta system observation vector</span>
+1608 
+1609     [dim,nov] = size(state);
+1610 
+1611     observ = zeros(InferenceDS.obsdim,nov);
+1612 
+1613     dimX  = InferenceDS.model.statedim;
+1614 <span class="comment">%    dimV  = InferenceDS.model.Vdim;</span>
+1615 
+1616     <span class="keyword">for</span> k=1:nov,
+1617       InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(dimX+1:<span class="keyword">end</span>,k), InferenceDS.paramParamIdxVec);    <span class="comment">% set model parameter vector</span>
+1618       observ(:,k) = InferenceDS.model.hfun( InferenceDS.model, state(1:dimX,k), N(:,k), U2(:,k));
+1619     <span class="keyword">end</span>
+1620 
+1621 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1622 <a name="_sub25" href="#_subfunctions" class="code">function llh = likelihood_joint(InferenceDS, obs, state, U2, oNoiseDS)</a>
+1623 
+1624     <span class="comment">%  LIKELIHOOD_JOINT  Calculates the likelood of a real-world observation obs given</span>
+1625     <span class="comment">%                           a realization of the predicted observation for a given state,</span>
+1626     <span class="comment">%                           i.e. p(y|x) = p(obs|state)</span>
+1627     <span class="comment">%</span>
+1628     <span class="comment">%    llh = likelihood_joint(InferenceDS, obs, observ)</span>
+1629     <span class="comment">%</span>
+1630     <span class="comment">%    INPUT</span>
+1631     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1632     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+1633     <span class="comment">%         state           : (c-vector)  meta system state vector</span>
+1634     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1635     <span class="comment">%         oNoiseDS        : (NoiseDS)   observation noise data structure</span>
+1636     <span class="comment">%    OUTPUT</span>
+1637     <span class="comment">%         llh             : scalar  likelihood</span>
+1638 
+1639     [dim,nov] = size(state);
+1640 
+1641     llh = zeros(1,nov);
+1642 
+1643     dimX  = InferenceDS.model.statedim;
+1644 
+1645     <span class="keyword">for</span> k=1:nov,
+1646       InferenceDS.model = InferenceDS.model.setparams( InferenceDS.model, state(dimX+1:<span class="keyword">end</span>,k), InferenceDS.paramParamIdxVec); <span class="keyword">...</span>
+1647       <span class="comment">% set model parameter vector</span>
+1648       llh(k) = InferenceDS.model.likelihood( InferenceDS.model, obs(:,k), state(1:dimX,k), U2(:,k), oNoiseDS);
+1649     <span class="keyword">end</span>
+1650 
+1651 
+1652 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1653 <a name="_sub26" href="#_subfunctions" class="code">function varargout = linearize_joint(InferenceDS, state, V, N, U1, U2, varargin)</a>
+1654 
+1655     <span class="comment">%  LINEARIZE_JOINT  Linearization function of meta system for state estimation</span>
+1656     <span class="comment">%</span>
+1657     <span class="comment">%    varargout = linearize_joint(InferenceDS, state, V, N, U1, U2, varargin)</span>
+1658     <span class="comment">%</span>
+1659     <span class="comment">%    INPUT</span>
+1660     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1661     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1662     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+1663     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+1664     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1665     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1666     <span class="comment">%         varargin        : (strings) linearization terms wanted, e.g. 'A','B','G',....</span>
+1667     <span class="comment">%    OUTPUT</span>
+1668     <span class="comment">%         varargout       : (matrices) linearization terms corresponding with varargin strings</span>
+1669 
+1670     model = InferenceDS.model;                                                     <span class="comment">% copy existing model</span>
+1671 
+1672     dimX  = model.statedim;
+1673 <span class="comment">%    dimO  = model.obsdim;</span>
+1674 <span class="comment">%    dimN  = model.Ndim;</span>
+1675     dimV  = model.Vdim;
+1676 
+1677     paramIdxVec = InferenceDS.paramParamIdxVec;
+1678     dimW  = length(paramIdxVec);
+1679     ext_state  = state(1:dimX);
+1680     ext_params = state(dimX+1:dimX+dimW);
+1681     ext_V      = V(1:dimV);
+1682 <span class="comment">%    param_V    = V(dimV+1:dimV+dimW);</span>
+1683 
+1684     <span class="comment">% Setup temporary model to use for linearization purposes</span>
+1685     model = model.setparams( model, ext_params, paramIdxVec);       <span class="comment">% set parameters acording to state variable</span>
+1686 
+1687 
+1688     nop = length(varargin);
+1689 
+1690     <span class="keyword">for</span> k=1:nop,
+1691 
+1692         <span class="keyword">switch</span> varargin{k}
+1693 
+1694          <span class="keyword">case</span> <span class="string">'A'</span>
+1695             A = eye(InferenceDS.statedim);
+1696             A(1:dimX,1:dimX) = model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'A'</span>);
+1697             A(1:dimX,dimX+1:dimX+dimW) = model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'JFW'</span>, paramIdxVec);
+1698             varargout{k} = A;
+1699 
+1700         <span class="keyword">case</span> <span class="string">'B'</span>
+1701             B = zeros(InferenceDS.statedim,InferenceDS.U1dim);
+1702             B(1:dimX,:) = model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'B'</span>);
+1703             varargout{k} = B;
+1704 
+1705         <span class="keyword">case</span> <span class="string">'G'</span>
+1706             G = zeros(InferenceDS.statedim,InferenceDS.Vdim);
+1707             G(1:dimX,1:dimV) = model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'G'</span>);
+1708             G(dimX+1:dimX+dimW,dimV+1:dimV+dimW) = eye(dimW);
+1709             varargout{k} = G;
+1710 
+1711          <span class="keyword">case</span> <span class="string">'C'</span>
+1712             C = zeros(InferenceDS.obsdim,InferenceDS.statedim);
+1713             C(:,1:dimX) =  model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'C'</span>);
+1714             C(:,dimX+1:dimX+dimW) = model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'JHW'</span>, paramIdxVec);
+1715             varargout{k} = C;
+1716 
+1717          <span class="keyword">case</span> <span class="string">'D'</span>
+1718             varargout{k} = model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'D'</span>);
+1719 
+1720          <span class="keyword">case</span> <span class="string">'H'</span>
+1721             varargout{k} = model.linearize( model, ext_state, ext_V, N, U1, U2, <span class="string">'H'</span>);
+1722 
+1723         <span class="keyword">end</span>
+1724 
+1725 
+1726     <span class="keyword">end</span>
+1727 
+1728 
+1729 
+1730 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1731 <a name="_sub27" href="#_subfunctions" class="code">function innov = innovation_generic(InferenceDS, obs, observ)</a>
+1732 
+1733     <span class="comment">%  INNOVATION_GENERIC  Calculates the innovation signal (difference) between the</span>
+1734     <span class="comment">%   output of HFUN, i.e. OBSERV (the predicted system observation) and an actual</span>
+1735     <span class="comment">%   'real world' observation OBS.</span>
+1736     <span class="comment">%</span>
+1737     <span class="comment">%   innov = innovation_generic(InferenceDS, obs, observ)</span>
+1738     <span class="comment">%</span>
+1739     <span class="comment">%    INPUT</span>
+1740     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1741     <span class="comment">%         obs             : (c-vector)  real-world observation vector</span>
+1742     <span class="comment">%         observ          : (c-vector)  meta system generated observation vector</span>
+1743     <span class="comment">%    OUTPUT</span>
+1744     <span class="comment">%         inov            : (c-vector) innovation sequence</span>
+1745 
+1746     innov = obs - observ;
+1747 
+1748 
+1749 <span class="comment">%-------------------------------------------------------------------------------------</span>
+1750 <a name="_sub28" href="#_subfunctions" class="code">function varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)</a>
+1751 
+1752     <span class="comment">%  LINEARIZE_GENERIC  Generic (perturbation based) linearization function of meta system</span>
+1753     <span class="comment">%</span>
+1754     <span class="comment">%    varargout = linearize_generic(InferenceDS, state, V, N, U1, U2, varargin)</span>
+1755     <span class="comment">%</span>
+1756     <span class="comment">%    INPUT</span>
+1757     <span class="comment">%         InferenceDS     : (InferenceDS) Inference data structure</span>
+1758     <span class="comment">%         state           : (c-vector) meta system state vector</span>
+1759     <span class="comment">%         V               : (c-vector) meta system process noise vector</span>
+1760     <span class="comment">%         N               : (c-vector) meta system observation noise vector</span>
+1761     <span class="comment">%         U1              : (c-vector) meta system exogenous input 1</span>
+1762     <span class="comment">%         U2              : (c-vector) meta system exogenous input 2</span>
+1763     <span class="comment">%         varargin        : (strings) linearization terms wanted, e.g. 'A','B','G',....</span>
+1764     <span class="comment">%    OUTPUT</span>
+1765     <span class="comment">%         varargout       : (matrices) linearization terms corresponding with varargin strings</span>
+1766 
+1767   nop = length(varargin);
+1768 
+1769   epsilon = 1e-8;                    <span class="comment">% perturbation step size</span>
+1770 
+1771   <span class="keyword">for</span> k=1:nop,
+1772 
+1773       <span class="keyword">switch</span> varargin{k}
+1774 
+1775       <span class="keyword">case</span> <span class="string">'A'</span>
+1776       <span class="comment">%%%========================================================</span>
+1777       <span class="comment">%%%             Calculate A = dffun/dstate</span>
+1778       <span class="comment">%%%========================================================</span>
+1779       A  = zeros(InferenceDS.statedim);
+1780       S = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(state, InferenceDS.statedim+1);
+1781       S(:,2:end) = S(:,2:end)+diag(<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(epsilon,InferenceDS.statedim));
+1782       F = InferenceDS.ffun( InferenceDS, S, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(V,InferenceDS.statedim+1), <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(U1,InferenceDS.statedim+1));
+1783       A = (F(:,2:end)-<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(F(:,1),InferenceDS.statedim))./epsilon;
+1784       varargout{k} = A;
+1785 
+1786 
+1787       <span class="keyword">case</span> <span class="string">'B'</span>
+1788       <span class="comment">%%%========================================================</span>
+1789       <span class="comment">%%%             Calculate B = dffun/dU1</span>
+1790       <span class="comment">%%%========================================================</span>
+1791       <span class="comment">%%%========================================================</span>
+1792       B = zeros(InferenceDS.statedim,InferenceDS.U1dim);
+1793       U = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(U1, InferenceDS.U1dim+1);
+1794       U(:,2:end) = U(:,2:end)+diag(<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(epsilon,InferenceDS.U1dim));
+1795       F = InferenceDS.ffun( InferenceDS, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(state,InferenceDS.U1dim+1, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(V,InferenceDS.U1dim+1), U));
+1796       B = (F(:,2:end)-<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(F(:,1),InferenceDS.U1dim))./epsilon;
+1797       varargout{k} = B;
+1798 
+1799 
+1800       <span class="keyword">case</span> <span class="string">'G'</span>
+1801       <span class="comment">%%%========================================================</span>
+1802       <span class="comment">%%%             Calculate G = dffun/dv</span>
+1803       <span class="comment">%%%========================================================</span>
+1804       G = zeros(InferenceDS.statedim,InferenceDS.Vdim);
+1805       VV = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(V, InferenceDS.Vdim+1);
+1806       VV(:,2:end) = VV(:,2:end)+diag(<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(epsilon,InferenceDS.Vdim));
+1807       F = InferenceDS.ffun( InferenceDS, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(state,InferenceDS.Vdim+1), VV, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(U1,InferenceDS.Vdim+1));
+1808       G = (F(:,2:end)-<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(F(:,1),InferenceDS.Vdim))./epsilon;
+1809       varargout{k} = G;
+1810 
+1811 
+1812       <span class="keyword">case</span> <span class="string">'C'</span>
+1813       <span class="comment">%%%========================================================</span>
+1814       <span class="comment">%%%             Calculate C = dhfun/dx</span>
+1815       <span class="comment">%%%========================================================</span>
+1816       C = zeros(InferenceDS.obsdim,InferenceDS.statedim);
+1817       S = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(state, InferenceDS.statedim+1);
+1818       S(:,2:end) = S(:,2:end)+diag(<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(epsilon,InferenceDS.statedim));
+1819       F = InferenceDS.hfun( InferenceDS, S, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(N,InferenceDS.statedim+1), <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(U2,InferenceDS.statedim+1));
+1820       C = (F(:,2:end)-<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(F(:,1),InferenceDS.statedim))./epsilon;
+1821       varargout{k} = C;
+1822 
+1823 
+1824       <span class="keyword">case</span> <span class="string">'D'</span>
+1825       <span class="comment">%%%========================================================</span>
+1826       <span class="comment">%%%             Calculate D = dhfun/dU2</span>
+1827       <span class="comment">%%%========================================================</span>
+1828       <span class="comment">%%%========================================================</span>
+1829       D = zeros(InferenceDS.obsdim,InferenceDS.U2dim);
+1830       U = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(U2, InferenceDS.U2dim+1);
+1831       U(:,2:end) = U(:,2:end)+diag(<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(epsilon,InferenceDS.U2dim));
+1832       F = InferenceDS.hfun( InferenceDS, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(state,InferenceDS.U2dim+1, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(N,InferenceDS.U2dim+1), U));
+1833       D = (F(:,2:end)-<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(F(:,1),InferenceDS.U2dim))./epsilon;
+1834       varargout{k} = B;
+1835 
+1836       <span class="keyword">case</span> <span class="string">'H'</span>
+1837       <span class="comment">%%%========================================================</span>
+1838       <span class="comment">%%%             Calculate H = dhfun/dn</span>
+1839       <span class="comment">%%%========================================================</span>
+1840       H = zeros(InferenceDS.obsdim,InferenceDS.Ndim);
+1841       NN = <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(N, InferenceDS.Ndim+1);
+1842       NN(:,2:end) = NN(:,2:end)+diag(<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(epsilon,InferenceDS.Ndim));
+1843       F = InferenceDS.hfun( InferenceDS, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(state,InferenceDS.Ndim+1), NN, <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(U2,InferenceDS.Ndim+1));
+1844       H = (F(:,2:end)-<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(F(:,1),InferenceDS.Ndim))./epsilon;
+1845       varargout{k} = H;
+1846 
+1847       <span class="keyword">otherwise</span>
+1848         error(<span class="string">'[ linearize_generic ] Invalid linearization term requested!'</span>);
+1849 
+1850       <span class="keyword">end</span>
+1851 
+1852 
+1853   <span class="keyword">end</span>
+1854</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

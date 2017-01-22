@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of somtrain</title>
+  <meta name="keywords" content="somtrain">
+  <meta name="description" content="SOMTRAIN Kohonen training algorithm for SOM.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; somtrain.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>somtrain
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>SOMTRAIN Kohonen training algorithm for SOM.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = somtrain(net, options, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SOMTRAIN Kohonen training algorithm for SOM.
+
+    Description
+    NET = SOMTRAIN{NET, OPTIONS, X) uses Kohonen's algorithm to train a
+    SOM.  Both on-line and batch algorithms are implemented. The learning
+    rate (for on-line) and neighbourhood size decay linearly. There is no
+    error function minimised during training (so there is no termination
+    criterion other than the number of epochs), but the  sum-of-squares
+    is computed and returned in OPTIONS(8).
+
+    The optional parameters have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs learning
+    rate ALPHA and neighbourhood size NSIZE. Otherwise nothing is
+    displayed.
+
+    OPTIONS(5) determines whether the patterns are sampled randomly with
+    replacement. If it is 0 (the default), then patterns are sampled in
+    order.  This is only relevant to the on-line algorithm.
+
+    OPTIONS(6) determines if the on-line or batch algorithm is used. If
+    it is 1 then the batch algorithm is used.  If it is 0 (the default)
+    then the on-line algorithm is used.
+
+    OPTIONS(14) is the maximum number of iterations (passes through the
+    complete pattern set); default 100.
+
+    OPTIONS(15) is the final neighbourhood size; default value is the
+    same as the initial neighbourhood size.
+
+    OPTIONS(16) is the final learning rate; default value is the same as
+    the initial learning rate.
+
+    OPTIONS(17) is the initial neighbourhood size; default 0.5*maximum
+    map size.
+
+    OPTIONS(18) is the initial learning rate; default 0.9.  This
+    parameter must be positive.
+
+    See also
+    <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">KMEANS</a>, <a href="som.html" class="code" title="function net = som(nin, map_size)">SOM</a>, <a href="somfwd.html" class="code" title="function [d2, win_nodes] = somfwd(net, x)">SOMFWD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li><li><a href="somfwd.html" class="code" title="function [d2, win_nodes] = somfwd(net, x)">somfwd</a>	SOMFWD	Forward propagation through a Self-Organising Map.</li><li><a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>	SOMPAK	Combines node weights into one weights matrix.</li><li><a href="somunpak.html" class="code" title="function net = somunpak(net, w)">somunpak</a>	SOMUNPAK Replaces node weights in SOM.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demsom1.html" class="code" title="">demsom1</a>	DEMSOM1 Demonstrate SOM for visualisation.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = somtrain(net, options, x)</a>
+0002 <span class="comment">%SOMTRAIN Kohonen training algorithm for SOM.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = SOMTRAIN{NET, OPTIONS, X) uses Kohonen's algorithm to train a</span>
+0006 <span class="comment">%    SOM.  Both on-line and batch algorithms are implemented. The learning</span>
+0007 <span class="comment">%    rate (for on-line) and neighbourhood size decay linearly. There is no</span>
+0008 <span class="comment">%    error function minimised during training (so there is no termination</span>
+0009 <span class="comment">%    criterion other than the number of epochs), but the  sum-of-squares</span>
+0010 <span class="comment">%    is computed and returned in OPTIONS(8).</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    The optional parameters have the following interpretations.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs learning</span>
+0015 <span class="comment">%    rate ALPHA and neighbourhood size NSIZE. Otherwise nothing is</span>
+0016 <span class="comment">%    displayed.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    OPTIONS(5) determines whether the patterns are sampled randomly with</span>
+0019 <span class="comment">%    replacement. If it is 0 (the default), then patterns are sampled in</span>
+0020 <span class="comment">%    order.  This is only relevant to the on-line algorithm.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    OPTIONS(6) determines if the on-line or batch algorithm is used. If</span>
+0023 <span class="comment">%    it is 1 then the batch algorithm is used.  If it is 0 (the default)</span>
+0024 <span class="comment">%    then the on-line algorithm is used.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    OPTIONS(14) is the maximum number of iterations (passes through the</span>
+0027 <span class="comment">%    complete pattern set); default 100.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%    OPTIONS(15) is the final neighbourhood size; default value is the</span>
+0030 <span class="comment">%    same as the initial neighbourhood size.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%    OPTIONS(16) is the final learning rate; default value is the same as</span>
+0033 <span class="comment">%    the initial learning rate.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%    OPTIONS(17) is the initial neighbourhood size; default 0.5*maximum</span>
+0036 <span class="comment">%    map size.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%    OPTIONS(18) is the initial learning rate; default 0.9.  This</span>
+0039 <span class="comment">%    parameter must be positive.</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%    See also</span>
+0042 <span class="comment">%    KMEANS, SOM, SOMFWD</span>
+0043 <span class="comment">%</span>
+0044 
+0045 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0046 
+0047 <span class="comment">% Check arguments for consistency</span>
+0048 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'som'</span>, x);
+0049 <span class="keyword">if</span> ~isempty(errstring)
+0050     error(errstring);
+0051 <span class="keyword">end</span>
+0052 
+0053 <span class="comment">% Set number of iterations in convergence phase</span>
+0054 <span class="keyword">if</span> (~options(14))
+0055     options(14) = 100;
+0056 <span class="keyword">end</span>
+0057 niters = options(14);
+0058 
+0059 <span class="comment">% Learning rate must be positive</span>
+0060 <span class="keyword">if</span> (options(18) &gt; 0)
+0061     alpha_first = options(18);
+0062 <span class="keyword">else</span>
+0063     alpha_first = 0.9;
+0064 <span class="keyword">end</span>
+0065 <span class="comment">% Final learning rate must be no greater than initial learning rate</span>
+0066 <span class="keyword">if</span> (options(16) &gt; alpha_first | options(16) &lt; 0)
+0067     alpha_last = alpha_first;
+0068 <span class="keyword">else</span>
+0069     alpha_last = options(16);
+0070 <span class="keyword">end</span>
+0071 
+0072 <span class="comment">% Neighbourhood size</span>
+0073 <span class="keyword">if</span> (options(17) &gt;= 0)
+0074     nsize_first = options(17);
+0075 <span class="keyword">else</span>
+0076     nsize_first = max(net.map_dim)/2;
+0077 <span class="keyword">end</span>
+0078 <span class="comment">% Final neighbourhood size must be no greater than initial size</span>
+0079 <span class="keyword">if</span> (options(15) &gt; nsize_first | options(15) &lt; 0)
+0080     nsize_last = nsize_first;
+0081 <span class="keyword">else</span>
+0082     nsize_last = options(15);
+0083 <span class="keyword">end</span>
+0084 
+0085 ndata = size(x, 1);
+0086 
+0087 <span class="keyword">if</span> options(6)
+0088     <span class="comment">% Batch algorithm</span>
+0089     H = zeros(ndata, net.num_nodes);
+0090 <span class="keyword">end</span>
+0091 <span class="comment">% Put weights into matrix form</span>
+0092 tempw = <a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>(net);
+0093 
+0094 <span class="comment">% Then carry out training</span>
+0095 j = 1;
+0096 <span class="keyword">while</span> j &lt;= niters
+0097     <span class="keyword">if</span> options(6)
+0098     <span class="comment">% Batch version of algorithm</span>
+0099     alpha = 0.0;
+0100     frac_done = (niters - j)/niters;
+0101     <span class="comment">% Compute neighbourhood</span>
+0102     nsize = round((nsize_first - nsize_last)*frac_done + nsize_last);
+0103     
+0104     <span class="comment">% Find winning node: put weights back into net so that we can</span>
+0105     <span class="comment">% call somunpak</span>
+0106     net = <a href="somunpak.html" class="code" title="function net = somunpak(net, w)">somunpak</a>(net, tempw);
+0107     [temp, bnode] = <a href="somfwd.html" class="code" title="function [d2, win_nodes] = somfwd(net, x)">somfwd</a>(net, x);
+0108     <span class="keyword">for</span> k = 1:ndata
+0109         H(k, :) = reshape(net.inode_dist(:, :, bnode(k))&lt;=nsize, <span class="keyword">...</span>
+0110         1, net.num_nodes);
+0111     <span class="keyword">end</span>
+0112     s = sum(H, 1);
+0113     <span class="keyword">for</span> k = 1:net.num_nodes
+0114         <span class="keyword">if</span> s(k) &gt; 0
+0115         tempw(k, :) = sum((H(:, k)*ones(1, net.nin)).*x, 1)/ <span class="keyword">...</span>
+0116             s(k);
+0117         <span class="keyword">end</span>
+0118     <span class="keyword">end</span>
+0119     <span class="keyword">else</span>
+0120     <span class="comment">% On-line version of algorithm</span>
+0121     <span class="keyword">if</span> options(5)
+0122         <span class="comment">% Randomise order of pattern presentation: with replacement</span>
+0123         pnum = ceil(rand(ndata, 1).*ndata);
+0124     <span class="keyword">else</span>
+0125         pnum = 1:ndata;
+0126     <span class="keyword">end</span>
+0127     <span class="comment">% Cycle through dataset</span>
+0128     <span class="keyword">for</span> k = 1:ndata
+0129         <span class="comment">% Fraction done</span>
+0130         frac_done = (((niters+1)*ndata)-(j*ndata + k))/((niters+1)*ndata);
+0131         <span class="comment">% Compute learning rate</span>
+0132         alpha = (alpha_first - alpha_last)*frac_done + alpha_last;
+0133         <span class="comment">% Compute neighbourhood</span>
+0134         nsize = round((nsize_first - nsize_last)*frac_done + nsize_last);
+0135         <span class="comment">% Find best node</span>
+0136         pat_diff = ones(net.num_nodes, 1)*x(pnum(k), :) - tempw;
+0137         [temp, bnode] = min(sum(abs(pat_diff), 2));
+0138     
+0139         <span class="comment">% Now update neighbourhood</span>
+0140         neighbourhood = (net.inode_dist(:, :, bnode) &lt;= nsize);
+0141         tempw = tempw + <span class="keyword">...</span>
+0142         ((alpha*(neighbourhood(:)))*ones(1, net.nin)).*pat_diff;
+0143     <span class="keyword">end</span>
+0144     <span class="keyword">end</span>
+0145     <span class="keyword">if</span> options(1)
+0146     <span class="comment">% Print iteration information</span>
+0147     fprintf(1, <span class="string">'Iteration %d; alpha = %f, nsize = %f. '</span>, j, alpha, <span class="keyword">...</span>
+0148     nsize);
+0149     <span class="comment">% Print sum squared error to nearest node</span>
+0150     d2 = <a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(tempw, x);
+0151     fprintf(1, <span class="string">'Error = %f\n'</span>, sum(min(d2)));
+0152     <span class="keyword">end</span>
+0153     j = j + 1;
+0154 <span class="keyword">end</span>
+0155 
+0156 net = <a href="somunpak.html" class="code" title="function net = somunpak(net, w)">somunpak</a>(net, tempw);
+0157 options(8) = sum(min(<a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(tempw, x)));</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

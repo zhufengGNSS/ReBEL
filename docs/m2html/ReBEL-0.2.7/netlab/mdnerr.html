@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mdnerr</title>
+  <meta name="keywords" content="mdnerr">
+  <meta name="description" content="MDNERR	Evaluate error function for Mixture Density Network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mdnerr.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mdnerr
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MDNERR	Evaluate error function for Mixture Density Network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function e = mdnerr(net, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MDNERR    Evaluate error function for Mixture Density Network.
+
+    Description
+     E = MDNERR(NET, X, T) takes a mixture density network data structure
+    NET, a matrix X of input vectors and a matrix T of target vectors,
+    and evaluates the error function E. The error function is the
+    negative log likelihood of the target data under the conditional
+    density given by the mixture model parameterised by the MLP.  Each
+    row of X corresponds to one input vector and each row of T
+    corresponds to one target vector.
+
+    See also
+    <a href="mdn.html" class="code" title="function net = mdn(nin, nhidden, ncentres, dim_target, mix_type,prior, beta)">MDN</a>, <a href="mdnfwd.html" class="code" title="function [mixparams, y, z, a] = mdnfwd(net, x)">MDNFWD</a>, <a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">MDNGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="mdnfwd.html" class="code" title="function [mixparams, y, z, a] = mdnfwd(net, x)">mdnfwd</a>	MDNFWD	Forward propagation through Mixture Density Network.</li><li><a href="mdnprob.html" class="code" title="function [prob,a] = mdnprob(mixparams, t)">mdnprob</a>	MDNPROB Computes the data probability likelihood for an MDN mixture structure.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function e = mdnerr(net, x, t)</a>
+0002 <span class="comment">%MDNERR    Evaluate error function for Mixture Density Network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     E = MDNERR(NET, X, T) takes a mixture density network data structure</span>
+0006 <span class="comment">%    NET, a matrix X of input vectors and a matrix T of target vectors,</span>
+0007 <span class="comment">%    and evaluates the error function E. The error function is the</span>
+0008 <span class="comment">%    negative log likelihood of the target data under the conditional</span>
+0009 <span class="comment">%    density given by the mixture model parameterised by the MLP.  Each</span>
+0010 <span class="comment">%    row of X corresponds to one input vector and each row of T</span>
+0011 <span class="comment">%    corresponds to one target vector.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    See also</span>
+0014 <span class="comment">%    MDN, MDNFWD, MDNGRAD</span>
+0015 <span class="comment">%</span>
+0016 
+0017 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0018 <span class="comment">%    David J Evans (1998)</span>
+0019 
+0020 <span class="comment">% Check arguments for consistency</span>
+0021 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'mdn'</span>, x, t);
+0022 <span class="keyword">if</span> ~isempty(errstring)
+0023   error(errstring);
+0024 <span class="keyword">end</span>
+0025 
+0026 <span class="comment">% Get the output mixture models</span>
+0027 mixparams = <a href="mdnfwd.html" class="code" title="function [mixparams, y, z, a] = mdnfwd(net, x)">mdnfwd</a>(net, x);
+0028 
+0029 <span class="comment">% Compute the probabilities of mixtures</span>
+0030 probs     = <a href="mdnprob.html" class="code" title="function [prob,a] = mdnprob(mixparams, t)">mdnprob</a>(mixparams, t);
+0031 <span class="comment">% Compute the error</span>
+0032 e       = sum( -log(max(eps, sum(probs, 2))));
+0033</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

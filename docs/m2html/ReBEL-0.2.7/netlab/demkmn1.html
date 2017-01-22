@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demkmn1</title>
+  <meta name="keywords" content="demkmn1">
+  <meta name="description" content="DEMKMEAN Demonstrate simple clustering model trained with K-means.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demkmn1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demkmn1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMKMEAN Demonstrate simple clustering model trained with K-means.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMKMEAN Demonstrate simple clustering model trained with K-means.
+
+    Description
+    The problem consists of data in a two-dimensional space.  The data is
+    drawn from three spherical Gaussian distributions with priors 0.3,
+    0.5 and 0.2; centres (2, 3.5), (0, 0) and (0,2); and standard
+    deviations 0.2, 0.5 and 1.0. The first figure contains a scatter plot
+    of the data.  The data is the same as in DEMGMM1.
+
+    A cluster model with three components is trained using the batch K-
+    means algorithm. The matrix of centres is printed after training. The
+    second figure shows the data labelled with a colour derived from the
+    corresponding  cluster
+
+    See also
+    <a href="dem2ddat.html" class="code" title="function [data, c, prior, sd] = dem2ddat(ndata)">DEM2DDAT</a>, <a href="demgmm1.html" class="code" title="">DEMGMM1</a>, KNN1, <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">KMEANS</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="dem2ddat.html" class="code" title="function [data, c, prior, sd] = dem2ddat(ndata)">dem2ddat</a>	DEM2DDAT Generates two dimensional data for demos.</li><li><a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">kmeans</a>	KMEANS	Trains a k means cluster model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMKMEAN Demonstrate simple clustering model trained with K-means.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    The problem consists of data in a two-dimensional space.  The data is</span>
+0005 <span class="comment">%    drawn from three spherical Gaussian distributions with priors 0.3,</span>
+0006 <span class="comment">%    0.5 and 0.2; centres (2, 3.5), (0, 0) and (0,2); and standard</span>
+0007 <span class="comment">%    deviations 0.2, 0.5 and 1.0. The first figure contains a scatter plot</span>
+0008 <span class="comment">%    of the data.  The data is the same as in DEMGMM1.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    A cluster model with three components is trained using the batch K-</span>
+0011 <span class="comment">%    means algorithm. The matrix of centres is printed after training. The</span>
+0012 <span class="comment">%    second figure shows the data labelled with a colour derived from the</span>
+0013 <span class="comment">%    corresponding  cluster</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    See also</span>
+0016 <span class="comment">%    DEM2DDAT, DEMGMM1, KNN1, KMEANS</span>
+0017 <span class="comment">%</span>
+0018 
+0019 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0020 
+0021 <span class="comment">% Generate the data, fixing seeds for reproducible results</span>
+0022 ndata = 250;
+0023 randn(<span class="string">'state'</span>, 42);
+0024 rand(<span class="string">'state'</span>, 42);
+0025 data = <a href="dem2ddat.html" class="code" title="function [data, c, prior, sd] = dem2ddat(ndata)">dem2ddat</a>(ndata);
+0026 
+0027 <span class="comment">% Randomise data order</span>
+0028 data = data(randperm(ndata),:);
+0029 
+0030 clc 
+0031 disp(<span class="string">'This demonstration illustrates the use of a cluster model to'</span>)
+0032 disp(<span class="string">'find centres that reflect the distribution of data points.'</span>)
+0033 disp(<span class="string">'We begin by generating the data from a mixture of three Gaussians'</span>)
+0034 disp(<span class="string">'in two-dimensional space and plotting it.'</span>)
+0035 disp(<span class="string">' '</span>)
+0036 disp(<span class="string">'Press any key to continue.'</span>)
+0037 pause
+0038 
+0039 fh1 = figure;
+0040 plot(data(:, 1), data(:, 2), <span class="string">'o'</span>)
+0041 set(gca, <span class="string">'Box'</span>, <span class="string">'on'</span>)
+0042 title(<span class="string">'Data'</span>)
+0043 
+0044 <span class="comment">% Set up cluster model</span>
+0045 ncentres = 3;
+0046 centres = zeros(ncentres, 2);
+0047 
+0048 <span class="comment">% Set up vector of options for kmeans trainer</span>
+0049 options = foptions;
+0050 options(1)  = 1;        <span class="comment">% Prints out error values.</span>
+0051 options(5) = 1;
+0052 options(14) = 10;        <span class="comment">% Number of iterations.</span>
+0053 
+0054 clc
+0055 disp(<span class="string">'The model is chosen to have three centres, which are initialised'</span>)
+0056 disp(<span class="string">'at randomly selected data points.  We now train the model using'</span>)
+0057 disp(<span class="string">'the batch K-means algorithm with a maximum of 10 iterations and'</span>)
+0058 disp(<span class="string">'stopping tolerance of 1e-4.'</span>)
+0059 disp(<span class="string">' '</span>)
+0060 disp(<span class="string">'Press any key to continue.'</span>)
+0061 pause
+0062 
+0063 <span class="comment">% Train the centres from the data</span>
+0064 [centres, options, post] = <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">kmeans</a>(centres, data, options);
+0065 
+0066 <span class="comment">% Print out model</span>
+0067 disp(<span class="string">' '</span>)
+0068 disp(<span class="string">'Note that training has terminated before 10 iterations as there'</span>)
+0069 disp(<span class="string">'has been no change in the centres or error function.'</span>)
+0070 disp(<span class="string">' '</span>)
+0071 disp(<span class="string">'The trained model has centres:'</span>)
+0072 disp(centres);
+0073 disp(<span class="string">'Press any key to continue.'</span>)
+0074 pause
+0075 
+0076 clc
+0077 disp(<span class="string">'We now plot each data point coloured according to its classification'</span>)
+0078 disp(<span class="string">'given by the nearest cluster centre.  The cluster centres are denoted'</span>)
+0079 disp(<span class="string">'by black crosses.'</span>)
+0080 
+0081 <span class="comment">%                     Plot the result</span>
+0082 fh2 = figure;
+0083 
+0084 hold on
+0085 colours = [<span class="string">'b.'</span>; <span class="string">'r.'</span>; <span class="string">'g.'</span>];
+0086 
+0087 [tempi, tempj] = find(post);
+0088 hold on
+0089 <span class="keyword">for</span> i = 1:3
+0090   <span class="comment">% Select data points closest to ith centre</span>
+0091   thisX = data(tempi(tempj == i), 1);
+0092   thisY = data(tempi(tempj == i), 2);
+0093   hp(i) = plot(thisX, thisY, colours(i,:));
+0094   set(hp(i), <span class="string">'MarkerSize'</span>, 12);
+0095 <span class="keyword">end</span>
+0096 set(gca, <span class="string">'Box'</span>, <span class="string">'on'</span>)
+0097 legend(<span class="string">'Class 1'</span>, <span class="string">'Class 2'</span>, <span class="string">'Class 3'</span>, 2)
+0098 hold on
+0099 plot(centres(:, 1), centres(:,2), <span class="string">'k+'</span>, <span class="string">'LineWidth'</span>, 2, <span class="keyword">...</span>
+0100   <span class="string">'MarkerSize'</span>, 8)
+0101 title(<span class="string">'Centres and data labels'</span>)
+0102 hold off
+0103 
+0104 disp(<span class="string">' '</span>)
+0105 disp(<span class="string">'Press any key to end.'</span>)
+0106 pause
+0107 
+0108 close(fh1);
+0109 close(fh2);
+0110 clear all;
+0111</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotmat</title>
+  <meta name="keywords" content="plotmat">
+  <meta name="description" content="PLOTMAT Display a matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; plotmat.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>plotmat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PLOTMAT Display a matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function plotmat(matrix, textcolour, gridcolour, fontsize) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PLOTMAT Display a matrix.
+
+    Description
+    PLOTMAT(MATRIX, TEXTCOLOUR, GRIDCOLOUR, FONTSIZE) displays the matrix
+    MATRIX on the current figure.  The TEXTCOLOUR and GRIDCOLOUR
+    arguments control the colours of the numbers and grid labels
+    respectively and should follow the usual Matlab specification. The
+    parameter FONTSIZE should be an integer.
+
+    See also
+    <a href="conffig.html" class="code" title="function fh=conffig(y, t)">CONFFIG</a>, <a href="demmlp2.html" class="code" title="">DEMMLP2</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="conffig.html" class="code" title="function fh=conffig(y, t)">conffig</a>	CONFFIG Display a confusion matrix.</li><li><a href="demmlp2.html" class="code" title="">demmlp2</a>	DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function plotmat(matrix, textcolour, gridcolour, fontsize)</a>
+0002 <span class="comment">%PLOTMAT Display a matrix.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    PLOTMAT(MATRIX, TEXTCOLOUR, GRIDCOLOUR, FONTSIZE) displays the matrix</span>
+0006 <span class="comment">%    MATRIX on the current figure.  The TEXTCOLOUR and GRIDCOLOUR</span>
+0007 <span class="comment">%    arguments control the colours of the numbers and grid labels</span>
+0008 <span class="comment">%    respectively and should follow the usual Matlab specification. The</span>
+0009 <span class="comment">%    parameter FONTSIZE should be an integer.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    CONFFIG, DEMMLP2</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 [m,n]=size(matrix);
+0018 <span class="keyword">for</span> rowCnt=1:m,
+0019   <span class="keyword">for</span> colCnt=1:n,
+0020     numberString=num2str(matrix(rowCnt,colCnt));
+0021     text(colCnt-.5,m-rowCnt+.5,numberString, <span class="keyword">...</span>
+0022       <span class="string">'HorizontalAlignment'</span>,<span class="string">'center'</span>, <span class="keyword">...</span>
+0023       <span class="string">'Color'</span>, textcolour, <span class="keyword">...</span>
+0024       <span class="string">'FontWeight'</span>,<span class="string">'bold'</span>, <span class="keyword">...</span>
+0025       <span class="string">'FontSize'</span>, fontsize);
+0026   <span class="keyword">end</span>;
+0027 <span class="keyword">end</span>;
+0028 
+0029 set(gca,<span class="string">'Box'</span>,<span class="string">'on'</span>, <span class="keyword">...</span>
+0030   <span class="string">'Visible'</span>,<span class="string">'on'</span>, <span class="keyword">...</span>
+0031   <span class="string">'xLim'</span>,[0 n], <span class="keyword">...</span>
+0032   <span class="string">'xGrid'</span>,<span class="string">'on'</span>, <span class="keyword">...</span>
+0033   <span class="string">'xTickLabel'</span>,[], <span class="keyword">...</span>
+0034   <span class="string">'xTick'</span>,0:n, <span class="keyword">...</span>
+0035   <span class="string">'yGrid'</span>,<span class="string">'on'</span>, <span class="keyword">...</span>
+0036   <span class="string">'yLim'</span>,[0 m], <span class="keyword">...</span>
+0037   <span class="string">'yTickLabel'</span>,[], <span class="keyword">...</span>
+0038   <span class="string">'yTick'</span>,0:m, <span class="keyword">...</span>
+0039   <span class="string">'DataAspectRatio'</span>,[1, 1, 1], <span class="keyword">...</span>
+0040   <span class="string">'GridLineStyle'</span>,<span class="string">':'</span>, <span class="keyword">...</span>
+0041   <span class="string">'LineWidth'</span>,3, <span class="keyword">...</span>
+0042   <span class="string">'XColor'</span>,gridcolour, <span class="keyword">...</span>
+0043   <span class="string">'YColor'</span>,gridcolour);
+0044</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

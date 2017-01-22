@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gsamp</title>
+  <meta name="keywords" content="gsamp">
+  <meta name="description" content="GSAMP	Sample from a Gaussian distribution.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gsamp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gsamp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GSAMP	Sample from a Gaussian distribution.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function x = gsamp(mu, covar, nsamp) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GSAMP    Sample from a Gaussian distribution.
+
+    Description
+
+    X = GSAMP(MU, COVAR, NSAMP) generates a sample of size NSAMP from a
+    D-dimensional Gaussian distribution. The Gaussian density has mean
+    vector MU and covariance matrix COVAR, and the matrix X has NSAMP
+    rows in which each row represents a D-dimensional sample vector.
+
+    See also
+    <a href="gauss.html" class="code" title="function y = gauss(mu, covar, x)">GAUSS</a>, <a href="demgauss.html" class="code" title="">DEMGAUSS</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgauss.html" class="code" title="">demgauss</a>	DEMGAUSS Demonstrate sampling from Gaussian distributions.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function x = gsamp(mu, covar, nsamp)</a>
+0002 <span class="comment">%GSAMP    Sample from a Gaussian distribution.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    X = GSAMP(MU, COVAR, NSAMP) generates a sample of size NSAMP from a</span>
+0007 <span class="comment">%    D-dimensional Gaussian distribution. The Gaussian density has mean</span>
+0008 <span class="comment">%    vector MU and covariance matrix COVAR, and the matrix X has NSAMP</span>
+0009 <span class="comment">%    rows in which each row represents a D-dimensional sample vector.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    GAUSS, DEMGAUSS</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 d = size(covar, 1);
+0018 
+0019 mu = reshape(mu, 1, d);   <span class="comment">% Ensure that mu is a row vector</span>
+0020 
+0021 [evec, eval] = eig(covar);
+0022 
+0023 deig=diag(eval);
+0024 
+0025 <span class="keyword">if</span> (~isreal(deig)) | any(deig&lt;0), 
+0026   warning(<span class="string">'Covariance Matrix is not OK, redefined to be positive definite'</span>);
+0027   eval=abs(eval);
+0028 <span class="keyword">end</span>
+0029 
+0030 coeffs = randn(nsamp, d)*sqrt(eval);
+0031 
+0032 x = ones(nsamp, 1)*mu + coeffs*evec';</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

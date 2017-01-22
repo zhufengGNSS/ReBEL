@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rbfgrad</title>
+  <meta name="keywords" content="rbfgrad">
+  <meta name="description" content="RBFGRAD Evaluate gradient of error function for RBF network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; rbfgrad.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>rbfgrad
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>RBFGRAD Evaluate gradient of error function for RBF network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [g, gdata, gprior] = rbfgrad(net, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RBFGRAD Evaluate gradient of error function for RBF network.
+
+    Description
+    G = RBFGRAD(NET, X, T) takes a network data structure NET together
+    with a matrix X of input vectors and a matrix T of target vectors,
+    and evaluates the gradient G of the error function with respect to
+    the network weights (i.e. including the hidden unit parameters). The
+    error function is sum of squares. Each row of X corresponds to one
+    input vector and each row of T contains the corresponding target
+    vector. If the output function is 'NEUROSCALE' then the gradient is
+    only computed for the output layer weights and biases.
+
+    [G, GDATA, GPRIOR] = RBFGRAD(NET, X, T) also returns separately  the
+    data and prior contributions to the gradient. In the case of multiple
+    groups in the prior, GPRIOR is a matrix with a row for each group and
+    a column for each weight parameter.
+
+    See also
+    <a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">RBF</a>, <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">RBFFWD</a>, <a href="rbferr.html" class="code" title="function [e, edata, eprior] = rbferr(net, x, t)">RBFERR</a>, <a href="rbfpak.html" class="code" title="function w = rbfpak(net)">RBFPAK</a>, <a href="rbfunpak.html" class="code" title="function net = rbfunpak(net, w)">RBFUNPAK</a>, <a href="rbfbkp.html" class="code" title="function g = rbfbkp(net, x, z, n2, deltas)">RBFBKP</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li><li><a href="gbayes.html" class="code" title="function [g, gdata, gprior] = gbayes(net, gdata)">gbayes</a>	GBAYES	Evaluate gradient of Bayesian error function for network.</li><li><a href="rbfbkp.html" class="code" title="function g = rbfbkp(net, x, z, n2, deltas)">rbfbkp</a>	RBFBKP	Backpropagate gradient of error function for RBF network.</li><li><a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>	RBFFWD	Forward propagation through RBF network with linear outputs.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [g, gdata, gprior] = rbfgrad(net, x, t)</a>
+0002 <span class="comment">%RBFGRAD Evaluate gradient of error function for RBF network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    G = RBFGRAD(NET, X, T) takes a network data structure NET together</span>
+0006 <span class="comment">%    with a matrix X of input vectors and a matrix T of target vectors,</span>
+0007 <span class="comment">%    and evaluates the gradient G of the error function with respect to</span>
+0008 <span class="comment">%    the network weights (i.e. including the hidden unit parameters). The</span>
+0009 <span class="comment">%    error function is sum of squares. Each row of X corresponds to one</span>
+0010 <span class="comment">%    input vector and each row of T contains the corresponding target</span>
+0011 <span class="comment">%    vector. If the output function is 'NEUROSCALE' then the gradient is</span>
+0012 <span class="comment">%    only computed for the output layer weights and biases.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    [G, GDATA, GPRIOR] = RBFGRAD(NET, X, T) also returns separately  the</span>
+0015 <span class="comment">%    data and prior contributions to the gradient. In the case of multiple</span>
+0016 <span class="comment">%    groups in the prior, GPRIOR is a matrix with a row for each group and</span>
+0017 <span class="comment">%    a column for each weight parameter.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also</span>
+0020 <span class="comment">%    RBF, RBFFWD, RBFERR, RBFPAK, RBFUNPAK, RBFBKP</span>
+0021 <span class="comment">%</span>
+0022 
+0023 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0024 
+0025 <span class="comment">% Check arguments for consistency</span>
+0026 <span class="keyword">switch</span> net.outfn
+0027 <span class="keyword">case</span> <span class="string">'linear'</span>
+0028    errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'rbf'</span>, x, t);
+0029 <span class="keyword">case</span> <span class="string">'neuroscale'</span>
+0030    errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'rbf'</span>, x);
+0031 <span class="keyword">otherwise</span>
+0032    error([<span class="string">'Unknown output function '</span>, net.outfn]);
+0033 <span class="keyword">end</span>
+0034 <span class="keyword">if</span> ~isempty(errstring);
+0035   error(errstring);
+0036 <span class="keyword">end</span>
+0037 
+0038 ndata = size(x, 1);
+0039 
+0040 [y, z, n2] = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net, x);
+0041 
+0042 <span class="keyword">switch</span> net.outfn
+0043 <span class="keyword">case</span> <span class="string">'linear'</span>
+0044 
+0045    <span class="comment">% Sum squared error at output units</span>
+0046    delout = y - t;
+0047 
+0048    gdata = <a href="rbfbkp.html" class="code" title="function g = rbfbkp(net, x, z, n2, deltas)">rbfbkp</a>(net, x, z, n2, delout);
+0049    [g, gdata, gprior] = <a href="gbayes.html" class="code" title="function [g, gdata, gprior] = gbayes(net, gdata)">gbayes</a>(net, gdata);
+0050 
+0051 <span class="keyword">case</span> <span class="string">'neuroscale'</span>
+0052    <span class="comment">% Compute the error gradient with respect to outputs</span>
+0053    y_dist = sqrt(<a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(y, y));
+0054    D = (t - y_dist)./(y_dist+diag(ones(ndata, 1)));
+0055    temp = y';
+0056    gradient = 2.*sum(kron(D, ones(1, net.nout)) .* <span class="keyword">...</span>
+0057       (repmat(y, 1, ndata) - repmat((temp(:))', ndata, 1)), 1);
+0058    gradient = (reshape(gradient, net.nout, ndata))';
+0059    <span class="comment">% Compute the error gradient</span>
+0060    gdata = <a href="rbfbkp.html" class="code" title="function g = rbfbkp(net, x, z, n2, deltas)">rbfbkp</a>(net, x, z, n2, gradient);
+0061    [g, gdata, gprior] = <a href="gbayes.html" class="code" title="function [g, gdata, gprior] = gbayes(net, gdata)">gbayes</a>(net, gdata);
+0062 <span class="keyword">otherwise</span>
+0063    error([<span class="string">'Unknown output function '</span>, net.outfn]);
+0064 <span class="keyword">end</span>
+0065</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

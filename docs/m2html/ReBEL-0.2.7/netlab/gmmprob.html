@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmmprob</title>
+  <meta name="keywords" content="gmmprob">
+  <meta name="description" content="GMMPROB Computes the data probability for a Gaussian mixture model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gmmprob.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmmprob
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMPROB Computes the data probability for a Gaussian mixture model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function prob = gmmprob(mix, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GMMPROB Computes the data probability for a Gaussian mixture model.
+
+    Description
+     This function computes the unconditional data density P(X) for a
+    Gaussian mixture model.  The data structure MIX defines the mixture
+    model, while the matrix X contains the data vectors.  Each row of X
+    represents a single vector.
+
+    See also
+    <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a>, <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">GMMPOST</a>, <a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">GMMACTIV</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>	GMMACTIV Computes the activations of a Gaussian mixture model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgmm2.html" class="code" title="">demgmm2</a>	DEMGMM1 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm3.html" class="code" title="">demgmm3</a>	DEMGMM3 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm4.html" class="code" title="">demgmm4</a>	DEMGMM4 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgpot.html" class="code" title="function g = demgpot(x, mix)">demgpot</a>	DEMGPOT Computes the gradient of the negative log likelihood for a mixture model.</li><li><a href="demmdn1.html" class="code" title="">demmdn1</a>	DEMMDN1 Demonstrate fitting a multi-valued function using a Mixture Density Network.</li><li><a href="dempot.html" class="code" title="function e = dempot(x, mix)">dempot</a>	DEMPOT	Computes the negative log likelihood for a mixture model.</li><li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="gtmprob.html" class="code" title="function prob = gtmprob(net, data)">gtmprob</a>	GTMPROB Probability for data under a GTM.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function prob = gmmprob(mix, x)</a>
+0002 <span class="comment">%GMMPROB Computes the data probability for a Gaussian mixture model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     This function computes the unconditional data density P(X) for a</span>
+0006 <span class="comment">%    Gaussian mixture model.  The data structure MIX defines the mixture</span>
+0007 <span class="comment">%    model, while the matrix X contains the data vectors.  Each row of X</span>
+0008 <span class="comment">%    represents a single vector.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    See also</span>
+0011 <span class="comment">%    GMM, GMMPOST, GMMACTIV</span>
+0012 <span class="comment">%</span>
+0013 
+0014 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0015 
+0016 <span class="comment">% Check that inputs are consistent</span>
+0017 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mix, <span class="string">'gmm'</span>, x);
+0018 <span class="keyword">if</span> ~isempty(errstring)
+0019   error(errstring);
+0020 <span class="keyword">end</span>
+0021 
+0022 <span class="comment">% Compute activations</span>
+0023 a = <a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>(mix, x);
+0024 
+0025 <span class="comment">% Form dot product with priors</span>
+0026 prob = a * (mix.priors)';</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of glm</title>
+  <meta name="keywords" content="glm">
+  <meta name="description" content="GLM	Create a generalized linear model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; glm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>glm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GLM	Create a generalized linear model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = glm(nin, nout, outfunc, prior, beta) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GLM    Create a generalized linear model.
+
+    Description
+
+    NET = GLM(NIN, NOUT, FUNC) takes the number of inputs and outputs for
+    a generalized linear model, together with a string FUNC which
+    specifies the output unit activation function, and returns a data
+    structure NET. The weights are drawn from a zero mean, isotropic
+    Gaussian, with variance scaled by the fan-in of the output units.
+    This makes use of the Matlab function RANDN and so the seed for the
+    random weight initialization can be  set using RANDN('STATE', S)
+    where S is the seed value. The optional argument ALPHA sets the
+    inverse variance for the weight initialization.
+
+    The fields in NET are
+      type = 'glm'
+      nin = number of inputs
+      nout = number of outputs
+      nwts = total number of weights and biases
+      actfn = string describing the output unit activation function:
+          'linear'
+          'logistic'
+          'softmax'
+      w1 = first-layer weight matrix
+      b1 = first-layer bias vector
+
+    NET = GLM(NIN, NOUT, FUNC, PRIOR), in which PRIOR is a scalar, allows
+    the field  NET.ALPHA in the data structure NET to be set,
+    corresponding  to a zero-mean isotropic Gaussian prior with inverse
+    variance with value PRIOR. Alternatively, PRIOR can consist of a data
+    structure with fields ALPHA and INDEX, allowing individual Gaussian
+    priors to be set over groups of weights in the network. Here ALPHA is
+    a column vector in which each element corresponds to a  separate
+    group of weights, which need not be mutually exclusive.  The
+    membership of the groups is defined by the matrix INDEX in which the
+    columns correspond to the elements of ALPHA. Each column has one
+    element for each weight in the matrix, in the order defined by the
+    function GLMPAK, and each element is 1 or 0 according to whether the
+    weight is a member of the corresponding group or not.
+
+    NET = GLM(NIN, NOUT, FUNC, PRIOR, BETA) also sets the  additional
+    field NET.BETA in the data structure NET, where beta corresponds to
+    the inverse noise variance.
+
+    See also
+    <a href="glmpak.html" class="code" title="function w = glmpak(net)">GLMPAK</a>, <a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">GLMUNPAK</a>, <a href="glmfwd.html" class="code" title="function [y, a] = glmfwd(net, x)">GLMFWD</a>, <a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">GLMERR</a>, <a href="glmgrad.html" class="code" title="function [g, gdata, gprior] = glmgrad(net, x, t)">GLMGRAD</a>, <a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">GLMTRAIN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demglm1.html" class="code" title="">demglm1</a>	DEMGLM1 Demonstrate simple classification using a generalized linear model.</li><li><a href="demglm2.html" class="code" title="">demglm2</a>	DEMGLM2 Demonstrate simple classification using a generalized linear model.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = glm(nin, nout, outfunc, prior, beta)</a>
+0002 <span class="comment">%GLM    Create a generalized linear model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    NET = GLM(NIN, NOUT, FUNC) takes the number of inputs and outputs for</span>
+0007 <span class="comment">%    a generalized linear model, together with a string FUNC which</span>
+0008 <span class="comment">%    specifies the output unit activation function, and returns a data</span>
+0009 <span class="comment">%    structure NET. The weights are drawn from a zero mean, isotropic</span>
+0010 <span class="comment">%    Gaussian, with variance scaled by the fan-in of the output units.</span>
+0011 <span class="comment">%    This makes use of the Matlab function RANDN and so the seed for the</span>
+0012 <span class="comment">%    random weight initialization can be  set using RANDN('STATE', S)</span>
+0013 <span class="comment">%    where S is the seed value. The optional argument ALPHA sets the</span>
+0014 <span class="comment">%    inverse variance for the weight initialization.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    The fields in NET are</span>
+0017 <span class="comment">%      type = 'glm'</span>
+0018 <span class="comment">%      nin = number of inputs</span>
+0019 <span class="comment">%      nout = number of outputs</span>
+0020 <span class="comment">%      nwts = total number of weights and biases</span>
+0021 <span class="comment">%      actfn = string describing the output unit activation function:</span>
+0022 <span class="comment">%          'linear'</span>
+0023 <span class="comment">%          'logistic'</span>
+0024 <span class="comment">%          'softmax'</span>
+0025 <span class="comment">%      w1 = first-layer weight matrix</span>
+0026 <span class="comment">%      b1 = first-layer bias vector</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%    NET = GLM(NIN, NOUT, FUNC, PRIOR), in which PRIOR is a scalar, allows</span>
+0029 <span class="comment">%    the field  NET.ALPHA in the data structure NET to be set,</span>
+0030 <span class="comment">%    corresponding  to a zero-mean isotropic Gaussian prior with inverse</span>
+0031 <span class="comment">%    variance with value PRIOR. Alternatively, PRIOR can consist of a data</span>
+0032 <span class="comment">%    structure with fields ALPHA and INDEX, allowing individual Gaussian</span>
+0033 <span class="comment">%    priors to be set over groups of weights in the network. Here ALPHA is</span>
+0034 <span class="comment">%    a column vector in which each element corresponds to a  separate</span>
+0035 <span class="comment">%    group of weights, which need not be mutually exclusive.  The</span>
+0036 <span class="comment">%    membership of the groups is defined by the matrix INDEX in which the</span>
+0037 <span class="comment">%    columns correspond to the elements of ALPHA. Each column has one</span>
+0038 <span class="comment">%    element for each weight in the matrix, in the order defined by the</span>
+0039 <span class="comment">%    function GLMPAK, and each element is 1 or 0 according to whether the</span>
+0040 <span class="comment">%    weight is a member of the corresponding group or not.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%    NET = GLM(NIN, NOUT, FUNC, PRIOR, BETA) also sets the  additional</span>
+0043 <span class="comment">%    field NET.BETA in the data structure NET, where beta corresponds to</span>
+0044 <span class="comment">%    the inverse noise variance.</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">%    See also</span>
+0047 <span class="comment">%    GLMPAK, GLMUNPAK, GLMFWD, GLMERR, GLMGRAD, GLMTRAIN</span>
+0048 <span class="comment">%</span>
+0049 
+0050 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0051 
+0052 net.type = <span class="string">'glm'</span>;
+0053 net.nin = nin;
+0054 net.nout = nout;
+0055 net.nwts = (nin + 1)*nout;
+0056 
+0057 outtfns = {<span class="string">'linear'</span>, <span class="string">'logistic'</span>, <span class="string">'softmax'</span>};
+0058 
+0059 <span class="keyword">if</span> sum(strcmp(outfunc, outtfns)) == 0
+0060   error(<span class="string">'Undefined activation function. Exiting.'</span>);
+0061 <span class="keyword">else</span>
+0062   net.outfn = outfunc;
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="keyword">if</span> nargin &gt; 3
+0066   <span class="keyword">if</span> isstruct(prior)
+0067     net.alpha = prior.alpha;
+0068     net.index = prior.index;
+0069   <span class="keyword">elseif</span> size(prior) == [1 1]
+0070     net.alpha = prior;
+0071   <span class="keyword">else</span>
+0072     error(<span class="string">'prior must be a scalar or structure'</span>);
+0073   <span class="keyword">end</span>
+0074 <span class="keyword">end</span>
+0075   
+0076 net.w1 = randn(nin, nout)/sqrt(nin + 1);
+0077 net.b1 = randn(1, nout)/sqrt(nin + 1);
+0078 
+0079 <span class="keyword">if</span> nargin == 5
+0080   net.beta = beta;
+0081 <span class="keyword">end</span>
+0082</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

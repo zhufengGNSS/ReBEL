@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of glminit</title>
+  <meta name="keywords" content="glminit">
+  <meta name="description" content="GLMINIT Initialise the weights in a generalized linear model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; glminit.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>glminit
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GLMINIT Initialise the weights in a generalized linear model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = glminit(net, prior) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GLMINIT Initialise the weights in a generalized linear model.
+
+    Description
+
+    NET = GLMINIT(NET, PRIOR) takes a generalized linear model NET and
+    sets the weights and biases by sampling from a Gaussian distribution.
+    If PRIOR is a scalar, then all of the parameters (weights and biases)
+    are sampled from a single isotropic Gaussian with inverse variance
+    equal to PRIOR. If PRIOR is a data structure similar to that in
+    MLPPRIOR but for a single layer of weights, then the parameters are
+    sampled from multiple Gaussians according to their groupings (defined
+    by the INDEX field) with corresponding variances (defined by the
+    ALPHA field).
+
+    See also
+    <a href="glm.html" class="code" title="function net = glm(nin, nout, outfunc, prior, beta)">GLM</a>, <a href="glmpak.html" class="code" title="function w = glmpak(net)">GLMPAK</a>, <a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">GLMUNPAK</a>, <a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">MLPINIT</a>, <a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">MLPPRIOR</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">glmunpak</a>	GLMUNPAK Separates weights vector into weight and bias matrices.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = glminit(net, prior)</a>
+0002 <span class="comment">%GLMINIT Initialise the weights in a generalized linear model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    NET = GLMINIT(NET, PRIOR) takes a generalized linear model NET and</span>
+0007 <span class="comment">%    sets the weights and biases by sampling from a Gaussian distribution.</span>
+0008 <span class="comment">%    If PRIOR is a scalar, then all of the parameters (weights and biases)</span>
+0009 <span class="comment">%    are sampled from a single isotropic Gaussian with inverse variance</span>
+0010 <span class="comment">%    equal to PRIOR. If PRIOR is a data structure similar to that in</span>
+0011 <span class="comment">%    MLPPRIOR but for a single layer of weights, then the parameters are</span>
+0012 <span class="comment">%    sampled from multiple Gaussians according to their groupings (defined</span>
+0013 <span class="comment">%    by the INDEX field) with corresponding variances (defined by the</span>
+0014 <span class="comment">%    ALPHA field).</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    See also</span>
+0017 <span class="comment">%    GLM, GLMPAK, GLMUNPAK, MLPINIT, MLPPRIOR</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0021 
+0022 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'glm'</span>);
+0023 <span class="keyword">if</span> ~isempty(errstring);
+0024   error(errstring);
+0025 <span class="keyword">end</span>
+0026 <span class="keyword">if</span> isstruct(prior)
+0027   sig = 1./sqrt(prior.index*prior.alpha);
+0028   w = sig'.*randn(1, net.nwts); 
+0029 <span class="keyword">elseif</span> size(prior) == [1 1]
+0030   w = randn(1, net.nwts).*sqrt(1/prior);
+0031 <span class="keyword">else</span>
+0032   error(<span class="string">'prior must be a scalar or a structure'</span>);
+0033 <span class="keyword">end</span>  
+0034 
+0035 net = <a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">glmunpak</a>(net, w);
+0036</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

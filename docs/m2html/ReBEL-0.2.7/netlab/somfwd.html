@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of somfwd</title>
+  <meta name="keywords" content="somfwd">
+  <meta name="description" content="SOMFWD	Forward propagation through a Self-Organising Map.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; somfwd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>somfwd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>SOMFWD	Forward propagation through a Self-Organising Map.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [d2, win_nodes] = somfwd(net, x) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SOMFWD    Forward propagation through a Self-Organising Map.
+
+    Description
+    D2 = SOMFWD(NET, X) propagates the data matrix X through  a SOM NET,
+    returning the squared distance matrix D2 with dimension NIN by
+    NUM_NODES.  The $i$th row represents the squared Euclidean distance
+    to each of the nodes of the SOM.
+
+    [D2, WIN_NODES] = SOMFWD(NET, X) also returns the indices of the
+    winning nodes for each pattern.
+
+    See also
+    <a href="som.html" class="code" title="function net = som(nin, map_size)">SOM</a>, <a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">SOMTRAIN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">somtrain</a>	SOMTRAIN Kohonen training algorithm for SOM.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [d2, win_nodes] = somfwd(net, x)</a>
+0002 <span class="comment">%SOMFWD    Forward propagation through a Self-Organising Map.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    D2 = SOMFWD(NET, X) propagates the data matrix X through  a SOM NET,</span>
+0006 <span class="comment">%    returning the squared distance matrix D2 with dimension NIN by</span>
+0007 <span class="comment">%    NUM_NODES.  The $i$th row represents the squared Euclidean distance</span>
+0008 <span class="comment">%    to each of the nodes of the SOM.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    [D2, WIN_NODES] = SOMFWD(NET, X) also returns the indices of the</span>
+0011 <span class="comment">%    winning nodes for each pattern.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    See also</span>
+0014 <span class="comment">%    SOM, SOMTRAIN</span>
+0015 <span class="comment">%</span>
+0016 
+0017 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0018 
+0019 <span class="comment">% Check for consistency</span>
+0020 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'som'</span>, x);
+0021 <span class="keyword">if</span> ~isempty(errstring)
+0022     error(errstring);
+0023 <span class="keyword">end</span>
+0024 
+0025 <span class="comment">% Turn nodes into matrix of centres</span>
+0026 nodes = (reshape(net.map, net.nin, net.num_nodes))';
+0027 <span class="comment">% Compute squared distance matrix</span>
+0028 d2 = <a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(x, nodes);
+0029 <span class="comment">% Find winning node for each pattern: minimum value in each row</span>
+0030 [w, win_nodes] = min(d2, [], 2);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

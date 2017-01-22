@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mdn2gmm</title>
+  <meta name="keywords" content="mdn2gmm">
+  <meta name="description" content="MDN2GMM Converts an MDN mixture data structure to array of GMMs.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mdn2gmm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mdn2gmm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MDN2GMM Converts an MDN mixture data structure to array of GMMs.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function gmmmixes = mdn2gmm(mdnmixes) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MDN2GMM Converts an MDN mixture data structure to array of GMMs.
+
+    Description
+    GMMMIXES = MDN2GMM(MDNMIXES) takes an MDN mixture data structure
+    MDNMIXES containing three matrices (for priors, centres and
+    variances) where each row represents the corresponding parameter
+    values for a different mixture model  and creates an array of GMMs.
+    These can then be used with the standard Netlab Gaussian mixture
+    model functions.
+
+    See also
+    <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a>, <a href="mdn.html" class="code" title="function net = mdn(nin, nhidden, ncentres, dim_target, mix_type,prior, beta)">MDN</a>, <a href="mdnfwd.html" class="code" title="function [mixparams, y, z, a] = mdnfwd(net, x)">MDNFWD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmunpak.html" class="code" title="function mix = gmmunpak(mix, p)">gmmunpak</a>	GMMUNPAK Separates a vector of Gaussian mixture model parameters into its components.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demmdn1.html" class="code" title="">demmdn1</a>	DEMMDN1 Demonstrate fitting a multi-valued function using a Mixture Density Network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function gmmmixes = mdn2gmm(mdnmixes)</a>
+0002 <span class="comment">%MDN2GMM Converts an MDN mixture data structure to array of GMMs.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    GMMMIXES = MDN2GMM(MDNMIXES) takes an MDN mixture data structure</span>
+0006 <span class="comment">%    MDNMIXES containing three matrices (for priors, centres and</span>
+0007 <span class="comment">%    variances) where each row represents the corresponding parameter</span>
+0008 <span class="comment">%    values for a different mixture model  and creates an array of GMMs.</span>
+0009 <span class="comment">%    These can then be used with the standard Netlab Gaussian mixture</span>
+0010 <span class="comment">%    model functions.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    See also</span>
+0013 <span class="comment">%    GMM, MDN, MDNFWD</span>
+0014 <span class="comment">%</span>
+0015 
+0016 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0017 <span class="comment">%    David J Evans (1998)</span>
+0018 
+0019 <span class="comment">% Check argument for consistency</span>
+0020 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mdnmixes, <span class="string">'mdnmixes'</span>);
+0021 <span class="keyword">if</span> ~isempty(errstring)
+0022   error(errstring);
+0023 <span class="keyword">end</span>
+0024 
+0025 nmixes = size(mdnmixes.centres, 1);
+0026 <span class="comment">% Construct ndata structures containing the mixture model information.</span>
+0027 <span class="comment">% First allocate the memory.</span>
+0028 tempmix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(mdnmixes.dim_target, mdnmixes.ncentres, <span class="string">'spherical'</span>);
+0029 f = fieldnames(tempmix);
+0030 gmmmixes = cell(size(f, 1), 1, nmixes);
+0031 gmmmixes = cell2struct(gmmmixes, f,1);
+0032 
+0033 <span class="comment">% Then fill each structure in turn using gmmunpak.  Assume that spherical</span>
+0034 <span class="comment">% covariance structure is used.</span>
+0035 <span class="keyword">for</span> i = 1:nmixes
+0036   centres = reshape(mdnmixes.centres(i, :), mdnmixes.dim_target, <span class="keyword">...</span>
+0037     mdnmixes.ncentres)';
+0038   gmmmixes(i) = <a href="gmmunpak.html" class="code" title="function mix = gmmunpak(mix, p)">gmmunpak</a>(tempmix, [mdnmixes.mixcoeffs(i,:), <span class="keyword">...</span>
+0039       centres(:)', mdnmixes.covars(i,:)]);
+0040 <span class="keyword">end</span>
+0041</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

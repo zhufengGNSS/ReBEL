@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rbfprior</title>
+  <meta name="keywords" content="rbfprior">
+  <meta name="description" content="RBFPRIOR Create Gaussian prior and output layer mask for RBF.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; rbfprior.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>rbfprior
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>RBFPRIOR Create Gaussian prior and output layer mask for RBF.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [mask, prior] = rbfprior(rbfunc, nin, nhidden, nout, aw2, ab2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RBFPRIOR Create Gaussian prior and output layer mask for RBF.
+
+    Description
+    [MASK, PRIOR] = RBFPRIOR(RBFUNC, NIN, NHIDDEN, NOUT, AW2, AB2)
+    generates a vector MASK  that selects only the output layer weights.
+    This is because most uses of RBF networks in a Bayesian context have
+    fixed basis functions with the output layer as the only adjustable
+    parameters.  In particular, the Neuroscale output error function is
+    designed to work only with this mask.
+
+    The return value PRIOR is a data structure,  with fields PRIOR.ALPHA
+    and PRIOR.INDEX, which specifies a Gaussian prior distribution for
+    the network weights in an RBF network. The parameters AW2 and AB2 are
+    all scalars and represent the regularization coefficients for two
+    groups of parameters in the network corresponding to  second-layer
+    weights, and second-layer biases respectively. Then PRIOR.ALPHA
+    represents a column vector of length 2 containing the parameters, and
+    PRIOR.INDEX is a matrix specifying which weights belong in each
+    group. Each column has one element for each weight in the matrix,
+    using the standard ordering as defined in RBFPAK, and each element is
+    1 or 0 according to whether the weight is a member of the
+    corresponding group or not.
+
+    See also
+    <a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">RBF</a>, <a href="rbferr.html" class="code" title="function [e, edata, eprior] = rbferr(net, x, t)">RBFERR</a>, <a href="rbfgrad.html" class="code" title="function [g, gdata, gprior] = rbfgrad(net, x, t)">RBFGRAD</a>, <a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">EVIDENCE</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev3.html" class="code" title="">demev3</a>	DEMEV3	Demonstrate Bayesian regression for the RBF.</li><li><a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">gtm</a>	GTM	Create a Generative Topographic Map.</li><li><a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">rbf</a>	RBF	Creates an RBF network with specified architecture</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [mask, prior] = rbfprior(rbfunc, nin, nhidden, nout, aw2, ab2)</a>
+0002 <span class="comment">%RBFPRIOR Create Gaussian prior and output layer mask for RBF.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    [MASK, PRIOR] = RBFPRIOR(RBFUNC, NIN, NHIDDEN, NOUT, AW2, AB2)</span>
+0006 <span class="comment">%    generates a vector MASK  that selects only the output layer weights.</span>
+0007 <span class="comment">%    This is because most uses of RBF networks in a Bayesian context have</span>
+0008 <span class="comment">%    fixed basis functions with the output layer as the only adjustable</span>
+0009 <span class="comment">%    parameters.  In particular, the Neuroscale output error function is</span>
+0010 <span class="comment">%    designed to work only with this mask.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    The return value PRIOR is a data structure,  with fields PRIOR.ALPHA</span>
+0013 <span class="comment">%    and PRIOR.INDEX, which specifies a Gaussian prior distribution for</span>
+0014 <span class="comment">%    the network weights in an RBF network. The parameters AW2 and AB2 are</span>
+0015 <span class="comment">%    all scalars and represent the regularization coefficients for two</span>
+0016 <span class="comment">%    groups of parameters in the network corresponding to  second-layer</span>
+0017 <span class="comment">%    weights, and second-layer biases respectively. Then PRIOR.ALPHA</span>
+0018 <span class="comment">%    represents a column vector of length 2 containing the parameters, and</span>
+0019 <span class="comment">%    PRIOR.INDEX is a matrix specifying which weights belong in each</span>
+0020 <span class="comment">%    group. Each column has one element for each weight in the matrix,</span>
+0021 <span class="comment">%    using the standard ordering as defined in RBFPAK, and each element is</span>
+0022 <span class="comment">%    1 or 0 according to whether the weight is a member of the</span>
+0023 <span class="comment">%    corresponding group or not.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%    See also</span>
+0026 <span class="comment">%    RBF, RBFERR, RBFGRAD, EVIDENCE</span>
+0027 <span class="comment">%</span>
+0028 
+0029 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0030 
+0031 nwts_layer2 = nout + (nhidden *nout);
+0032 <span class="keyword">switch</span> rbfunc
+0033 <span class="keyword">case</span> <span class="string">'gaussian'</span>
+0034    nwts_layer1 = nin*nhidden + nhidden;
+0035 <span class="keyword">case</span> {<span class="string">'tps'</span>, <span class="string">'r4logr'</span>}
+0036    nwts_layer1 = nin*nhidden;
+0037 <span class="keyword">otherwise</span>
+0038    error(<span class="string">'Undefined activation function'</span>);
+0039 <span class="keyword">end</span>  
+0040 nwts = nwts_layer1 + nwts_layer2;
+0041 
+0042 <span class="comment">% Make a mask only for output layer</span>
+0043 mask = [zeros(nwts_layer1, 1); ones(nwts_layer2, 1)];
+0044 
+0045 <span class="keyword">if</span> nargout &gt; 1
+0046   <span class="comment">% Construct prior</span>
+0047   indx = zeros(nwts, 2);
+0048   mark2 = nwts_layer1 + (nhidden * nout);
+0049   indx(nwts_layer1 + 1:mark2, 1) = ones(nhidden * nout, 1);
+0050   indx(mark2 + 1:nwts, 2) = ones(nout, 1);
+0051 
+0052   prior.index = indx;
+0053   prior.alpha = [aw2, ab2]';
+0054 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rbftrain</title>
+  <meta name="keywords" content="rbftrain">
+  <meta name="description" content="RBFTRAIN Two stage training of RBF network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; rbftrain.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>rbftrain
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>RBFTRAIN Two stage training of RBF network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [net, options] = rbftrain(net, options, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RBFTRAIN Two stage training of RBF network.
+
+    Description
+    NET = RBFTRAIN(NET, OPTIONS, X, T) uses a  two stage training
+    algorithm to set the weights in the RBF model structure NET. Each row
+    of X corresponds to one input vector and each row of T contains the
+    corresponding target vector. The centres are determined by fitting a
+    Gaussian mixture model with circular covariances using the EM
+    algorithm through a call to RBFSETBF.  (The mixture model is
+    initialised using a small number of iterations of the K-means
+    algorithm.) If the activation functions are Gaussians, then the basis
+    function widths are then set to the maximum inter-centre squared
+    distance.
+
+    For linear outputs,  the hidden to output weights that give rise to
+    the least squares solution can then be determined using the pseudo-
+    inverse. For neuroscale outputs, the hidden to output weights are
+    determined using the iterative shadow targets algorithm.  Although
+    this two stage procedure may not give solutions with as low an error
+    as using general  purpose non-linear optimisers, it is much faster.
+
+    The options vector may have two rows: if this is the case, then the
+    second row is passed to RBFSETBF, which allows the user to specify a
+    different number iterations for RBF and GMM training. The optional
+    parameters to RBFTRAIN have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values during EM training.
+
+    OPTIONS(2) is a measure of the precision required for the value of
+    the weights W at the solution.
+
+    OPTIONS(3) is a measure of the precision required of the objective
+    function at the solution.  Both this and the previous condition must
+    be satisfied for termination.
+
+    OPTIONS(5) is set to 1 if the basis functions parameters should
+    remain unchanged; default 0.
+
+    OPTIONS(6) is set to 1 if the output layer weights should be should
+    set using PCA. This is only relevant for Neuroscale outputs; default
+    0.
+
+    OPTIONS(14) is the maximum number of iterations for the shadow
+    targets algorithm;  default 100.
+
+    See also
+    <a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">RBF</a>, <a href="rbferr.html" class="code" title="function [e, edata, eprior] = rbferr(net, x, t)">RBFERR</a>, <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">RBFFWD</a>, <a href="rbfgrad.html" class="code" title="function [g, gdata, gprior] = rbfgrad(net, x, t)">RBFGRAD</a>, <a href="rbfpak.html" class="code" title="function w = rbfpak(net)">RBFPAK</a>, <a href="rbfunpak.html" class="code" title="function net = rbfunpak(net, w)">RBFUNPAK</a>, <a href="rbfsetbf.html" class="code" title="function net = rbfsetbf(net, options, x)">RBFSETBF</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li><li><a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>	NETPAK	Combines weights and biases into one weights vector.</li><li><a href="netunpak.html" class="code" title="function net = netunpak(net, w)">netunpak</a>	NETUNPAK Separates weights vector into weight and bias matrices.</li><li><a href="pca.html" class="code" title="function [PCcoeff, PCvec] = pca(data, N)">pca</a>	PCA	Principal Components Analysis</li><li><a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>	RBFFWD	Forward propagation through RBF network with linear outputs.</li><li><a href="rbfsetbf.html" class="code" title="function net = rbfsetbf(net, options, x)">rbfsetbf</a>	RBFSETBF Set basis functions of RBF from data.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demns1.html" class="code" title="">demns1</a>	DEMNS1	Demonstrate Neuroscale for visualisation.</li><li><a href="demrbf1.html" class="code" title="">demrbf1</a>	DEMRBF1 Demonstrate simple regression using a radial basis function network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [net, options] = rbftrain(net, options, x, t)</a>
+0002 <span class="comment">%RBFTRAIN Two stage training of RBF network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = RBFTRAIN(NET, OPTIONS, X, T) uses a  two stage training</span>
+0006 <span class="comment">%    algorithm to set the weights in the RBF model structure NET. Each row</span>
+0007 <span class="comment">%    of X corresponds to one input vector and each row of T contains the</span>
+0008 <span class="comment">%    corresponding target vector. The centres are determined by fitting a</span>
+0009 <span class="comment">%    Gaussian mixture model with circular covariances using the EM</span>
+0010 <span class="comment">%    algorithm through a call to RBFSETBF.  (The mixture model is</span>
+0011 <span class="comment">%    initialised using a small number of iterations of the K-means</span>
+0012 <span class="comment">%    algorithm.) If the activation functions are Gaussians, then the basis</span>
+0013 <span class="comment">%    function widths are then set to the maximum inter-centre squared</span>
+0014 <span class="comment">%    distance.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    For linear outputs,  the hidden to output weights that give rise to</span>
+0017 <span class="comment">%    the least squares solution can then be determined using the pseudo-</span>
+0018 <span class="comment">%    inverse. For neuroscale outputs, the hidden to output weights are</span>
+0019 <span class="comment">%    determined using the iterative shadow targets algorithm.  Although</span>
+0020 <span class="comment">%    this two stage procedure may not give solutions with as low an error</span>
+0021 <span class="comment">%    as using general  purpose non-linear optimisers, it is much faster.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%    The options vector may have two rows: if this is the case, then the</span>
+0024 <span class="comment">%    second row is passed to RBFSETBF, which allows the user to specify a</span>
+0025 <span class="comment">%    different number iterations for RBF and GMM training. The optional</span>
+0026 <span class="comment">%    parameters to RBFTRAIN have the following interpretations.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%    OPTIONS(1) is set to 1 to display error values during EM training.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%    OPTIONS(2) is a measure of the precision required for the value of</span>
+0031 <span class="comment">%    the weights W at the solution.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%    OPTIONS(3) is a measure of the precision required of the objective</span>
+0034 <span class="comment">%    function at the solution.  Both this and the previous condition must</span>
+0035 <span class="comment">%    be satisfied for termination.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%    OPTIONS(5) is set to 1 if the basis functions parameters should</span>
+0038 <span class="comment">%    remain unchanged; default 0.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%    OPTIONS(6) is set to 1 if the output layer weights should be should</span>
+0041 <span class="comment">%    set using PCA. This is only relevant for Neuroscale outputs; default</span>
+0042 <span class="comment">%    0.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%    OPTIONS(14) is the maximum number of iterations for the shadow</span>
+0045 <span class="comment">%    targets algorithm;  default 100.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%    See also</span>
+0048 <span class="comment">%    RBF, RBFERR, RBFFWD, RBFGRAD, RBFPAK, RBFUNPAK, RBFSETBF</span>
+0049 <span class="comment">%</span>
+0050 
+0051 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0052 
+0053 <span class="comment">% Check arguments for consistency</span>
+0054 <span class="keyword">switch</span> net.outfn
+0055 <span class="keyword">case</span> <span class="string">'linear'</span>
+0056   errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'rbf'</span>, x, t);
+0057 <span class="keyword">case</span> <span class="string">'neuroscale'</span>
+0058   errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'rbf'</span>, x);
+0059 <span class="keyword">otherwise</span>
+0060  error([<span class="string">'Unknown output function '</span>, net.outfn]);
+0061 <span class="keyword">end</span>
+0062 <span class="keyword">if</span> ~isempty(errstring)
+0063   error(errstring);
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="comment">% Allow options to have two rows: if this is the case, then the second row</span>
+0067 <span class="comment">% is passed to rbfsetbf</span>
+0068 <span class="keyword">if</span> size(options, 1) == 2
+0069   setbfoptions = options(2, :);
+0070   options = options(1, :);
+0071 <span class="keyword">else</span>
+0072   setbfoptions = options;
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="keyword">if</span>(~options(14))
+0076   options(14) = 100;
+0077 <span class="keyword">end</span>
+0078 <span class="comment">% Do we need to test for termination?</span>
+0079 test = (options(2) | options(3));
+0080 
+0081 <span class="comment">% Set up the basis function parameters to model the input data density</span>
+0082 <span class="comment">% unless options(5) is set.</span>
+0083 <span class="keyword">if</span> ~(logical(options(5)))
+0084   net = <a href="rbfsetbf.html" class="code" title="function net = rbfsetbf(net, options, x)">rbfsetbf</a>(net, setbfoptions, x);
+0085 <span class="keyword">end</span>
+0086 
+0087 <span class="comment">% Compute the design (or activations) matrix</span>
+0088 [y, act] = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net, x);
+0089 ndata = size(x, 1);
+0090 
+0091 <span class="keyword">if</span> strcmp(net.outfn, <span class="string">'neuroscale'</span>) &amp; options(6)
+0092   <span class="comment">% Initialise output layer weights by projecting data with PCA</span>
+0093   mu = mean(x);
+0094   [pcvals, pcvecs] = <a href="pca.html" class="code" title="function [PCcoeff, PCvec] = pca(data, N)">pca</a>(x, net.nout);
+0095   xproj = (x - ones(ndata, 1)*mu)*pcvecs;
+0096   <span class="comment">% Now use projected data as targets to compute output layer weights</span>
+0097   temp = pinv([act ones(ndata, 1)]) * xproj;
+0098   net.w2 = temp(1:net.nhidden, :);
+0099   net.b2 = temp(net.nhidden+1, :);
+0100   <span class="comment">% Propagate again to compute revised outputs</span>
+0101   [y, act] = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net, x);
+0102 <span class="keyword">end</span>
+0103 
+0104 <span class="keyword">switch</span> net.outfn
+0105 <span class="keyword">case</span> <span class="string">'linear'</span>
+0106   <span class="comment">% Sum of squares error function in regression model</span>
+0107   <span class="comment">% Solve for the weights and biases using pseudo-inverse from activations</span>
+0108   Phi = [act ones(ndata, 1)];
+0109   <span class="keyword">if</span> ~isfield(net, <span class="string">'alpha'</span>)
+0110     <span class="comment">% Solve for the weights and biases using left matrix divide</span>
+0111     temp = pinv(Phi)*t;
+0112   <span class="keyword">elseif</span> size(net.alpha == [1 1])
+0113     <span class="comment">% Use normal form equation</span>
+0114     hessian = Phi'*Phi + net.alpha*eye(net.nhidden+1);
+0115     temp = pinv(hessian)*(Phi'*t);  
+0116   <span class="keyword">else</span>
+0117     error(<span class="string">'Only scalar alpha allowed'</span>);
+0118   <span class="keyword">end</span>
+0119   net.w2 = temp(1:net.nhidden, :);
+0120   net.b2 = temp(net.nhidden+1, :);
+0121 
+0122 <span class="keyword">case</span> <span class="string">'neuroscale'</span>
+0123   <span class="comment">% Use the shadow targets training algorithm</span>
+0124   <span class="keyword">if</span> nargin &lt; 4
+0125     <span class="comment">% If optional input distances not passed in, then use</span>
+0126     <span class="comment">% Euclidean distance</span>
+0127     x_dist = sqrt(<a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(x, x));
+0128   <span class="keyword">else</span>
+0129     x_dist = t;
+0130   <span class="keyword">end</span>
+0131   Phi = [act, ones(ndata, 1)];
+0132   <span class="comment">% Compute the pseudo-inverse of Phi</span>
+0133   PhiDag = pinv(Phi);
+0134   <span class="comment">% Compute y_dist, distances between image points</span>
+0135   y_dist = sqrt(<a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(y, y));
+0136 
+0137   <span class="comment">% Save old weights so that we can check the termination criterion</span>
+0138   wold = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0139   <span class="comment">% Compute initial error (stress) value</span>
+0140   errold = 0.5*(sum(sum((x_dist - y_dist).^2)));
+0141 
+0142   <span class="comment">% Initial value for eta</span>
+0143   eta = 0.1;
+0144   k_up = 1.2;
+0145   k_down = 0.1;
+0146   success = 1;  <span class="comment">% Force initial gradient calculation</span>
+0147 
+0148   <span class="keyword">for</span> j = 1:options(14)
+0149     <span class="keyword">if</span> success
+0150       <span class="comment">% Compute the negative error gradient with respect to network outputs</span>
+0151       D = (x_dist - y_dist)./(y_dist+(y_dist==0));
+0152       temp = y';
+0153       neg_gradient = -2.*sum(kron(D, ones(1, net.nout)) .* <span class="keyword">...</span>
+0154     (repmat(y, 1, ndata) - repmat((temp(:))', ndata, 1)), 1);
+0155       neg_gradient = (reshape(neg_gradient, net.nout, ndata))';
+0156     <span class="keyword">end</span>
+0157     <span class="comment">% Compute the shadow targets</span>
+0158     t = y + eta*neg_gradient;
+0159     <span class="comment">% Solve for the weights and biases</span>
+0160     temp = PhiDag * t;
+0161     net.w2 = temp(1:net.nhidden, :);
+0162     net.b2 = temp(net.nhidden+1, :);
+0163    
+0164     <span class="comment">% Do housekeeping and test for convergence</span>
+0165     ynew = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net, x);
+0166     y_distnew = sqrt(<a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(ynew, ynew));
+0167     err = 0.5.*(sum(sum((x_dist-y_distnew).^2)));
+0168     <span class="keyword">if</span> err &gt; errold
+0169       success = 0;
+0170       <span class="comment">% Restore previous weights</span>
+0171       net = <a href="netunpak.html" class="code" title="function net = netunpak(net, w)">netunpak</a>(net, wold);
+0172       err = errold;
+0173       eta = eta * k_down;
+0174     <span class="keyword">else</span>
+0175       success = 1;
+0176       eta = eta * k_up;
+0177       errold = err;
+0178       y = ynew;
+0179       y_dist = y_distnew;
+0180       <span class="keyword">if</span> test &amp; j &gt; 1
+0181     w = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0182     <span class="keyword">if</span> (max(abs(w - wold)) &lt; options(2) &amp; abs(err-errold) &lt; options(3))
+0183       options(8) = err;
+0184       <span class="keyword">return</span>;
+0185     <span class="keyword">end</span>
+0186       <span class="keyword">end</span>
+0187       wold = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0188     <span class="keyword">end</span>
+0189     <span class="keyword">if</span> options(1)
+0190       fprintf(1, <span class="string">'Cycle %4d Error %11.6f\n'</span>, j, err)
+0191     <span class="keyword">end</span>
+0192     <span class="keyword">if</span> nargout &gt;= 3
+0193       errlog(j) = err;
+0194     <span class="keyword">end</span>
+0195   <span class="keyword">end</span>
+0196   options(8) = errold;
+0197   <span class="keyword">if</span> (options(1) &gt;= 0)
+0198     disp(<span class="string">'Warning: Maximum number of iterations has been exceeded'</span>);
+0199   <span class="keyword">end</span>
+0200 <span class="keyword">otherwise</span>
+0201    error([<span class="string">'Unknown output function '</span>, net.outfn]);
+0202 
+0203 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

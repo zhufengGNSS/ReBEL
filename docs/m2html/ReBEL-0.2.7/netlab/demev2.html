@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demev2</title>
+  <meta name="keywords" content="demev2">
+  <meta name="description" content="DEMEV2	Demonstrate Bayesian classification for the MLP.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demev2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demev2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMEV2	Demonstrate Bayesian classification for the MLP.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMEV2    Demonstrate Bayesian classification for the MLP.
+
+    Description
+    A synthetic two class two-dimensional dataset X is sampled  from a
+    mixture of four Gaussians.  Each class is associated with two of the
+    Gaussians so that the optimal decision boundary is non-linear. A 2-
+    layer network with logistic outputs is trained by minimizing the
+    cross-entropy error function with isotroipc Gaussian regularizer (one
+    hyperparameter for each of the four standard weight groups), using
+    the scaled conjugate gradient optimizer. The hyperparameter vectors
+    ALPHA and BETA are re-estimated using the function EVIDENCE. A graph
+    is plotted of the optimal, regularised, and unregularised decision
+    boundaries.  A further plot of the moderated versus unmoderated
+    contours is generated.
+
+    See also
+    <a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">EVIDENCE</a>, <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a>, <a href="demard.html" class="code" title="">DEMARD</a>, <a href="demmlp2.html" class="code" title="">DEMMLP2</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li><li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>	GMMACTIV Computes the activations of a Gaussian mixture model.</li><li><a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>	GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li><li><a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>	MLP	Create a 2-layer feedforward network.</li><li><a href="mlpevfwd.html" class="code" title="function [y, extra, invhess] = mlpevfwd(net, x, t, x_test, invhess)">mlpevfwd</a>	MLPEVFWD Forward propagation with evidence for MLP</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li><li><a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">mlpprior</a>	MLPPRIOR Create Gaussian prior for mlp.</li><li><a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>	NETOPT	Optimize the weights in a network model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMEV2    Demonstrate Bayesian classification for the MLP.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    A synthetic two class two-dimensional dataset X is sampled  from a</span>
+0005 <span class="comment">%    mixture of four Gaussians.  Each class is associated with two of the</span>
+0006 <span class="comment">%    Gaussians so that the optimal decision boundary is non-linear. A 2-</span>
+0007 <span class="comment">%    layer network with logistic outputs is trained by minimizing the</span>
+0008 <span class="comment">%    cross-entropy error function with isotroipc Gaussian regularizer (one</span>
+0009 <span class="comment">%    hyperparameter for each of the four standard weight groups), using</span>
+0010 <span class="comment">%    the scaled conjugate gradient optimizer. The hyperparameter vectors</span>
+0011 <span class="comment">%    ALPHA and BETA are re-estimated using the function EVIDENCE. A graph</span>
+0012 <span class="comment">%    is plotted of the optimal, regularised, and unregularised decision</span>
+0013 <span class="comment">%    boundaries.  A further plot of the moderated versus unmoderated</span>
+0014 <span class="comment">%    contours is generated.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    See also</span>
+0017 <span class="comment">%    EVIDENCE, MLP, SCG, DEMARD, DEMMLP2</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0021 
+0022 
+0023 clc;
+0024 
+0025 disp(<span class="string">'This program demonstrates the use of the evidence procedure on'</span>)
+0026 disp(<span class="string">'a two-class problem.  It also shows the improved generalisation'</span>)
+0027 disp(<span class="string">'performance that can be achieved with moderated outputs; that is'</span>)
+0028 disp(<span class="string">'predictions where an approximate integration over the true'</span>)
+0029 disp(<span class="string">'posterior distribution is carried out.'</span>)
+0030 disp(<span class="string">' '</span>)
+0031 disp(<span class="string">'First we generate a synthetic dataset with two-dimensional input'</span>)
+0032 disp(<span class="string">'sampled from a mixture of four Gaussians.  Each class is'</span>)
+0033 disp(<span class="string">'associated with two of the Gaussians so that the optimal decision'</span>)
+0034 disp(<span class="string">'boundary is non-linear.'</span>)
+0035 disp(<span class="string">' '</span>)
+0036 disp(<span class="string">'Press any key to see a plot of the data.'</span>)
+0037 pause;
+0038 
+0039 <span class="comment">% Generate the matrix of inputs x and targets t.</span>
+0040 
+0041 rand(<span class="string">'state'</span>, 423);
+0042 randn(<span class="string">'state'</span>, 423);
+0043 
+0044 ClassSymbol1 = <span class="string">'r.'</span>;
+0045 ClassSymbol2 = <span class="string">'y.'</span>;
+0046 PointSize = 12;
+0047 titleSize = 10;
+0048 
+0049 fh1 = figure;
+0050 set(fh1, <span class="string">'Name'</span>, <span class="string">'True Data Distribution'</span>);
+0051 whitebg(fh1, <span class="string">'k'</span>);
+0052 
+0053 <span class="comment">%</span>
+0054 <span class="comment">% Generate the data</span>
+0055 <span class="comment">%</span>
+0056 n=200;
+0057 
+0058 <span class="comment">% Set up mixture model: 2d data with four centres</span>
+0059 <span class="comment">% Class 1 is first two centres, class 2 from the other two</span>
+0060 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(2, 4, <span class="string">'full'</span>);
+0061 mix.priors = [0.25 0.25 0.25 0.25];
+0062 mix.centres = [0 -0.1; 1.5 0; 1 1; 1 -1];
+0063 mix.covars(:,:,1) = [0.625 -0.2165; -0.2165 0.875];
+0064 mix.covars(:,:,2) = [0.25 0; 0 0.25];
+0065 mix.covars(:,:,3) = [0.2241 -0.1368; -0.1368 0.9759];
+0066 mix.covars(:,:,4) = [0.2375 0.1516; 0.1516 0.4125];
+0067 
+0068 [data, label] = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(mix, n);
+0069 
+0070 <span class="comment">%</span>
+0071 <span class="comment">% Calculate some useful axis limits</span>
+0072 <span class="comment">%</span>
+0073 x0 = min(data(:,1));
+0074 x1 = max(data(:,1));
+0075 y0 = min(data(:,2));
+0076 y1 = max(data(:,2));
+0077 dx = x1-x0;
+0078 dy = y1-y0;
+0079 expand = 5/100;            <span class="comment">% Add on 5 percent each way</span>
+0080 x0 = x0 - dx*expand;
+0081 x1 = x1 + dx*expand;
+0082 y0 = y0 - dy*expand;
+0083 y1 = y1 + dy*expand;
+0084 resolution = 100;
+0085 step = dx/resolution;
+0086 xrange = [x0:step:x1];
+0087 yrange = [y0:step:y1];
+0088 <span class="comment">%</span>
+0089 <span class="comment">% Generate the grid</span>
+0090 <span class="comment">%</span>
+0091 [X Y]=meshgrid([x0:step:x1],[y0:step:y1]);
+0092 <span class="comment">%</span>
+0093 <span class="comment">% Calculate the class conditional densities, the unconditional densities and</span>
+0094 <span class="comment">% the posterior probabilities</span>
+0095 <span class="comment">%</span>
+0096 px_j = <a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>(mix, [X(:) Y(:)]);
+0097 px = reshape(px_j*(mix.priors)',size(X));
+0098 post = <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>(mix, [X(:) Y(:)]);
+0099 p1_x = reshape(post(:, 1) + post(:, 2), size(X));
+0100 p2_x = reshape(post(:, 3) + post(:, 4), size(X));
+0101 
+0102 plot(data((label&lt;=2),1),data(label&lt;=2,2),ClassSymbol1, <span class="string">'MarkerSize'</span>, <span class="keyword">...</span>
+0103 PointSize)
+0104 hold on
+0105 axis([x0 x1 y0 y1])
+0106 plot(data((label&gt;2),1),data(label&gt;2,2),ClassSymbol2, <span class="string">'MarkerSize'</span>, <span class="keyword">...</span>
+0107     PointSize)
+0108 
+0109 <span class="comment">% Convert targets to 0-1 encoding</span>
+0110 target=[label&lt;=2];
+0111 disp(<span class="string">' '</span>)
+0112 disp(<span class="string">'Press any key to continue'</span>)
+0113 pause; clc;
+0114 
+0115 disp(<span class="string">'Next we create a two-layer MLP network with 6 hidden units and'</span>)
+0116 disp(<span class="string">'one logistic output.  We use a separate inverse variance'</span>)
+0117 disp(<span class="string">'hyperparameter for each group of weights (inputs, input bias,'</span>)
+0118 disp(<span class="string">'outputs, output bias) and the weights are optimised with the'</span>)
+0119 disp(<span class="string">'scaled conjugate gradient algorithm.  After each 100 iterations'</span>)
+0120 disp(<span class="string">'the hyperparameters are re-estimated twice.  There are eight'</span>)
+0121 disp(<span class="string">'cycles of the whole algorithm.'</span>)
+0122 disp(<span class="string">' '</span>)
+0123 disp(<span class="string">'Press any key to train the network and determine the hyperparameters.'</span>)
+0124 pause;
+0125 
+0126 <span class="comment">% Set up network parameters.</span>
+0127 nin = 2;        <span class="comment">% Number of inputs.</span>
+0128 nhidden = 6;        <span class="comment">% Number of hidden units.</span>
+0129 nout = 1;        <span class="comment">% Number of outputs.</span>
+0130 alpha = 0.01;        <span class="comment">% Initial prior hyperparameter.</span>
+0131 aw1 = 0.01;
+0132 ab1 = 0.01;
+0133 aw2 = 0.01;
+0134 ab2 = 0.01;
+0135 
+0136 <span class="comment">% Create and initialize network weight vector.</span>
+0137 prior = <a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">mlpprior</a>(nin, nhidden, nout, aw1, ab1, aw2, ab2);
+0138 net = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(nin, nhidden, nout, <span class="string">'logistic'</span>, prior);
+0139 
+0140 <span class="comment">% Set up vector of options for the optimiser.</span>
+0141 nouter = 8;            <span class="comment">% Number of outer loops.</span>
+0142 ninner = 2;            <span class="comment">% Number of innter loops.</span>
+0143 options = foptions;        <span class="comment">% Default options vector.</span>
+0144 options(1) = 1;            <span class="comment">% This provides display of error values.</span>
+0145 options(2) = 1.0e-5;        <span class="comment">% Absolute precision for weights.</span>
+0146 options(3) = 1.0e-5;        <span class="comment">% Precision for objective function.</span>
+0147 options(14) = 100;        <span class="comment">% Number of training cycles in inner loop.</span>
+0148 
+0149 <span class="comment">% Train using scaled conjugate gradients, re-estimating alpha and beta.</span>
+0150 <span class="keyword">for</span> k = 1:nouter
+0151   net = <a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>(net, options, data, target, <span class="string">'scg'</span>);
+0152   [net, gamma] = <a href="evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>(net, data, target, ninner);
+0153   fprintf(1, <span class="string">'\nRe-estimation cycle %d:\n'</span>, k);
+0154   disp([<span class="string">'  alpha = '</span>, num2str(net.alpha')]);
+0155   fprintf(1, <span class="string">'  gamma =  %8.5f\n\n'</span>, gamma);
+0156   disp(<span class="string">' '</span>)
+0157   disp(<span class="string">'Press any key to continue.'</span>)
+0158   pause;
+0159 <span class="keyword">end</span>
+0160 
+0161 disp(<span class="string">' '</span>)
+0162 disp(<span class="string">'Network training and hyperparameter re-estimation are now complete.'</span>)
+0163 disp(<span class="string">'Notice that the final error value is close to the number of data'</span>)
+0164 disp([<span class="string">'points ('</span>, num2str(n), <span class="string">') divided by two.'</span>])
+0165 disp(<span class="string">'Also, the hyperparameter values differ, which suggests that a single'</span>)
+0166 disp(<span class="string">'hyperparameter would not be so effective.'</span>)
+0167 disp(<span class="string">' '</span>)
+0168 disp(<span class="string">'First we train an MLP without Bayesian regularisation on the'</span>)
+0169 disp(<span class="string">'same dataset using 400 iterations of scaled conjugate gradient'</span>)
+0170 disp(<span class="string">' '</span>)
+0171 disp(<span class="string">'Press any key to train the network by maximum likelihood.'</span>)
+0172 pause;
+0173 <span class="comment">% Train standard network</span>
+0174 net2 = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(nin, nhidden, nout, <span class="string">'logistic'</span>);
+0175 options(14) = 400;
+0176 net2 = <a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>(net2, options, data, target, <span class="string">'scg'</span>);
+0177 y2g = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net2, [X(:), Y(:)]);
+0178 y2g = reshape(y2g(:, 1), size(X));
+0179 
+0180 disp(<span class="string">' '</span>)
+0181 disp(<span class="string">'We can now plot the function represented by the trained networks.'</span>)
+0182 disp(<span class="string">'We show the decision boundaries (output = 0.5) and the optimal'</span>)
+0183 disp(<span class="string">'decision boundary given by applying Bayes'' theorem to the true'</span>)
+0184 disp(<span class="string">'data model.'</span>)
+0185 disp(<span class="string">' '</span>)
+0186 disp(<span class="string">'Press any key to add the boundaries to the plot.'</span>)
+0187 pause;
+0188 
+0189 <span class="comment">% Evaluate predictions.</span>
+0190 [yg, ymodg] = <a href="mlpevfwd.html" class="code" title="function [y, extra, invhess] = mlpevfwd(net, x, t, x_test, invhess)">mlpevfwd</a>(net, data, target, [X(:) Y(:)]);
+0191 yg = reshape(yg(:,1),size(X));
+0192 ymodg = reshape(ymodg(:,1),size(X));
+0193 
+0194 <span class="comment">% Bayesian decision boundary</span>
+0195 [cB, hB] = contour(xrange,yrange,p1_x,[0.5 0.5],<span class="string">'b-'</span>);
+0196 [cNb, hNb] = contour(xrange,yrange,yg,[0.5 0.5],<span class="string">'r-'</span>);
+0197 [cN, hN] = contour(xrange,yrange,y2g,[0.5 0.5],<span class="string">'g-'</span>);
+0198 set(hB, <span class="string">'LineWidth'</span>, 2);
+0199 set(hNb, <span class="string">'LineWidth'</span>, 2);
+0200 set(hN, <span class="string">'LineWidth'</span>, 2);
+0201 Chandles = [hB(1) hNb(1) hN(1)];
+0202 legend(Chandles, <span class="string">'Bayes'</span>, <span class="keyword">...</span>
+0203   <span class="string">'Reg. Network'</span>, <span class="string">'Network'</span>, 3);
+0204 
+0205 disp(<span class="string">' '</span>)
+0206 disp(<span class="string">'Note how the regularised network predictions are closer to the'</span>)
+0207 disp(<span class="string">'optimal decision boundary, while the unregularised network is'</span>)
+0208 disp(<span class="string">'overtrained.'</span>)
+0209 
+0210 disp(<span class="string">' '</span>)
+0211 disp(<span class="string">'We will now compare moderated and unmoderated outputs for the'</span>);
+0212 disp(<span class="string">'regularised network by showing the contour plot of the posterior'</span>)
+0213 disp(<span class="string">'probability estimates.'</span>)
+0214 disp(<span class="string">' '</span>)
+0215 disp(<span class="string">'The first plot shows the regularised (moderated) predictions'</span>)
+0216 disp(<span class="string">'and the second shows the standard predictions from the same network.'</span>)
+0217 disp(<span class="string">'These agree at the level 0.5.'</span>)
+0218 disp(<span class="string">'Press any key to continue'</span>)
+0219 pause
+0220 levels = 0:0.1:1;
+0221 fh4 = figure;
+0222 set(fh4, <span class="string">'Name'</span>, <span class="string">'Moderated outputs'</span>);
+0223 hold on
+0224 plot(data((label&lt;=2),1),data(label&lt;=2,2),<span class="string">'r.'</span>, <span class="string">'MarkerSize'</span>, PointSize)
+0225 plot(data((label&gt;2),1),data(label&gt;2,2),<span class="string">'y.'</span>, <span class="string">'MarkerSize'</span>, PointSize)
+0226 
+0227 [cNby, hNby] = contour(xrange, yrange, ymodg, levels, <span class="string">'k-'</span>);
+0228 set(hNby, <span class="string">'LineWidth'</span>, 1);
+0229 
+0230 fh5 = figure;
+0231 set(fh5, <span class="string">'Name'</span>, <span class="string">'Unmoderated outputs'</span>);
+0232 hold on
+0233 plot(data((label&lt;=2),1),data(label&lt;=2,2),<span class="string">'r.'</span>, <span class="string">'MarkerSize'</span>, PointSize)
+0234 plot(data((label&gt;2),1),data(label&gt;2,2),<span class="string">'y.'</span>, <span class="string">'MarkerSize'</span>, PointSize)
+0235 
+0236 [cNbm, hNbm] = contour(xrange, yrange, yg, levels, <span class="string">'k-'</span>);
+0237 set(hNbm, <span class="string">'LineWidth'</span>, 1);
+0238 
+0239 disp(<span class="string">' '</span>)
+0240 disp(<span class="string">'Note how the moderated contours are more widely spaced.  This shows'</span>)
+0241 disp(<span class="string">'that there is a larger region where the outputs are close to 0.5'</span>)
+0242 disp(<span class="string">'and a smaller region where the outputs are close to 0 or 1.'</span>)
+0243 disp(<span class="string">' '</span>)
+0244 disp(<span class="string">'Press any key to exit'</span>)
+0245 pause
+0246 close(fh1);
+0247 close(fh4);
+0248 close(fh5);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

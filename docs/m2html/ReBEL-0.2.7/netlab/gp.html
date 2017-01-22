@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gp</title>
+  <meta name="keywords" content="gp">
+  <meta name="description" content="GP	Create a Gaussian Process.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GP	Create a Gaussian Process.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = gp(nin, covar_fn, prior) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GP    Create a Gaussian Process.
+
+    Description
+
+    NET = GP(NIN, COVARFN) takes the number of inputs NIN  for a Gaussian
+    Process model with a single output, together with a string COVARFN
+    which specifies the type of the covariance function, and returns a
+    data structure NET. The parameters are set to zero.
+
+    The fields in NET are
+      type = 'gp'
+      nin = number of inputs
+      nout = number of outputs: always 1
+      nwts = total number of weights and covariance function parameters
+      bias = logarithm of constant offset in covariance function
+      noise = logarithm of output noise variance
+      inweights = logarithm of inverse length scale for each input 
+      covarfn = string describing the covariance function:
+          'sqexp'
+          'ratquad'
+      fpar = covariance function specific parameters (1 for squared exponential,
+       2 for rational quadratic)
+      trin = training input data (initially empty)
+      trtargets = training target data (initially empty)
+
+    NET = GP(NIN, COVARFN, PRIOR) sets a Gaussian prior on the parameters
+    of the model. PRIOR must contain the fields PR_MEAN and PR_VARIANCE.
+    If PR_MEAN is a scalar, then the Gaussian is assumed to be isotropic
+    and the additional fields NET.PR_MEAN and PR_VARIANCE are set.
+    Otherwise,  the Gaussian prior has a mean defined by a column vector
+    of parameters PRIOR.PR_MEAN and covariance defined by a column vector
+    of parameters PRIOR.PR_VARIANCE. Each element of PRMEAN corresponds
+    to a separate group of parameters, which need not be mutually
+    exclusive. The membership of the groups is defined by the matrix
+    PRIOR.INDEX in which the columns correspond to the elements of
+    PRMEAN. Each column has one element for each weight in the matrix, in
+    the order defined by the function GPPAK, and each element is 1 or 0
+    according to whether the parameter is a member of the corresponding
+    group or not.  The additional field NET.INDEX is set in this case.
+
+    See also
+    <a href="gppak.html" class="code" title="function hp = gppak(net)">GPPAK</a>, <a href="gpunpak.html" class="code" title="function net = gpunpak(net, hp)">GPUNPAK</a>, <a href="gpfwd.html" class="code" title="function [y, sigsq] = gpfwd(net, x, cninv)">GPFWD</a>, <a href="gperr.html" class="code" title="function [e, edata, eprior] = gperr(net, x, t)">GPERR</a>, <a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">GPCOVAR</a>, <a href="gpgrad.html" class="code" title="function g = gpgrad(net, x, t)">GPGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgp.html" class="code" title="">demgp</a>	DEMGP	Demonstrate simple regression using a Gaussian Process.</li><li><a href="demgpard.html" class="code" title="">demgpard</a>	DEMGPARD Demonstrate ARD using a Gaussian Process.</li><li><a href="demprgp.html" class="code" title="function demprgp(action);">demprgp</a>	DEMPRGP Demonstrate sampling from a Gaussian Process prior.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = gp(nin, covar_fn, prior)</a>
+0002 <span class="comment">%GP    Create a Gaussian Process.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    NET = GP(NIN, COVARFN) takes the number of inputs NIN  for a Gaussian</span>
+0007 <span class="comment">%    Process model with a single output, together with a string COVARFN</span>
+0008 <span class="comment">%    which specifies the type of the covariance function, and returns a</span>
+0009 <span class="comment">%    data structure NET. The parameters are set to zero.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    The fields in NET are</span>
+0012 <span class="comment">%      type = 'gp'</span>
+0013 <span class="comment">%      nin = number of inputs</span>
+0014 <span class="comment">%      nout = number of outputs: always 1</span>
+0015 <span class="comment">%      nwts = total number of weights and covariance function parameters</span>
+0016 <span class="comment">%      bias = logarithm of constant offset in covariance function</span>
+0017 <span class="comment">%      noise = logarithm of output noise variance</span>
+0018 <span class="comment">%      inweights = logarithm of inverse length scale for each input</span>
+0019 <span class="comment">%      covarfn = string describing the covariance function:</span>
+0020 <span class="comment">%          'sqexp'</span>
+0021 <span class="comment">%          'ratquad'</span>
+0022 <span class="comment">%      fpar = covariance function specific parameters (1 for squared exponential,</span>
+0023 <span class="comment">%       2 for rational quadratic)</span>
+0024 <span class="comment">%      trin = training input data (initially empty)</span>
+0025 <span class="comment">%      trtargets = training target data (initially empty)</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%    NET = GP(NIN, COVARFN, PRIOR) sets a Gaussian prior on the parameters</span>
+0028 <span class="comment">%    of the model. PRIOR must contain the fields PR_MEAN and PR_VARIANCE.</span>
+0029 <span class="comment">%    If PR_MEAN is a scalar, then the Gaussian is assumed to be isotropic</span>
+0030 <span class="comment">%    and the additional fields NET.PR_MEAN and PR_VARIANCE are set.</span>
+0031 <span class="comment">%    Otherwise,  the Gaussian prior has a mean defined by a column vector</span>
+0032 <span class="comment">%    of parameters PRIOR.PR_MEAN and covariance defined by a column vector</span>
+0033 <span class="comment">%    of parameters PRIOR.PR_VARIANCE. Each element of PRMEAN corresponds</span>
+0034 <span class="comment">%    to a separate group of parameters, which need not be mutually</span>
+0035 <span class="comment">%    exclusive. The membership of the groups is defined by the matrix</span>
+0036 <span class="comment">%    PRIOR.INDEX in which the columns correspond to the elements of</span>
+0037 <span class="comment">%    PRMEAN. Each column has one element for each weight in the matrix, in</span>
+0038 <span class="comment">%    the order defined by the function GPPAK, and each element is 1 or 0</span>
+0039 <span class="comment">%    according to whether the parameter is a member of the corresponding</span>
+0040 <span class="comment">%    group or not.  The additional field NET.INDEX is set in this case.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%    See also</span>
+0043 <span class="comment">%    GPPAK, GPUNPAK, GPFWD, GPERR, GPCOVAR, GPGRAD</span>
+0044 <span class="comment">%</span>
+0045 
+0046 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0047 
+0048 net.type = <span class="string">'gp'</span>;
+0049 net.nin = nin;
+0050 net.nout = 1;  <span class="comment">% Only do single output GP</span>
+0051 
+0052 <span class="comment">% Store log parameters</span>
+0053 net.bias = 0;
+0054 net.min_noise = sqrt(eps);  <span class="comment">% Prevent output noise collapsing completely</span>
+0055 net.noise = 0;
+0056 net.inweights = zeros(1,nin);  <span class="comment">% Weights on inputs in covariance function</span>
+0057 
+0058 covarfns = {<span class="string">'sqexp'</span>, <span class="string">'ratquad'</span>};
+0059 
+0060 <span class="keyword">if</span> sum(strcmp(covar_fn, covarfns)) == 0
+0061   error(<span class="string">'Undefined activation function. Exiting.'</span>);
+0062 <span class="keyword">else</span>
+0063   net.covar_fn = covar_fn;
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="keyword">switch</span> covar_fn
+0067 
+0068   <span class="keyword">case</span> <span class="string">'sqexp'</span>        <span class="comment">% Squared exponential</span>
+0069     net.fpar = zeros(1,1);  <span class="comment">% One function specific parameter</span>
+0070     
+0071   <span class="keyword">case</span> <span class="string">'ratquad'</span>     <span class="comment">% Rational quadratic</span>
+0072     net.fpar = zeros(1, 2); <span class="comment">% Two function specific parameters</span>
+0073 
+0074   <span class="keyword">otherwise</span>
+0075     error([<span class="string">'Unknown covariance function '</span>, covar_fn]);
+0076 <span class="keyword">end</span>
+0077 
+0078 net.nwts = 2 + nin + length(net.fpar);
+0079 
+0080 <span class="keyword">if</span> nargin &gt;= 3
+0081   <span class="keyword">if</span> size(prior.pr_mean) == [1 1]
+0082     net.pr_mean = prior.pr_mean;
+0083     net.pr_var = prior.pr_var;
+0084   <span class="keyword">else</span>
+0085     net.pr_mean = prior.pr_mean;
+0086     net.pr_var = prior.pr_var;
+0087     net.index = prior.index;
+0088   <span class="keyword">end</span>  
+0089 <span class="keyword">end</span>
+0090 
+0091 <span class="comment">% Store training data as needed for gpfwd</span>
+0092 net.tr_in = [];
+0093 net.tr_targets = [];</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

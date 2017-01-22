@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dempe2</title>
+  <meta name="keywords" content="dempe2">
+  <meta name="description" content="DEMPE2  Demonstrate how the ReBEL toolkit is used to train a neural network">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">parameter_estimation</a> &gt; dempe2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\parameter_estimation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>dempe2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DEMPE2  Demonstrate how the ReBEL toolkit is used to train a neural network</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">  DEMPE2  Demonstrate how the ReBEL toolkit is used to train a neural network
+          in efficient &quot;low-level&quot; mode by directly defining an InferenceDS
+          data structure.
+
+   We train a small 2 layer MLP on the standard XOR classification problem using
+   a Square-Root Central Difference Kalman Filter (SPKF variant)
+
+   --------------------------- NOTE ----------------------------------------------------
+
+   In this example we make use of a directly defined InferenceDS data structure, without
+   the use of a GSSM (general state space model) file. By doing this we are removing one
+   level of abstraction from the inference problem, thereby gaining execution speed. ReBEL
+   in general makes use of a two-layer abstraction approach to seperate the problem
+   definition (gssm file) from the actual inference/estimation algorithms. This allows for
+   easy state-,parameter and/or joint estimation to be done on the same model without having
+   to modify the underlying state-space formulation and/or estimator implementations. This
+   increased generality and ease of implementation however comes at the cost of increased
+   computational overhead, since the estimation algorithms access the underlying model functions
+   (as defined in gssm) via the InferenceDS abstraction/state-space-mapping layers.
+   This combined with Matlab's inherent function-calling overhead causes a less than desireable
+   speed penalty to be paid. But, c'est la vie... what we loose in speed we gain in protoyping
+   ease.
+
+   HOWEVER, once is free to describe your system directly in the InferenceDS layer (which is
+   what we'll be doing in this example) in order to lessen the function call overhead. The down
+   side is that you have to now make sure you implement the correct state-space reformulation
+   depending if you are doing state-, parameter or joint estimation and you also need to comply
+   with the interface expected by the different estimation algorithms.
+
+   This is thus an example showing how ReBEL can be used on a &quot;lower level&quot;.
+
+   ---------------------------------------------------------------------------------------
+
+   See also
+
+   INFDS_TRAIN_NN
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>	ADDRELPATH  Add a relative path which gets expanded into a absolute path</li><li><a href="../../.././ReBEL-0.2.7/core/fixinfds.html" class="code" title="function InferenceDS = fixinfds(InferenceDS)">fixinfds</a>	FIXINFDS  Fix a user generated ("hand rolled") inference data structure to make sure it meets</li><li><a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="../../.././ReBEL-0.2.7/core/mlpff.html" class="code" title="function Y = mlpff(olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpff</a>	MLPFF  Calculates the output of a ReBEL feed-forward MLP neural network with 2,3 or 4 layers</li><li><a href="../../.././ReBEL-0.2.7/core/mlpweightinit.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpweightinit(nodes)">mlpweightinit</a>	MLPWEIGHTINIT   Initializes the weights of a ReBEL MLP feedforward neural network</li><li><a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>	REMRELPATH  Remove a relative path (which gets expanded into a absolute path)</li><li><a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>	SRCDKF  Square Root Central Difference Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/examples/gssm/infds_train_nn.html" class="code" title="function InferenceDS = infds_train_nn">infds_train_nn</a>	INFDS_TRAIN_NN  Demonstrate how the ReBEL toolkit is used to train a neural network</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%  DEMPE2  Demonstrate how the ReBEL toolkit is used to train a neural network</span>
+0002 <span class="comment">%          in efficient &quot;low-level&quot; mode by directly defining an InferenceDS</span>
+0003 <span class="comment">%          data structure.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   We train a small 2 layer MLP on the standard XOR classification problem using</span>
+0006 <span class="comment">%   a Square-Root Central Difference Kalman Filter (SPKF variant)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   --------------------------- NOTE ----------------------------------------------------</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   In this example we make use of a directly defined InferenceDS data structure, without</span>
+0011 <span class="comment">%   the use of a GSSM (general state space model) file. By doing this we are removing one</span>
+0012 <span class="comment">%   level of abstraction from the inference problem, thereby gaining execution speed. ReBEL</span>
+0013 <span class="comment">%   in general makes use of a two-layer abstraction approach to seperate the problem</span>
+0014 <span class="comment">%   definition (gssm file) from the actual inference/estimation algorithms. This allows for</span>
+0015 <span class="comment">%   easy state-,parameter and/or joint estimation to be done on the same model without having</span>
+0016 <span class="comment">%   to modify the underlying state-space formulation and/or estimator implementations. This</span>
+0017 <span class="comment">%   increased generality and ease of implementation however comes at the cost of increased</span>
+0018 <span class="comment">%   computational overhead, since the estimation algorithms access the underlying model functions</span>
+0019 <span class="comment">%   (as defined in gssm) via the InferenceDS abstraction/state-space-mapping layers.</span>
+0020 <span class="comment">%   This combined with Matlab's inherent function-calling overhead causes a less than desireable</span>
+0021 <span class="comment">%   speed penalty to be paid. But, c'est la vie... what we loose in speed we gain in protoyping</span>
+0022 <span class="comment">%   ease.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   HOWEVER, once is free to describe your system directly in the InferenceDS layer (which is</span>
+0025 <span class="comment">%   what we'll be doing in this example) in order to lessen the function call overhead. The down</span>
+0026 <span class="comment">%   side is that you have to now make sure you implement the correct state-space reformulation</span>
+0027 <span class="comment">%   depending if you are doing state-, parameter or joint estimation and you also need to comply</span>
+0028 <span class="comment">%   with the interface expected by the different estimation algorithms.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%   This is thus an example showing how ReBEL can be used on a &quot;lower level&quot;.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%   ---------------------------------------------------------------------------------------</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%   See also</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%   INFDS_TRAIN_NN</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0041 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0042 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0043 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0046 <span class="comment">%   detail.</span>
+0047 
+0048 <span class="comment">%=============================================================================================</span>
+0049 
+0050 clear all; clc;
+0051 
+0052 fprintf(<span class="string">'\nDEMPE2 : Demonstrate how the ReBEL toolkit is used to train a neural network\n'</span>);
+0053 fprintf(<span class="string">'         in efficient &quot;low-level&quot; mode by directly defining an InferenceDS\n'</span>);
+0054 fprintf(<span class="string">'         data structure. We train a small 2 layer MLP on the standard XOR\n'</span>);
+0055 fprintf(<span class="string">'         classification problem using a Square-Root Central Difference Kalman\n'</span>);
+0056 fprintf(<span class="string">'         Filter (SPKF variant). We do a single pass through the data set. This\n'</span>);
+0057 fprintf(<span class="string">'         problem is not optimsed for optimal training and generalization perfor-\n'</span>);
+0058 fprintf(<span class="string">'         mance. It is simply used to demonstrate the method.\n\n'</span>);
+0059 
+0060 
+0061 <span class="comment">%--- General setup</span>
+0062 
+0063 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../gssm'</span>);         <span class="comment">% add relative search path to example GSSM files to MATLABPATH</span>
+0064 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../data'</span>);         <span class="comment">% add relative search path to example data files to MATLABPATH</span>
+0065 
+0066 <span class="comment">%--- Generate some data for the XOR problem</span>
+0067 
+0068 N=4000;                            <span class="comment">% number of data points</span>
+0069 Ntrain = 1000;                     <span class="comment">% size of training set</span>
+0070 Ntest  = N-Ntrain;                 <span class="comment">% size of testing set</span>
+0071 
+0072 X = 1-2*rand(2,N);                 <span class="comment">% uniformly draw input points from [-1 1 -1 1]</span>
+0073 C = 0.95*sign(X(1,:).*X(2,:));      <span class="comment">% standard XOR classes</span>
+0074 
+0075 C1Idx = find(C&gt;0);
+0076 C2Idx = find(C&lt;0);
+0077 
+0078 figure(1);
+0079 clf;
+0080 plot(X(1,C1Idx),X(2,C1Idx),<span class="string">'b.'</span>); hold on;
+0081 plot(X(1,C2Idx),X(2,C2Idx),<span class="string">'r.'</span>); hold off;
+0082 xlabel(<span class="string">'x1'</span>); ylabel(<span class="string">'x2'</span>);
+0083 title(<span class="string">'XOR Input Data'</span>);
+0084 drawnow
+0085 
+0086 Xtrain = X(:,1:Ntrain);              <span class="comment">% trainet set</span>
+0087 Ctrain = C(:,1:Ntrain);
+0088 
+0089 Xtest = X(:,Ntrain+1:end);           <span class="comment">% testing set</span>
+0090 Ctest = C(:,Ntrain+1:end);
+0091 
+0092 
+0093 <span class="comment">%--- Setup neural network and InferenceDS structures</span>
+0094 
+0095 InfDS = <a href="../../.././ReBEL-0.2.7/examples/gssm/infds_train_nn.html" class="code" title="function InferenceDS = infds_train_nn">infds_train_nn</a>;         <span class="comment">% Directly generate InferenceDS data structure. See 'infds_train_nn.m' for detail</span>
+0096 
+0097 InfDS = <a href="../../.././ReBEL-0.2.7/core/fixinfds.html" class="code" title="function InferenceDS = fixinfds(InferenceDS)">fixinfds</a>(InfDS);        <span class="comment">% Make sure all required fields of InfDS are set and add required default fields which</span>
+0098                                 <span class="comment">% the user did not specify.</span>
+0099 
+0100 <span class="comment">%--- Generate process and observation noise sources needed by the SPKF inference algorithm (srcdkf)</span>
+0101 <span class="comment">%    Since the SRCDKF is a square-root algorithm, all noise sources should be of type 'gaussian' and</span>
+0102 <span class="comment">%    cov_type 'sqrt'.</span>
+0103 
+0104 Arg.type = <span class="string">'gaussian'</span>;                     <span class="comment">% Gaussian process noise noise source</span>
+0105 Arg.cov_type = <span class="string">'sqrt'</span>;                     <span class="comment">% Square root form</span>
+0106 Arg.dim  = InfDS.statedim;                 <span class="comment">% noise vector dimension</span>
+0107 Arg.mu   = zeros(InfDS.statedim,1);        <span class="comment">% zero mean</span>
+0108 Arg.cov  = sqrt(1e-1)*eye(InfDS.statedim); <span class="comment">% initial noise covariance (Cholesky factor used for square-root forms). Usually</span>
+0109                                            <span class="comment">% a good idea to not set this to large initially. We will also aneal this during</span>
+0110                                            <span class="comment">% training.</span>
+0111 
+0112 pNoise = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);                 <span class="comment">% generate process noise source with call to 'gennoiseds'</span>
+0113 
+0114 pNoise.adaptMethod = <span class="string">'anneal'</span>;            <span class="comment">% we will use the 'annealing' method to adapt the process noise covariance</span>
+0115 pNoise.adaptParams = [0.95 1e-7];         <span class="comment">% annealing factor = 0.98  and minimum allowed variance (variance floor) = 1e-8</span>
+0116 
+0117 
+0118 Arg.type = <span class="string">'gaussian'</span>;                    <span class="comment">% Gaussian observation noise noise source</span>
+0119 Arg.cov_type = <span class="string">'full'</span>;                    <span class="comment">% Set covariance matrix type : full covariance</span>
+0120 Arg.dim  = InfDS.obsdim;                  <span class="comment">% noise vector dimension</span>
+0121 Arg.mu   = zeros(InfDS.obsdim,1);         <span class="comment">% zero mean</span>
+0122 Arg.cov  = eye(InfDS.obsdim);             <span class="comment">% initial noise covariance (Cholesky factor used for square-root forms).</span>
+0123                                           <span class="comment">% For parameter estimation the absolute value of the observation noise covariance</span>
+0124                                           <span class="comment">% is not crucial. Only the relative values (across the outputs) determine the</span>
+0125                                           <span class="comment">% relative weighting of the output errors.</span>
+0126 
+0127 oNoise = <a href="../../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);                 <span class="comment">% generate observation noise source with call to 'gennoiseds'</span>
+0128 
+0129 
+0130 <span class="comment">%--- Setup estimation buffers</span>
+0131 
+0132 Wh = zeros(InfDS.statedim, Ntrain);  <span class="comment">% setup state buffer  (the NN parameters are the states of our state-space system</span>
+0133                                      <span class="comment">% defined in 'infds_train_bb.m'</span>
+0134 
+0135 
+0136 Wh(:,1) = <a href="../../.././ReBEL-0.2.7/core/mlpweightinit.html" class="code" title="function [W1, B1, W2, B2, W3, B3, W4, B4] = mlpweightinit(nodes)">mlpweightinit</a>(InfDS.nodes);   <span class="comment">% initialize initial parameter vector</span>
+0137 
+0138 Sw = eye(InfDS.statedim);               <span class="comment">% Initial state covariance Cholesky factor</span>
+0139 
+0140 
+0141 <span class="comment">%--- Call estimator</span>
+0142 <span class="comment">%    Here we are calling the estimator in batch mode, i.e. we are passing it all the data (all observations) at once. The</span>
+0143 <span class="comment">%    estimator will recursively run through all the observations internally and return a vector (or matrix) of all the</span>
+0144 <span class="comment">%    estimates from k=1:N. This is a more efficient way of calling the estimator if we have all of the data available ofline.</span>
+0145 <span class="comment">%    The estimator can however also be called using a single observation per time instance (i.e. external recursion). This</span>
+0146 <span class="comment">%    would be the standard way of using the estimator in an on-line situation.</span>
+0147 
+0148 InfDS.spkfParams = sqrt(3);            <span class="comment">% SPKF parameter : CDKF step size</span>
+0149 
+0150 
+0151 <span class="comment">%--- Call the SRCDKF estimator</span>
+0152 
+0153 [Wh, Sw, pNoise] = <a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>(Wh(:,1), Sw, pNoise, oNoise, Ctrain, [], Xtrain, InfDS);  <span class="comment">% train on the training set</span>
+0154 
+0155 
+0156 
+0157 <span class="comment">%--- Calculate performance of trained neural network</span>
+0158 
+0159 NNparams = Wh(:,end);
+0160 
+0161 Ytrain = <a href="../../.././ReBEL-0.2.7/core/mlpff.html" class="code" title="function Y = mlpff(olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpff</a>(InfDS.olType, InfDS.nodes, Xtrain, NNparams);       <span class="comment">% output on training set</span>
+0162 Ytest  = <a href="../../.././ReBEL-0.2.7/core/mlpff.html" class="code" title="function Y = mlpff(olType, nodes, X, W1, B1, W2, B2, W3, B3, W4, B4)">mlpff</a>(InfDS.olType, InfDS.nodes, Xtest, NNparams);        <span class="comment">% output on testing set</span>
+0163 
+0164 <span class="comment">%--- Plot classification results</span>
+0165 
+0166 figure(2); clf
+0167 
+0168 subplot(211);
+0169 Y1Idx = find(Ytrain&gt;0);
+0170 Y2Idx = find(Ytrain&lt;0);
+0171 plot(Xtrain(1,Y1Idx),Xtrain(2,Y1Idx),<span class="string">'b.'</span>); hold on;
+0172 plot(Xtrain(1,Y2Idx),Xtrain(2,Y2Idx),<span class="string">'r.'</span>); hold off;
+0173 xlabel(<span class="string">'x1'</span>); ylabel(<span class="string">'x2'</span>);
+0174 title(<span class="string">'Classification Results on Training Set'</span>);
+0175 
+0176 subplot(212);
+0177 Y1Idx = find(Ytest&gt;0);
+0178 Y2Idx = find(Ytest&lt;0);
+0179 plot(Xtest(1,Y1Idx),Xtest(2,Y1Idx),<span class="string">'b.'</span>); hold on;
+0180 plot(Xtest(1,Y2Idx),Xtest(2,Y2Idx),<span class="string">'r.'</span>); hold off;
+0181 xlabel(<span class="string">'x1'</span>); ylabel(<span class="string">'x2'</span>);
+0182 title(<span class="string">'Classification Results on Testing Set'</span>);
+0183 
+0184 drawnow
+0185 
+0186 <span class="comment">%--- Calculate classification performance</span>
+0187 
+0188 cerror_train = sum(0.5*abs(sign(Ctrain)-sign(Ytrain)))/length(Ctrain);
+0189 cerror_test = sum(0.5*abs(sign(Ctest)-sign(Ytest)))/length(Ctest);
+0190 
+0191 disp([<span class="string">'Classification error on training set : '</span> num2str(round(cerror_train*100)) <span class="string">' %'</span>]);
+0192 disp([<span class="string">'Classification error on test set     : '</span> num2str(round(cerror_test*100)) <span class="string">' %'</span>]);
+0193 disp(<span class="string">' '</span>);
+0194 
+0195 
+0196 <span class="comment">%--- House keeping</span>
+0197 
+0198 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../gssm'</span>);       <span class="comment">% remove relative search path to example GSSM files from MATLABPATH</span>
+0199 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../data'</span>);       <span class="comment">% remove relative search path to example data files from MATLABPATH</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

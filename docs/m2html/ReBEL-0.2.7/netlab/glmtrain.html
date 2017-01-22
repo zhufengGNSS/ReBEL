@@ -1,0 +1,296 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of glmtrain</title>
+  <meta name="keywords" content="glmtrain">
+  <meta name="description" content="GLMTRAIN Specialised training of generalized linear model">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; glmtrain.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>glmtrain
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GLMTRAIN Specialised training of generalized linear model</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [net, options] = glmtrain(net, options, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GLMTRAIN Specialised training of generalized linear model
+
+    Description
+    NET = GLMTRAIN(NET, OPTIONS, X, T) uses the iterative reweighted
+    least squares (IRLS) algorithm to set the weights in the generalized
+    linear model structure NET.  This is a more efficient alternative to
+    using GLMERR and GLMGRAD and a non-linear optimisation routine
+    through NETOPT. Note that for linear outputs, a single pass through
+    the  algorithm is all that is required, since the error function is
+    quadratic in the weights.  The algorithm also handles scalar ALPHA
+    and BETA terms.  If you want to use more complicated priors, you
+    should use general-purpose non-linear optimisation algorithms.
+
+    For logistic and softmax outputs, general priors can be handled,
+    although this requires the pseudo-inverse of the Hessian, giving up
+    the better conditioning and some of the speed advantage of the normal
+    form equations.
+
+    The error function value at the final set of weights is returned in
+    OPTIONS(8). Each row of X corresponds to one input vector and each
+    row of T corresponds to one target vector.
+
+    The optional parameters have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values during training. If
+    OPTIONS(1) is set to 0, then only warning messages are displayed.  If
+    OPTIONS(1) is -1, then nothing is displayed.
+
+    OPTIONS(2) is a measure of the precision required for the value of
+    the weights W at the solution.
+
+    OPTIONS(3) is a measure of the precision required of the objective
+    function at the solution.  Both this and the previous condition must
+    be satisfied for termination.
+
+    OPTIONS(5) is set to 1 if an approximation to the Hessian (which
+    assumes that all outputs are independent) is used for softmax
+    outputs. With the default value of 0 the exact Hessian (which is more
+    expensive to compute) is used.
+
+    OPTIONS(14) is the maximum number of iterations for the IRLS
+    algorithm;  default 100.
+
+    See also
+    <a href="glm.html" class="code" title="function net = glm(nin, nout, outfunc, prior, beta)">GLM</a>, <a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">GLMERR</a>, <a href="glmgrad.html" class="code" title="function [g, gdata, gprior] = glmgrad(net, x, t)">GLMGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">glmerr</a>	GLMERR Evaluate error function for generalized linear model.</li><li><a href="glmgrad.html" class="code" title="function [g, gdata, gprior] = glmgrad(net, x, t)">glmgrad</a>	GLMGRAD Evaluate gradient of error function for generalized linear model.</li><li><a href="glmhess.html" class="code" title="function [h, hdata] = glmhess(net, x, t, hdata)">glmhess</a>	GLMHESS Evaluate the Hessian matrix for a generalised linear model.</li><li><a href="glmpak.html" class="code" title="function w = glmpak(net)">glmpak</a>	GLMPAK	Combines weights and biases into one weights vector.</li><li><a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">glmunpak</a>	GLMUNPAK Separates weights vector into weight and bias matrices.</li><li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li><li><a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>	NETPAK	Combines weights and biases into one weights vector.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demglm1.html" class="code" title="">demglm1</a>	DEMGLM1 Demonstrate simple classification using a generalized linear model.</li><li><a href="demglm2.html" class="code" title="">demglm2</a>	DEMGLM2 Demonstrate simple classification using a generalized linear model.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [net, options] = glmtrain(net, options, x, t)</a>
+0002 <span class="comment">%GLMTRAIN Specialised training of generalized linear model</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = GLMTRAIN(NET, OPTIONS, X, T) uses the iterative reweighted</span>
+0006 <span class="comment">%    least squares (IRLS) algorithm to set the weights in the generalized</span>
+0007 <span class="comment">%    linear model structure NET.  This is a more efficient alternative to</span>
+0008 <span class="comment">%    using GLMERR and GLMGRAD and a non-linear optimisation routine</span>
+0009 <span class="comment">%    through NETOPT. Note that for linear outputs, a single pass through</span>
+0010 <span class="comment">%    the  algorithm is all that is required, since the error function is</span>
+0011 <span class="comment">%    quadratic in the weights.  The algorithm also handles scalar ALPHA</span>
+0012 <span class="comment">%    and BETA terms.  If you want to use more complicated priors, you</span>
+0013 <span class="comment">%    should use general-purpose non-linear optimisation algorithms.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    For logistic and softmax outputs, general priors can be handled,</span>
+0016 <span class="comment">%    although this requires the pseudo-inverse of the Hessian, giving up</span>
+0017 <span class="comment">%    the better conditioning and some of the speed advantage of the normal</span>
+0018 <span class="comment">%    form equations.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    The error function value at the final set of weights is returned in</span>
+0021 <span class="comment">%    OPTIONS(8). Each row of X corresponds to one input vector and each</span>
+0022 <span class="comment">%    row of T corresponds to one target vector.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%    The optional parameters have the following interpretations.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    OPTIONS(1) is set to 1 to display error values during training. If</span>
+0027 <span class="comment">%    OPTIONS(1) is set to 0, then only warning messages are displayed.  If</span>
+0028 <span class="comment">%    OPTIONS(1) is -1, then nothing is displayed.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%    OPTIONS(2) is a measure of the precision required for the value of</span>
+0031 <span class="comment">%    the weights W at the solution.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%    OPTIONS(3) is a measure of the precision required of the objective</span>
+0034 <span class="comment">%    function at the solution.  Both this and the previous condition must</span>
+0035 <span class="comment">%    be satisfied for termination.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%    OPTIONS(5) is set to 1 if an approximation to the Hessian (which</span>
+0038 <span class="comment">%    assumes that all outputs are independent) is used for softmax</span>
+0039 <span class="comment">%    outputs. With the default value of 0 the exact Hessian (which is more</span>
+0040 <span class="comment">%    expensive to compute) is used.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%    OPTIONS(14) is the maximum number of iterations for the IRLS</span>
+0043 <span class="comment">%    algorithm;  default 100.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%    See also</span>
+0046 <span class="comment">%    GLM, GLMERR, GLMGRAD</span>
+0047 <span class="comment">%</span>
+0048 
+0049 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0050 
+0051 <span class="comment">% Check arguments for consistency</span>
+0052 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'glm'</span>, x, t);
+0053 <span class="keyword">if</span> ~errstring
+0054   error(errstring);
+0055 <span class="keyword">end</span>
+0056 
+0057 <span class="keyword">if</span>(~options(14))
+0058   options(14) = 100;
+0059 <span class="keyword">end</span>
+0060 
+0061 display = options(1);
+0062 <span class="comment">% Do we need to test for termination?</span>
+0063 test = (options(2) | options(3));
+0064 
+0065 ndata = size(x, 1);
+0066 <span class="comment">% Add a column of ones for the bias</span>
+0067 inputs = [x ones(ndata, 1)];
+0068 
+0069 <span class="comment">% Linear outputs are a special case as they can be found in one step</span>
+0070 <span class="keyword">if</span> strcmp(net.outfn, <span class="string">'linear'</span>)
+0071   <span class="keyword">if</span> ~isfield(net, <span class="string">'alpha'</span>)
+0072     <span class="comment">% Solve for the weights and biases using left matrix divide</span>
+0073     temp = inputs\t;
+0074   <span class="keyword">elseif</span> size(net.alpha == [1 1])
+0075     <span class="keyword">if</span> isfield(net, <span class="string">'beta'</span>)
+0076       beta = net.beta;
+0077     <span class="keyword">else</span>
+0078       beta = 1.0;
+0079     <span class="keyword">end</span>
+0080     <span class="comment">% Use normal form equation</span>
+0081     hessian = beta*(inputs'*inputs) + net.alpha*eye(net.nin+1);
+0082     temp = pinv(hessian)*(beta*(inputs'*t));  
+0083   <span class="keyword">else</span>
+0084     error(<span class="string">'Only scalar alpha allowed'</span>);
+0085   <span class="keyword">end</span>
+0086   net.w1 = temp(1:net.nin, :);
+0087   net.b1 = temp(net.nin+1, :);
+0088   <span class="comment">% Store error value in options vector</span>
+0089   options(8) = <a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">glmerr</a>(net, x, t);
+0090   <span class="keyword">return</span>;
+0091 <span class="keyword">end</span>
+0092 
+0093 <span class="comment">% Otherwise need to use iterative reweighted least squares</span>
+0094 e = ones(1, net.nin+1);
+0095 <span class="keyword">for</span> n = 1:options(14)
+0096 
+0097   <span class="keyword">switch</span> net.outfn
+0098     <span class="keyword">case</span> <span class="string">'logistic'</span>
+0099       <span class="keyword">if</span> n == 1
+0100         <span class="comment">% Initialise model</span>
+0101         p = (t+0.5)/2;
+0102     act = log(p./(1-p));
+0103         wold = <a href="glmpak.html" class="code" title="function w = glmpak(net)">glmpak</a>(net);
+0104       <span class="keyword">end</span>
+0105       link_deriv = p.*(1-p);
+0106       weights = sqrt(link_deriv); <span class="comment">% sqrt of weights</span>
+0107       <span class="keyword">if</span> (min(min(weights)) &lt; eps)
+0108         warning(<span class="string">'ill-conditioned weights in glmtrain'</span>)
+0109         <span class="keyword">return</span>
+0110       <span class="keyword">end</span>
+0111       z = act + (t-p)./link_deriv;
+0112       <span class="keyword">if</span> ~isfield(net, <span class="string">'alpha'</span>)
+0113          <span class="comment">% Treat each output independently with relevant set of weights</span>
+0114          <span class="keyword">for</span> j = 1:net.nout
+0115         indep = inputs.*(weights(:,j)*e);
+0116         dep = z(:,j).*weights(:,j);
+0117         temp = indep\dep;
+0118         net.w1(:,j) = temp(1:net.nin);
+0119         net.b1(j) = temp(net.nin+1);
+0120          <span class="keyword">end</span>
+0121       <span class="keyword">else</span>
+0122      gradient = <a href="glmgrad.html" class="code" title="function [g, gdata, gprior] = glmgrad(net, x, t)">glmgrad</a>(net, x, t);
+0123          Hessian = <a href="glmhess.html" class="code" title="function [h, hdata] = glmhess(net, x, t, hdata)">glmhess</a>(net, x, t);
+0124          deltaw = -gradient*pinv(Hessian);
+0125          w = wold + deltaw;
+0126          net = <a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">glmunpak</a>(net, w);
+0127       <span class="keyword">end</span>
+0128       [err, edata, eprior, p, act] = <a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">glmerr</a>(net, x, t);
+0129       <span class="keyword">if</span> n == 1
+0130         errold = err;
+0131         wold = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0132       <span class="keyword">else</span>
+0133         w = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0134       <span class="keyword">end</span>
+0135     <span class="keyword">case</span> <span class="string">'softmax'</span>
+0136       <span class="keyword">if</span> n == 1
+0137         <span class="comment">% Initialise model: ensure that row sum of p is one no matter</span>
+0138     <span class="comment">% how many classes there are</span>
+0139         p = (t + (1/size(t, 2)))/2;
+0140     act = log(p./(1-p));
+0141       <span class="keyword">end</span>
+0142       <span class="keyword">if</span> options(5) == 1 | n == 1
+0143         link_deriv = p.*(1-p);
+0144         weights = sqrt(link_deriv); <span class="comment">% sqrt of weights</span>
+0145         <span class="keyword">if</span> (min(min(weights)) &lt; eps)
+0146           warning(<span class="string">'ill-conditioned weights in glmtrain'</span>)
+0147           <span class="keyword">return</span>
+0148         <span class="keyword">end</span>
+0149         z = act + (t-p)./link_deriv;
+0150         <span class="comment">% Treat each output independently with relevant set of weights</span>
+0151         <span class="keyword">for</span> j = 1:net.nout
+0152           indep = inputs.*(weights(:,j)*e);
+0153       dep = z(:,j).*weights(:,j);
+0154       temp = indep\dep;
+0155       net.w1(:,j) = temp(1:net.nin);
+0156       net.b1(j) = temp(net.nin+1);
+0157         <span class="keyword">end</span>
+0158         [err, edata, eprior, p, act] = <a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">glmerr</a>(net, x, t);
+0159         <span class="keyword">if</span> n == 1
+0160           errold = err;
+0161           wold = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0162         <span class="keyword">else</span>
+0163           w = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0164         <span class="keyword">end</span>
+0165       <span class="keyword">else</span>
+0166     <span class="comment">% Exact method of calculation after w first initialised</span>
+0167     <span class="comment">% Start by working out Hessian</span>
+0168     Hessian = <a href="glmhess.html" class="code" title="function [h, hdata] = glmhess(net, x, t, hdata)">glmhess</a>(net, x, t);
+0169     gradient = <a href="glmgrad.html" class="code" title="function [g, gdata, gprior] = glmgrad(net, x, t)">glmgrad</a>(net, x, t);
+0170     <span class="comment">% Now compute modification to weights</span>
+0171     deltaw = -gradient*pinv(Hessian);
+0172     w = wold + deltaw;
+0173     net = <a href="glmunpak.html" class="code" title="function net = glmunpak(net, w)">glmunpak</a>(net, w);
+0174     [err, edata, eprior, p] = <a href="glmerr.html" class="code" title="function [e, edata, eprior, y, a, mse] = glmerr(net, x, t)">glmerr</a>(net, x, t);
+0175     <span class="keyword">end</span>
+0176 
+0177     <span class="keyword">otherwise</span>
+0178       error([<span class="string">'Unknown activation function '</span>, net.outfn]);
+0179    <span class="keyword">end</span>
+0180    <span class="keyword">if</span> options(1)
+0181      fprintf(1, <span class="string">'Cycle %4d Error %11.6f\n'</span>, n, err)
+0182    <span class="keyword">end</span>
+0183    <span class="comment">% Test for termination</span>
+0184    <span class="comment">% Terminate if error increases</span>
+0185    <span class="keyword">if</span> err &gt;  errold
+0186      errold = err;
+0187      w = wold;
+0188      options(8) = err;
+0189      fprintf(1, <span class="string">'Error has increased: terminating\n'</span>)
+0190      <span class="keyword">return</span>;
+0191    <span class="keyword">end</span>
+0192    <span class="keyword">if</span> test &amp; n &gt; 1
+0193      <span class="keyword">if</span> (max(abs(w - wold)) &lt; options(2) &amp; abs(err-errold) &lt; options(3))
+0194        options(8) = err;
+0195        <span class="keyword">return</span>;
+0196      <span class="keyword">else</span>
+0197        errold = err;
+0198        wold = w;
+0199      <span class="keyword">end</span>
+0200    <span class="keyword">end</span>
+0201 <span class="keyword">end</span>
+0202 
+0203 options(8) = err;
+0204 <span class="keyword">if</span> (options(1) &gt;= 0)
+0205   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0206 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

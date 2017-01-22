@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmminitialize</title>
+  <meta name="keywords" content="gmminitialize">
+  <meta name="description" content="GMMINITIALIZE  Initialises Gaussian mixture model (GMM) from data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; gmminitialize.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmminitialize
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMINITIALIZE  Initialises Gaussian mixture model (GMM) from data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function gmmDS = gmminitialize(gmmDS, X, maxI) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GMMINITIALIZE  Initialises Gaussian mixture model (GMM) from data
+
+   INPUT
+          gmmDS         Gaussian mixture model data structure with the following fields
+            .cov_type   covariance matrix type 'full' , 'diag' , 'sqrt' , 'sqrt-diag'    [string]
+            .dim        data dimension  [scalar]
+            .M          number of Gaussian component densities  [scalar]
+            .weights    mixing priors (component weights) [1-by-M matrix]
+            .mu         N Gaussian component means (columns of matrix) [dim-by-N matrix]
+            .cov        covariance matrices of Gaussian components (must comply with .cov_type)
+                        [dim-by-dim-by-N matrix]
+          X             dataset of M samples (column vectors) [dim-by-M matrix]
+          maxI          (optional) maximum number of iterations (default = 100)
+
+   OUTPUT
+          gmmDS         data initilized (updated) GMM data structure
+
+   See also
+   GMMEVAL, <a href="gmmsample.html" class="code" title="function [X,comp] = gmmsample(gmmDS, N)">GMMSAMPLE</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././ReBEL-0.2.7/netlab/kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">kmeans</a>	KMEANS	Trains a k means cluster model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmmfit.html" class="code" title="function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W)">gmmfit</a>	GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function gmmDS = gmminitialize(gmmDS, X, maxI)</a>
+0002 
+0003 <span class="comment">% GMMINITIALIZE  Initialises Gaussian mixture model (GMM) from data</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   INPUT</span>
+0006 <span class="comment">%          gmmDS         Gaussian mixture model data structure with the following fields</span>
+0007 <span class="comment">%            .cov_type   covariance matrix type 'full' , 'diag' , 'sqrt' , 'sqrt-diag'    [string]</span>
+0008 <span class="comment">%            .dim        data dimension  [scalar]</span>
+0009 <span class="comment">%            .M          number of Gaussian component densities  [scalar]</span>
+0010 <span class="comment">%            .weights    mixing priors (component weights) [1-by-M matrix]</span>
+0011 <span class="comment">%            .mu         N Gaussian component means (columns of matrix) [dim-by-N matrix]</span>
+0012 <span class="comment">%            .cov        covariance matrices of Gaussian components (must comply with .cov_type)</span>
+0013 <span class="comment">%                        [dim-by-dim-by-N matrix]</span>
+0014 <span class="comment">%          X             dataset of M samples (column vectors) [dim-by-M matrix]</span>
+0015 <span class="comment">%          maxI          (optional) maximum number of iterations (default = 100)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   OUTPUT</span>
+0018 <span class="comment">%          gmmDS         data initilized (updated) GMM data structure</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   See also</span>
+0021 <span class="comment">%   GMMEVAL, GMMSAMPLE</span>
+0022 <span class="comment">%</span>
+0023 
+0024 <span class="comment">%   This function has been derived and modified from the 'gmminit' function in</span>
+0025 <span class="comment">%   the NETLAB toolkit (by Ian T Nabney and Chris Bishop). See LICENSE file</span>
+0026 <span class="comment">%   in the NETLAB subdirectory for the Netlab license</span>
+0027 <span class="comment">%   Copyright (c) Ian T Nabney (1996-2001)</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%   The license for the derived file (this function) follows:</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0034 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0035 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0036 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0039 <span class="comment">%   detail.</span>
+0040 
+0041 <span class="comment">%=============================================================================================</span>
+0042 
+0043 <span class="keyword">if</span> nargin &lt; 3
+0044   maxI = 100;
+0045 <span class="keyword">end</span>
+0046 
+0047 [xdim, nov] = size(X);
+0048 
+0049 dim = xdim;         <span class="comment">% state dimension</span>
+0050 M   = gmmDS.M;      <span class="comment">% number of components</span>
+0051 
+0052 X=X';
+0053 
+0054 <span class="comment">% Arbitrary width used if variance collapses to zero: make it 'large' so</span>
+0055 <span class="comment">% that centre is responsible for a reasonable number of points.</span>
+0056 GMM_WIDTH = 1.0;
+0057 
+0058   <span class="comment">% Use kmeans algorithm to initialise the centroids from the data</span>
+0059   options = foptions;
+0060   options(1) = -1;       <span class="comment">% don't display warnings</span>
+0061   options(14) = maxI;    <span class="comment">% Just use 5 iterations of k-means in initialisation</span>
+0062   options(5)  = 1;       <span class="comment">% initilize centroids and their covariances from data</span>
+0063   [mu, options, post] = <a href="../.././ReBEL-0.2.7/netlab/kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">kmeans</a>(gmmDS.mu', X, options);       <span class="comment">% call Netlab k-means algorithm</span>
+0064 
+0065   gmmDS.mu = mu';   <span class="comment">% convert from Netlab format to ReBEL format</span>
+0066 
+0067   <span class="comment">% Set priors depending on number of points in each cluster</span>
+0068   cluster_sizes = max(sum(post, 1), 1);             <span class="comment">% Make sure that no prior is zero</span>
+0069   gmmDS.weights = cluster_sizes/sum(cluster_sizes); <span class="comment">% Normalise priors</span>
+0070 
+0071 
+0072 fixCov = GMM_WIDTH*eye(dim);
+0073 
+0074 <span class="keyword">switch</span> gmmDS.cov_type
+0075 
+0076   <span class="keyword">case</span> <span class="string">'full'</span>
+0077     <span class="keyword">for</span> j = 1:M
+0078       <span class="comment">% Pick out data points belonging to this centre</span>
+0079       c = X(find(post(:, j)),:);
+0080       sizec = size(c,1);
+0081       tmu = mu(j,:);
+0082       diffs = c - tmu(ones(1,sizec),:);
+0083       gmmDS.cov(:,:,j) = (diffs'*diffs)/sizec;
+0084       <span class="comment">% Add GMM_WIDTH*Identity to rank-deficient covariance matrices</span>
+0085       <span class="keyword">if</span> rank(gmmDS.cov(:,:,j)) &lt; dim
+0086           gmmDS.cov(:,:,j) = gmmDS.cov(:,:,j) + fixCov;
+0087       <span class="keyword">end</span>
+0088     <span class="keyword">end</span>
+0089 
+0090   <span class="keyword">case</span> <span class="string">'diag'</span>
+0091     <span class="keyword">for</span> j = 1:M
+0092       <span class="comment">% Pick out data points belonging to this centre</span>
+0093       c = X(find(post(:, j)),:);
+0094       sizec = size(c,1);
+0095       tmu = mu(j,:);
+0096       diffs = c - tmu(ones(1,sizec),:);
+0097       d = sum((diffs.*diffs), 1)/sizec;
+0098       <span class="comment">% Replace small entries by GMM_WIDTH value</span>
+0099       d = d + GMM_WIDTH*(d&lt;eps);
+0100       gmmDS.cov(:,:,j) = diag(d);
+0101     <span class="keyword">end</span>
+0102 
+0103   <span class="keyword">case</span> <span class="string">'sqrt'</span>
+0104     <span class="keyword">for</span> j = 1:M
+0105       <span class="comment">% Pick out data points belonging to this centre</span>
+0106       c = X(find(post(:, j)),:);
+0107       sizec = size(c,1);
+0108       tmu = mu(j,:);
+0109       diffs = c - tmu(ones(1,sizec),:);
+0110       cov = (diffs'*diffs)/sizec;
+0111       <span class="comment">% Add GMM_WIDTH*Identity to rank-deficient covariance matrices</span>
+0112       <span class="keyword">if</span> rank(cov) &lt; gmmDS.dim
+0113           cov = cov + fixCov;
+0114       <span class="keyword">end</span>
+0115       gmmDS.cov(:,:,j) = chol(cov)';
+0116     <span class="keyword">end</span>
+0117 
+0118   <span class="keyword">case</span> <span class="string">'sqrt-diag'</span>
+0119     <span class="keyword">for</span> j = 1:M
+0120       <span class="comment">% Pick out data points belonging to this centre</span>
+0121       c = x(find(post(:, j)),:);
+0122       sizec = size(c,1);
+0123       tmu = mu(j,:);
+0124       diffs = c - tmu(ones(1,sizec),:);
+0125       d = sum((diffs.*diffs), 1)/sizec;
+0126       <span class="comment">% Replace small entries by GMM_WIDTH value</span>
+0127       d = d + GMM_WIDTH*(d&lt;eps);
+0128       gmmDS.cov(:,:,j) = diag(sqrt(d));
+0129     <span class="keyword">end</span>
+0130 
+0131 
+0132   <span class="keyword">otherwise</span>
+0133     error([<span class="string">' [ gmminitialize ] Unknown covariance type '</span>, gmmDS.cov_type]);
+0134 
+0135 <span class="keyword">end</span>
+0136</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gensysnoiseds</title>
+  <meta name="keywords" content="gensysnoiseds">
+  <meta name="description" content="GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; gensysnoiseds.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gensysnoiseds
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure
+                and algorithm type. All ReBEL estimation algorithms take an inference data structure (InferenceDS),
+                as well as two system noise data structures (process noise and observation noise) as arguments.
+
+   [pNoise, oNoise] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams, oNoiseAdaptMethod, oNoiseAdaptParams))
+
+   INPUT
+          InferenceDS         (InferenceDS) Inference data structure generated from a GSSM file by 'geninfds'
+          estimatorType       (string) type of estimator to be used (i.e. 'kf', 'ukf', 'ekf', 'pf', etc.)
+          pNoiseAdaptMethod  &lt;&lt;optional&gt;&gt; (string) Process noise covariance adaptation method :
+                                      'anneal'        : annealing
+                                      'lambda-decay'  : RLS like lambda decay
+                                      'robbins-monro' : Robbins-Monro stochastic approximation
+                               If this field is set, then pNoiseAdaptParams must also be set.
+          pNoiseAdaptParams  &lt;&lt;optional&gt;&gt; (vector) noise adaptation parameters. Depend on pNoiseAdaptMethod
+                                 if 'anneal'        : [annealing_factor minimum_allowed_variance]
+                                 if 'lambda-decay'  : [lambda_factor minimum_allowed_variance]
+                                 if 'robbins-monro' : [1/nu_initial 1/nu_final]
+          oNoiseAdaptMethod  &lt;&lt;optional&gt;&gt; Observation noise covariance adaptation method : same as above
+                                          except the only allowed method is 'robbins-monro'
+          oNoiseAdaptParams  &lt;&lt;optional&gt;&gt; Same as above for process noise
+
+   OUTPUT
+          pNoise              (NoiseDS) process noise data structure
+          oNoise              (NoiseDS) observation noise data structure
+          InferenceDS         (InferenceDS) updated inference data structure
+
+     See also
+     <a href="geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">GENINFDS</a>, <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">GENNOISEDS</a>
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>	CONSISTENT   Check ReBEL data structures for consistentency.</li><li><a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>	CONVGAUSNS  Convert Gaussian noise source from one cov_type to another</li><li><a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>	STRINGMATCH  Returns match > 0 if string1 and string2 match (string2 can be a cell array of</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././ReBEL-0.2.7/examples/dual_estimation/demspeech_dual.html" class="code" title="">demspeech_dual</a>	DEMSPEECH_DUAL  Sigma-Point Kalman Filter based Speech Enhancement Demonstration.</li><li><a href="../.././ReBEL-0.2.7/examples/joint_estimation/demje1.html" class="code" title="">demje1</a>	DEMJE1  Demonstrate joint estimation on a 2nd order LTI system.</li><li><a href="../.././ReBEL-0.2.7/examples/joint_estimation/demje2.html" class="code" title="">demje2</a>	DEMJE2 Demonstrate nonlinear time series joint estimation for Mackey-Glass chaotic time series</li><li><a href="../.././ReBEL-0.2.7/examples/parameter_estimation/dempe1.html" class="code" title="">dempe1</a>	DEMPE1  Demonstrate parameter estimation on a simple 2nd order LTI system.</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse1.html" class="code" title="">demse1</a>	DEMSE1  Demonstrate state estimation on a simple 2nd order LTI system.</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse2.html" class="code" title="">demse2</a>	DEMSE2  Demonstrate state estimation on a simple scalar nonlinear (time variant) problem</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse3.html" class="code" title="">demse3</a>	DEMSE3  Demonstrate nonlinear time series state estimation for Mackey-Glass chaotic time series</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse4.html" class="code" title="">demse4</a>	DEMSE4  Bearing Only Tracking Example</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse5.html" class="code" title="">demse5</a>	DEMSE4  Bearing and Frequency Tracking Example</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams, </a><span class="keyword">...</span>
+0002                                           oNoiseAdaptMethod, oNoiseAdaptParams)
+0003 
+0004 <span class="comment">% GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure</span>
+0005 <span class="comment">%                and algorithm type. All ReBEL estimation algorithms take an inference data structure (InferenceDS),</span>
+0006 <span class="comment">%                as well as two system noise data structures (process noise and observation noise) as arguments.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   [pNoise, oNoise] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams, oNoiseAdaptMethod, oNoiseAdaptParams))</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   INPUT</span>
+0011 <span class="comment">%          InferenceDS         (InferenceDS) Inference data structure generated from a GSSM file by 'geninfds'</span>
+0012 <span class="comment">%          estimatorType       (string) type of estimator to be used (i.e. 'kf', 'ukf', 'ekf', 'pf', etc.)</span>
+0013 <span class="comment">%          pNoiseAdaptMethod  &lt;&lt;optional&gt;&gt; (string) Process noise covariance adaptation method :</span>
+0014 <span class="comment">%                                      'anneal'        : annealing</span>
+0015 <span class="comment">%                                      'lambda-decay'  : RLS like lambda decay</span>
+0016 <span class="comment">%                                      'robbins-monro' : Robbins-Monro stochastic approximation</span>
+0017 <span class="comment">%                               If this field is set, then pNoiseAdaptParams must also be set.</span>
+0018 <span class="comment">%          pNoiseAdaptParams  &lt;&lt;optional&gt;&gt; (vector) noise adaptation parameters. Depend on pNoiseAdaptMethod</span>
+0019 <span class="comment">%                                 if 'anneal'        : [annealing_factor minimum_allowed_variance]</span>
+0020 <span class="comment">%                                 if 'lambda-decay'  : [lambda_factor minimum_allowed_variance]</span>
+0021 <span class="comment">%                                 if 'robbins-monro' : [1/nu_initial 1/nu_final]</span>
+0022 <span class="comment">%          oNoiseAdaptMethod  &lt;&lt;optional&gt;&gt; Observation noise covariance adaptation method : same as above</span>
+0023 <span class="comment">%                                          except the only allowed method is 'robbins-monro'</span>
+0024 <span class="comment">%          oNoiseAdaptParams  &lt;&lt;optional&gt;&gt; Same as above for process noise</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%   OUTPUT</span>
+0027 <span class="comment">%          pNoise              (NoiseDS) process noise data structure</span>
+0028 <span class="comment">%          oNoise              (NoiseDS) observation noise data structure</span>
+0029 <span class="comment">%          InferenceDS         (InferenceDS) updated inference data structure</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%     See also</span>
+0032 <span class="comment">%     GENINFDS, GENNOISEDS</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0037 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0038 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0039 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0042 <span class="comment">%   detail.</span>
+0043 
+0044 <span class="comment">%=============================================================================================</span>
+0045 
+0046 <span class="comment">%=== ERROR CHECKING ==========================================================================</span>
+0047 
+0048 <span class="keyword">if</span> ((nargin &lt; 2) | rem(nargin,2))
+0049     error(<span class="string">' [ gensysnoiseds ] Not enough input parameters.'</span>);
+0050 <span class="keyword">end</span>
+0051 
+0052 <span class="keyword">if</span> (nargout ~= 3)
+0053     error(<span class="string">' [ gensysnoiseds ] Not enough output arguments.'</span>);
+0054 <span class="keyword">end</span>
+0055 
+0056 
+0057 error(<a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>(InferenceDS,<span class="string">'InferenceDS'</span>));         <span class="comment">%-- check for consistency of InferenceDS data structure</span>
+0058 
+0059 InferenceDS.esttype = estimatorType;                  <span class="comment">% store estimator type</span>
+0060 
+0061 
+0062 <span class="comment">%=== INFERENCE TYPE SPECIFIC STRUCTURE ==================================================================</span>
+0063 
+0064 <span class="keyword">switch</span> (InferenceDS.inftype)
+0065 
+0066 <span class="comment">%----------------------------------------- STATE ESTIMATION ---------------------------------------------</span>
+0067 <span class="keyword">case</span> <span class="string">'state'</span>
+0068 
+0069     <span class="comment">%--- Generate/convert or copy noise sources from GSSM data structure</span>
+0070 
+0071     pNoise = InferenceDS.model.pNoise;                            <span class="comment">% process noise data structure</span>
+0072     oNoise = InferenceDS.model.oNoise;                            <span class="comment">% observation noise data structure</span>
+0073 
+0074 
+0075     <span class="comment">%--- KALMAN FILTER FAMILY : Checks and conversion</span>
+0076 
+0077     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'kf'</span>,<span class="string">'ekf'</span>,<span class="string">'ukf'</span>,<span class="string">'cdkf'</span>,<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>})
+0078 
+0079         <span class="comment">% If default noise source is not Guassian, define a Gaussian noise source with the same dimension, mean and covariance</span>
+0080         <span class="comment">% if available</span>
+0081         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(pNoise.ns_type, {<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>})
+0082             Arg.type = <span class="string">'gaussian'</span>;         <span class="comment">% standard Gaussian noise source</span>
+0083             Arg.cov_type = <span class="string">'full'</span>;          <span class="comment">% with full covariance matrix</span>
+0084             Arg.dim = pNoise.dim;          <span class="comment">% process noise dimension</span>
+0085             <span class="keyword">if</span> isfield(pNoise,<span class="string">'mu'</span>)
+0086               Arg.mu = pNoise.mu;
+0087             <span class="keyword">else</span>
+0088               <span class="comment">%warning(' [ gensysnoiseds ] Process noise data structure does not have a defined mean vector. Default assigned.');</span>
+0089               Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0090             <span class="keyword">end</span>
+0091             <span class="keyword">if</span> isfield(pNoise,<span class="string">'cov'</span>)
+0092               Arg.cov = pNoise.cov;
+0093             <span class="keyword">else</span>
+0094               <span class="comment">%warning(' [ gensysnoiseds ] Process noise data structure does not have a defined covariance matrix. Default assigned.');</span>
+0095               Arg.cov  = eye(Arg.dim);         <span class="comment">% default : covariance</span>
+0096             <span class="keyword">end</span>
+0097             pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate process noise data structure</span>
+0098         <span class="keyword">end</span>
+0099         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(oNoise.ns_type, {<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>})
+0100             Arg.type = <span class="string">'gaussian'</span>;         <span class="comment">% standard Gaussian noise source</span>
+0101             Arg.cov_type = <span class="string">'full'</span>;          <span class="comment">% with full covariance matrix</span>
+0102             Arg.dim = oNoise.dim;          <span class="comment">% process noise dimension</span>
+0103             <span class="keyword">if</span> isfield(oNoise,<span class="string">'mu'</span>)
+0104               Arg.mu = oNoise.mu;
+0105             <span class="keyword">else</span>
+0106               <span class="comment">%warning(' [ gensysnoiseds ] Observation noise data structure does not have a defined mean vector. Default assigned.');</span>
+0107               Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0108             <span class="keyword">end</span>
+0109             <span class="keyword">if</span> isfield(oNoise,<span class="string">'cov'</span>)
+0110               Arg.cov = oNoise.cov;
+0111             <span class="keyword">else</span>
+0112               <span class="comment">%warning(' [ gensysnoiseds ] Observation noise data structure does not have a defined covariance matrix. Default assigned.');</span>
+0113               Arg.cov  = eye(Arg.dim);         <span class="comment">% default : covariance</span>
+0114             <span class="keyword">end</span>
+0115             oNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate observation noise data structure</span>
+0116         <span class="keyword">end</span>
+0117 
+0118         <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>})   <span class="comment">% Check for square root Kalman algorithms</span>
+0119             <span class="comment">%-- process noise</span>
+0120             <span class="keyword">switch</span> (pNoise.cov_type)                        <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0121             <span class="keyword">case</span> <span class="string">'diag'</span>
+0122                 pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt-diag'</span>);
+0123                 <span class="comment">%warning(' [ gensysnoiseds ] Converting process noise source covariance type to ''sqrt-diag''.');</span>
+0124             <span class="keyword">case</span> <span class="string">'full'</span>
+0125                 pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt'</span>);
+0126                 <span class="comment">%warning(' [ gensysnoiseds ] Converting process noise source covariance type to ''sqrt''.');</span>
+0127             <span class="keyword">end</span>
+0128             <span class="comment">%-- observation noise</span>
+0129             <span class="keyword">switch</span> (oNoise.cov_type)                        <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0130             <span class="keyword">case</span> <span class="string">'diag'</span>
+0131                 oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt-diag'</span>);
+0132                 <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt-diag''.');</span>
+0133             <span class="keyword">case</span> <span class="string">'full'</span>
+0134                 oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt'</span>);
+0135                 <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt''.');</span>
+0136             <span class="keyword">end</span>
+0137         <span class="keyword">end</span>
+0138 
+0139         InferenceDS.InovUpdateMaskIdxVec = []; <span class="comment">% Innovation update mask index vector ... Indicates which components</span>
+0140                                                <span class="comment">% of the innovation vector should be ignored when calculating a Kalman</span>
+0141                                                <span class="comment">% state update</span>
+0142 
+0143     <span class="keyword">end</span>
+0144 
+0145 
+0146     <span class="comment">%--------------------------------------------------------------------------------------------</span>
+0147     <span class="comment">%--- PARTICLE FILTER FAMILY : Checks and conversion</span>
+0148 
+0149 
+0150     <span class="comment">%----------------------------------------------------------------------------------</span>
+0151     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, <span class="string">'gspf'</span>)   <span class="comment">% 'Gaussian Sum Particle Filter'</span>
+0152 
+0153         <span class="comment">% If process noise source is not a GMM, define a GMM noise source with the same dimension, mean and covariance</span>
+0154         <span class="comment">% if available</span>
+0155         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(pNoise.ns_type, <span class="string">'gmm'</span>)
+0156 
+0157             Arg.type = <span class="string">'gmm'</span>;              <span class="comment">% GMM noise source</span>
+0158             Arg.cov_type = <span class="string">'sqrt'</span>;         <span class="comment">% GSPF use square-root covariance matrices</span>
+0159             Arg.dim = pNoise.dim;          <span class="comment">% process noise dimension</span>
+0160             Arg.M = 1;                     <span class="comment">% single component</span>
+0161             Arg.weights = [1];             <span class="comment">% component weight</span>
+0162             <span class="keyword">if</span> isfield(pNoise,<span class="string">'mu'</span>)
+0163               Arg.mu = pNoise.mu;
+0164             <span class="keyword">else</span>
+0165               <span class="comment">%warning(' [ gensysnoiseds ] Process noise data structure does not have a defined mean vector. Default assigned');</span>
+0166               Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0167             <span class="keyword">end</span>
+0168             Arg.cov = repmat(zeros(Arg.dim),[1 1 1]); <span class="comment">% default covariance buffer</span>
+0169 
+0170             <span class="keyword">if</span> isfield(pNoise,<span class="string">'cov'</span>)
+0171               <span class="keyword">if</span> isfield(pNoise,<span class="string">'cov_type'</span>) cov_type = pNoise.cov_type; <span class="keyword">else</span> cov_type=<span class="string">'full'</span>; <span class="keyword">end</span>
+0172               <span class="keyword">switch</span> cov_type
+0173               <span class="keyword">case</span> {<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}
+0174                   Arg.cov(:,:,1) = pNoise.cov;
+0175               <span class="keyword">case</span> {<span class="string">'full'</span>,<span class="string">'diag'</span>}
+0176                   Arg.cov(:,:,1) = chol(pNoise.cov)';
+0177               <span class="keyword">otherwise</span>
+0178                   error(<span class="string">'[ gensysnoiseds::gspf ] Unknown process noise covariance type.'</span>);
+0179               <span class="keyword">end</span>
+0180             <span class="keyword">else</span>
+0181               warning(<span class="string">' [ gensysnoiseds::gspf ] Process noise data structure does not have a defined covariance matrix. Default assigned.'</span>);
+0182               Arg.cov(:,:,1) = repmat(eye(Arg.dim),[1 1 1]);  <span class="comment">% default : covariance  (Cholesky factor)</span>
+0183             <span class="keyword">end</span>
+0184             pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate process noise data structure</span>
+0185 
+0186         <span class="keyword">else</span>
+0187 
+0188         <span class="comment">% Make sure the GMM component densities is of cov_type 'sqrt'</span>
+0189 
+0190             <span class="comment">%-- process noise</span>
+0191             <span class="keyword">switch</span> (pNoise.cov_type)                        <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0192             <span class="keyword">case</span> <span class="string">'diag'</span>
+0193                 pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt-diag'</span>);
+0194                 <span class="comment">%warning(' [ gensysnoiseds ] Converting process noise source covariance type to ''sqrt-diag''.');</span>
+0195             <span class="keyword">case</span> <span class="string">'full'</span>
+0196                 pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt'</span>);
+0197                 <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt''.');</span>
+0198             <span class="keyword">end</span>
+0199 
+0200         <span class="keyword">end</span>
+0201 
+0202     <span class="keyword">end</span>
+0203 
+0204 
+0205     <span class="comment">%----------------------------------------------------------------------------------</span>
+0206     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, <span class="string">'gmsppf'</span>)   <span class="comment">% 'Gaussian Mixture Sigma-Point Particle Filter'</span>
+0207 
+0208         <span class="comment">% If process noise source is not a GMM, define a GMM noise source with the same dimension, mean and covariance</span>
+0209         <span class="comment">% if available</span>
+0210         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(pNoise.ns_type, <span class="string">'gmm'</span>)
+0211             Arg.type = <span class="string">'gmm'</span>;              <span class="comment">% GMM noise source</span>
+0212             Arg.cov_type = <span class="string">'sqrt'</span>;         <span class="comment">% GSPF use square-root covariance matrices</span>
+0213             Arg.dim = pNoise.dim;          <span class="comment">% process noise dimension</span>
+0214             Arg.M = 1;                     <span class="comment">% single component</span>
+0215             Arg.weights = [1];             <span class="comment">% component weight</span>
+0216             <span class="keyword">if</span> isfield(pNoise,<span class="string">'mu'</span>)
+0217               Arg.mu = pNoise.mu;
+0218             <span class="keyword">else</span>
+0219               warning(<span class="string">' [ gensysnoiseds ] Process noise data structure does not have a defined mean vector. Default assigned'</span>);
+0220               Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0221             <span class="keyword">end</span>
+0222             Arg.cov = repmat(zeros(Arg.dim),[1 1 1]); <span class="comment">% default covariance buffer</span>
+0223             <span class="keyword">if</span> isfield(pNoise,<span class="string">'cov'</span>)
+0224               <span class="keyword">if</span> isfield(pNoise,<span class="string">'cov_type'</span>) cov_type = pNoise.cov_type; <span class="keyword">else</span> cov_type=<span class="string">'full'</span>; <span class="keyword">end</span>
+0225               <span class="keyword">switch</span> cov_type
+0226                 <span class="keyword">case</span> {<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}
+0227                     Arg.cov(:,:,1) = pNoise.cov;
+0228                 <span class="keyword">case</span> {<span class="string">'full'</span>,<span class="string">'diag'</span>}
+0229                     Arg.cov(:,:,1) = chol(pNoise.cov)';
+0230                 <span class="keyword">otherwise</span>
+0231                     error(<span class="string">' [ gensysnoiseds::gmsppf ] Unknown process noise covariance type.'</span>);
+0232               <span class="keyword">end</span>
+0233 
+0234             <span class="keyword">else</span>
+0235               warning(<span class="string">' [ gensysnoiseds::gmsppf ] Process noise data structure does not have a defined covariance matrix. Default assigned.'</span>);
+0236               Arg.cov(:,:,1) = repmat(eye(Arg.dim),[1 1 1]);  <span class="comment">% default : covariance  (Cholesky factor)</span>
+0237             <span class="keyword">end</span>
+0238             pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate process noise data structure</span>
+0239         <span class="keyword">else</span>
+0240             <span class="comment">% Make sure the GMM component densities is of cov_type 'sqrt'</span>
+0241             <span class="comment">%-- process noise</span>
+0242             <span class="keyword">switch</span> (pNoise.cov_type)                        <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0243             <span class="keyword">case</span> <span class="string">'diag'</span>
+0244                 pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt-diag'</span>);
+0245                 <span class="comment">%warning(' [ gensysnoiseds ] Converting process noise source covariance type to ''sqrt-diag''.');</span>
+0246             <span class="keyword">case</span> <span class="string">'full'</span>
+0247                 pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt'</span>);
+0248                 <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt''.');</span>
+0249             <span class="keyword">end</span>
+0250         <span class="keyword">end</span>
+0251 
+0252         <span class="comment">% If observation noise source is not a GMM, define a GMM noise source with the same dimension, mean and covariance</span>
+0253         <span class="comment">% if available</span>
+0254         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(oNoise.ns_type, <span class="string">'gmm'</span>)
+0255             Arg.type = <span class="string">'gmm'</span>;              <span class="comment">% GMM noise source</span>
+0256             Arg.cov_type = <span class="string">'sqrt'</span>;         <span class="comment">% GSPF use square-root covariance matrices</span>
+0257             Arg.dim = oNoise.dim;          <span class="comment">% observation noise dimension</span>
+0258             Arg.M = 1;                     <span class="comment">% single component</span>
+0259             Arg.weights = [1];             <span class="comment">% component weight</span>
+0260             <span class="keyword">if</span> isfield(oNoise,<span class="string">'mu'</span>)
+0261               Arg.mu = oNoise.mu;
+0262             <span class="keyword">else</span>
+0263               warning(<span class="string">' [ gensysnoiseds::gmsppf ] Observation noise data structure does not have a defined mean vector. Default assigned'</span>);
+0264               Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0265             <span class="keyword">end</span>
+0266             Arg.cov = repmat(zeros(Arg.dim),[1 1 1]); <span class="comment">% default covariance buffer</span>
+0267             <span class="keyword">if</span> isfield(oNoise,<span class="string">'cov'</span>)
+0268               <span class="keyword">if</span> isfield(oNoise,<span class="string">'cov_type'</span>) cov_type = oNoise.cov_type; <span class="keyword">else</span> cov_type=<span class="string">'full'</span>; <span class="keyword">end</span>
+0269               <span class="keyword">switch</span> cov_type
+0270               <span class="keyword">case</span> {<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}
+0271                   Arg.cov(:,:,1) = oNoise.cov;
+0272               <span class="keyword">case</span> {<span class="string">'full'</span>,<span class="string">'diag'</span>}
+0273                   Arg.cov(:,:,1) = chol(oNoise.cov)';
+0274               <span class="keyword">otherwise</span>
+0275                   error(<span class="string">' [ gensysnoiseds::gmsppf ] Unknown observation noise covariance type.'</span>);
+0276               <span class="keyword">end</span>
+0277             <span class="keyword">else</span>
+0278               warning(<span class="string">' [ gensysnoiseds::gmsppf ] Observation noise data structure does not have a defined covariance matrix. Default assigned.'</span>);
+0279               Arg.cov(:,:,1) = repmat(eye(Arg.dim),[1 1 1]);  <span class="comment">% default : covariance  (Cholesky factor)</span>
+0280             <span class="keyword">end</span>
+0281             oNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate process noise data structure</span>
+0282         <span class="keyword">else</span>
+0283             <span class="comment">% Make sure the GMM component densities is of cov_type 'sqrt'</span>
+0284             <span class="comment">%-- process noise</span>
+0285             <span class="keyword">switch</span> (oNoise.cov_type)                        <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0286             <span class="keyword">case</span> <span class="string">'diag'</span>
+0287                 oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt-diag'</span>);
+0288                 <span class="comment">%warning(' [ gensysnoiseds ] Converting process noise source covariance type to ''sqrt-diag''.');</span>
+0289             <span class="keyword">case</span> <span class="string">'full'</span>
+0290                 oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt'</span>);
+0291                 <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt''.');</span>
+0292             <span class="keyword">end</span>
+0293         <span class="keyword">end</span>
+0294 
+0295     <span class="keyword">end</span>
+0296 
+0297 
+0298     <span class="comment">%--- Setup noise source tags</span>
+0299 
+0300     pNoise.tag = <span class="string">'state'</span>;                   <span class="comment">% tag this as a state variable noise sources</span>
+0301     oNoise.tag = <span class="string">'obs'</span>;                     <span class="comment">% tag this as a observation variable noise source</span>
+0302 
+0303 
+0304 
+0305 <span class="comment">%----------------------------------------- PARAMETER ESTIMATION ---------------------------------------------</span>
+0306 <span class="keyword">case</span> <span class="string">'parameter'</span>
+0307 
+0308     <span class="comment">%--- Generate default process noise source</span>
+0309 
+0310     <span class="keyword">switch</span> estimatorType
+0311     <span class="keyword">case</span> {<span class="string">'gspf'</span>,<span class="string">'gmsppf'</span>}
+0312         Arg.type = <span class="string">'gmm'</span>;                                    <span class="comment">% standard Gaussian noise source</span>
+0313         Arg.cov_type = <span class="string">'sqrt'</span>;                               <span class="comment">% with full covariance matrix</span>
+0314         Arg.tag = <span class="string">'param'</span>;                                   <span class="comment">% this noise source operates on parameters</span>
+0315         Arg.dim = InferenceDS.Vdim;                          <span class="comment">% process noise dimension</span>
+0316         Arg.mu = zeros(Arg.dim,1);                           <span class="comment">% default : zero mean</span>
+0317         Arg.M  = 1;                                          <span class="comment">% single component GMM</span>
+0318         Arg.weights = [1];                                   <span class="comment">% component weight</span>
+0319         Arg.cov  = repmat(eye(Arg.dim),[1 1 1]);             <span class="comment">% default : unity covariance</span>
+0320     <span class="keyword">otherwise</span>
+0321         Arg.type = <span class="string">'gaussian'</span>;                               <span class="comment">% standard Gaussian noise source</span>
+0322         Arg.cov_type = <span class="string">'full'</span>;                               <span class="comment">% with full covariance matrix</span>
+0323         Arg.tag = <span class="string">'param'</span>;                                   <span class="comment">% this noise source operates on parameters</span>
+0324         Arg.dim = InferenceDS.Vdim;                          <span class="comment">% process noise dimension</span>
+0325         Arg.mu = zeros(Arg.dim,1);                           <span class="comment">% default : zero mean</span>
+0326         Arg.cov  = eye(Arg.dim);                             <span class="comment">% default : unity covariance</span>
+0327     <span class="keyword">end</span>
+0328 
+0329     pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);                                 <span class="comment">% generate default process noise source</span>
+0330 
+0331 
+0332     <span class="comment">%--- Generate default observation noise source</span>
+0333 
+0334 
+0335     <span class="comment">%--- KALMAN FILTER FAMILY : Checks and conversion</span>
+0336 
+0337     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'kf'</span>,<span class="string">'ekf'</span>,<span class="string">'ukf'</span>,<span class="string">'cdkf'</span>,<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>})
+0338 
+0339         <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(InferenceDS.paramFunSelect, {<span class="string">'both'</span>,<span class="string">'both-p'</span>,<span class="string">'ffun'</span>})
+0340             <span class="comment">% If default noise source is not Guassian, define a Gaussian noise source with the same dimension</span>
+0341             <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(InferenceDS.model.pNoise.ns_type, {<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>})
+0342                 Arg.type = <span class="string">'gaussian'</span>;         <span class="comment">% standard Gaussian noise source</span>
+0343                 Arg.cov_type = <span class="string">'full'</span>;          <span class="comment">% with full covariance matrix</span>
+0344                 Arg.dim = InferenceDS.model.pNoise.dim;          <span class="comment">% process noise dimension</span>
+0345                 <span class="keyword">if</span> isfield(InferenceDS.model.pNoise,<span class="string">'mu'</span>)
+0346                    Arg.mu = InferenceDS.model.pNoise.mu;
+0347                 <span class="keyword">else</span>
+0348                    Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0349                    <span class="comment">%warning(' [ gensysnoiseds ] Process noise data structure does not have a defined mean vector. Default assigned.');</span>
+0350                 <span class="keyword">end</span>
+0351                 <span class="keyword">if</span> isfield(InferenceDS.model.pNoise,<span class="string">'cov'</span>)
+0352                    Arg.cov = InferenceDS.model.pNoise.cov;
+0353                 <span class="keyword">else</span>
+0354                    Arg.cov = eye(Arg.dim);         <span class="comment">% default : covariance</span>
+0355                    <span class="comment">%warning(' [ gensysnoiseds ] Process noise data structure does not have a defined covariance matrix. Default assigned.');</span>
+0356                 <span class="keyword">end</span>
+0357                 obs_pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate process noise data structure</span>
+0358             <span class="keyword">else</span>
+0359                 obs_pNoise = InferenceDS.model.pNoise; <span class="comment">% or copy the original pnoise if its already gaussian</span>
+0360             <span class="keyword">end</span>
+0361         <span class="keyword">end</span>
+0362         <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(InferenceDS.paramFunSelect, {<span class="string">'both'</span>,<span class="string">'both-p'</span>,<span class="string">'hfun'</span>})
+0363             <span class="comment">% If default noise source is not Guassian, define a Gaussian noise source with the same dimension</span>
+0364             <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(InferenceDS.model.oNoise.ns_type, {<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>})
+0365                 Arg.type = <span class="string">'gaussian'</span>;         <span class="comment">% standard Gaussian noise source</span>
+0366                 Arg.cov_type = <span class="string">'full'</span>;          <span class="comment">% with full covariance matrix</span>
+0367                 Arg.dim = InferenceDS.model.oNoise.dim;          <span class="comment">% process noise dimension</span>
+0368                 <span class="keyword">if</span> isfield(InferenceDS.model.oNoise,<span class="string">'mu'</span>)
+0369                     Arg.mu = InferenceDS.model.oNoise.mu;
+0370                 <span class="keyword">else</span>
+0371                     Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0372                     <span class="comment">%warning(' [ gensysnoiseds ] Observation noise data structure does not have a defined mean vector. Default assigned.');</span>
+0373                 <span class="keyword">end</span>
+0374                 <span class="keyword">if</span> isfield(InferenceDS.model.oNoise,<span class="string">'cov'</span>)
+0375                     Arg.cov = InferenceDS.model.oNoise.cov;
+0376                 <span class="keyword">else</span>
+0377                     Arg.cov = eye(Arg.dim);         <span class="comment">% default : covariance</span>
+0378                     <span class="comment">%warning(' [ gensysnoiseds ] Observation noise data structure does not have a defined covariance matrix. Default assigned.');</span>
+0379                 <span class="keyword">end</span>
+0380                 obs_oNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate observation noise data structure</span>
+0381             <span class="keyword">else</span>
+0382                 obs_oNoise = InferenceDS.model.oNoise; <span class="comment">% or copy the original onoise if its already gaussian</span>
+0383             <span class="keyword">end</span>
+0384         <span class="keyword">end</span>
+0385 
+0386     <span class="keyword">else</span>
+0387 
+0388         <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(InferenceDS.paramFunSelect, {<span class="string">'both'</span>,<span class="string">'both-p'</span>,<span class="string">'ffun'</span>})
+0389             obs_pNoise = InferenceDS.model.pNoise; <span class="comment">% or copy the original pnoise if its already gaussian</span>
+0390         <span class="keyword">end</span>
+0391         <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(InferenceDS.paramFunSelect, {<span class="string">'both'</span>,<span class="string">'both-p'</span>,<span class="string">'hfun'</span>})
+0392             obs_oNoise = InferenceDS.model.oNoise; <span class="comment">% or copy the original onoise if its already gaussian</span>
+0393         <span class="keyword">end</span>
+0394 
+0395     <span class="keyword">end</span>
+0396 
+0397 
+0398     <span class="comment">%--- NOW BUILD OBSERVATION NOISE SOURCE</span>
+0399 
+0400     <span class="keyword">switch</span> InferenceDS.paramFunSelect
+0401     <span class="keyword">case</span> {<span class="string">'both'</span>,<span class="string">'both-p'</span>}
+0402         clear Arg;
+0403         Arg.tag = <span class="string">'obs'</span>;                        <span class="comment">% ID tag : this noise source operates on observations</span>
+0404         Arg.dim = InferenceDS.Ndim;             <span class="comment">% set noise source dimension</span>
+0405         Arg.type = <span class="string">'combo'</span>;                     <span class="comment">% Combination noise source</span>
+0406         Arg.noiseSources = {obs_pNoise , obs_oNoise};   <span class="comment">% construct noise source cell array</span>
+0407         oNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);               <span class="comment">% generate observation noise source</span>
+0408      <span class="keyword">case</span> <span class="string">'ffun'</span>
+0409         oNoise = obs_pNoise;                    <span class="comment">% copy process noise source from GSSM</span>
+0410         oNoise.tag = <span class="string">'obs'</span>;                     <span class="comment">%  ID tag : this noise source operates on observations</span>
+0411      <span class="keyword">case</span> <span class="string">'hfun'</span>
+0412         oNoise = obs_oNoise;                    <span class="comment">% copy observation noise source from GSSM</span>
+0413         oNoise.tag = <span class="string">'obs'</span>;                     <span class="comment">%  ID tag : this noise source operates on observations</span>
+0414      <span class="keyword">otherwise</span>
+0415         error([<span class="string">' [ gensysnoiseds::parameter ] Unknown paramFunSelect value '''</span> InferenceDS.paramFunSelect <span class="string">''''</span>]);
+0416     <span class="keyword">end</span>
+0417 
+0418 
+0419     <span class="comment">%--- KALMAN FILTER FAMILY : Checks and conversion (again!)</span>
+0420 
+0421     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>})           <span class="comment">% Check for square root Kalman algorithms</span>
+0422         <span class="comment">%-- process noise</span>
+0423         pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt'</span>);
+0424         <span class="comment">%-- observation noise</span>
+0425         <span class="keyword">switch</span> (oNoise.cov_type)                                <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0426         <span class="keyword">case</span> <span class="string">'diag'</span>
+0427             oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt-diag'</span>);
+0428             <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt-diag''.');</span>
+0429         <span class="keyword">case</span> <span class="string">'full'</span>
+0430             oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt'</span>);
+0431             <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt''.');</span>
+0432         <span class="keyword">end</span>
+0433     <span class="keyword">end</span>
+0434 
+0435 
+0436 
+0437 
+0438 <span class="comment">%----------------------------------------- JOINT ESTIMATION ---------------------------------------------</span>
+0439 <span class="keyword">case</span> <span class="string">'joint'</span>
+0440 
+0441     <span class="comment">%--- Generate/convert or copy noise sources from GSSM data structure</span>
+0442 
+0443     param_pNoise_Arg.type = <span class="string">'gaussian'</span>;              <span class="comment">% standard Gaussian noise source</span>
+0444     param_pNoise_Arg.cov_type = <span class="string">'full'</span>;              <span class="comment">% with full covariance matrix</span>
+0445     param_pNoise_Arg.tag = <span class="string">'param'</span>;                  <span class="comment">% this noise source operates on parameters</span>
+0446     param_pNoise_Arg.dim = length(InferenceDS.paramParamIdxVec); <span class="comment">% noise dimension (length of parameter vector)</span>
+0447     param_pNoise_Arg.mu  = zeros(param_pNoise_Arg.dim,1);         <span class="comment">% default : zero mean</span>
+0448     param_pNoise_Arg.cov = eye(param_pNoise_Arg.dim);             <span class="comment">% default : unity covariance</span>
+0449 
+0450     state_pNoise = InferenceDS.model.pNoise;        <span class="comment">% Copy GSSM process noise source for state part of state vector</span>
+0451     state_pNoise.tag = <span class="string">'state'</span>;
+0452 
+0453     oNoise = InferenceDS.model.oNoise;              <span class="comment">% The observation noise source is the same as that of the</span>
+0454                                                     <span class="comment">% underlying model</span>
+0455 
+0456     <span class="comment">%--- KALMAN FILTER FAMILY : Checks and conversion</span>
+0457 
+0458     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'kf'</span>,<span class="string">'ekf'</span>,<span class="string">'ukf'</span>,<span class="string">'cdkf'</span>,<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>})
+0459 
+0460         <span class="comment">% If default noise source is not Guassian, define a Gaussian noise source with the same dimension</span>
+0461         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(state_pNoise.ns_type, {<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>})
+0462             clear Arg;
+0463             Arg.type = <span class="string">'gaussian'</span>;          <span class="comment">% standard Gaussian noise source</span>
+0464             Arg.cov_type = <span class="string">'full'</span>;           <span class="comment">% with full covariance matrix</span>
+0465             Arg.dim = state_pNoise.dim;     <span class="comment">% process noise dimension</span>
+0466             <span class="keyword">if</span> isfield(state_pNoise,<span class="string">'mu'</span>)
+0467               Arg.mu = state_pNoise.mu;
+0468             <span class="keyword">else</span>
+0469               Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0470               <span class="comment">%warning(' [ gensysnoiseds ] Process noise data structure does not have a defined mean vector. Default assigned.');</span>
+0471             <span class="keyword">end</span>
+0472             <span class="keyword">if</span> isfield(state_pNoise,<span class="string">'cov'</span>)
+0473               Arg.cov = state_pNoise.cov;
+0474             <span class="keyword">else</span>
+0475               Arg.cov  = eye(Arg.dim);         <span class="comment">% default : covariance</span>
+0476               <span class="comment">%warning(' [ gensysnoiseds ] Process noise data structure does not have a defined covariance matrix. Default assigned.');</span>
+0477             <span class="keyword">end</span>
+0478             state_pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg); <span class="comment">% generate process noise data structure</span>
+0479         <span class="keyword">else</span>
+0480             param_pNoise_Arg.cov_type = state_pNoise.cov_type;
+0481         <span class="keyword">end</span>
+0482 
+0483         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(oNoise.ns_type, {<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>})
+0484             Arg.type = <span class="string">'gaussian'</span>;         <span class="comment">% standard Gaussian noise source</span>
+0485             Arg.cov_type = <span class="string">'full'</span>;          <span class="comment">% with full covariance matrix</span>
+0486             Arg.dim = oNoise.dim;          <span class="comment">% process noise dimension</span>
+0487             <span class="keyword">if</span> isfield(oNoise,<span class="string">'mu'</span>)
+0488               Arg.mu = oNoise.mu;
+0489             <span class="keyword">else</span>
+0490               Arg.mu = zeros(Arg.dim,1);     <span class="comment">% default : zero mean</span>
+0491               <span class="comment">%warning(' [ gensysnoiseds ] Observation noise data structure does not have a defined mean vector. Default assigned.');</span>
+0492             <span class="keyword">end</span>
+0493             <span class="keyword">if</span> isfield(oNoise,<span class="string">'cov'</span>)
+0494               Arg.cov = oNoise.cov;
+0495             <span class="keyword">else</span>
+0496               Arg.cov  = eye(Arg.dim);         <span class="comment">% default : covariance</span>
+0497               <span class="comment">%warning(' [ gensysnoiseds ] Observation noise data structure does not have a defined covariance matrix. Default assigned.');</span>
+0498             <span class="keyword">end</span>
+0499             oNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);      <span class="comment">% generate observation noise data structure</span>
+0500         <span class="keyword">end</span>
+0501 
+0502     <span class="keyword">end</span>
+0503 
+0504 
+0505     <span class="comment">%--- PARTICLE FILTER FAMILY : Checks and conversions</span>
+0506 
+0507     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'gspf'</span>,<span class="string">'gmsppf'</span>})
+0508 
+0509         error(<span class="string">' [ gensysnoiseds ] Joint estimation is not yet supported in the meta/abstract level for algorithms : GSPF'</span>);
+0510 
+0511         <span class="comment">%param_pNoise_Arg.type = 'gmm';              %</span>
+0512         <span class="comment">%param_pNoise_Arg.cov_type = 'sqrt';         % with full covariance matrix</span>
+0513         <span class="comment">%param_pNoise_Arg.tag = 'param';                  % this noise source operates on parameters</span>
+0514         <span class="comment">%param_pNoise_Arg.dim = length(InferenceDS.paramParamIdxVec); % noise dimension (length of parameter vector)</span>
+0515         <span class="comment">%param_pNoise_Arg.mu  = zeros(param_pNoise_Arg.dim,1);         % default : zero mean</span>
+0516         <span class="comment">%param_pNoise_Arg.cov = eye(param_pNoise_Arg.dim);             % default : unity covariance</span>
+0517 
+0518         <span class="comment">%state_pNoise = InferenceDS.model.pNoise;        % Copy GSSM process noise source for state part of state vector</span>
+0519         <span class="comment">%state_pNoise.tag = 'state';</span>
+0520 
+0521         <span class="comment">%oNoise = InferenceDS.model.oNoise;              % The observation noise source is the same as that of the</span>
+0522                                                     <span class="comment">% underlying model</span>
+0523 
+0524 
+0525     <span class="keyword">end</span>
+0526 
+0527 
+0528     param_pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(param_pNoise_Arg);   <span class="comment">% Generate default process noise source for parameter part of state vector</span>
+0529 
+0530 
+0531     clear Arg;
+0532     Arg.tag = <span class="string">'state/param'</span>;                    <span class="comment">% set descriptive tag</span>
+0533     Arg.dim = InferenceDS.Vdim;                 <span class="comment">% set noise source dimension</span>
+0534     Arg.type = <span class="string">'combo'</span>;                         <span class="comment">% Combination noise source</span>
+0535     Arg.noiseSources = {state_pNoise , param_pNoise};   <span class="comment">% construct noise source cell array</span>
+0536 
+0537     pNoise = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);                   <span class="comment">% Generate process noise source as a combination of the original model</span>
+0538                                                 <span class="comment">% process noise source and the above generated artifical process noise</span>
+0539                                                 <span class="comment">% source operating on the parameter values in the state vector</span>
+0540 
+0541 
+0542     <span class="comment">%--- KALMAN FILTER FAMILY : Checks and conversion   (again!)</span>
+0543 
+0544     <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>})           <span class="comment">% Check for square root algorithms</span>
+0545         <span class="comment">%-- process noise</span>
+0546         <span class="keyword">switch</span> (pNoise.cov_type)                                <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0547         <span class="keyword">case</span> <span class="string">'diag'</span>
+0548             pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt-diag'</span>);
+0549             <span class="comment">%warning(' [ gensysnoiseds ] Converting process noise source covariance type to ''sqrt-diag''.');</span>
+0550         <span class="keyword">case</span> <span class="string">'full'</span>
+0551             pNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(pNoise,<span class="string">'sqrt'</span>);
+0552             <span class="comment">%warning(' [ gensysnoiseds ] Converting process noise source covariance type to ''sqrt''.');</span>
+0553         <span class="keyword">end</span>
+0554         <span class="comment">%-- observation noise</span>
+0555         <span class="keyword">switch</span> (oNoise.cov_type)                                <span class="comment">% Determine cov_type of Gaussian noise source</span>
+0556         <span class="keyword">case</span> <span class="string">'diag'</span>
+0557             oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt-diag'</span>);
+0558             <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt-diag''.');</span>
+0559         <span class="keyword">case</span> <span class="string">'full'</span>
+0560             oNoise = <a href="convgausns.html" class="code" title="function NoiseDS = convgausns(NoiseDS, target_cov_type)">convgausns</a>(oNoise,<span class="string">'sqrt'</span>);
+0561             <span class="comment">%warning(' [ gensysnoiseds ] Converting observation noise source covariance type to ''sqrt''.');</span>
+0562         <span class="keyword">end</span>
+0563     <span class="keyword">end</span>
+0564 
+0565 
+0566     <span class="comment">%--- Setup noise source tags</span>
+0567 
+0568     pNoise.tag = <span class="string">'state/param'</span>;             <span class="comment">% tag this as a state variable noise sources</span>
+0569     oNoise.tag = <span class="string">'obs'</span>;                     <span class="comment">% tag this as a observation variable noise source</span>
+0570 
+0571 
+0572 
+0573 <span class="comment">%--------------------------------------------------------------------------------------------------------</span>
+0574 <span class="keyword">otherwise</span>
+0575 
+0576   error([<span class="string">' [ gensysnoiseds ] Unknown inference type '''</span> InferenceDS.inftype <span class="string">''' in InferenceDS.type '</span>]);
+0577 
+0578 <span class="keyword">end</span>
+0579 
+0580 InferenceDS.pNoiseAdaptMethod = [];
+0581 InferenceDS.oNoiseAdaptMethod = [];
+0582 pNoise.adaptMethod = [];
+0583 oNoise.adaptMethod = [];
+0584 
+0585 <span class="keyword">if</span> (nargin &gt;= 4)
+0586   pNoise.adaptMethod = pNoiseAdaptMethod;
+0587   pNoise.adaptParams = pNoiseAdaptParams;
+0588   InferenceDS.pNoiseAdaptMethod = pNoiseAdaptMethod;
+0589 <span class="keyword">end</span>
+0590 <span class="keyword">if</span> (nargin == 6)
+0591   oNoise.adaptMethod = oNoiseAdaptMethod;
+0592   oNoise.adaptParams = oNoiseAdaptParams;
+0593   InferenceDS.oNoiseAdaptMethod = oNoiseAdaptMethod;
+0594 <span class="keyword">end</span>
+0595 
+0596 
+0597 <span class="comment">%=== Other default parmeters</span>
+0598 <span class="keyword">if</span> <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(estimatorType, {<span class="string">'ekf'</span>})
+0599   <span class="keyword">if</span> ~isfield(InferenceDS,<span class="string">'ekfParams'</span>)
+0600     InferenceDS.ekfParams = 1;
+0601   <span class="keyword">end</span>
+0602 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

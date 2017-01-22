@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gpinit</title>
+  <meta name="keywords" content="gpinit">
+  <meta name="description" content="GPINIT	Initialise Gaussian Process model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gpinit.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gpinit
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GPINIT	Initialise Gaussian Process model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = gpinit(net, tr_in, tr_targets, prior) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GPINIT    Initialise Gaussian Process model.
+
+    Description
+    NET = GPINIT(NET, TRIN, TRTARGETS) takes a Gaussian Process data
+    structure NET  together  with a matrix TRIN of training input vectors
+    and a matrix TRTARGETS of  training target vectors, and stores them
+    in NET. These datasets are required if the corresponding inverse
+    covariance matrix is not supplied to GPFWD. This is important if the
+    data structure is saved and then reloaded before calling GPFWD. Each
+    row of TRIN corresponds to one input vector and each row of TRTARGETS
+    corresponds to one target vector.
+
+    NET = GPINIT(NET, TRIN, TRTARGETS, PRIOR) additionally initialises
+    the parameters in NET from the PRIOR data structure which contains
+    the mean and variance of the Gaussian distribution which is sampled
+    from.
+
+    See also
+    <a href="gp.html" class="code" title="function net = gp(nin, covar_fn, prior)">GP</a>, <a href="gpfwd.html" class="code" title="function [y, sigsq] = gpfwd(net, x, cninv)">GPFWD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gpunpak.html" class="code" title="function net = gpunpak(net, hp)">gpunpak</a>	GPUNPAK Separates hyperparameter vector into components.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgp.html" class="code" title="">demgp</a>	DEMGP	Demonstrate simple regression using a Gaussian Process.</li><li><a href="demgpard.html" class="code" title="">demgpard</a>	DEMGPARD Demonstrate ARD using a Gaussian Process.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = gpinit(net, tr_in, tr_targets, prior)</a>
+0002 <span class="comment">%GPINIT    Initialise Gaussian Process model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = GPINIT(NET, TRIN, TRTARGETS) takes a Gaussian Process data</span>
+0006 <span class="comment">%    structure NET  together  with a matrix TRIN of training input vectors</span>
+0007 <span class="comment">%    and a matrix TRTARGETS of  training target vectors, and stores them</span>
+0008 <span class="comment">%    in NET. These datasets are required if the corresponding inverse</span>
+0009 <span class="comment">%    covariance matrix is not supplied to GPFWD. This is important if the</span>
+0010 <span class="comment">%    data structure is saved and then reloaded before calling GPFWD. Each</span>
+0011 <span class="comment">%    row of TRIN corresponds to one input vector and each row of TRTARGETS</span>
+0012 <span class="comment">%    corresponds to one target vector.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    NET = GPINIT(NET, TRIN, TRTARGETS, PRIOR) additionally initialises</span>
+0015 <span class="comment">%    the parameters in NET from the PRIOR data structure which contains</span>
+0016 <span class="comment">%    the mean and variance of the Gaussian distribution which is sampled</span>
+0017 <span class="comment">%    from.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also</span>
+0020 <span class="comment">%    GP, GPFWD</span>
+0021 <span class="comment">%</span>
+0022 
+0023 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0024 
+0025 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gp'</span>, tr_in, tr_targets);
+0026 <span class="keyword">if</span> ~isempty(errstring);
+0027   error(errstring);
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="keyword">if</span> nargin &gt;= 4 
+0031   <span class="comment">% Initialise weights at random</span>
+0032   <span class="keyword">if</span> size(prior.pr_mean) == [1 1]
+0033     w = randn(1, net.nwts).*sqrt(prior.pr_var) + <span class="keyword">...</span>
+0034        repmat(prior.pr_mean, 1, net.nwts);
+0035   <span class="keyword">else</span>
+0036     sig = sqrt(prior.index*prior.pr_var);
+0037     w = sig'.*randn(1, net.nwts) + (prior.index*prior.pr_mean)'; 
+0038   <span class="keyword">end</span>
+0039   net = <a href="gpunpak.html" class="code" title="function net = gpunpak(net, hp)">gpunpak</a>(net, w);
+0040 <span class="keyword">end</span>
+0041 
+0042 net.tr_in = tr_in;
+0043 net.tr_targets = tr_targets;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

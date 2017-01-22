@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gradchek</title>
+  <meta name="keywords" content="gradchek">
+  <meta name="description" content="GRADCHEK Checks a user-defined gradient function using finite differences.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gradchek.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gradchek
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GRADCHEK Checks a user-defined gradient function using finite differences.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [gradient, delta] = gradchek(w, func, grad, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GRADCHEK Checks a user-defined gradient function using finite differences.
+
+    Description
+    This function is intended as a utility for other netlab functions
+    (particularly optimisation functions) to use.  It enables the user to
+    check whether a gradient calculation has been correctly implmented
+    for a given function. GRADCHEK(W, FUNC, GRAD) checks how accurate the
+    gradient  GRAD of a function FUNC is at a parameter vector X.   A
+    central difference formula with step size 1.0e-6 is used, and the
+    results for both gradient function and finite difference
+    approximation are printed. The optional return value GRADIENT is the
+    gradient calculated using the function GRAD and the return value
+    DELTA is the difference between the functional and finite difference
+    methods of calculating the graident.
+
+    GRADCHEK(X, FUNC, GRAD, P1, P2, ...) allows additional arguments to
+    be passed to FUNC and GRAD.
+
+    See also
+    <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">GRADDESC</a>, <a href="hmc.html" class="code" title="function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin)">HMC</a>, <a href="olgd.html" class="code" title="function [net, options, errlog, pointlog] = olgd(net, options, x, t)">OLGD</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [gradient, delta] = gradchek(w, func, grad, varargin)</a>
+0002 <span class="comment">%GRADCHEK Checks a user-defined gradient function using finite differences.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    This function is intended as a utility for other netlab functions</span>
+0006 <span class="comment">%    (particularly optimisation functions) to use.  It enables the user to</span>
+0007 <span class="comment">%    check whether a gradient calculation has been correctly implmented</span>
+0008 <span class="comment">%    for a given function. GRADCHEK(W, FUNC, GRAD) checks how accurate the</span>
+0009 <span class="comment">%    gradient  GRAD of a function FUNC is at a parameter vector X.   A</span>
+0010 <span class="comment">%    central difference formula with step size 1.0e-6 is used, and the</span>
+0011 <span class="comment">%    results for both gradient function and finite difference</span>
+0012 <span class="comment">%    approximation are printed. The optional return value GRADIENT is the</span>
+0013 <span class="comment">%    gradient calculated using the function GRAD and the return value</span>
+0014 <span class="comment">%    DELTA is the difference between the functional and finite difference</span>
+0015 <span class="comment">%    methods of calculating the graident.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    GRADCHEK(X, FUNC, GRAD, P1, P2, ...) allows additional arguments to</span>
+0018 <span class="comment">%    be passed to FUNC and GRAD.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    See also</span>
+0021 <span class="comment">%    CONJGRAD, GRADDESC, HMC, OLGD, QUASINEW, SCG</span>
+0022 <span class="comment">%</span>
+0023 
+0024 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0025 
+0026 <span class="comment">% Reasonable value for step size</span>
+0027 epsilon = 1.0e-6;
+0028 
+0029 func = fcnchk(func, length(varargin));
+0030 grad = fcnchk(grad, length(varargin));
+0031 
+0032 <span class="comment">% Treat</span>
+0033 nparams = length(w);
+0034 deltaf = zeros(1, nparams);
+0035 step = zeros(1, nparams);
+0036 <span class="keyword">for</span> i = 1:nparams
+0037   <span class="comment">% Move a small way in the ith coordinate of w</span>
+0038   step(i) = 1.0;
+0039   fplus  = feval(<span class="string">'linef'</span>, epsilon, func, w, step, varargin{:});
+0040   fminus = feval(<span class="string">'linef'</span>, -epsilon, func, w, step, varargin{:});
+0041   <span class="comment">% Use central difference formula for approximation</span>
+0042   deltaf(i) = 0.5*(fplus - fminus)/epsilon;
+0043   step(i) = 0.0;
+0044 <span class="keyword">end</span>
+0045 gradient = feval(grad, w, varargin{:});
+0046 fprintf(1, <span class="string">'Checking gradient ...\n\n'</span>);
+0047 delta = gradient - deltaf;
+0048 fprintf(1, <span class="string">'   analytic   diffs     delta\n\n'</span>);
+0049 disp([gradient', deltaf', delta'])</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmm</title>
+  <meta name="keywords" content="gmm">
+  <meta name="description" content="GMM	Creates a Gaussian mixture model with specified architecture.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gmm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMM	Creates a Gaussian mixture model with specified architecture.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function mix = gmm(dim, ncentres, covar_type, ppca_dim) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GMM    Creates a Gaussian mixture model with specified architecture.
+
+    Description
+     MIX = GMM(DIM, NCENTRES, COVARTYPE) takes the dimension of the space
+    DIM, the number of centres in the mixture model and the type of the
+    mixture model, and returns a data structure MIX. The mixture model
+    type defines the covariance structure of each component  Gaussian:
+      'spherical' = single variance parameter for each component: stored as a vector
+      'diag' = diagonal matrix for each component: stored as rows of a matrix
+      'full' = full matrix for each component: stored as 3d array
+      'ppca' = probabilistic PCA: stored as principal components (in a 3d array
+        and associated variances and off-subspace noise
+     MIX = GMM(DIM, NCENTRES, COVARTYPE, PPCA_DIM) also sets the
+    dimension of the PPCA sub-spaces: the default value is one.
+
+    The priors are initialised to equal values summing to one, and the
+    covariances are all the identity matrix (or equivalent).  The centres
+    are initialised randomly from a zero mean unit variance Gaussian.
+    This makes use of the MATLAB function RANDN and so the seed for the
+    random weight initialisation can be set using RANDN('STATE', S) where
+    S is the state value.
+
+    The fields in MIX are
+      
+      type = 'gmm'
+      nin = the dimension of the space
+      ncentres = number of mixture components
+      covartype = string for type of variance model
+      priors = mixing coefficients
+      centres = means of Gaussians: stored as rows of a matrix
+      covars = covariances of Gaussians
+     The additional fields for mixtures of PPCA are
+      U = principal component subspaces
+      lambda = in-space covariances: stored as rows of a matrix
+     The off-subspace noise is stored in COVARS.
+
+    See also
+    <a href="gmmpak.html" class="code" title="function p = gmmpak(mix)">GMMPAK</a>, <a href="gmmunpak.html" class="code" title="function mix = gmmunpak(mix, p)">GMMUNPAK</a>, <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">GMMSAMP</a>, <a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">GMMINIT</a>, <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">GMMEM</a>, <a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">GMMACTIV</a>, <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">GMMPOST</a>,
+    <a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">GMMPROB</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev2.html" class="code" title="">demev2</a>	DEMEV2	Demonstrate Bayesian classification for the MLP.</li><li><a href="demglm1.html" class="code" title="">demglm1</a>	DEMGLM1 Demonstrate simple classification using a generalized linear model.</li><li><a href="demglm2.html" class="code" title="">demglm2</a>	DEMGLM2 Demonstrate simple classification using a generalized linear model.</li><li><a href="demgmm1.html" class="code" title="">demgmm1</a>	DEMGMM1 Demonstrate EM for Gaussian mixtures.</li><li><a href="demgmm2.html" class="code" title="">demgmm2</a>	DEMGMM1 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm3.html" class="code" title="">demgmm3</a>	DEMGMM3 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm4.html" class="code" title="">demgmm4</a>	DEMGMM4 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm5.html" class="code" title="">demgmm5</a>	DEMGMM5 Demonstrate density modelling with a PPCA mixture model.</li><li><a href="demgtm2.html" class="code" title="">demgtm2</a>	DEMGTM2 Demonstrate GTM for visualisation.</li><li><a href="demhmc1.html" class="code" title="">demhmc1</a>	DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.</li><li><a href="demmet1.html" class="code" title="function demmet1(plot_wait)">demmet1</a>	DEMMET1 Demonstrate Markov Chain Monte Carlo sampling on a Gaussian.</li><li><a href="demmlp2.html" class="code" title="">demmlp2</a>	DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</li><li><a href="demns1.html" class="code" title="">demns1</a>	DEMNS1	Demonstrate Neuroscale for visualisation.</li><li><a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">gtm</a>	GTM	Create a Generative Topographic Map.</li><li><a href="mdn2gmm.html" class="code" title="function gmmmixes = mdn2gmm(mdnmixes)">mdn2gmm</a>	MDN2GMM Converts an MDN mixture data structure to array of GMMs.</li><li><a href="mdninit.html" class="code" title="function net = mdninit(net, prior, t, options)">mdninit</a>	MDNINIT Initialise the weights in a Mixture Density Network.</li><li><a href="rbfsetbf.html" class="code" title="function net = rbfsetbf(net, options, x)">rbfsetbf</a>	RBFSETBF Set basis functions of RBF from data.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mix = gmm(dim, ncentres, covar_type, ppca_dim)</a>
+0002 <span class="comment">%GMM    Creates a Gaussian mixture model with specified architecture.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     MIX = GMM(DIM, NCENTRES, COVARTYPE) takes the dimension of the space</span>
+0006 <span class="comment">%    DIM, the number of centres in the mixture model and the type of the</span>
+0007 <span class="comment">%    mixture model, and returns a data structure MIX. The mixture model</span>
+0008 <span class="comment">%    type defines the covariance structure of each component  Gaussian:</span>
+0009 <span class="comment">%      'spherical' = single variance parameter for each component: stored as a vector</span>
+0010 <span class="comment">%      'diag' = diagonal matrix for each component: stored as rows of a matrix</span>
+0011 <span class="comment">%      'full' = full matrix for each component: stored as 3d array</span>
+0012 <span class="comment">%      'ppca' = probabilistic PCA: stored as principal components (in a 3d array</span>
+0013 <span class="comment">%        and associated variances and off-subspace noise</span>
+0014 <span class="comment">%     MIX = GMM(DIM, NCENTRES, COVARTYPE, PPCA_DIM) also sets the</span>
+0015 <span class="comment">%    dimension of the PPCA sub-spaces: the default value is one.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    The priors are initialised to equal values summing to one, and the</span>
+0018 <span class="comment">%    covariances are all the identity matrix (or equivalent).  The centres</span>
+0019 <span class="comment">%    are initialised randomly from a zero mean unit variance Gaussian.</span>
+0020 <span class="comment">%    This makes use of the MATLAB function RANDN and so the seed for the</span>
+0021 <span class="comment">%    random weight initialisation can be set using RANDN('STATE', S) where</span>
+0022 <span class="comment">%    S is the state value.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%    The fields in MIX are</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%      type = 'gmm'</span>
+0027 <span class="comment">%      nin = the dimension of the space</span>
+0028 <span class="comment">%      ncentres = number of mixture components</span>
+0029 <span class="comment">%      covartype = string for type of variance model</span>
+0030 <span class="comment">%      priors = mixing coefficients</span>
+0031 <span class="comment">%      centres = means of Gaussians: stored as rows of a matrix</span>
+0032 <span class="comment">%      covars = covariances of Gaussians</span>
+0033 <span class="comment">%     The additional fields for mixtures of PPCA are</span>
+0034 <span class="comment">%      U = principal component subspaces</span>
+0035 <span class="comment">%      lambda = in-space covariances: stored as rows of a matrix</span>
+0036 <span class="comment">%     The off-subspace noise is stored in COVARS.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%    See also</span>
+0039 <span class="comment">%    GMMPAK, GMMUNPAK, GMMSAMP, GMMINIT, GMMEM, GMMACTIV, GMMPOST,</span>
+0040 <span class="comment">%    GMMPROB</span>
+0041 <span class="comment">%</span>
+0042 
+0043 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0044 
+0045 <span class="keyword">if</span> ncentres &lt; 1
+0046   error(<span class="string">'Number of centres must be greater than zero'</span>)
+0047 <span class="keyword">end</span>
+0048 
+0049 mix.type = <span class="string">'gmm'</span>;
+0050 mix.nin = dim;
+0051 mix.ncentres = ncentres;
+0052 
+0053 vartypes = {<span class="string">'spherical'</span>, <span class="string">'diag'</span>, <span class="string">'full'</span>, <span class="string">'ppca'</span>};
+0054 
+0055 <span class="keyword">if</span> sum(strcmp(covar_type, vartypes)) == 0
+0056   error(<span class="string">'Undefined covariance type'</span>)
+0057 <span class="keyword">else</span>
+0058   mix.covar_type = covar_type;
+0059 <span class="keyword">end</span>
+0060 
+0061 <span class="comment">% Make default dimension of PPCA subspaces one.</span>
+0062 <span class="keyword">if</span> strcmp(covar_type, <span class="string">'ppca'</span>)
+0063   <span class="keyword">if</span> nargin &lt; 4
+0064     ppca_dim = 1;
+0065   <span class="keyword">end</span>
+0066   <span class="keyword">if</span> ppca_dim &gt; dim
+0067     error(<span class="string">'Dimension of PPCA subspaces must be less than data.'</span>)
+0068   <span class="keyword">end</span>
+0069   mix.ppca_dim = ppca_dim;
+0070 <span class="keyword">end</span>
+0071 
+0072 <span class="comment">% Initialise priors to be equal and summing to one</span>
+0073 mix.priors = ones(1,mix.ncentres) ./ mix.ncentres;
+0074 
+0075 <span class="comment">% Initialise centres</span>
+0076 mix.centres = randn(mix.ncentres, mix.nin);
+0077 
+0078 <span class="comment">% Initialise all the variances to unity</span>
+0079 <span class="keyword">switch</span> mix.covar_type
+0080 
+0081 <span class="keyword">case</span> <span class="string">'spherical'</span>
+0082   mix.covars = ones(1, mix.ncentres);
+0083   mix.nwts = mix.ncentres + mix.ncentres*mix.nin + mix.ncentres;
+0084 <span class="keyword">case</span> <span class="string">'diag'</span>
+0085   <span class="comment">% Store diagonals of covariance matrices as rows in a matrix</span>
+0086   mix.covars =  ones(mix.ncentres, mix.nin);
+0087   mix.nwts = mix.ncentres + mix.ncentres*mix.nin + <span class="keyword">...</span>
+0088     mix.ncentres*mix.nin;
+0089 <span class="keyword">case</span> <span class="string">'full'</span>
+0090   <span class="comment">% Store covariance matrices in a row vector of matrices</span>
+0091   mix.covars = repmat(eye(mix.nin), [1 1 mix.ncentres]);
+0092   mix.nwts = mix.ncentres + mix.ncentres*mix.nin + <span class="keyword">...</span>
+0093     mix.ncentres*mix.nin*mix.nin;
+0094 <span class="keyword">case</span> <span class="string">'ppca'</span>
+0095   <span class="comment">% This is the off-subspace noise: make it smaller than</span>
+0096   <span class="comment">% lambdas</span>
+0097   mix.covars = 0.1*ones(1, mix.ncentres);
+0098   <span class="comment">% Also set aside storage for principal components and</span>
+0099   <span class="comment">% associated variances</span>
+0100   init_space = eye(mix.nin);
+0101   init_space = init_space(:, 1:mix.ppca_dim);
+0102   init_space(mix.ppca_dim+1:mix.nin, :) = <span class="keyword">...</span>
+0103     ones(mix.nin - mix.ppca_dim, mix.ppca_dim);
+0104   mix.U = repmat(init_space , [1 1 mix.ncentres]);
+0105   mix.lambda = ones(mix.ncentres, mix.ppca_dim);
+0106   <span class="comment">% Take account of additional parameters</span>
+0107   mix.nwts = mix.ncentres + mix.ncentres*mix.nin + <span class="keyword">...</span>
+0108     mix.ncentres + mix.ncentres*mix.ppca_dim + <span class="keyword">...</span>
+0109     mix.ncentres*mix.nin*mix.ppca_dim;
+0110 <span class="keyword">otherwise</span>
+0111   error([<span class="string">'Unknown covariance type '</span>, mix.covar_type]);               
+0112 <span class="keyword">end</span>
+0113</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

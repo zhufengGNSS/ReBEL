@@ -1,0 +1,891 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gennoiseds</title>
+  <meta name="keywords" content="gennoiseds">
+  <meta name="description" content="GENNOISEDS    Generates a NoiseDS data structure describing a noise source.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; gennoiseds.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gennoiseds
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function NoiseDS = gennoiseds(ArgDS) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GENNOISEDS    Generates a NoiseDS data structure describing a noise source.
+
+   NoiseDS = gennoiseds(ArgDS)
+
+   This function generates a ReBEL noise source which is encapsulated in the NoiseDS data structure.
+   All arguments to the function are passed via the ArgDS argument data structure which has the
+   following fields, depending on the required noise source type:
+
+   1) Gaussian Noise Source   :  Single Gaussian noise source
+
+      ArgDS.type    : (string)    'gaussian'
+           .cov_type : (string)    'full'       full covariance matrix (default value)
+                                  'diag'       single diagonal covariance
+                                  'sqrt'       square-root form (lower triangular Cholesky factor)
+                                  'sqrt-diag'  square-root single diagonal form
+           .tag     : (string)     ID tag      (default='')
+           .dim     : (scalar)     noise vector length
+           .mu      : (c-vector)   mean vector
+           .cov     : (matrix)     covariance matrix (should comply with cov_type)
+
+   2) Combination Gaussian Noise Source : Combination of N independent Gaussian sources. All Gaussian
+                                          sources must have the same cov_type.
+
+      ArgDS.type     : (string)      'combo-gaussian'
+           .tag      : (string)      ID tag
+           .dim      : (scalar)      noise vector length
+           .noiseSources : (cell array)  cell array of N Guassian noise sources (NoiseDS data structures)
+
+
+   3) Generic Combination Noise Source : Combination of N independent noise sources.
+
+      ArgDS.type     : (string)      'combo'
+           .tag      : (string)      ID tag
+           .dim      : (scalar)      noise vector length
+           .noiseSources : (cell array)  cell array of N noise sources (NoiseDS data structure)
+
+
+   4) Scalar Gamma noise source
+
+      ArgDS.type     : (string)      'gamma'
+           .tag      : (string)      ID tag
+           .dim      : (scalar)      1 (multivariate Gamma noise not yet supported)
+           .alpha    : (scalar)      alpha parameter
+           .beta     : (scalar)      beta parameter
+
+
+   5) Gaussian Mixture noise Source
+
+      ArgDS.type     : (string)   'gmm'
+           .cov_type  : (string)   'full'       full covariance matrix (default value)
+                                  'diag'       single diagonal covariance
+                                  'sqrt'       square-root form (lower triangular Cholesky factor)
+                                  'sqrt-diag'  square-root single diagonal form
+           .tag     : (string)     ID tag      (default='')
+           .dim     : (scalar)     noise vector dimension
+           .M       : (scalar)     number of Gaussian component densities
+           .mu      : (dim-by-M matrix)  noise mean vectors of M mixture components
+           .cov     : (dim-by-dim-by-M matrix)  noise covariance matrices of N mixture components (should comply with cov_type)
+           .weights : (1-by-N vector)    mixing weights (priors) of mixture components
+
+
+   The generated noise source data structure, NoiseDS, has the following required fields. Depending on the noise source
+   type, the data structure may also have other type dependent fields. See documentation for full details.
+
+     NoiseDS.type       : (string) data structure type : 'NoiseDS'
+            .ns_type    : (string) noise source type
+            .dim        : (scalar) noise source dimension
+            .sample     : (function handle) Function to generate N noise source samples
+            .likelihood : (function handle) Function to evaluate the likelihood of a given noise source sample
+            .update     : (function handle) &lt;&lt;optional&gt;&gt; Function to update the internal structure of noise source.
+                                            This is not required of all noise sources.
+
+   See also
+     <a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">CONSISTENT</a>, <a href="gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">GENSYSNOISEDS</a>
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>	CVECREP  Column vector replicate</li><li><a href="gauseval.html" class="code" title="function likelihood = gauseval(gausDS, X, logflag)">gauseval</a>	GAUSEVAL  Calculates the likelihood of a dataset X under a Gaussian probability</li><li><a href="gaussample.html" class="code" title="function X = gaussample(gausDS, N)">gaussample</a>	GAUSSAMPLE  Draw N samples from the Gaussian distribution (pdf) described by the</li><li><a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="gmmprobability.html" class="code" title="function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W)">gmmprobability</a>	GMMPROBABILITY  Calculates any of the related (through Bayes rule) probabilities</li><li><a href="gmmsample.html" class="code" title="function [X,comp] = gmmsample(gmmDS, N)">gmmsample</a>	GMMSAMPLE  Draw N samples from the Gaussian mixture model (GMM) described by the</li><li><a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>	STRINGMATCH  Returns match > 0 if string1 and string2 match (string2 can be a cell array of</li><li><a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>	GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure</li><li><a href="gssm.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm</a>	GSSM  Template file for generalized state space model.</li><li><a href="../.././ReBEL-0.2.7/examples/dual_estimation/demspeech_dual.html" class="code" title="">demspeech_dual</a>	DEMSPEECH_DUAL  Sigma-Point Kalman Filter based Speech Enhancement Demonstration.</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_bft.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_bft</a>	GSSM_BFT  General state space model for Bearings and Frequency Tracking of a randomly maneuvering</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_bot.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_bot</a>	GSSM_BOT  General state space model for Bearings-Only Tracking of a randomly maneuvering</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_brt.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_brt</a>	GSSM_BRT  General state space model for Bearing-and-Range Tracking of a randomly maneuvering</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_lti1.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_lti1</a>	GSSM_LTI1  Generalized state space model for simple LTI system</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_mackey_glass.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_mackey_glass</a>	GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_n1.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_n1</a>	GSSM_N1  Generalized state space model for simple nonlinear system</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_speech_linear.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_speech_linear</a>	GSSM_SPEECH  Generalized state space model for single phoneme speech enhancement</li><li><a href="../.././ReBEL-0.2.7/examples/parameter_estimation/dempe2.html" class="code" title="">dempe2</a>	DEMPE2  Demonstrate how the ReBEL toolkit is used to train a neural network</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse2.html" class="code" title="">demse2</a>	DEMSE2  Demonstrate state estimation on a simple scalar nonlinear (time variant) problem</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function NoiseDS = update_gaussian(NoiseDS)</a></li><li><a href="#_sub2" class="code">function noise = sample_gaussian(NoiseDS, N)</a></li><li><a href="#_sub3" class="code">function llh = likelihood_combo_gaussian(NoiseDS, noise, idxVec)</a></li><li><a href="#_sub4" class="code">function llh = likelihood_combo(NoiseDS, noise, idxVec)</a></li><li><a href="#_sub5" class="code">function noise = sample_combo(NoiseDS, N)</a></li><li><a href="#_sub6" class="code">function noise = sample_combo_gaussian(NoiseDS, N)</a></li><li><a href="#_sub7" class="code">function NoiseDS = update_combo_gaussian(NoiseDS)</a></li><li><a href="#_sub8" class="code">function noise = sample_gamma(NoiseDS, N)</a></li><li><a href="#_sub9" class="code">function llh = likelihood_gamma(NoiseDS, noise)</a></li><li><a href="#_sub10" class="code">function llh = likelihood_gmm(NoiseDS, noise)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function NoiseDS = gennoiseds(ArgDS)</a>
+0002 
+0003 <span class="comment">% GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   NoiseDS = gennoiseds(ArgDS)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   This function generates a ReBEL noise source which is encapsulated in the NoiseDS data structure.</span>
+0008 <span class="comment">%   All arguments to the function are passed via the ArgDS argument data structure which has the</span>
+0009 <span class="comment">%   following fields, depending on the required noise source type:</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   1) Gaussian Noise Source   :  Single Gaussian noise source</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%      ArgDS.type    : (string)    'gaussian'</span>
+0014 <span class="comment">%           .cov_type : (string)    'full'       full covariance matrix (default value)</span>
+0015 <span class="comment">%                                  'diag'       single diagonal covariance</span>
+0016 <span class="comment">%                                  'sqrt'       square-root form (lower triangular Cholesky factor)</span>
+0017 <span class="comment">%                                  'sqrt-diag'  square-root single diagonal form</span>
+0018 <span class="comment">%           .tag     : (string)     ID tag      (default='')</span>
+0019 <span class="comment">%           .dim     : (scalar)     noise vector length</span>
+0020 <span class="comment">%           .mu      : (c-vector)   mean vector</span>
+0021 <span class="comment">%           .cov     : (matrix)     covariance matrix (should comply with cov_type)</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   2) Combination Gaussian Noise Source : Combination of N independent Gaussian sources. All Gaussian</span>
+0024 <span class="comment">%                                          sources must have the same cov_type.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%      ArgDS.type     : (string)      'combo-gaussian'</span>
+0027 <span class="comment">%           .tag      : (string)      ID tag</span>
+0028 <span class="comment">%           .dim      : (scalar)      noise vector length</span>
+0029 <span class="comment">%           .noiseSources : (cell array)  cell array of N Guassian noise sources (NoiseDS data structures)</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%   3) Generic Combination Noise Source : Combination of N independent noise sources.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%      ArgDS.type     : (string)      'combo'</span>
+0035 <span class="comment">%           .tag      : (string)      ID tag</span>
+0036 <span class="comment">%           .dim      : (scalar)      noise vector length</span>
+0037 <span class="comment">%           .noiseSources : (cell array)  cell array of N noise sources (NoiseDS data structure)</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%   4) Scalar Gamma noise source</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%      ArgDS.type     : (string)      'gamma'</span>
+0043 <span class="comment">%           .tag      : (string)      ID tag</span>
+0044 <span class="comment">%           .dim      : (scalar)      1 (multivariate Gamma noise not yet supported)</span>
+0045 <span class="comment">%           .alpha    : (scalar)      alpha parameter</span>
+0046 <span class="comment">%           .beta     : (scalar)      beta parameter</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%   5) Gaussian Mixture noise Source</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%      ArgDS.type     : (string)   'gmm'</span>
+0052 <span class="comment">%           .cov_type  : (string)   'full'       full covariance matrix (default value)</span>
+0053 <span class="comment">%                                  'diag'       single diagonal covariance</span>
+0054 <span class="comment">%                                  'sqrt'       square-root form (lower triangular Cholesky factor)</span>
+0055 <span class="comment">%                                  'sqrt-diag'  square-root single diagonal form</span>
+0056 <span class="comment">%           .tag     : (string)     ID tag      (default='')</span>
+0057 <span class="comment">%           .dim     : (scalar)     noise vector dimension</span>
+0058 <span class="comment">%           .M       : (scalar)     number of Gaussian component densities</span>
+0059 <span class="comment">%           .mu      : (dim-by-M matrix)  noise mean vectors of M mixture components</span>
+0060 <span class="comment">%           .cov     : (dim-by-dim-by-M matrix)  noise covariance matrices of N mixture components (should comply with cov_type)</span>
+0061 <span class="comment">%           .weights : (1-by-N vector)    mixing weights (priors) of mixture components</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">%</span>
+0064 <span class="comment">%   The generated noise source data structure, NoiseDS, has the following required fields. Depending on the noise source</span>
+0065 <span class="comment">%   type, the data structure may also have other type dependent fields. See documentation for full details.</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">%     NoiseDS.type       : (string) data structure type : 'NoiseDS'</span>
+0068 <span class="comment">%            .ns_type    : (string) noise source type</span>
+0069 <span class="comment">%            .dim        : (scalar) noise source dimension</span>
+0070 <span class="comment">%            .sample     : (function handle) Function to generate N noise source samples</span>
+0071 <span class="comment">%            .likelihood : (function handle) Function to evaluate the likelihood of a given noise source sample</span>
+0072 <span class="comment">%            .update     : (function handle) &lt;&lt;optional&gt;&gt; Function to update the internal structure of noise source.</span>
+0073 <span class="comment">%                                            This is not required of all noise sources.</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">%   See also</span>
+0076 <span class="comment">%     CONSISTENT, GENSYSNOISEDS</span>
+0077 <span class="comment">%</span>
+0078 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0081 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0082 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0083 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0084 <span class="comment">%</span>
+0085 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0086 <span class="comment">%   detail.</span>
+0087 
+0088 <span class="comment">%========================================================================================================</span>
+0089 
+0090 <span class="comment">%--- ERROR CHECKING &amp; TYPE INDEPENDENT STRUCTURE ASSIGNMENT ---------------------------------------------</span>
+0091 
+0092 <span class="keyword">if</span> (nargin ~= 1), error(<span class="string">' [ gennoiseds ] Incorrect number of inputs'</span>); <span class="keyword">end</span>
+0093 
+0094 <span class="keyword">if</span> ~isstruct(ArgDS), error(<span class="string">' [ gennoiseds ] The input argument to this function must be an argument data structure.'</span>); <span class="keyword">end</span>
+0095 
+0096 <span class="keyword">if</span> ~(isfield(ArgDS,<span class="string">'type'</span>) &amp; ischar(ArgDS.type))
+0097   error(<span class="string">' [ gennoiseds ] The argument data structure must have a ''type'' field, specifying the desired noise source type. This field must be a string.'</span>);
+0098 <span class="keyword">else</span>
+0099   Noise.type = ArgDS.type;       <span class="comment">% assign noise source type</span>
+0100 <span class="keyword">end</span>
+0101 
+0102 <span class="keyword">if</span> isfield(ArgDS,<span class="string">'tag'</span>)          <span class="comment">% assign tag</span>
+0103   <span class="keyword">if</span> ischar(ArgDS.tag)
+0104     Noise.tag = ArgDS.tag;
+0105   <span class="keyword">else</span>
+0106     error(<span class="string">' [ gennoiseds ] The ''tag'' field must be a string.'</span>);
+0107   <span class="keyword">end</span>
+0108 <span class="keyword">else</span>
+0109   Noise.tag = <span class="string">''</span>;
+0110 <span class="keyword">end</span>
+0111 
+0112 <span class="keyword">if</span> (isfield(ArgDS,<span class="string">'dim'</span>) &amp; isnumeric(ArgDS.dim) &amp; (length(ArgDS.dim(:))==1))   <span class="comment">%-- Check for and assign noise source dimension</span>
+0113   Noise.dim  = ArgDS.dim;
+0114 <span class="keyword">else</span>
+0115   error(<span class="string">' [ gennoiseds ] Noise source dimension not specified or not a scalar.'</span>);
+0116 <span class="keyword">end</span>
+0117 
+0118 
+0119 <span class="comment">%--- BUILD NOISE SOURCE DEPENDENT ON TYPE ----------------------------------------------------</span>
+0120 
+0121 <span class="keyword">switch</span> (Noise.type)
+0122 
+0123 <span class="comment">%=============================================================================================</span>
+0124 <span class="keyword">case</span> <span class="string">'gamma'</span>
+0125 
+0126     <span class="keyword">if</span> (Noise.dim~=1)
+0127         error(<span class="string">' [ gennoiseds::gamma ] Multivariate Gamma noise not supported yet.'</span>);
+0128     <span class="keyword">end</span>
+0129 
+0130     <span class="keyword">if</span> isfield(ArgDS,<span class="string">'alpha'</span>) &amp; isnumeric(ArgDS.alpha) &amp; (size(ArgDS.alpha) == [1 1])
+0131         Noise.alpha = ArgDS.alpha;
+0132     <span class="keyword">else</span>
+0133         error(<span class="string">' [ gennoiseds::gamma ] Alpha parameter must be a scalar'</span>);
+0134     <span class="keyword">end</span>
+0135 
+0136     <span class="keyword">if</span> isfield(ArgDS,<span class="string">'beta'</span>) &amp; isnumeric(ArgDS.beta) &amp; (size(ArgDS.beta) == [1 1])
+0137         Noise.beta = ArgDS.beta;
+0138     <span class="keyword">else</span>
+0139         error(<span class="string">' [ gennoiseds::gamma ] Beta parameter must be a scalar'</span>);
+0140     <span class="keyword">end</span>
+0141 
+0142     Noise.mu = Noise.alpha*Noise.beta;
+0143     Noise.cov = Noise.alpha*(Noise.beta^2);
+0144 
+0145     NoiseDS.type = <span class="string">'NoiseDS'</span>;
+0146     NoiseDS.ns_type = Noise.type;
+0147     NoiseDS.tag = Noise.tag;
+0148     NoiseDS.dim = Noise.dim;
+0149     NoiseDS.alpha = Noise.alpha;
+0150     NoiseDS.beta = Noise.beta;
+0151     NoiseDS.mu = Noise.mu;
+0152     NoiseDS.cov = Noise.cov;
+0153     NoiseDS.sample = @<a href="#_sub8" class="code" title="subfunction noise = sample_gamma(NoiseDS, N)">sample_gamma</a>;
+0154     NoiseDS.likelihood = @<a href="#_sub9" class="code" title="subfunction llh = likelihood_gamma(NoiseDS, noise)">likelihood_gamma</a>;
+0155 
+0156 <span class="comment">%=============================================================================================</span>
+0157 <span class="keyword">case</span> <span class="string">'gaussian'</span>
+0158 
+0159     <span class="comment">%-- check for and assign cov_type</span>
+0160     <span class="keyword">if</span> isfield(ArgDS,<span class="string">'cov_type'</span>)
+0161         <span class="keyword">if</span> (ischar(ArgDS.cov_type) &amp; <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(ArgDS.cov_type,{<span class="string">'full'</span>,<span class="string">'diag'</span>,<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}))
+0162             Noise.cov_type = ArgDS.cov_type;
+0163         <span class="keyword">else</span>
+0164             error(<span class="string">' [ gennoiseds::gaussian ] Noise source cov_type not recognized or not a string.'</span>);
+0165         <span class="keyword">end</span>
+0166     <span class="keyword">else</span>
+0167         warning(<span class="string">' [ gennoiseds::gaussian ] Covariance type field .cov_type not assigned!. Assuming default value, ''full'''</span>);
+0168         Noise.cov_type = <span class="string">'full'</span>;             <span class="comment">% default cov_type</span>
+0169     <span class="keyword">end</span>
+0170 
+0171     <span class="comment">%-- assign noise source mean vector</span>
+0172     <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'mu'</span>)
+0173         Noise.mu = zeros(Noise.dim,1);    <span class="comment">% default value</span>
+0174     <span class="keyword">else</span>
+0175         Noise.mu = ArgDS.mu;
+0176     <span class="keyword">end</span>
+0177 
+0178     <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'cov'</span>)
+0179       warning(<span class="string">' [ gennoiseds::gaussian ] Covariance field .cov not assigned!. Assuming default unity value.'</span>);
+0180     <span class="keyword">end</span>
+0181 
+0182     <span class="comment">%-- assign rest of noise source structure</span>
+0183     <span class="keyword">switch</span> (Noise.cov_type)
+0184 
+0185     <span class="comment">%.............................................................................................</span>
+0186     <span class="keyword">case</span> <span class="string">'full'</span>
+0187 
+0188         <span class="comment">%-- assign noise source covariance structure</span>
+0189         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'cov'</span>)
+0190             Noise.cov = eye(Noise.dim);    <span class="comment">% default value</span>
+0191         <span class="keyword">elseif</span> (isnumeric(ArgDS.cov) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim]))
+0192             Noise.cov = ArgDS.cov;
+0193         <span class="keyword">else</span>
+0194             error([<span class="string">' [ gennoiseds::gaussian::full ] Noise source covariance matrix of incorrect '</span> <span class="keyword">...</span>
+0195                    <span class="string">'dimensions or type.'</span>]);
+0196         <span class="keyword">end</span>
+0197 
+0198     <span class="comment">%.............................................................................................</span>
+0199     <span class="keyword">case</span> <span class="string">'diag'</span>
+0200 
+0201         <span class="comment">%-- assign noise source covariance structure</span>
+0202         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'cov'</span>)
+0203             Noise.cov = eye(Noise.dim);           <span class="comment">% default value</span>
+0204         <span class="keyword">elseif</span> (isnumeric(ArgDS.cov) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim]))
+0205             <span class="comment">% check if covariance only has entries on the diagonal</span>
+0206             <span class="keyword">if</span> (ArgDS.cov==diag(diag(ArgDS.cov)))
+0207                 Noise.cov = ArgDS.cov;              <span class="comment">% assign covariance matrix</span>
+0208             <span class="keyword">else</span>
+0209                 error([<span class="string">' [ gennoiseds::gaussian::diag ] Diagonal Guassian noise source cannot '</span> <span class="keyword">...</span>
+0210                        <span class="string">'have non-zero off diagonal values in the covariance matrix.'</span>]);
+0211             <span class="keyword">end</span>
+0212         <span class="keyword">else</span>
+0213             error([<span class="string">' [ gennoiseds::gaussian::diag ] Noise source covariance matrix of incorrect '</span> <span class="keyword">...</span>
+0214                   <span class="string">'dimensions or type.'</span>]);
+0215         <span class="keyword">end</span>
+0216 
+0217     <span class="comment">%.............................................................................................</span>
+0218     <span class="keyword">case</span> <span class="string">'sqrt'</span>
+0219 
+0220         <span class="comment">%-- assign noise source covariance structure</span>
+0221         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'cov'</span>)
+0222             Noise.cov = eye(Noise.dim);    <span class="comment">% default value</span>
+0223         <span class="keyword">elseif</span> (isnumeric(ArgDS.cov) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim]))
+0224             Noise.cov = ArgDS.cov;
+0225         <span class="keyword">else</span>
+0226             error([<span class="string">' [ gennoiseds::gaussian::sqrt ] Noise source covariance matrix of incorrect '</span> <span class="keyword">...</span>
+0227                    <span class="string">'dimensions or type.'</span>]);
+0228         <span class="keyword">end</span>
+0229 
+0230 
+0231     <span class="comment">%.............................................................................................</span>
+0232     <span class="keyword">case</span> <span class="string">'sqrt-diag'</span>
+0233 
+0234         <span class="comment">%-- assign noise source covariance structure</span>
+0235         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'cov'</span>)
+0236             Noise.cov = eye(Noise.dim);            <span class="comment">% default value</span>
+0237         <span class="keyword">elseif</span> (isnumeric(ArgDS.cov) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim]))
+0238             <span class="comment">% check if covariance only has entries on the diagonal</span>
+0239             <span class="keyword">if</span> (ArgDS.cov == diag(diag(ArgDS.cov)))
+0240                 Noise.cov = ArgDS.cov;               <span class="comment">% assign covariance matrix</span>
+0241             <span class="keyword">else</span>
+0242                 error([<span class="string">' [ gennoiseds::gaussian::sqrt-diag ] Diagonal Guassian noise source '</span> <span class="keyword">...</span>
+0243                        <span class="string">'cannot have non-zero off diagonal values in the covariance matrix.'</span>]);
+0244             <span class="keyword">end</span>
+0245         <span class="keyword">else</span>
+0246             error([<span class="string">' [ gennoiseds::gaussian::sqrt-diag ] Noise source covariance matrix of '</span> <span class="keyword">...</span>
+0247                    <span class="string">'incorrect dimensions or type.'</span>]);
+0248         <span class="keyword">end</span>
+0249 
+0250     <span class="comment">%.............................................................................................</span>
+0251     <span class="keyword">otherwise</span>
+0252         error(<span class="string">' [ gennoiseds::gaussian ]unknown noise source cov_type.'</span>);
+0253     <span class="keyword">end</span>
+0254 
+0255 
+0256     <span class="comment">% Restructure NoiseDS data structure</span>
+0257     NoiseDS.type = <span class="string">'NoiseDS'</span>;
+0258     NoiseDS.ns_type = Noise.type;
+0259     NoiseDS.cov_type = Noise.cov_type;
+0260     NoiseDS.tag = Noise.tag;
+0261     NoiseDS.dim = Noise.dim;
+0262     NoiseDS.mu = Noise.mu;
+0263     NoiseDS.cov = Noise.cov;
+0264     NoiseDS.sample = @<a href="gaussample.html" class="code" title="function X = gaussample(gausDS, N)">gaussample</a>;
+0265     NoiseDS.update = @<a href="#_sub1" class="code" title="subfunction NoiseDS = update_gaussian(NoiseDS)">update_gaussian</a>;
+0266     NoiseDS.likelihood = @<a href="gauseval.html" class="code" title="function likelihood = gauseval(gausDS, X, logflag)">gauseval</a>;
+0267 
+0268 
+0269 
+0270 
+0271 <span class="comment">%===================================================================================================</span>
+0272 <span class="keyword">case</span> <span class="string">'combo-gaussian'</span>
+0273 
+0274     <span class="keyword">if</span> (~isfield(ArgDS,<span class="string">'noiseSources'</span>) | ~iscell(ArgDS.noiseSources))
+0275         error([<span class="string">' [ gennoiseds::combo-gaussian ] Sub noise source field (ArgDS.noiseSources) is '</span> <span class="keyword">...</span>
+0276                <span class="string">'missing or is not a cell array.'</span>]);
+0277     <span class="keyword">end</span>
+0278 
+0279     Noise.N = length(ArgDS.noiseSources);    <span class="comment">% number of sub noise sources</span>
+0280     <span class="keyword">if</span> (Noise.N &lt; 2)
+0281         error([<span class="string">' [ gennoiseds::combo-gaussian ] A combo-Gaussian noise sources needs at '</span> <span class="keyword">...</span>
+0282                <span class="string">'least 2 sub noise sources.'</span>]);
+0283     <span class="keyword">end</span>
+0284 
+0285     noisetype = ArgDS.noiseSources{1}.ns_type;
+0286     cov_type = ArgDS.noiseSources{1}.cov_type;
+0287 
+0288     <span class="comment">% Check cov_type type for correctness</span>
+0289     <span class="keyword">if</span> ~(<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(noisetype,{<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>}) &amp; <span class="keyword">...</span>
+0290          <a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(cov_type,{<span class="string">'full'</span>,<span class="string">'diag'</span>,<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}))
+0291         error([<span class="string">'[ gennoiseds::combo-gaussian ] A combination Gaussian noise source can '</span> <span class="keyword">...</span>
+0292                <span class="string">'only have Gaussian sub noise sources.'</span>]);
+0293     <span class="keyword">end</span>
+0294 
+0295     <span class="comment">% check for consistentency of cov_type of sub noise sources</span>
+0296     <span class="keyword">for</span> k=1:Noise.N
+0297         subNoise = ArgDS.noiseSources{k};
+0298         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(subNoise.cov_type,cov_type)
+0299             error(<span class="string">'[ gennoiseds::combo-gaussian ] Sub noise sources does not have consistent cov_types.\n Previous cov_type: %s     Current cov_type: %s'</span>, cov_type,subNoise.cov_type);
+0300         <span class="keyword">end</span>
+0301     <span class="keyword">end</span>
+0302 
+0303     Noise.cov_type = cov_type;                    <span class="comment">% assign cov_type</span>
+0304 
+0305     Noise.mu   = zeros(Noise.dim,1);            <span class="comment">% setup mean vector</span>
+0306     Noise.cov  = zeros(Noise.dim);              <span class="comment">% setup covariance matrix</span>
+0307 
+0308     Noise.idxArr = zeros(Noise.N,2);            <span class="comment">% buffer for beginning and ending indeces of sub noise</span>
+0309                                                 <span class="comment">% source entries in global mean and covariance</span>
+0310 
+0311     <span class="comment">% Extract sub noise source detail and build combo noise source</span>
+0312     dim = 0;
+0313     <span class="keyword">for</span> j=1:Noise.N,
+0314         subNoise = ArgDS.noiseSources{j};       <span class="comment">% copy j'th sub noise source</span>
+0315         dim = dim + subNoise.dim;               <span class="comment">% add sub noise dimension to global dimension</span>
+0316         ind1 = dim-subNoise.dim+1;              <span class="comment">% calculate beginning index value</span>
+0317         ind2 = dim;                             <span class="comment">% calculate ending index value</span>
+0318         Noise.idxArr(j,:) = [ind1 ind2];        <span class="comment">% store indeces in index array</span>
+0319         Noise.mu(ind1:ind2,1) = subNoise.mu;    <span class="comment">% copy sub noise source mean</span>
+0320         Noise.cov(ind1:ind2,ind1:ind2) = subNoise.cov;  <span class="comment">% copy sub noise covariance</span>
+0321     <span class="keyword">end</span>
+0322     <span class="keyword">if</span> (Noise.dim ~= dim),
+0323         error([<span class="string">' [ gennoiseds::combo-gaussian ] Combined noise vector dimension does '</span> <span class="keyword">...</span>
+0324                <span class="string">'not agree with aggregate dimension of sub noise sources.'</span>]);
+0325     <span class="keyword">end</span>
+0326 
+0327     <span class="comment">% Restructure NoiseDS data structure</span>
+0328     NoiseDS.type = <span class="string">'NoiseDS'</span>;
+0329     NoiseDS.ns_type = Noise.type;
+0330     NoiseDS.cov_type = Noise.cov_type;
+0331     NoiseDS.tag = Noise.tag;
+0332     NoiseDS.N = Noise.N;
+0333     NoiseDS.idxArr = Noise.idxArr;
+0334     NoiseDS.dim = Noise.dim;
+0335     NoiseDS.mu = Noise.mu;
+0336     NoiseDS.cov = Noise.cov;
+0337     NoiseDS.noiseSources = ArgDS.noiseSources;
+0338     NoiseDS.sample = @<a href="#_sub6" class="code" title="subfunction noise = sample_combo_gaussian(NoiseDS, N)">sample_combo_gaussian</a>;
+0339     NoiseDS.update = @<a href="#_sub7" class="code" title="subfunction NoiseDS = update_combo_gaussian(NoiseDS)">update_combo_gaussian</a>;
+0340     NoiseDS.likelihood = @<a href="#_sub3" class="code" title="subfunction llh = likelihood_combo_gaussian(NoiseDS, noise, idxVec)">likelihood_combo_gaussian</a>;
+0341 
+0342 <span class="comment">%==================================================================================================</span>
+0343 <span class="keyword">case</span> <span class="string">'combo'</span>
+0344 
+0345     <span class="keyword">if</span> (~isfield(ArgDS,<span class="string">'noiseSources'</span>) | ~iscell(ArgDS.noiseSources))
+0346         error([<span class="string">' [ gennoiseds::combo ] Sub noise source field (ArgDS.noiseSources) '</span> <span class="keyword">...</span>
+0347                <span class="string">'is missing or is not a cell array.'</span>]);
+0348     <span class="keyword">end</span>
+0349 
+0350     Noise.N = length(ArgDS.noiseSources);     <span class="comment">% number of sub noise sources</span>
+0351     <span class="keyword">if</span> (Noise.N &lt; 2)
+0352       error(<span class="string">'[ gennoiseds::combo-gaussian ] A combo-Gaussian noise sources needs at least 2 sub noise sources.'</span>);
+0353     <span class="keyword">end</span>
+0354 
+0355     Noise.noiseSources = ArgDS.noiseSources;  <span class="comment">% copy cell-array of sub noise sources</span>
+0356 
+0357     Gaussian_flag = 1;                        <span class="comment">% flag to check for the possibility of a Gaussian combination</span>
+0358 
+0359     Noise.idxArr = zeros(Noise.N,2);          <span class="comment">% buffer for beginning and ending indeces of sub noise</span>
+0360                                               <span class="comment">% source entries in global mean and covariance</span>
+0361 
+0362     dim = 0;
+0363     <span class="keyword">for</span> j=1:Noise.N,
+0364         subNoise = Noise.noiseSources{j};
+0365         dim = dim + subNoise.dim;
+0366         ind1 = dim-subNoise.dim+1;
+0367         ind2 = dim;
+0368         Noise.idxArr(j,:) = [ind1 ind2];
+0369         <span class="keyword">if</span> ~<a href="stringmatch.html" class="code" title="function match = stringmatch(string1,string2)">stringmatch</a>(subNoise.ns_type,{<span class="string">'gaussian'</span>,<span class="string">'combo-gaussian'</span>})
+0370             Gaussian_flag = 0;
+0371         <span class="keyword">end</span>
+0372     <span class="keyword">end</span>
+0373 
+0374     <span class="keyword">if</span> (Noise.dim ~= dim),
+0375         error([<span class="string">' [ gennoiseds::combo-gaussian ] Combined noise vector dimension does '</span> <span class="keyword">...</span>
+0376                <span class="string">'not agree with aggregate dimension of sub noise sources.'</span>]);
+0377     <span class="keyword">end</span>
+0378 
+0379     <span class="comment">% A Gaussian combination should always be constructed if  the underlying sub</span>
+0380     <span class="comment">% noise sources are all Gaussian</span>
+0381     <span class="keyword">if</span> Gaussian_flag
+0382         Arg.type = <span class="string">'combo-gaussian'</span>;
+0383         Arg.tag  = Noise.tag;
+0384         Arg.dim  = Noise.dim;
+0385         Arg.noiseSources = Noise.noiseSources;
+0386         NoiseDS = <a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>(Arg);
+0387     <span class="keyword">else</span>
+0388         <span class="comment">% Restructure NoiseDS data structure</span>
+0389         NoiseDS.type = <span class="string">'NoiseDS'</span>;
+0390         NoiseDS.ns_type = Noise.type;
+0391         NoiseDS.cov_type = Noise.cov_type;
+0392         NoiseDS.tag = Noise.tag;
+0393         NoiseDS.N = Noise.N;
+0394         NoiseDS.idxArr = Noise.idxArr;
+0395         NoiseDS.dim = Noise.dim;
+0396         NoiseDS.mu = Noise.mu;
+0397         NoiseDS.cov = Noise.cov;
+0398         NoiseDS.noiseSources = Noise.noiseSources;
+0399         NoiseDS.sample = @<a href="#_sub5" class="code" title="subfunction noise = sample_combo(NoiseDS, N)">sample_combo</a>;
+0400         NoiseDS.update = @update_combo;
+0401         NoiseDS.likelihood = @<a href="#_sub4" class="code" title="subfunction llh = likelihood_combo(NoiseDS, noise, idxVec)">likelihood_combo</a>;
+0402     <span class="keyword">end</span>
+0403 
+0404 
+0405 <span class="comment">%===============================================================================================</span>
+0406 <span class="comment">%--- Gaussian Mixture Model</span>
+0407 <span class="keyword">case</span> <span class="string">'gmm'</span>
+0408 
+0409     <span class="keyword">if</span> isfield(ArgDS,<span class="string">'M'</span>)
+0410         Noise.M = ArgDS.M;
+0411     <span class="keyword">else</span>
+0412         error(<span class="string">' [ gennoiseds::gmm ] Number of mixture components not specified.'</span>);
+0413     <span class="keyword">end</span>
+0414 
+0415     <span class="comment">%-- assign noise source mean vector</span>
+0416     <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'mu'</span>)
+0417         Noise.mu = zeros(Noise.dim,Noise.M);    <span class="comment">% default value</span>
+0418     <span class="keyword">else</span>
+0419         <span class="keyword">if</span> (size(ArgDS.mu)==[Noise.dim Noise.M])
+0420             Noise.mu = ArgDS.mu;
+0421         <span class="keyword">else</span>
+0422             error(<span class="string">' [ gennoiseds::gmm ] Centroid mean dimension error.'</span>);
+0423         <span class="keyword">end</span>
+0424     <span class="keyword">end</span>
+0425 
+0426     <span class="comment">%-- check for and assign cov_type</span>
+0427     <span class="keyword">if</span> isfield(ArgDS,<span class="string">'cov_type'</span>)
+0428         Noise.cov_type = ArgDS.cov_type;
+0429     <span class="keyword">else</span>
+0430         warning(<span class="string">' [ gennoiseds::gmm ] Covariance type field .cov_type not assigned!. Assuming default value, ''full'''</span>);
+0431         Noise.cov_type = <span class="string">'full'</span>;             <span class="comment">% default cov_type</span>
+0432     <span class="keyword">end</span>
+0433 
+0434     <span class="comment">%-- assign mixing weights</span>
+0435     <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'weights'</span>)
+0436         Noise.weights = (1/Noise.M)*ones(1,Noise.M);
+0437     <span class="keyword">else</span>
+0438         <span class="keyword">if</span> (length(ArgDS.weights)==Noise.M)
+0439             Noise.weights = ArgDS.weights/(sum(ArgDS.weights));   <span class="comment">% assign normalized weights</span>
+0440         <span class="keyword">else</span>
+0441             error(<span class="string">' [ gennoiseds::gmm ] Incorrect number of mixing weights (priors).'</span>);
+0442         <span class="keyword">end</span>
+0443     <span class="keyword">end</span>
+0444 
+0445 
+0446     <span class="comment">%-- assign rest of noise source structure</span>
+0447     <span class="keyword">switch</span> (Noise.cov_type)
+0448 
+0449     <span class="comment">%.............................................................................................</span>
+0450     <span class="keyword">case</span> {<span class="string">'full'</span>,<span class="string">'diag'</span>}
+0451 
+0452         <span class="comment">%-- assign noise source covariance structure</span>
+0453         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'cov'</span>)
+0454             Noise.cov = repmat(eye(Noise.dim),[1 1 Noise.M]);    <span class="comment">% default value</span>
+0455             warning(<span class="string">' [ gennoiseds::gmm ] Covariance field .cov not assigned!. Assuming default unity value.'</span>);
+0456         <span class="keyword">elseif</span> ((Noise.M == 1) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim])) | <span class="keyword">...</span>
+0457                ((Noise.M  &gt; 1) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim Noise.M]))
+0458             Noise.cov = ArgDS.cov;
+0459         <span class="keyword">else</span>
+0460             error([<span class="string">' [ gennoiseds::gmm::full ] Noise source covariance matrix has incorrect dimensions.'</span>]);
+0461         <span class="keyword">end</span>
+0462 
+0463     <span class="comment">%.............................................................................................</span>
+0464     <span class="keyword">case</span> {<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}
+0465 
+0466         <span class="comment">%-- assign noise source covariance structure</span>
+0467         <span class="keyword">if</span> ~isfield(ArgDS,<span class="string">'cov'</span>)
+0468             Noise.cov = repmat(eye(Noise.dim),[1 1 Noise.M]);    <span class="comment">% default value</span>
+0469             warning(<span class="string">' [ gennoiseds::gmm ] Covariance field .cov not assigned!. Assuming default unity value.'</span>);
+0470         <span class="keyword">elseif</span> ((Noise.M == 1) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim])) | <span class="keyword">...</span>
+0471                ((Noise.M  &gt; 1) &amp; (size(ArgDS.cov) == [Noise.dim Noise.dim Noise.M]))
+0472             Noise.cov = ArgDS.cov;
+0473         <span class="keyword">else</span>
+0474             error([<span class="string">' [ gennoiseds::gmm::sqrt ] Noise source covariance matrix has incorrect dimensions.'</span>]);
+0475         <span class="keyword">end</span>
+0476 
+0477     <span class="comment">%.............................................................................................</span>
+0478     <span class="keyword">otherwise</span>
+0479         error(<span class="string">' [ gennoiseds::gmm ]unknown noise source cov_type.'</span>);
+0480     <span class="keyword">end</span>
+0481 
+0482 
+0483     <span class="comment">% Restructure NoiseDS data structure</span>
+0484     NoiseDS.type = <span class="string">'NoiseDS'</span>;
+0485     NoiseDS.ns_type = Noise.type;
+0486     NoiseDS.cov_type = Noise.cov_type;
+0487     NoiseDS.tag = Noise.tag;
+0488     NoiseDS.dim = Noise.dim;
+0489     NoiseDS.M = Noise.M;
+0490     NoiseDS.weights = Noise.weights;
+0491     NoiseDS.mu = Noise.mu;
+0492     NoiseDS.cov = Noise.cov;
+0493     NoiseDS.sample = @<a href="gmmsample.html" class="code" title="function [X,comp] = gmmsample(gmmDS, N)">gmmsample</a>;
+0494     NoiseDS.likelihood = @<a href="#_sub10" class="code" title="subfunction llh = likelihood_gmm(NoiseDS, noise)">likelihood_gmm</a>;
+0495 
+0496 
+0497 
+0498 
+0499 <span class="comment">%===============================================================================================</span>
+0500 
+0501 <span class="keyword">otherwise</span>
+0502   error([<span class="string">' [ gennoiseds ] Noise type '</span> type <span class="string">' not supported.'</span>]);
+0503 <span class="keyword">end</span>
+0504 
+0505 NoiseDS.adaptMethod = [];
+0506 
+0507 
+0508 
+0509 <span class="comment">%***********************************************************************************************</span>
+0510 <span class="comment">%***                                                                                         ***</span>
+0511 <span class="comment">%***                               SUB FUNCTION BLOCK                                        ***</span>
+0512 <span class="comment">%***                                                                                         ***</span>
+0513 <span class="comment">%***********************************************************************************************</span>
+0514 
+0515 <span class="comment">%===============================================================================================</span>
+0516 <a name="_sub1" href="#_subfunctions" class="code">function NoiseDS = update_gaussian(NoiseDS)</a>
+0517 
+0518 <span class="comment">% Updates a Gaussian noise source</span>
+0519 <span class="comment">%</span>
+0520 <span class="comment">% This function is only a placeholder here since Gaussian noise sources are completely updated, i.e.</span>
+0521 <span class="comment">% mean and covariance are set externally, i.e. there are no INTERNAL structure to update.</span>
+0522 
+0523 
+0524 <span class="comment">%===============================================================================================</span>
+0525 <a name="_sub2" href="#_subfunctions" class="code">function noise = sample_gaussian(NoiseDS, N)</a>
+0526 
+0527 <span class="comment">% Generate N samples of a noise source specified by the NoiseDS data structure</span>
+0528 
+0529     <span class="keyword">switch</span> NoiseDS.cov_type
+0530 
+0531     <span class="keyword">case</span> <span class="string">'full'</span>
+0532         A = chol(NoiseDS.cov)';
+0533     <span class="keyword">case</span> <span class="string">'diag'</span>
+0534         A = diag(sqrt(diag(NoiseDS.cov)));
+0535     <span class="keyword">case</span> <span class="string">'sqrt'</span>
+0536         A = NoiseDS.cov;
+0537     <span class="keyword">case</span> <span class="string">'sqrt-diag'</span>
+0538         A = NoiseDS.cov;
+0539     <span class="keyword">otherwise</span>
+0540         error(<span class="string">' [ sample_gaussian ] Unknown cov_type.'</span>);
+0541     <span class="keyword">end</span>
+0542 
+0543     noise = A*randn(NoiseDS.dim,N) + <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(NoiseDS.mu,N);
+0544 
+0545 
+0546 <span class="comment">%===============================================================================================</span>
+0547 <a name="_sub3" href="#_subfunctions" class="code">function llh = likelihood_combo_gaussian(NoiseDS, noise, idxVec)</a>
+0548 
+0549 <span class="comment">% Calculates the likelihood of sample 'noise', given the noise model NoiseDS. If the optional index</span>
+0550 <span class="comment">% vector 'idxVec' is specified, only those sub-noise sources are used. The 'noise' vector's dimension should</span>
+0551 <span class="comment">% concur with the implied total dimensionality of 'idxVec'</span>
+0552 
+0553     <span class="keyword">if</span> (nargin == 2)
+0554       idxVec = 1:NoiseDS.N;
+0555     <span class="keyword">end</span>
+0556 
+0557     numNS = length(idxVec);
+0558 
+0559     [dim,nov] = size(noise);
+0560     idxArr = NoiseDS.idxArr;        <span class="comment">% copy beginning/ending index array</span>
+0561     llh = ones(1,nov);
+0562 
+0563     <span class="comment">% ... for each noise source</span>
+0564     <span class="keyword">for</span> j=1:numNS,
+0565 
+0566         idx1 = idxArr(idxVec(j),1);
+0567         idx2 = idxArr(idxVec(j),2);
+0568 
+0569         idxRange = idx1:idx2;
+0570 
+0571         dim = idx2-idx1+1;
+0572 
+0573         <span class="keyword">switch</span> NoiseDS.cov_type
+0574 
+0575         <span class="keyword">case</span> <span class="string">'full'</span>
+0576             D  = det(NoiseDS.cov(idxRange,idxRange));
+0577             iP = inv(NoiseDS.cov(idxRange,idxRange));
+0578         <span class="keyword">case</span> <span class="string">'diag'</span>
+0579             D = prod(diag(NoiseDS.cov(idxRange,idxRange)));
+0580             iP = diag(1./diag(NoiseDS.cov(idxRange,idxRange)));
+0581         <span class="keyword">case</span> <span class="string">'sqrt'</span>
+0582             D = det(NoiseDS.cov(idxRange,idxRange))^2;
+0583             iS = inv(NoiseDS.cov(idxRange,idxRange));
+0584             iP = iS'*iS;
+0585         <span class="keyword">case</span> <span class="string">'sqrt-diag'</span>
+0586             D = prod(diag(NoiseDS.cov(idxRange,idxRange)))^2;
+0587             iP = diag(1./(diag(NoiseDS.cov(idxRange,idxRange)).^2));
+0588         <span class="keyword">otherwise</span>
+0589             error(<span class="string">' [ likelihood_gaussian ]unknown cov_type.'</span>);
+0590         <span class="keyword">end</span>
+0591 
+0592         X = noise - <a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(NoiseDS.mu(idxRange),nov);
+0593         q = 1/sqrt((2*pi)^dim * D);
+0594 
+0595         llh = llh .* (q * exp(-0.5*diag(X'*iP*X)'));
+0596 
+0597     <span class="keyword">end</span>
+0598 
+0599     llh = llh + 1e-99; <span class="comment">% needed to avoid 0 likelihood (cause ill conditioning)</span>
+0600 
+0601 
+0602 <span class="comment">%===============================================================================================</span>
+0603 <a name="_sub4" href="#_subfunctions" class="code">function llh = likelihood_combo(NoiseDS, noise, idxVec)</a>
+0604 
+0605 <span class="comment">% Calculates the likelihood of sample 'noise', given the noise model NoiseDS.</span>
+0606 <span class="comment">% 'idxVec' is an optional index vector that can be used to indicate which of the N sub-noise sources should be used.</span>
+0607 <span class="comment">% to calculate the likelihood... this also requires 'noise' to have the same dimension of the relevant sub-noise source.</span>
+0608 
+0609     <span class="keyword">if</span> (nargin == 2)
+0610       idxVec = 1:NoiseDS.N;
+0611     <span class="keyword">end</span>
+0612 
+0613     numNS = length(idxVec);
+0614 
+0615     [dim,nov] = size(noise);
+0616     idxArr = NoiseDS.idxArr;        <span class="comment">% copy beginning/ending index array</span>
+0617     llh = ones(1,nov);
+0618 
+0619     <span class="comment">% ... for each noise source</span>
+0620     <span class="keyword">for</span> j=1:numNS,
+0621 
+0622         idx1 = idxArr(idxVec(j),1);
+0623         idx2 = idxArr(idxVec(j),2);
+0624         subNoiseDS = NoiseDS.noiseSources{idxVec(j)};
+0625         llh = llh .* subNoiseDS.likelihood( subNoiseDS, noise(idx1:idx2,:));
+0626 
+0627     <span class="keyword">end</span>
+0628 
+0629     llh = llh + 1e-99; <span class="comment">% needed to avoid 0 likelihood (cause ill conditioning)</span>
+0630 
+0631 
+0632 <span class="comment">%===============================================================================================</span>
+0633 <a name="_sub5" href="#_subfunctions" class="code">function noise = sample_combo(NoiseDS, N)</a>
+0634 
+0635 <span class="comment">%  Generate N samples of a noise source specified by the NoiseDS data structure</span>
+0636 
+0637     noise=zeros(NoiseDS.dim,N);     <span class="comment">% setup noise sample output buffer</span>
+0638 
+0639     idxArr = NoiseDS.idxArr;        <span class="comment">% copy beginning/ending index array</span>
+0640 
+0641     <span class="comment">% ... for each noise source</span>
+0642     <span class="keyword">for</span> j=1:NoiseDS.N
+0643         subNoiseDS = NoiseDS.noiseSources{j};
+0644         noise(idxArr(j,1):idxArr(j,2),:) = subNoiseDS.sample( subNoiseDS, N);
+0645     <span class="keyword">end</span>
+0646 
+0647 
+0648 
+0649 <span class="comment">%===============================================================================================</span>
+0650 <a name="_sub6" href="#_subfunctions" class="code">function noise = sample_combo_gaussian(NoiseDS, N)</a>
+0651 
+0652 <span class="comment">%  Generate N samples of a noise source specified by the NoiseDS data structure</span>
+0653 
+0654     noise=<a href="cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(NoiseDS.mu,N);    <span class="comment">% setup noise sample output buffer</span>
+0655 
+0656     idxArr = NoiseDS.idxArr;        <span class="comment">% copy beginning/ending index array</span>
+0657 
+0658     num = NoiseDS.N;
+0659 
+0660     <span class="keyword">for</span> j=1:num
+0661         ind1 = idxArr(j,1);
+0662         ind2 = idxArr(j,2);
+0663         <span class="keyword">switch</span> NoiseDS.cov_type
+0664         <span class="keyword">case</span> <span class="string">'full'</span>
+0665             A = chol(NoiseDS.cov(ind1:ind2,ind1:ind2))';
+0666         <span class="keyword">case</span> <span class="string">'diag'</span>
+0667             A = diag(sqrt(diag(NoiseDS.cov(ind1:ind2,ind1:ind2))));
+0668         <span class="keyword">case</span> <span class="string">'sqrt'</span>
+0669             A = NoiseDS.cov(ind1:ind2,ind1:ind2);
+0670         <span class="keyword">case</span> <span class="string">'sqrt-diag'</span>
+0671             A = NoiseDS.cov(ind1:ind2,ind1:ind2);
+0672         <span class="keyword">otherwise</span>
+0673             error(<span class="string">' [ sample_gaussian ]unknown cov_type.'</span>);
+0674         <span class="keyword">end</span>
+0675         noise(ind1:ind2,:) = noise(ind1:ind2,:) + A*randn(ind2-ind1+1,N);
+0676     <span class="keyword">end</span>
+0677 
+0678 
+0679 
+0680 <span class="comment">%===============================================================================================</span>
+0681 <a name="_sub7" href="#_subfunctions" class="code">function NoiseDS = update_combo_gaussian(NoiseDS)</a>
+0682 
+0683 <span class="comment">% Updates a 'combination Gaussian' noise source which has N Gaussian sub noise sources. The global mean and covariance</span>
+0684 <span class="comment">% is updated externally and then this function is called to update the internal sub-noise source structure.</span>
+0685 <span class="comment">%</span>
+0686 
+0687 idxArr = NoiseDS.idxArr;
+0688 
+0689 <span class="keyword">for</span> j=1:NoiseDS.N,
+0690     ind1 = idxArr(j,1);
+0691     ind2 = idxArr(j,2);
+0692     idxRange = ind1:ind2;
+0693     NoiseDS.noiseSources{j}.mu = NoiseDS.mu(idxRange,1);
+0694     NoiseDS.noiseSources{j}.cov = NoiseDS.cov(idxRange,idxRange);
+0695 <span class="keyword">end</span>
+0696 
+0697 <span class="comment">%===============================================================================================</span>
+0698 <a name="_sub8" href="#_subfunctions" class="code">function noise = sample_gamma(NoiseDS, N)</a>
+0699 
+0700 <span class="comment">% Generate N samples of a noise source specified by the NoiseDS data structure</span>
+0701 
+0702     alpha = NoiseDS.alpha;
+0703     beta = NoiseDS.beta;
+0704 
+0705     <span class="keyword">if</span> (alpha==1)
+0706         noise = -log(1-rand(1,N))*beta;
+0707         <span class="keyword">return</span>
+0708     <span class="keyword">end</span>
+0709 
+0710     flag=0;
+0711 
+0712     <span class="keyword">if</span> (alpha&lt;1)
+0713         flag=1;
+0714         alpha=alpha+1;
+0715     <span class="keyword">end</span>
+0716 
+0717     gamma=alpha-1;
+0718     eta=sqrt(2.0*alpha-1.0);
+0719     c=.5-atan(gamma/eta)/pi;
+0720 
+0721     y(N)=0;
+0722 
+0723     <span class="keyword">for</span> k=1:N,
+0724         aux=-.5;
+0725         <span class="keyword">while</span>(aux&lt;0)
+0726             y(k)=-.5;
+0727             <span class="keyword">while</span>(y(k)&lt;=0)
+0728                 u=rand(1,1);
+0729                 y(k) = gamma + eta * tan(pi*(u-c)+c-.5);
+0730             <span class="keyword">end</span>
+0731             v=-log(rand(1,1));
+0732             aux=v+log(1.0+((y(k)-gamma)/eta)^2)+gamma*log(y(k)/gamma)-y(k)+gamma;
+0733         <span class="keyword">end</span>
+0734     <span class="keyword">end</span>
+0735 
+0736     <span class="keyword">if</span> (flag==1)
+0737         noise = y.*beta.*(rand(1,N)).^(1.0/(alpha-1));
+0738     <span class="keyword">else</span>
+0739         noise = y.*beta;
+0740     <span class="keyword">end</span>
+0741 
+0742 
+0743 
+0744 <span class="comment">%===============================================================================================</span>
+0745 <a name="_sub9" href="#_subfunctions" class="code">function llh = likelihood_gamma(NoiseDS, noise)</a>
+0746 
+0747 <span class="comment">% Calculates the likelihood of sample 'noise', given the noise model NoiseDS.</span>
+0748 
+0749     llh = noise.^(NoiseDS.alpha-1) .* exp((-1/NoiseDS.beta)*noise);
+0750 
+0751 <span class="comment">%===============================================================================================</span>
+0752 <a name="_sub10" href="#_subfunctions" class="code">function llh = likelihood_gmm(NoiseDS, noise)</a>
+0753 
+0754 <span class="comment">% Calculates the likelihood of sample 'noise', given the noise model NoiseDS.</span>
+0755 
+0756 [prior,likelihood,<a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>] = <a href="gmmprobability.html" class="code" title="function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W)">gmmprobability</a>(NoiseDS, noise);
+0757 
+0758 llh = <a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>;
+0759 
+0760</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

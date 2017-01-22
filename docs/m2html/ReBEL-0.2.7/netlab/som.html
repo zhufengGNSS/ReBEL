@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of som</title>
+  <meta name="keywords" content="som">
+  <meta name="description" content="SOM	Creates a Self-Organising Map.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; som.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>som
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>SOM	Creates a Self-Organising Map.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = som(nin, map_size) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SOM    Creates a Self-Organising Map.
+
+    Description
+    NET = SOM(NIN, MAP_SIZE) creates a SOM NET with input dimension (i.e.
+    data dimension) NIN and map dimensions MAP_SIZE.  Only two-
+    dimensional maps are currently implemented.
+
+    The fields in NET are
+      type = 'som'
+      nin = number of inputs
+      map_dim = dimension of map (constrained to be 2)
+      map_size = grid size: number of nodes in each dimension
+      num_nodes = number of nodes: the product of values in map_size
+      map = map_dim+1 dimensional array containing nodes
+      inode_dist = map of inter-node distances using Manhatten metric
+
+    The map contains the node vectors arranged column-wise in the first
+    dimension of the array.
+
+    See also
+    <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">KMEANS</a>, <a href="somfwd.html" class="code" title="function [d2, win_nodes] = somfwd(net, x)">SOMFWD</a>, <a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">SOMTRAIN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demsom1.html" class="code" title="">demsom1</a>	DEMSOM1 Demonstrate SOM for visualisation.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = som(nin, map_size)</a>
+0002 <span class="comment">%SOM    Creates a Self-Organising Map.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = SOM(NIN, MAP_SIZE) creates a SOM NET with input dimension (i.e.</span>
+0006 <span class="comment">%    data dimension) NIN and map dimensions MAP_SIZE.  Only two-</span>
+0007 <span class="comment">%    dimensional maps are currently implemented.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    The fields in NET are</span>
+0010 <span class="comment">%      type = 'som'</span>
+0011 <span class="comment">%      nin = number of inputs</span>
+0012 <span class="comment">%      map_dim = dimension of map (constrained to be 2)</span>
+0013 <span class="comment">%      map_size = grid size: number of nodes in each dimension</span>
+0014 <span class="comment">%      num_nodes = number of nodes: the product of values in map_size</span>
+0015 <span class="comment">%      map = map_dim+1 dimensional array containing nodes</span>
+0016 <span class="comment">%      inode_dist = map of inter-node distances using Manhatten metric</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    The map contains the node vectors arranged column-wise in the first</span>
+0019 <span class="comment">%    dimension of the array.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%    See also</span>
+0022 <span class="comment">%    KMEANS, SOMFWD, SOMTRAIN</span>
+0023 <span class="comment">%</span>
+0024 
+0025 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0026 
+0027 net.type = <span class="string">'som'</span>;
+0028 net.nin = nin;
+0029 
+0030 <span class="comment">% Create Map of nodes</span>
+0031 <span class="keyword">if</span> round(map_size) ~= map_size | (map_size &lt; 1)
+0032     error(<span class="string">'SOM specification must contain positive integers'</span>);
+0033 <span class="keyword">end</span>
+0034 
+0035 net.map_dim = length(map_size);
+0036 <span class="keyword">if</span> net.map_dim ~= 2
+0037     error(<span class="string">'SOM is a 2 dimensional map'</span>);
+0038 <span class="keyword">end</span>
+0039 net.num_nodes = prod(map_size);
+0040 <span class="comment">% Centres are stored by column as first index of multi-dimensional array.</span>
+0041 <span class="comment">% This makes extracting them later more easy.</span>
+0042 <span class="comment">% Initialise with rand to create square grid</span>
+0043 net.map = rand([nin, map_size]);
+0044 net.map_size = map_size;
+0045 
+0046 <span class="comment">% Crude function to compute inter-node distances</span>
+0047 net.inode_dist = zeros([map_size, net.num_nodes]);
+0048 <span class="keyword">for</span> m = 1:net.num_nodes
+0049     node_loc = [1+fix((m-1)/map_size(2)), 1+rem((m-1),map_size(2))];
+0050     <span class="keyword">for</span> k = 1:map_size(1)
+0051     <span class="keyword">for</span> l = 1:map_size(2)
+0052         net.inode_dist(k, l, m) = round(max(abs([k l] - node_loc)));
+0053     <span class="keyword">end</span>
+0054     <span class="keyword">end</span>
+0055 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

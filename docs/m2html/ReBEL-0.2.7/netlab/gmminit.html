@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmminit</title>
+  <meta name="keywords" content="gmminit">
+  <meta name="description" content="GMMINIT Initialises Gaussian mixture model from data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gmminit.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmminit
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMINIT Initialises Gaussian mixture model from data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function mix = gmminit(mix, x, options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GMMINIT Initialises Gaussian mixture model from data
+
+    Description
+    MIX = GMMINIT(MIX, X, OPTIONS) uses a dataset X to initialise the
+    parameters of a Gaussian mixture model defined by the data structure
+    MIX.  The k-means algorithm is used to determine the centres. The
+    priors are computed from the proportion of examples belonging to each
+    cluster. The covariance matrices are calculated as the sample
+    covariance of the points associated with (i.e. closest to) the
+    corresponding centres. For a mixture of PPCA model, the PPCA
+    decomposition is calculated for the points closest to a given centre.
+    This initialisation can be used as the starting point for training
+    the model using the EM algorithm.
+
+    See also
+    <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li><li><a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">kmeans</a>	KMEANS	Trains a k means cluster model.</li><li><a href="ppca.html" class="code" title="function [var, U, lambda] = ppca(x, ppca_dim)">ppca</a>	PPCA	Probabilistic Principal Components Analysis</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgmm2.html" class="code" title="">demgmm2</a>	DEMGMM1 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm3.html" class="code" title="">demgmm3</a>	DEMGMM3 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm4.html" class="code" title="">demgmm4</a>	DEMGMM4 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm5.html" class="code" title="">demgmm5</a>	DEMGMM5 Demonstrate density modelling with a PPCA mixture model.</li><li><a href="demhmc1.html" class="code" title="">demhmc1</a>	DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.</li><li><a href="mdninit.html" class="code" title="function net = mdninit(net, prior, t, options)">mdninit</a>	MDNINIT Initialise the weights in a Mixture Density Network.</li><li><a href="rbfsetbf.html" class="code" title="function net = rbfsetbf(net, options, x)">rbfsetbf</a>	RBFSETBF Set basis functions of RBF from data.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mix = gmminit(mix, x, options)</a>
+0002 <span class="comment">%GMMINIT Initialises Gaussian mixture model from data</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    MIX = GMMINIT(MIX, X, OPTIONS) uses a dataset X to initialise the</span>
+0006 <span class="comment">%    parameters of a Gaussian mixture model defined by the data structure</span>
+0007 <span class="comment">%    MIX.  The k-means algorithm is used to determine the centres. The</span>
+0008 <span class="comment">%    priors are computed from the proportion of examples belonging to each</span>
+0009 <span class="comment">%    cluster. The covariance matrices are calculated as the sample</span>
+0010 <span class="comment">%    covariance of the points associated with (i.e. closest to) the</span>
+0011 <span class="comment">%    corresponding centres. For a mixture of PPCA model, the PPCA</span>
+0012 <span class="comment">%    decomposition is calculated for the points closest to a given centre.</span>
+0013 <span class="comment">%    This initialisation can be used as the starting point for training</span>
+0014 <span class="comment">%    the model using the EM algorithm.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    See also</span>
+0017 <span class="comment">%    GMM</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0021 
+0022 [ndata, xdim] = size(x);
+0023 
+0024 <span class="comment">% Check that inputs are consistent</span>
+0025 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mix, <span class="string">'gmm'</span>, x);
+0026 <span class="keyword">if</span> ~isempty(errstring)
+0027   error(errstring);
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="comment">% Arbitrary width used if variance collapses to zero: make it 'large' so</span>
+0031 <span class="comment">% that centre is responsible for a reasonable number of points.</span>
+0032 GMM_WIDTH = 1.0;
+0033 
+0034 <span class="comment">% Use kmeans algorithm to set centres</span>
+0035 options(5) = 1;    
+0036 [mix.centres, options, post] = <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">kmeans</a>(mix.centres, x, options);
+0037 
+0038 <span class="comment">% Set priors depending on number of points in each cluster</span>
+0039 cluster_sizes = max(sum(post, 1), 1);  <span class="comment">% Make sure that no prior is zero</span>
+0040 mix.priors = cluster_sizes/sum(cluster_sizes); <span class="comment">% Normalise priors</span>
+0041 
+0042 <span class="keyword">switch</span> mix.covar_type
+0043 <span class="keyword">case</span> <span class="string">'spherical'</span>
+0044    <span class="keyword">if</span> mix.ncentres &gt; 1
+0045       <span class="comment">% Determine widths as distance to nearest centre</span>
+0046       <span class="comment">% (or a constant if this is zero)</span>
+0047       cdist = <a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(mix.centres, mix.centres);
+0048       cdist = cdist + diag(ones(mix.ncentres, 1)*realmax);
+0049       mix.covars = min(cdist);
+0050       mix.covars = mix.covars + GMM_WIDTH*(mix.covars &lt; eps);
+0051    <span class="keyword">else</span>
+0052       <span class="comment">% Just use variance of all data points averaged over all</span>
+0053       <span class="comment">% dimensions</span>
+0054       mix.covars = mean(diag(cov(x)));
+0055    <span class="keyword">end</span>
+0056   <span class="keyword">case</span> <span class="string">'diag'</span>
+0057     <span class="keyword">for</span> j = 1:mix.ncentres
+0058       <span class="comment">% Pick out data points belonging to this centre</span>
+0059       c = x(find(post(:, j)),:);
+0060       diffs = c - (ones(size(c, 1), 1) * mix.centres(j, :));
+0061       mix.covars(j, :) = sum((diffs.*diffs), 1)/size(c, 1);
+0062       <span class="comment">% Replace small entries by GMM_WIDTH value</span>
+0063       mix.covars(j, :) = mix.covars(j, :) + GMM_WIDTH.*(mix.covars(j, :)&lt;eps);
+0064     <span class="keyword">end</span>
+0065   <span class="keyword">case</span> <span class="string">'full'</span>
+0066     <span class="keyword">for</span> j = 1:mix.ncentres
+0067       <span class="comment">% Pick out data points belonging to this centre</span>
+0068       c = x(find(post(:, j)),:);
+0069       diffs = c - (ones(size(c, 1), 1) * mix.centres(j, :));
+0070       mix.covars(:,:,j) = (diffs'*diffs)/(size(c, 1));
+0071       <span class="comment">% Add GMM_WIDTH*Identity to rank-deficient covariance matrices</span>
+0072       <span class="keyword">if</span> rank(mix.covars(:,:,j)) &lt; mix.nin
+0073     mix.covars(:,:,j) = mix.covars(:,:,j) + GMM_WIDTH.*eye(mix.nin);
+0074       <span class="keyword">end</span>
+0075     <span class="keyword">end</span>
+0076   <span class="keyword">case</span> <span class="string">'ppca'</span>
+0077     <span class="keyword">for</span> j = 1:mix.ncentres
+0078       <span class="comment">% Pick out data points belonging to this centre</span>
+0079       c = x(find(post(:,j)),:);
+0080       diffs = c - (ones(size(c, 1), 1) * mix.centres(j, :));
+0081       [tempcovars, tempU, templambda] = <span class="keyword">...</span>
+0082     <a href="ppca.html" class="code" title="function [var, U, lambda] = ppca(x, ppca_dim)">ppca</a>((diffs'*diffs)/size(c, 1), mix.ppca_dim);
+0083       <span class="keyword">if</span> length(templambda) ~= mix.ppca_dim
+0084     error(<span class="string">'Unable to extract enough components'</span>);
+0085       <span class="keyword">else</span> 
+0086         mix.covars(j) = tempcovars;
+0087         mix.U(:, :, j) = tempU;
+0088         mix.lambda(j, :) = templambda;
+0089       <span class="keyword">end</span>
+0090     <span class="keyword">end</span>
+0091   <span class="keyword">otherwise</span>
+0092     error([<span class="string">'Unknown covariance type '</span>, mix.covar_type]);
+0093 <span class="keyword">end</span>
+0094</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

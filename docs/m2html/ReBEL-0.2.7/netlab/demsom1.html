@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demsom1</title>
+  <meta name="keywords" content="demsom1">
+  <meta name="description" content="DEMSOM1 Demonstrate SOM for visualisation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demsom1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demsom1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMSOM1 Demonstrate SOM for visualisation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMSOM1 Demonstrate SOM for visualisation.
+
+    Description
+     This script demonstrates the use of a SOM with  a two-dimensional
+    grid to map onto data in  two-dimensional space.  Both on-line and
+    batch training algorithms are shown.
+
+    See also
+    <a href="som.html" class="code" title="function net = som(nin, map_size)">SOM</a>, <a href="sompak.html" class="code" title="function [c] = sompak(net)">SOMPAK</a>, <a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">SOMTRAIN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="som.html" class="code" title="function net = som(nin, map_size)">som</a>	SOM	Creates a Self-Organising Map.</li><li><a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>	SOMPAK	Combines node weights into one weights matrix.</li><li><a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">somtrain</a>	SOMTRAIN Kohonen training algorithm for SOM.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMSOM1 Demonstrate SOM for visualisation.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%     This script demonstrates the use of a SOM with  a two-dimensional</span>
+0005 <span class="comment">%    grid to map onto data in  two-dimensional space.  Both on-line and</span>
+0006 <span class="comment">%    batch training algorithms are shown.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%    See also</span>
+0009 <span class="comment">%    SOM, SOMPAK, SOMTRAIN</span>
+0010 <span class="comment">%</span>
+0011 
+0012 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0013 
+0014 
+0015 randn(<span class="string">'state'</span>, 42);
+0016 rand(<span class="string">'state'</span>, 42);
+0017 nin = 2; 
+0018 ndata = 300;
+0019 <span class="comment">% Give data an offset so that network has something to learn.</span>
+0020 x = rand(ndata, nin) + ones(ndata, 1)*[1.5 1.5];
+0021 
+0022 clc;
+0023 disp(<span class="string">'This demonstration of the SOM, or Kohonen network, shows how the'</span>)
+0024 disp(<span class="string">'network units after training lie in regions of high data density.'</span>)
+0025 disp(<span class="string">'First we show the data, which is generated uniformly from a square.'</span>)
+0026 disp(<span class="string">'Red crosses denote the data and black dots are the initial locations'</span>)
+0027 disp(<span class="string">'of the SOM units.'</span>)
+0028 disp(<span class="string">' '</span>)
+0029 disp(<span class="string">'Press any key to continue.'</span>)
+0030 pause
+0031 net = <a href="som.html" class="code" title="function net = som(nin, map_size)">som</a>(nin, [8, 7]);
+0032 c1 = <a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>(net);
+0033 h1 = figure;
+0034 plot(x(:, 1), x(:, 2), <span class="string">'r+'</span>);
+0035 hold on
+0036 plot(c1(:,1), c1(:, 2), <span class="string">'k.'</span>);
+0037 drawnow;  <span class="comment">% Force figure to be drawn before training starts</span>
+0038 options = foptions;
+0039 
+0040 <span class="comment">% Ordering phase</span>
+0041 options(1) = 1;
+0042 options(14) = 50;
+0043 <span class="comment">%options(14) = 5; % Just for testing</span>
+0044 options(18) = 0.9;  <span class="comment">% Initial learning rate</span>
+0045 options(16) = 0.05; <span class="comment">% Final learning rate</span>
+0046 options(17) = 8;    <span class="comment">% Initial neighbourhood size</span>
+0047 options(15) = 1;    <span class="comment">% Final neighbourhood size</span>
+0048 
+0049 disp(<span class="string">'The SOM network is trained in two phases using an on-line algorithm.'</span>)
+0050 disp(<span class="string">'Initially the neighbourhood is set to 8 and is then reduced'</span>)
+0051 disp(<span class="string">'linearly to 1 over the first 50 iterations.'</span>)
+0052 disp(<span class="string">'Each iteration consists of a pass through the complete'</span>)
+0053 disp(<span class="string">'dataset, while the weights are adjusted after each pattern.'</span>)
+0054 disp(<span class="string">'The learning rate is reduced linearly from 0.9 to 0.05.'</span>)
+0055 disp(<span class="string">'This ordering phase puts the units in a rough grid shape.'</span>)
+0056 disp(<span class="string">'Blue circles denote the units at the end of this phase.'</span>)
+0057 disp(<span class="string">' '</span>)
+0058 disp(<span class="string">'Press any key to continue.'</span>)
+0059 pause
+0060 net2 = <a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">somtrain</a>(net, options, x);
+0061 c2 = <a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>(net2);
+0062 plot(c2(:, 1), c2(:, 2), <span class="string">'bo'</span>);
+0063 drawnow;
+0064 
+0065 <span class="comment">% Convergence phase</span>
+0066 options(1) = 1;
+0067 options(14) = 400;
+0068 options(18) = 0.05;
+0069 options(16) = 0.01;
+0070 options(17) = 0;
+0071 options(15) = 0;
+0072 
+0073 disp(<span class="string">'The second, convergence, phase of learning just updates the winning node.'</span>)
+0074 disp(<span class="string">'The learning rate is reduced from 0.05 to 0.01 over 400 iterations.'</span>)
+0075 disp(<span class="string">'Note how the error value does not decrease monotonically; it is'</span>)
+0076 disp(<span class="string">'difficult to decide when training is complete in a principled way.'</span>)
+0077 disp(<span class="string">'The units are plotted as green stars.'</span>)
+0078 disp(<span class="string">' '</span>)
+0079 disp(<span class="string">'Press any key to continue.'</span>)
+0080 pause
+0081 net3 = <a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">somtrain</a>(net2, options, x);
+0082 c3 = <a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>(net3);
+0083 plot(c3(:, 1), c3(:, 2), <span class="string">'g*'</span>);
+0084 drawnow;
+0085 
+0086 <span class="comment">% Now try batch training</span>
+0087 options(1) = 1;
+0088 options(6) = 1;
+0089 options(14) = 50;
+0090 options(17) = 3;
+0091 options(15) = 0;
+0092 disp(<span class="string">'An alternative approach to the on-line algorithm is a batch update'</span>)
+0093 disp(<span class="string">'rule.  Each unit is updated to be the average weights'</span>)
+0094 disp(<span class="string">'in a neighbourhood (which reduces from 3 to 0) over 50 iterations.'</span>);
+0095 disp(<span class="string">'Note how the error is even more unstable at first, though eventually'</span>)
+0096 disp(<span class="string">'it does converge.'</span>)
+0097 disp(<span class="string">'The final units are shown as black triangles.'</span>)
+0098 disp(<span class="string">' '</span>)
+0099 disp(<span class="string">'Press any key to continue.'</span>)
+0100 pause
+0101 net4 = <a href="somtrain.html" class="code" title="function net = somtrain(net, options, x)">somtrain</a>(net, options, x);
+0102 c4 = <a href="sompak.html" class="code" title="function [c] = sompak(net)">sompak</a>(net4);
+0103 plot(c4(:, 1), c4(:, 2), <span class="string">'k^'</span>)
+0104 legend(<span class="string">'Data'</span>, <span class="string">'Initial weights'</span>, <span class="string">'Weights after ordering'</span>, <span class="keyword">...</span>
+0105     <span class="string">'Weights after convergence'</span>, <span class="string">'Batch weights'</span>, 2);
+0106 drawnow;
+0107 
+0108 disp(<span class="string">' '</span>)
+0109 disp(<span class="string">'Press any key to end.'</span>)
+0110 disp(<span class="string">' '</span>)
+0111 pause
+0112 
+0113 close(h1);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

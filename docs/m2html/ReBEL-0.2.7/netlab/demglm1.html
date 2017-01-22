@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demglm1</title>
+  <meta name="keywords" content="demglm1">
+  <meta name="description" content="DEMGLM1 Demonstrate simple classification using a generalized linear model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demglm1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demglm1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMGLM1 Demonstrate simple classification using a generalized linear model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMGLM1 Demonstrate simple classification using a generalized linear model.
+
+    Description
+     The problem consists of a two dimensional input matrix DATA and a
+    vector of classifications T.  The data is  generated from two
+    Gaussian clusters, and a generalized linear model with logistic
+    output is trained using iterative reweighted least squares. A plot of
+    the data together with the 0.1, 0.5 and 0.9 contour lines of the
+    conditional probability is generated.
+
+    See also
+    <a href="demglm2.html" class="code" title="">DEMGLM2</a>, <a href="glm.html" class="code" title="function net = glm(nin, nout, outfunc, prior, beta)">GLM</a>, <a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">GLMTRAIN</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="glm.html" class="code" title="function net = glm(nin, nout, outfunc, prior, beta)">glm</a>	GLM	Create a generalized linear model.</li><li><a href="glmfwd.html" class="code" title="function [y, a] = glmfwd(net, x)">glmfwd</a>	GLMFWD	Forward propagation through generalized linear model.</li><li><a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">glmtrain</a>	GLMTRAIN Specialised training of generalized linear model</li><li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMGLM1 Demonstrate simple classification using a generalized linear model.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%     The problem consists of a two dimensional input matrix DATA and a</span>
+0005 <span class="comment">%    vector of classifications T.  The data is  generated from two</span>
+0006 <span class="comment">%    Gaussian clusters, and a generalized linear model with logistic</span>
+0007 <span class="comment">%    output is trained using iterative reweighted least squares. A plot of</span>
+0008 <span class="comment">%    the data together with the 0.1, 0.5 and 0.9 contour lines of the</span>
+0009 <span class="comment">%    conditional probability is generated.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    DEMGLM2, GLM, GLMTRAIN</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 
+0018 <span class="comment">% Generate data from two classes in 2d</span>
+0019 input_dim = 2;
+0020 
+0021 <span class="comment">% Fix seeds for reproducible results</span>
+0022 randn(<span class="string">'state'</span>, 42);
+0023 rand(<span class="string">'state'</span>, 42);
+0024 
+0025 ndata = 100;
+0026 <span class="comment">% Generate mixture of two Gaussians in two dimensional space</span>
+0027 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(2, 2, <span class="string">'spherical'</span>);
+0028 mix.priors = [0.4 0.6];              <span class="comment">% Cluster priors</span>
+0029 mix.centres = [2.0, 2.0; 0.0, 0.0];  <span class="comment">% Cluster centres</span>
+0030 mix.covars = [0.5, 1.0];
+0031 
+0032 [data, label] = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(mix, ndata);
+0033 targets = label - ones(ndata, 1);
+0034 
+0035 <span class="comment">% Plot the result</span>
+0036 
+0037 clc
+0038 disp(<span class="string">'This demonstration illustrates the use of a generalized linear model'</span>)
+0039 disp(<span class="string">'to classify data from two classes in a two-dimensional space. We'</span>)
+0040 disp(<span class="string">'begin by generating and plotting the data.'</span>)
+0041 disp(<span class="string">' '</span>)
+0042 disp(<span class="string">'Press any key to continue.'</span>)
+0043 pause
+0044 
+0045 fh1 = figure;
+0046 plot(data(label==1,1), data(label==1,2), <span class="string">'bo'</span>);
+0047 hold on
+0048 axis([-4 5 -4 5])
+0049 set(gca, <span class="string">'box'</span>, <span class="string">'on'</span>)
+0050 plot(data(label==2,1), data(label==2,2), <span class="string">'rx'</span>)
+0051 title(<span class="string">'Data'</span>)
+0052 
+0053 clc
+0054 disp(<span class="string">'Now we fit a model consisting of a logistic sigmoid function of'</span>)
+0055 disp(<span class="string">'a linear combination of the input variables.'</span>)
+0056 disp(<span class="string">' '</span>)
+0057 disp(<span class="string">'The model is trained using the IRLS algorithm for 5 iterations'</span>)
+0058 disp(<span class="string">' '</span>)
+0059 disp(<span class="string">'Press any key to continue.'</span>)
+0060 pause
+0061 
+0062 net = <a href="glm.html" class="code" title="function net = glm(nin, nout, outfunc, prior, beta)">glm</a>(input_dim, 1, <span class="string">'logistic'</span>);
+0063 options = foptions;
+0064 options(1) = 1;
+0065 options(14) = 5;
+0066 net = <a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">glmtrain</a>(net, options, data, targets);
+0067 
+0068 disp(<span class="string">' '</span>)
+0069 disp(<span class="string">'We now plot some density contours given by this model.'</span>)
+0070 disp(<span class="string">'The contour labelled 0.5 is the decision boundary.'</span>)
+0071 disp(<span class="string">' '</span>)
+0072 disp(<span class="string">'Press any key to continue.'</span>)
+0073 pause
+0074 x = -4.0:0.2:5.0;
+0075 y = -4.0:0.2:5.0;
+0076 [X, Y] = meshgrid(x,y);
+0077 X = X(:);
+0078 Y = Y(:);
+0079 grid = [X Y];
+0080 Z = <a href="glmfwd.html" class="code" title="function [y, a] = glmfwd(net, x)">glmfwd</a>(net, grid);
+0081 Z = reshape(Z, length(x), length(y));
+0082 v = [0.1 0.5 0.9];
+0083 [c, h] = contour(x, y, Z, v);
+0084 title(<span class="string">'Generalized Linear Model'</span>)
+0085 set(h, <span class="string">'linewidth'</span>, 3)
+0086 clabel(c, h);
+0087 
+0088 clc
+0089 disp(<span class="string">'Note that the contours of constant density are straight lines.'</span>)
+0090 disp(<span class="string">' '</span>)
+0091 disp(<span class="string">'Press any key to end.'</span>)
+0092 pause
+0093 close(fh1);
+0094 clear all;
+0095</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

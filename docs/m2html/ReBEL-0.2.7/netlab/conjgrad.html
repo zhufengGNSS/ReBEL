@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of conjgrad</title>
+  <meta name="keywords" content="conjgrad">
+  <meta name="description" content="CONJGRAD Conjugate gradients optimization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; conjgrad.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>conjgrad
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CONJGRAD Conjugate gradients optimization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CONJGRAD Conjugate gradients optimization.
+
+    Description
+    [X, OPTIONS, FLOG, POINTLOG] = CONJGRAD(F, X, OPTIONS, GRADF) uses a
+    conjugate gradients algorithm to find the minimum of the function
+    F(X) whose gradient is given by GRADF(X).  Here X is a row vector and
+    F returns a scalar value.  The point at which F has a local minimum
+    is returned as X.  The function value at that point is returned in
+    OPTIONS(8).  A log of the function values after each cycle is
+    (optionally) returned in FLOG, and a log of the points visited is
+    (optionally) returned in POINTLOG.
+
+    CONJGRAD(F, X, OPTIONS, GRADF, P1, P2, ...) allows  additional
+    arguments to be passed to F() and GRADF().
+
+    The optional parameters have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs error
+    values in the return argument ERRLOG, and the points visited in the
+    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only
+    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is
+    displayed.
+
+    OPTIONS(2) is a measure of the absolute precision required for the
+    value of X at the solution.  If the absolute difference between the
+    values of X between two successive steps is less than OPTIONS(2),
+    then this condition is satisfied.
+
+    OPTIONS(3) is a measure of the precision required of the objective
+    function at the solution.  If the absolute difference between the
+    objective function values between two successive steps is less than
+    OPTIONS(3), then this condition is satisfied. Both this and the
+    previous condition must be satisfied for termination.
+
+    OPTIONS(9) is set to 1 to check the user defined gradient function.
+
+    OPTIONS(10) returns the total number of function evaluations
+    (including those in any line searches).
+
+    OPTIONS(11) returns the total number of gradient evaluations.
+
+    OPTIONS(14) is the maximum number of iterations; default 100.
+
+    OPTIONS(15) is the precision in parameter space of the line search;
+    default 1E-4.
+
+    See also
+    <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">GRADDESC</a>, <a href="linemin.html" class="code" title="function [x, options] = linemin(f, pt, dir, fpt, options,varargin)">LINEMIN</a>, <a href="minbrack.html" class="code" title="function  [br_min, br_mid, br_max, num_evals] = minbrack(f, a, b, fa,varargin)">MINBRACK</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demopt1.html" class="code" title="function demopt1(xinit)">demopt1</a>	DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf, </a><span class="keyword">...</span>
+0002                                     varargin)
+0003 <span class="comment">%CONJGRAD Conjugate gradients optimization.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    [X, OPTIONS, FLOG, POINTLOG] = CONJGRAD(F, X, OPTIONS, GRADF) uses a</span>
+0007 <span class="comment">%    conjugate gradients algorithm to find the minimum of the function</span>
+0008 <span class="comment">%    F(X) whose gradient is given by GRADF(X).  Here X is a row vector and</span>
+0009 <span class="comment">%    F returns a scalar value.  The point at which F has a local minimum</span>
+0010 <span class="comment">%    is returned as X.  The function value at that point is returned in</span>
+0011 <span class="comment">%    OPTIONS(8).  A log of the function values after each cycle is</span>
+0012 <span class="comment">%    (optionally) returned in FLOG, and a log of the points visited is</span>
+0013 <span class="comment">%    (optionally) returned in POINTLOG.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    CONJGRAD(F, X, OPTIONS, GRADF, P1, P2, ...) allows  additional</span>
+0016 <span class="comment">%    arguments to be passed to F() and GRADF().</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    The optional parameters have the following interpretations.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs error</span>
+0021 <span class="comment">%    values in the return argument ERRLOG, and the points visited in the</span>
+0022 <span class="comment">%    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only</span>
+0023 <span class="comment">%    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is</span>
+0024 <span class="comment">%    displayed.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    OPTIONS(2) is a measure of the absolute precision required for the</span>
+0027 <span class="comment">%    value of X at the solution.  If the absolute difference between the</span>
+0028 <span class="comment">%    values of X between two successive steps is less than OPTIONS(2),</span>
+0029 <span class="comment">%    then this condition is satisfied.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%    OPTIONS(3) is a measure of the precision required of the objective</span>
+0032 <span class="comment">%    function at the solution.  If the absolute difference between the</span>
+0033 <span class="comment">%    objective function values between two successive steps is less than</span>
+0034 <span class="comment">%    OPTIONS(3), then this condition is satisfied. Both this and the</span>
+0035 <span class="comment">%    previous condition must be satisfied for termination.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%    OPTIONS(9) is set to 1 to check the user defined gradient function.</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%    OPTIONS(10) returns the total number of function evaluations</span>
+0040 <span class="comment">%    (including those in any line searches).</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%    OPTIONS(11) returns the total number of gradient evaluations.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%    OPTIONS(14) is the maximum number of iterations; default 100.</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">%    OPTIONS(15) is the precision in parameter space of the line search;</span>
+0047 <span class="comment">%    default 1E-4.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%    See also</span>
+0050 <span class="comment">%    GRADDESC, LINEMIN, MINBRACK, QUASINEW, SCG</span>
+0051 <span class="comment">%</span>
+0052 
+0053 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0054 
+0055 <span class="comment">%  Set up the options.</span>
+0056 <span class="keyword">if</span> length(options) &lt; 18
+0057   error(<span class="string">'Options vector too short'</span>)
+0058 <span class="keyword">end</span>
+0059 
+0060 <span class="keyword">if</span>(options(14))
+0061   niters = options(14);
+0062 <span class="keyword">else</span>
+0063   niters = 100;
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="comment">% Set up options for line search</span>
+0067 line_options = foptions;
+0068 <span class="comment">% Need a precise line search for success</span>
+0069 <span class="keyword">if</span> options(15) &gt; 0
+0070   line_options(2) = options(15);
+0071 <span class="keyword">else</span>
+0072   line_options(2) = 1e-4;
+0073 <span class="keyword">end</span>
+0074 
+0075 display = options(1);
+0076 
+0077 <span class="comment">% Next two lines allow conjgrad to work with expression strings</span>
+0078 f = fcnchk(f, length(varargin));
+0079 gradf = fcnchk(gradf, length(varargin));
+0080 
+0081 <span class="comment">%  Check gradients</span>
+0082 <span class="keyword">if</span> (options(9))
+0083   feval(<span class="string">'gradchek'</span>, x, f, gradf, varargin{:});
+0084 <span class="keyword">end</span>
+0085 
+0086 options(10) = 0;
+0087 options(11) = 0;
+0088 nparams = length(x);
+0089 fnew = feval(f, x, varargin{:});
+0090 options(10) = options(10) + 1;
+0091 gradnew = feval(gradf, x, varargin{:});
+0092 options(11) = options(11) + 1;
+0093 d = -gradnew;        <span class="comment">% Initial search direction</span>
+0094 br_min = 0;
+0095 br_max = 1.0;    <span class="comment">% Initial value for maximum distance to search along</span>
+0096 tol = sqrt(eps);
+0097 
+0098 j = 1;
+0099 <span class="keyword">if</span> nargout &gt;= 3
+0100   flog(j, :) = fnew;
+0101   <span class="keyword">if</span> nargout == 4
+0102     pointlog(j, :) = x;
+0103   <span class="keyword">end</span>
+0104 <span class="keyword">end</span>
+0105 
+0106 <span class="keyword">while</span> (j &lt;= niters)
+0107 
+0108   xold = x;
+0109   fold = fnew;
+0110   gradold = gradnew;
+0111 
+0112   gg = gradold*gradold';
+0113   <span class="keyword">if</span> (gg == 0.0)
+0114     <span class="comment">% If the gradient is zero then we are done.</span>
+0115     options(8) = fnew;
+0116     <span class="keyword">return</span>;
+0117   <span class="keyword">end</span>
+0118 
+0119   <span class="comment">% This shouldn't occur, but rest of code depends on d being downhill</span>
+0120   <span class="keyword">if</span> (gradnew*d' &gt; 0)
+0121     d = -d;
+0122     <span class="keyword">if</span> options(1) &gt;= 0
+0123       warning(<span class="string">'search direction uphill in conjgrad'</span>);
+0124     <span class="keyword">end</span>
+0125   <span class="keyword">end</span>
+0126 
+0127   line_sd = d./norm(d);
+0128   [lmin, line_options] = feval(<span class="string">'linemin'</span>, f, xold, line_sd, fold, <span class="keyword">...</span>
+0129     line_options, varargin{:});
+0130   options(10) = options(10) + line_options(10);
+0131   options(11) = options(11) + line_options(11);
+0132   <span class="comment">% Set x and fnew to be the actual search point we have found</span>
+0133   x = xold + lmin * line_sd;
+0134   fnew = line_options(8);
+0135 
+0136   <span class="comment">% Check for termination</span>
+0137   <span class="keyword">if</span> (max(abs(x - xold)) &lt; options(2) &amp; max(abs(fnew - fold)) &lt; options(3))
+0138     options(8) = fnew;
+0139     <span class="keyword">return</span>;
+0140   <span class="keyword">end</span>
+0141 
+0142   gradnew = feval(gradf, x, varargin{:});
+0143   options(11) = options(11) + 1;
+0144 
+0145   <span class="comment">% Use Polak-Ribiere formula to update search direction</span>
+0146   gamma = ((gradnew - gradold)*(gradnew)')/gg;
+0147   d = (d .* gamma) - gradnew;
+0148 
+0149   <span class="keyword">if</span> (display &gt; 0)
+0150     fprintf(1, <span class="string">'Cycle %4d  Function %11.6f\n'</span>, j, line_options(8));
+0151   <span class="keyword">end</span>
+0152 
+0153   j = j + 1;
+0154   <span class="keyword">if</span> nargout &gt;= 3
+0155     flog(j, :) = fnew;
+0156     <span class="keyword">if</span> nargout == 4
+0157       pointlog(j, :) = x;
+0158     <span class="keyword">end</span>
+0159   <span class="keyword">end</span>
+0160 <span class="keyword">end</span>
+0161 
+0162 <span class="comment">% If we get here, then we haven't terminated in the given number of</span>
+0163 <span class="comment">% iterations.</span>
+0164 
+0165 options(8) = fold;
+0166 <span class="keyword">if</span> (options(1) &gt;= 0)
+0167   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0168 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demse5</title>
+  <meta name="keywords" content="demse5">
+  <meta name="description" content="DEMSE4  Bearing and Frequency Tracking Example">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">state_estimation</a> &gt; demse5.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\state_estimation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>demse5
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DEMSE4  Bearing and Frequency Tracking Example</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DEMSE4  Bearing and Frequency Tracking Example
+
+   This demonstrates the use of the Sigma-Point Particle Filter on the classic
+   HARD bearing and frequency tracking problem.
+
+   This example is courtesy of Alain Bonnot.
+
+   See also
+   GSSM_BOT <a href="demse4.html" class="code" title="">DEMSE4</a> <a href="demse5.html" class="code" title="">DEMSE5</a>
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>	ADDRELPATH  Add a relative path which gets expanded into a absolute path</li><li><a href="../../.././ReBEL-0.2.7/core/cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>	CVECREP  Column vector replicate</li><li><a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>	GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</li><li><a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>	GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure</li><li><a href="../../.././ReBEL-0.2.7/core/gmmfit.html" class="code" title="function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W)">gmmfit</a>	GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X</li><li><a href="../../.././ReBEL-0.2.7/core/gmsppf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise, extra] = gmsppf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">gmsppf</a>	GMSPPF  Gaussian Mixture Sigma-Point Particle Filter</li><li><a href="../../.././ReBEL-0.2.7/core/gspf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise] = gspf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">gspf</a>	GSPF  Gaussian Sum Particle Filter</li><li><a href="../../.././ReBEL-0.2.7/core/pf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise] = pf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">pf</a>	PF  Generic Particle Filter</li><li><a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>	REMRELPATH  Remove a relative path (which gets expanded into a absolute path)</li><li><a href="../../.././ReBEL-0.2.7/core/sppf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise] = sppf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">sppf</a>	SPPF  Sigma-Point Particle Filter.</li><li><a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>	SRCDKF  Square Root Central Difference Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_bft.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_bft</a>	GSSM_BFT  General state space model for Bearings and Frequency Tracking of a randomly maneuvering</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% DEMSE4  Bearing and Frequency Tracking Example</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   This demonstrates the use of the Sigma-Point Particle Filter on the classic</span>
+0004 <span class="comment">%   HARD bearing and frequency tracking problem.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   This example is courtesy of Alain Bonnot.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   See also</span>
+0009 <span class="comment">%   GSSM_BOT DEMSE4 DEMSE5</span>
+0010 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0013 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0014 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0015 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0018 <span class="comment">%   detail.</span>
+0019 
+0020 <span class="comment">%=============================================================================================</span>
+0021 
+0022 clc;
+0023 clear;
+0024 
+0025 fprintf(<span class="string">'\nDEMSE5 :  Submarine bearing and frequency tracking \n\n'</span>);
+0026 fprintf(<span class="string">'Your submarine tries to determine the position, course, speed and emitted frequency \n'</span>);
+0027 fprintf(<span class="string">'of a target.\n'</span>);
+0028 fprintf(<span class="string">'At the beginning of the exercise, you know that :\n'</span>);
+0029 fprintf(<span class="string">'           - the speed of the target is between 8 and 16 m/s ;\n'</span>);
+0030 fprintf(<span class="string">'           - its range is between 1000 and 3000 m;\n'</span>);
+0031 fprintf(<span class="string">'           - its frequency tone is very stable between 295 and 305 Hz.\n\n'</span>);
+0032 fprintf(<span class="string">'You only observe the bearings of the target, and the doppler-shifted tone frequency.\n'</span>);
+0033 fprintf(<span class="string">'At mid-course, you perform a maneuver to improve observability.\n\n'</span>);
+0034 fprintf(<span class="string">'A random target trajectory is generated for each run, resulting in varying\n'</span>);
+0035 fprintf(<span class="string">'tracking performance depending on the observability.\n\n\n'</span>)
+0036 
+0037 
+0038 <span class="comment">%--- General setup</span>
+0039 
+0040 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../gssm'</span>);         <span class="comment">% add relative search path to example GSSM files to MATLABPATH</span>
+0041 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../data'</span>);         <span class="comment">% add relative search path to example data files to MATLABPATH</span>
+0042 
+0043 
+0044 <span class="comment">%--- Initialise GSSM</span>
+0045 
+0046 model = <a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_bft.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_bft</a>(<span class="string">'init'</span>);
+0047 
+0048 
+0049 <span class="comment">%--- Generate inference data structure</span>
+0050 
+0051 Arg.model = model;                                   <span class="comment">% embed GSSM</span>
+0052 Arg.type = <span class="string">'state'</span>;                                  <span class="comment">% estimation type</span>
+0053 Arg.tag = <span class="string">'State estimation for bearings and frequency tracking problem'</span>;  <span class="comment">% info tag (not required)</span>
+0054 
+0055 InfDS = <a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>(Arg);                               <span class="comment">% call generate function</span>
+0056 
+0057 <span class="comment">%--- Generate estimation process and observation noise sources</span>
+0058 
+0059 ftype = input(<span class="string">'Inference algorithm  [ srcdkf / pf / sppf / gspf / gmsppf ] : '</span>,<span class="string">'s'</span>);  <span class="comment">%  set type of inference algorithm (estimator) to use :</span>
+0060 
+0061 
+0062 <span class="comment">%--- Generate some data : Initial target state generated according to Gordon, Salmond &amp; Ewing - 1995</span>
+0063 
+0064 T = 100;                                              <span class="comment">% max. time k=1..T</span>
+0065 
+0066 V = model.pNoise.sample( model.pNoise, T);     <span class="comment">% generate process noise</span>
+0067 W = model.oNoise.sample( model.oNoise, T);     <span class="comment">% generate observation noise</span>
+0068 
+0069 <span class="comment">%Generate the observer (submarine) trajectory</span>
+0070 
+0071 <span class="comment">%Initial state of submarine</span>
+0072 sub=zeros(InfDS.statedim,T);
+0073 
+0074 sub(1,1)=0;
+0075 sub(2,1)=10;
+0076 sub(3,1)=0;
+0077 sub(4,1)=0;
+0078 sub(5,1)=350;
+0079 
+0080 <span class="keyword">for</span> k=2:(T/2-1);
+0081     sub(:,k)=model.ffun(model,sub(:,k-1),V(:,k-1),[]);
+0082 <span class="keyword">end</span>
+0083 
+0084 <span class="comment">%At mid-course, the sub changes its course (90° turn)</span>
+0085 sub_speedX=sub(2,T/2-1);
+0086 sub_speedY=sub(4,T/2-1);
+0087 sub(2,T/2-1)=sub_speedY;
+0088 sub(4,T/2-1)=sub_speedX;
+0089 
+0090 <span class="keyword">for</span> k=T/2:T;
+0091     sub(:,k)=model.ffun(model,sub(:,k-1),V(:,k-1),[]);
+0092 <span class="keyword">end</span>
+0093 
+0094 <span class="comment">%Generate the target trajectory</span>
+0095 X = zeros(InfDS.statedim, T);                        <span class="comment">% system state buffer</span>
+0096 y = zeros(InfDS.obsdim,T);                           <span class="comment">% system observations buffer</span>
+0097 
+0098 
+0099 range_0        = 2000 + 100*randn(1);
+0100 bearing_0      = -pi + 2*pi*rand(1);
+0101 frequency_0    = 300;
+0102 course_0       = -pi + 2*pi*rand(1);
+0103 speed_0        = 12+1*randn(1);
+0104 
+0105 X(:,1)=[range_0.*cos(bearing_0) + sub(1,1);
+0106     speed_0.*cos(course_0);
+0107     range_0.*sin(bearing_0) + sub(1,1);
+0108     speed_0.*sin(course_0);
+0109     frequency_0];
+0110 
+0111 
+0112 y(:,1) = model.hfun( model, X(:,1), W(:,1), sub(:,1));  <span class="comment">% initial observation</span>
+0113 
+0114 
+0115 <span class="keyword">for</span> k=2:T,
+0116     X(:,k) = model.ffun( model, X(:,k-1), V(:,k-1), []);
+0117     y(:,k) = model.hfun( model, X(:,k), W(:,k), sub(:,k));
+0118 <span class="keyword">end</span>
+0119 
+0120 true_range   = sqrt((X(1,:)-sub(1,:)).^2 + (X(3,:)-sub(3,:)).^2); <span class="comment">% calculate range ground truth trajectory</span>
+0121 true_bearing = atan2(X(3,:)-sub(3,:),X(1,:)-sub(1,:));   <span class="comment">% calculate bearing ground truth trajectory</span>
+0122 <span class="keyword">for</span> m=1:T
+0123 true_frequency(1,m) = X(5,m)*(1+1/1500*((sub(2,m)-X(2,m))*cos(true_bearing(1,m))+(sub(4,m)-X(4,m))*sin(true_bearing(1,m))));
+0124 <span class="keyword">end</span>
+0125 
+0126 
+0127 <span class="comment">%--- Display target trajectory detail</span>
+0128 
+0129 figure(1); clf;
+0130 p1=plot(X(1,:),X(3,:),<span class="string">'r-'</span>); hold on;
+0131 p2=plot(X(1,1),X(3,1),<span class="string">'g*'</span>);
+0132 p3=plot(X(1,end),X(3,end),<span class="string">'k*'</span>);
+0133 
+0134 p4=plot(sub(1,:),sub(3,:),<span class="string">'b-'</span>); hold on;
+0135 p5=plot(sub(1,1),sub(3,1),<span class="string">'g*'</span>);
+0136 p6=plot(sub(1,end),sub(3,end),<span class="string">'k*'</span>);hold off;
+0137 legend([p1 p2 p3 p4],<span class="string">'target trajectory'</span>,<span class="string">'position : k=0'</span>,[<span class="string">'position : k='</span> num2str(T)],<span class="string">'submarine trajectory'</span>);
+0138 
+0139 xlabel(<span class="string">'x'</span>);
+0140 ylabel(<span class="string">'y'</span>);
+0141 title(<span class="string">'Target and submarine trajectory'</span>);
+0142 
+0143 figure(2);
+0144 subplot(211);
+0145 p11=plot(1:T,true_range,<span class="string">'b-o'</span>);
+0146 xlabel(<span class="string">'k'</span>);
+0147 ylabel(<span class="string">'Distance'</span>);
+0148 title(<span class="string">'Distance'</span>);
+0149 legend([p11],<span class="string">'true'</span>);
+0150 subplot(212);
+0151 p13=plot(1:T,true_bearing,<span class="string">'b-o'</span>); hold on;
+0152 p14=plot(1:T,y(1,:),<span class="string">'k+'</span>); hold off;
+0153 legend([p13 p14],<span class="string">'true bearing'</span>,<span class="string">'measured bearing'</span>);
+0154 xlabel(<span class="string">'time : k'</span>);
+0155 ylabel(<span class="string">'bearing : radians'</span>);
+0156 title(<span class="string">'Bearing'</span>);
+0157 
+0158 figure(3);
+0159 p17=plot(true_frequency(1,:),<span class="string">'b-o'</span>);hold on
+0160 p18=plot(y(2,:),<span class="string">'k+'</span>);hold off
+0161 legend([p17 p18],<span class="string">'true frequency'</span>,<span class="string">'measured frequency'</span>);
+0162 xlabel(<span class="string">'time : k'</span>);
+0163 ylabel(<span class="string">'frequency : Hertz'</span>);
+0164 title(<span class="string">'Doppler shifted frequency'</span>);
+0165 axis([0 T 295 305]);
+0166 drawnow;
+0167 
+0168 
+0169 <span class="comment">%--- Setup estimation buffers</span>
+0170 
+0171 Xh = zeros(InfDS.statedim, T);
+0172 Sx = eye(InfDS.statedim);
+0173 
+0174 range_error   = zeros(1,T);
+0175 bearing_error = zeros(1,T);
+0176 pos_error     = zeros(1,T);
+0177 
+0178 
+0179 
+0180 <span class="comment">%--- Determine initial uncertainty in vehicle position</span>
+0181 
+0182 Nstat = 10000;
+0183 
+0184 bearing_stat      = true_bearing(1)+sqrt(model.oNoise.cov(1,1))*randn(1,Nstat);          <span class="comment">% observed (measured) bearing (mean) + observation noise</span>
+0185 range_stat        = 2000+500*randn(1,Nstat);
+0186 course_stat       = course_0 + 2*rand(1,Nstat);
+0187 speed_stat        = 12+1*randn(1,Nstat);
+0188 frequency_stat    = 300+sqrt(model.oNoise.cov(2,2))*randn(1,Nstat);
+0189 
+0190 Xstat=[range_stat.*cos(bearing_stat) + sub(1,1);
+0191     speed_stat.*cos(course_stat);
+0192     range_stat.*sin(bearing_stat) + sub(1,1);
+0193     speed_stat.*sin(course_stat);
+0194     frequency_stat];
+0195 
+0196 
+0197 Mu0 = mean(Xstat,2);
+0198 P0  = cov(Xstat');
+0199 
+0200 <span class="comment">%-------------------------------------------------------</span>
+0201 
+0202 <span class="keyword">switch</span> ftype
+0203   <span class="keyword">case</span> <span class="string">'sppf'</span>
+0204       numParticles = 200;                        <span class="comment">% number of particles</span>
+0205   <span class="keyword">otherwise</span>
+0206       numParticles = 1000;
+0207 <span class="keyword">end</span>
+0208 
+0209 
+0210 
+0211 bearing_stat      = true_bearing(1)+sqrt(model.oNoise.cov(1,1))*randn(1,numParticles);
+0212 range_stat        = 2000+500*randn(1,numParticles);
+0213 course_stat       = course_0 + 2*rand(1,numParticles);
+0214 speed_stat        = 12+1*randn(1,numParticles);
+0215 frequency_stat    = 300+sqrt(model.oNoise.cov(2,2))*randn(1,numParticles);
+0216 
+0217 initialParticles = [range_stat.*cos(bearing_stat) + sub(1,1);
+0218                     speed_stat.*cos(course_stat);
+0219                     range_stat.*sin(bearing_stat) + sub(1,1);
+0220                     speed_stat.*sin(course_stat);
+0221                     frequency_stat];
+0222 
+0223 
+0224 <span class="comment">%figure(1); hold on</span>
+0225 <span class="comment">%plot(ParticleFiltDS.particles(1,:),ParticleFiltDS.particles(3,:),'go');</span>
+0226 <span class="comment">%drawnow</span>
+0227 
+0228 
+0229 
+0230 <span class="comment">%=================================================================================================================</span>
+0231 <span class="comment">%--- Run estimator on observed data (noisy bearing readings)</span>
+0232 
+0233 fprintf(<span class="string">'Estimating trajectory...'</span>);
+0234 
+0235 <span class="keyword">switch</span> ftype
+0236 
+0237   <span class="comment">%---------------------------------------------------------------------------------------------------------</span>
+0238   <span class="keyword">case</span> <span class="string">'pf'</span>
+0239 
+0240       [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, ftype);     <span class="comment">% call system noise sources generation function</span>
+0241 
+0242       ParticleFiltDS.N = numParticles;
+0243       ParticleFiltDS.particles = initialParticles;
+0244       ParticleFiltDS.weights = (1/numParticles)*ones(1,numParticles);
+0245       InfDS.resampleThreshold = 1;    <span class="comment">% set resample threshold</span>
+0246       InfDS.estimateType = <span class="string">'mean'</span>;    <span class="comment">% estimate type for Xh</span>
+0247 
+0248       [Xh, ParticleFiltDS] = <a href="../../.././ReBEL-0.2.7/core/pf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise] = pf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">pf</a>(ParticleFiltDS, pNoise, oNoise, y, [], sub, InfDS);
+0249 
+0250 
+0251   <span class="comment">%---------------------------------------------------------------------------------------------------------</span>
+0252   <span class="keyword">case</span> <span class="string">'gspf'</span>
+0253 
+0254       [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, ftype);     <span class="comment">% call system noise sources generation function</span>
+0255 
+0256       ParticleFiltDS.N = numParticles;      <span class="comment">% number of particles</span>
+0257       ParticleFiltDS.stateGMM = <a href="../../.././ReBEL-0.2.7/core/gmmfit.html" class="code" title="function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W)">gmmfit</a>(initialParticles, 3, [0.001 10], <span class="string">'sqrt'</span>, 1);  <span class="comment">% fit a 5 component GMM to initial state distribution</span>
+0258 
+0259       InfDS.estimateType = <span class="string">'mean'</span>;    <span class="comment">% estimate type for Xh</span>
+0260 
+0261       [Xh, ParticleFiltDS] = <a href="../../.././ReBEL-0.2.7/core/gspf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise] = gspf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">gspf</a>(ParticleFiltDS, pNoise, oNoise, y, [], sub, InfDS);
+0262 
+0263 
+0264   <span class="comment">%---------------------------------------------------------------------------------------------------------</span>
+0265   <span class="keyword">case</span> <span class="string">'gmsppf'</span>
+0266 
+0267       [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, ftype);     <span class="comment">% call system noise sources generation function</span>
+0268 
+0269       ParticleFiltDS.N = numParticles;      <span class="comment">% number of particles</span>
+0270       ParticleFiltDS.stateGMM = <a href="../../.././ReBEL-0.2.7/core/gmmfit.html" class="code" title="function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W)">gmmfit</a>(initialParticles, 3, [0.001 10], <span class="string">'sqrt'</span>, 1);  <span class="comment">% fit a 5 component GMM to initial state distribution</span>
+0271       InfDS.estimateType = <span class="string">'mean'</span>;    <span class="comment">% estimate type for Xh</span>
+0272       InfDS.spkfType = <span class="string">'srcdkf'</span>;      <span class="comment">% Type of SPKF to use inside SPPF (note that ParticleFiltDS.particlesCov should comply)</span>
+0273       InfDS.spkfParams  = sqrt(3);    <span class="comment">% scale factor (CDKF parameter h)</span>
+0274 
+0275       [Xh, ParticleFiltDS] = <a href="../../.././ReBEL-0.2.7/core/gmsppf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise, extra] = gmsppf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">gmsppf</a>(ParticleFiltDS, pNoise, oNoise, y, [], sub, InfDS);
+0276 
+0277 
+0278   <span class="comment">%---------------------------------------------------------------------------------------------------------</span>
+0279   <span class="keyword">case</span> <span class="string">'sppf'</span>
+0280 
+0281       [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, ftype);     <span class="comment">% call system noise sources generation function</span>
+0282 
+0283       InfDS.spkfType = <span class="string">'srcdkf'</span>;      <span class="comment">% Type of SPKF to use inside SPPF (note that ParticleFiltDS.particlesCov should comply)</span>
+0284       InfDS.spkfParams  = sqrt(3);    <span class="comment">% scale factor (CDKF parameter h)</span>
+0285       InfDS.resampleThreshold = 1;    <span class="comment">% set resample threshold</span>
+0286       InfDS.estimateType = <span class="string">'mean'</span>;    <span class="comment">% estimate type for Xh</span>
+0287 
+0288       [pNoiseGAUS, oNoiseGAUS, foo] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, InfDS.spkfType); <span class="comment">% generate Gaussian system noise sources for internal SPKFs</span>
+0289 
+0290       <span class="comment">% build ParticleFilter data structure</span>
+0291 
+0292       ParticleFiltDS.N = numParticles;              <span class="comment">% number of particles</span>
+0293       ParticleFiltDS.particles = initialParticles;  <span class="comment">% initialize particle means</span>
+0294       ParticleFiltDS.particlesCov = repmat(chol(P0)',[1 1 numParticles]);  <span class="comment">% initialize article covariances</span>
+0295       ParticleFiltDS.pNoise = pNoiseGAUS;      <span class="comment">% embed SPKF noise sources</span>
+0296       ParticleFiltDS.oNoise = oNoiseGAUS;      <span class="comment">%   &quot;   &quot;       &quot;    &quot;</span>
+0297       ParticleFiltDS.weights = <a href="../../.././ReBEL-0.2.7/core/cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(1/numParticles,numParticles); <span class="comment">% initialize particle weights</span>
+0298 
+0299       [Xh, ParticleFiltDS] = <a href="../../.././ReBEL-0.2.7/core/sppf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise] = sppf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">sppf</a>(ParticleFiltDS, pNoise, oNoise, y, [], sub, InfDS);
+0300 
+0301   <span class="comment">%---------------------------------------------------------------------------------------------------------</span>
+0302   <span class="keyword">case</span> <span class="string">'srcdkf'</span>
+0303 
+0304 
+0305       [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, ftype);     <span class="comment">% call system noise sources generation function</span>
+0306 
+0307 
+0308       InfDS.spkfParams  = sqrt(3);    <span class="comment">% scale factor (CDKF parameter h)</span>
+0309 
+0310       Sx = chol(P0)';
+0311       Xh(:,1) = Mu0;
+0312 
+0313       [Xh, Sx] = <a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>(Xh(:,1), Sx, pNoise, oNoise, y, [], sub, InfDS);
+0314 
+0315 
+0316   <span class="comment">%---------------------------------------------------------------------------------------------------------</span>
+0317   <span class="keyword">case</span> <span class="string">'srukf'</span>
+0318 
+0319 
+0320       [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, ftype);     <span class="comment">% call system noise sources generation function</span>
+0321 
+0322 
+0323       InfDS.spkfParams  = [1 2 0];    <span class="comment">% scale factor (CDKF parameter h)</span>
+0324 
+0325       Sx = chol(P0)';
+0326       Xh(:,1) = Mu0;
+0327 
+0328       [Xh, Sx] = <a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>(Xh(:,1), Sx, pNoise, oNoise, y, [], sub, InfDS);
+0329 
+0330 
+0331   <span class="comment">%---------------------------------------------------------------------------------------------------------</span>
+0332   <span class="keyword">otherwise</span>
+0333 
+0334       error([<span class="string">' Unknown inference algorithm type '''</span> ftype <span class="string">''''</span>]);
+0335 
+0336 
+0337 <span class="keyword">end</span>
+0338 
+0339 fprintf(<span class="string">' done.\n\n'</span>);
+0340 
+0341 <span class="comment">%=================================================================================================================</span>
+0342 
+0343 <span class="comment">%--- Calculate errors</span>
+0344 
+0345 range_estimate = sqrt((Xh(1,:)-sub(1,:)).^2 + (Xh(3,:)-sub(3,:)).^2);
+0346 bearing_estimate = atan2(Xh(3,:)-sub(3,:),Xh(1,:)-sub(1,:));
+0347 <span class="keyword">for</span> m=1:T
+0348 frequency_estimate(1,m) = Xh(5,m)*(1+1/1500*((sub(2,m)-Xh(2,m))*cos(bearing_estimate(1,m))+(sub(4,m)-Xh(4,m))*sin(bearing_estimate(1,m))));
+0349 <span class="keyword">end</span>
+0350 
+0351 range_error     =  range_estimate - true_range;
+0352 bearing_error   =  bearing_estimate - true_bearing;
+0353 pos_error       =  sqrt((Xh([1;3],:)-X([1;3],:)).^2);
+0354 
+0355 
+0356 <span class="comment">%--- Display results</span>
+0357 
+0358 
+0359 figure(1); hold on;
+0360 p7=plot(Xh(1,:),Xh(3,:),<span class="string">'r.'</span>);
+0361 legend([p1 p2 p3 p4 p7],<span class="string">'true target trajectory'</span>,<span class="string">'position : k=0'</span>,[<span class="string">'position : k='</span> num2str(T)],<span class="string">'submarine trajectory'</span>,<span class="string">'estimated target''s trajectory'</span>,0);
+0362 xlabel(<span class="string">'x'</span>);
+0363 ylabel(<span class="string">'y'</span>);
+0364 title(<span class="string">'Target and submarine trajectory'</span>);
+0365 hold off;
+0366 
+0367 figure(2);
+0368 subplot(211); hold on;
+0369 p12=plot(1:T,range_estimate,<span class="string">'r-'</span>);
+0370 xlabel(<span class="string">'k'</span>);
+0371 ylabel(<span class="string">'range'</span>);
+0372 title(<span class="string">'Range Profile'</span>);
+0373 legend([p11 p12],<span class="string">'true'</span>,<span class="string">'inferred'</span>,0);
+0374 hold off;
+0375 subplot(212); hold on;
+0376 p15=plot(1:T,bearing_estimate,<span class="string">'r-'</span>);
+0377 xlabel(<span class="string">'t'</span>);
+0378 ylabel(<span class="string">'bearing'</span>);
+0379 title(<span class="string">'Bearing Profile'</span>)
+0380 legend([p13 p14 p15],<span class="string">'true'</span>,<span class="string">'measured'</span>,<span class="string">'inferred'</span>,0);
+0381 hold off;
+0382 
+0383 figure(3);
+0384 p16=plot(Xh(5,:),<span class="string">'r-'</span>);hold on;
+0385 p17=plot(X(5,:),<span class="string">'b-'</span>);
+0386 xlabel(<span class="string">'t'</span>);
+0387 ylabel(<span class="string">'Source frequency : Hertz'</span>);
+0388 title(<span class="string">'Source frequency profile'</span>);
+0389 legend([p16 p17],<span class="string">'estimated frequency'</span>,<span class="string">'true source frequency'</span>,0);
+0390 axis([0 T 280 320]);
+0391 hold off;
+0392 
+0393 figure(4);
+0394 p18=plot(true_frequency(1,:),<span class="string">'b-o'</span>);hold on;
+0395 p19=plot(frequency_estimate(1,:),<span class="string">'r-'</span>);
+0396 p20=plot(y(2,:),<span class="string">'k+'</span>);
+0397 legend([p18 p19 p20],<span class="string">'true doppler shifted frequency'</span>,<span class="string">'estimated doppler shifted frequency'</span>,<span class="string">'measured doppler shifted frequency'</span>,0);
+0398 xlabel(<span class="string">'t'</span>);
+0399 ylabel(<span class="string">'frequency : Hertz'</span>);
+0400 title(<span class="string">'Doppler shifted frequency profile'</span>);
+0401 axis([0 T 295 305]);
+0402 hold off;
+0403 
+0404 figure(5);
+0405 subplot(211);
+0406 p21=plot(atan2(X(4,:),X(2,:)),<span class="string">'b-'</span>);hold on;
+0407 p22=plot(atan2(Xh(4,:),Xh(2,:)),<span class="string">'r-'</span>);hold off;
+0408 xlabel(<span class="string">'t'</span>);
+0409 ylabel(<span class="string">'Course : rad'</span>);
+0410 title(<span class="string">'Course profile (true and estimated)'</span>);
+0411 legend([p21 p22],<span class="string">'True course'</span>,<span class="string">'Estimated course'</span>,0);
+0412 
+0413 
+0414 subplot(212);
+0415 p23=plot(sqrt(X(4,:).^2+X(2,:).^2),<span class="string">'b-'</span>);hold on;
+0416 p24=plot(sqrt(Xh(4,:).^2+Xh(2,:).^2),<span class="string">'r-'</span>);hold off;
+0417 xlabel(<span class="string">'t'</span>);
+0418 ylabel(<span class="string">'Speed : m/s'</span>);
+0419 title(<span class="string">'Speed profile (true and estimated)'</span>);
+0420 legend([p23 p24],<span class="string">'True speed'</span>,<span class="string">'Estimated speed'</span>,0);
+0421 
+0422 
+0423 <span class="comment">%--- House keeping</span>
+0424 
+0425 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../gssm'</span>);       <span class="comment">% remove relative search path to example GSSM files from MATLABPATH</span>
+0426 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../data'</span>);       <span class="comment">% remove relative search path to example data files from MATLABPATH</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

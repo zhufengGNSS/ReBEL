@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gpcovarp</title>
+  <meta name="keywords" content="gpcovarp">
+  <meta name="description" content="GPCOVARP Calculate the prior covariance for a Gaussian Process.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gpcovarp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gpcovarp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GPCOVARP Calculate the prior covariance for a Gaussian Process.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [covp, covf] = gpcovarp(net, x1, x2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GPCOVARP Calculate the prior covariance for a Gaussian Process.
+
+    Description
+
+    COVP = GPCOVARP(NET, X1, X2) takes  a Gaussian Process data structure
+    NET together with two matrices X1 and X2 of input vectors,  and
+    computes the matrix of the prior covariance.  This is the function
+    component of the covariance plus the exponential of the bias term.
+
+    [COVP, COVF] = GPCOVARP(NET, X1, X2) also returns the function
+    component of the covariance.
+
+    See also
+    <a href="gp.html" class="code" title="function net = gp(nin, covar_fn, prior)">GP</a>, <a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">GPCOVAR</a>, <a href="gpcovarf.html" class="code" title="function covf = gpcovarf(net, x1, x2)">GPCOVARF</a>, <a href="gperr.html" class="code" title="function [e, edata, eprior] = gperr(net, x, t)">GPERR</a>, <a href="gpgrad.html" class="code" title="function g = gpgrad(net, x, t)">GPGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gpcovarf.html" class="code" title="function covf = gpcovarf(net, x1, x2)">gpcovarf</a>	GPCOVARF Calculate the covariance function for a Gaussian Process.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>	GPCOVAR Calculate the covariance for a Gaussian Process.</li><li><a href="gpfwd.html" class="code" title="function [y, sigsq] = gpfwd(net, x, cninv)">gpfwd</a>	GPFWD	Forward propagation through Gaussian Process.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [covp, covf] = gpcovarp(net, x1, x2)</a>
+0002 <span class="comment">%GPCOVARP Calculate the prior covariance for a Gaussian Process.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    COVP = GPCOVARP(NET, X1, X2) takes  a Gaussian Process data structure</span>
+0007 <span class="comment">%    NET together with two matrices X1 and X2 of input vectors,  and</span>
+0008 <span class="comment">%    computes the matrix of the prior covariance.  This is the function</span>
+0009 <span class="comment">%    component of the covariance plus the exponential of the bias term.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    [COVP, COVF] = GPCOVARP(NET, X1, X2) also returns the function</span>
+0012 <span class="comment">%    component of the covariance.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also</span>
+0015 <span class="comment">%    GP, GPCOVAR, GPCOVARF, GPERR, GPGRAD</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0019 
+0020 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gp'</span>, x1);
+0021 <span class="keyword">if</span> ~isempty(errstring);
+0022   error(errstring);
+0023 <span class="keyword">end</span>
+0024 
+0025 <span class="keyword">if</span> size(x1, 2) ~= size(x2, 2)
+0026   error(<span class="string">'Number of variables in x1 and x2 must be the same'</span>);
+0027 <span class="keyword">end</span>
+0028 
+0029 covf = <a href="gpcovarf.html" class="code" title="function covf = gpcovarf(net, x1, x2)">gpcovarf</a>(net, x1, x2);
+0030 covp = covf + exp(net.bias);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

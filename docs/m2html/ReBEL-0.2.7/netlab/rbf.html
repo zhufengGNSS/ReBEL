@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rbf</title>
+  <meta name="keywords" content="rbf">
+  <meta name="description" content="RBF	Creates an RBF network with specified architecture">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; rbf.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>rbf
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>RBF	Creates an RBF network with specified architecture</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RBF    Creates an RBF network with specified architecture
+
+    Description
+    NET = RBF(NIN, NHIDDEN, NOUT, RBFUNC) constructs and initialises a
+    radial basis function network returning a data structure NET. The
+    weights are all initialised with a zero mean, unit variance normal
+    distribution, with the exception of the variances, which are set to
+    one. This makes use of the Matlab function RANDN and so the seed for
+    the random weight initialization can be  set using RANDN('STATE', S)
+    where S is the seed value. The activation functions are defined in
+    terms of the distance between the data point and the corresponding
+    centre.  Note that the functions are computed to a convenient
+    constant multiple: for example, the Gaussian is not normalised.
+    (Normalisation is not needed as the function outputs are linearly
+    combined in the next layer.)
+
+    The fields in NET are
+      type = 'rbf'
+      nin = number of inputs
+      nhidden = number of hidden units
+      nout = number of outputs
+      nwts = total number of weights and biases
+      actfn = string defining hidden unit activation function:
+        'gaussian' for a radially symmetric Gaussian function.
+        'tps' for r^2 log r, the thin plate spline function.
+        'r4logr' for r^4 log r.
+      outfn = string defining output error function:
+        'linear' for linear outputs (default) and SoS error.
+        'neuroscale' for Sammon stress measure.
+      c = centres
+      wi = squared widths (null for rlogr and tps)
+      w2 = second layer weight matrix
+      b2 = second layer bias vector
+
+    NET = RBF(NIN, NHIDDEN, NOUT, RBFUND, OUTFUNC) allows the user to
+    specify the type of error function to be used.  The field OUTFN is
+    set to the value of this string.  Linear outputs (for regression
+    problems) and Neuroscale outputs (for topographic mappings) are
+    supported.
+
+    NET = RBF(NIN, NHIDDEN, NOUT, RBFUNC, OUTFUNC, PRIOR, BETA), in which
+    PRIOR is a scalar, allows the field NET.ALPHA in the data structure
+    NET to be set, corresponding to a zero-mean isotropic Gaussian prior
+    with inverse variance with value PRIOR. Alternatively, PRIOR can
+    consist of a data structure with fields ALPHA and INDEX, allowing
+    individual Gaussian priors to be set over groups of weights in the
+    network. Here ALPHA is a column vector in which each element
+    corresponds to a separate group of weights, which need not be
+    mutually exclusive.  The membership of the groups is defined by the
+    matrix INDX in which the columns correspond to the elements of ALPHA.
+    Each column has one element for each weight in the matrix, in the
+    order defined by the function RBFPAK, and each element is 1 or 0
+    according to whether the weight is a member of the corresponding
+    group or not. A utility function RBFPRIOR is provided to help in
+    setting up the PRIOR data structure.
+
+    NET = RBF(NIN, NHIDDEN, NOUT, FUNC, PRIOR, BETA) also sets the
+    additional field NET.BETA in the data structure NET, where beta
+    corresponds to the inverse noise variance.
+
+    See also
+    <a href="rbferr.html" class="code" title="function [e, edata, eprior] = rbferr(net, x, t)">RBFERR</a>, <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">RBFFWD</a>, <a href="rbfgrad.html" class="code" title="function [g, gdata, gprior] = rbfgrad(net, x, t)">RBFGRAD</a>, <a href="rbfpak.html" class="code" title="function w = rbfpak(net)">RBFPAK</a>, <a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">RBFTRAIN</a>, <a href="rbfunpak.html" class="code" title="function net = rbfunpak(net, w)">RBFUNPAK</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="rbfprior.html" class="code" title="function [mask, prior] = rbfprior(rbfunc, nin, nhidden, nout, aw2, ab2)">rbfprior</a>	RBFPRIOR Create Gaussian prior and output layer mask for RBF.</li><li><a href="rbfunpak.html" class="code" title="function net = rbfunpak(net, w)">rbfunpak</a>	RBFUNPAK Separates a vector of RBF weights into its components.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev3.html" class="code" title="">demev3</a>	DEMEV3	Demonstrate Bayesian regression for the RBF.</li><li><a href="demns1.html" class="code" title="">demns1</a>	DEMNS1	Demonstrate Neuroscale for visualisation.</li><li><a href="demrbf1.html" class="code" title="">demrbf1</a>	DEMRBF1 Demonstrate simple regression using a radial basis function network.</li><li><a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">gtm</a>	GTM	Create a Generative Topographic Map.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)</a>
+0002 <span class="comment">%RBF    Creates an RBF network with specified architecture</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    NET = RBF(NIN, NHIDDEN, NOUT, RBFUNC) constructs and initialises a</span>
+0006 <span class="comment">%    radial basis function network returning a data structure NET. The</span>
+0007 <span class="comment">%    weights are all initialised with a zero mean, unit variance normal</span>
+0008 <span class="comment">%    distribution, with the exception of the variances, which are set to</span>
+0009 <span class="comment">%    one. This makes use of the Matlab function RANDN and so the seed for</span>
+0010 <span class="comment">%    the random weight initialization can be  set using RANDN('STATE', S)</span>
+0011 <span class="comment">%    where S is the seed value. The activation functions are defined in</span>
+0012 <span class="comment">%    terms of the distance between the data point and the corresponding</span>
+0013 <span class="comment">%    centre.  Note that the functions are computed to a convenient</span>
+0014 <span class="comment">%    constant multiple: for example, the Gaussian is not normalised.</span>
+0015 <span class="comment">%    (Normalisation is not needed as the function outputs are linearly</span>
+0016 <span class="comment">%    combined in the next layer.)</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    The fields in NET are</span>
+0019 <span class="comment">%      type = 'rbf'</span>
+0020 <span class="comment">%      nin = number of inputs</span>
+0021 <span class="comment">%      nhidden = number of hidden units</span>
+0022 <span class="comment">%      nout = number of outputs</span>
+0023 <span class="comment">%      nwts = total number of weights and biases</span>
+0024 <span class="comment">%      actfn = string defining hidden unit activation function:</span>
+0025 <span class="comment">%        'gaussian' for a radially symmetric Gaussian function.</span>
+0026 <span class="comment">%        'tps' for r^2 log r, the thin plate spline function.</span>
+0027 <span class="comment">%        'r4logr' for r^4 log r.</span>
+0028 <span class="comment">%      outfn = string defining output error function:</span>
+0029 <span class="comment">%        'linear' for linear outputs (default) and SoS error.</span>
+0030 <span class="comment">%        'neuroscale' for Sammon stress measure.</span>
+0031 <span class="comment">%      c = centres</span>
+0032 <span class="comment">%      wi = squared widths (null for rlogr and tps)</span>
+0033 <span class="comment">%      w2 = second layer weight matrix</span>
+0034 <span class="comment">%      b2 = second layer bias vector</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%    NET = RBF(NIN, NHIDDEN, NOUT, RBFUND, OUTFUNC) allows the user to</span>
+0037 <span class="comment">%    specify the type of error function to be used.  The field OUTFN is</span>
+0038 <span class="comment">%    set to the value of this string.  Linear outputs (for regression</span>
+0039 <span class="comment">%    problems) and Neuroscale outputs (for topographic mappings) are</span>
+0040 <span class="comment">%    supported.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%    NET = RBF(NIN, NHIDDEN, NOUT, RBFUNC, OUTFUNC, PRIOR, BETA), in which</span>
+0043 <span class="comment">%    PRIOR is a scalar, allows the field NET.ALPHA in the data structure</span>
+0044 <span class="comment">%    NET to be set, corresponding to a zero-mean isotropic Gaussian prior</span>
+0045 <span class="comment">%    with inverse variance with value PRIOR. Alternatively, PRIOR can</span>
+0046 <span class="comment">%    consist of a data structure with fields ALPHA and INDEX, allowing</span>
+0047 <span class="comment">%    individual Gaussian priors to be set over groups of weights in the</span>
+0048 <span class="comment">%    network. Here ALPHA is a column vector in which each element</span>
+0049 <span class="comment">%    corresponds to a separate group of weights, which need not be</span>
+0050 <span class="comment">%    mutually exclusive.  The membership of the groups is defined by the</span>
+0051 <span class="comment">%    matrix INDX in which the columns correspond to the elements of ALPHA.</span>
+0052 <span class="comment">%    Each column has one element for each weight in the matrix, in the</span>
+0053 <span class="comment">%    order defined by the function RBFPAK, and each element is 1 or 0</span>
+0054 <span class="comment">%    according to whether the weight is a member of the corresponding</span>
+0055 <span class="comment">%    group or not. A utility function RBFPRIOR is provided to help in</span>
+0056 <span class="comment">%    setting up the PRIOR data structure.</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">%    NET = RBF(NIN, NHIDDEN, NOUT, FUNC, PRIOR, BETA) also sets the</span>
+0059 <span class="comment">%    additional field NET.BETA in the data structure NET, where beta</span>
+0060 <span class="comment">%    corresponds to the inverse noise variance.</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">%    See also</span>
+0063 <span class="comment">%    RBFERR, RBFFWD, RBFGRAD, RBFPAK, RBFTRAIN, RBFUNPAK</span>
+0064 <span class="comment">%</span>
+0065 
+0066 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0067 
+0068 net.type = <span class="string">'rbf'</span>;
+0069 net.nin = nin;
+0070 net.nhidden = nhidden;
+0071 net.nout = nout;
+0072 
+0073 <span class="comment">% Check that function is an allowed type</span>
+0074 actfns = {<span class="string">'gaussian'</span>, <span class="string">'tps'</span>, <span class="string">'r4logr'</span>};
+0075 outfns = {<span class="string">'linear'</span>, <span class="string">'neuroscale'</span>};
+0076 <span class="keyword">if</span> (strcmp(rbfunc, actfns)) == 0
+0077   error(<span class="string">'Undefined activation function.'</span>)
+0078 <span class="keyword">else</span>
+0079   net.actfn = rbfunc;
+0080 <span class="keyword">end</span>
+0081 <span class="keyword">if</span> nargin &lt;= 4
+0082    net.outfn = outfns{1};
+0083 <span class="keyword">elseif</span> (strcmp(outfunc, outfns) == 0)
+0084    error(<span class="string">'Undefined output function.'</span>)
+0085 <span class="keyword">else</span>
+0086    net.outfn = outfunc;
+0087  <span class="keyword">end</span>
+0088 
+0089 <span class="comment">% Assume each function has a centre and a single width parameter, and that</span>
+0090 <span class="comment">% hidden layer to output weights include a bias.  Only the Gaussian function</span>
+0091 <span class="comment">% requires a width</span>
+0092 net.nwts = nin*nhidden + (nhidden + 1)*nout;
+0093 <span class="keyword">if</span> strcmp(rbfunc, <span class="string">'gaussian'</span>)
+0094   <span class="comment">% Extra weights for width parameters</span>
+0095   net.nwts = net.nwts + nhidden;
+0096 <span class="keyword">end</span>
+0097 
+0098 <span class="keyword">if</span> nargin &gt; 5
+0099   <span class="keyword">if</span> isstruct(prior)
+0100     net.alpha = prior.alpha;
+0101     net.index = prior.index;
+0102   <span class="keyword">elseif</span> size(prior) == [1 1]
+0103     net.alpha = prior;
+0104   <span class="keyword">else</span>
+0105     error(<span class="string">'prior must be a scalar or a structure'</span>);
+0106   <span class="keyword">end</span>  
+0107   <span class="keyword">if</span> nargin &gt; 6
+0108     net.beta = beta;
+0109   <span class="keyword">end</span>
+0110 <span class="keyword">end</span>
+0111 
+0112 w = randn(1, net.nwts);
+0113 net = <a href="rbfunpak.html" class="code" title="function net = rbfunpak(net, w)">rbfunpak</a>(net, w);
+0114 
+0115 <span class="comment">% Make widths equal to one</span>
+0116 <span class="keyword">if</span> strcmp(rbfunc, <span class="string">'gaussian'</span>)
+0117   net.wi = ones(1, nhidden);
+0118 <span class="keyword">end</span>
+0119 
+0120 <span class="keyword">if</span> strcmp(net.outfn, <span class="string">'neuroscale'</span>)
+0121   net.mask = <a href="rbfprior.html" class="code" title="function [mask, prior] = rbfprior(rbfunc, nin, nhidden, nout, aw2, ab2)">rbfprior</a>(rbfunc, nin, nhidden, nout);
+0122 <span class="keyword">end</span>
+0123</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

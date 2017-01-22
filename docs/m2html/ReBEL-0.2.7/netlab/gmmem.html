@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmmem</title>
+  <meta name="keywords" content="gmmem">
+  <meta name="description" content="GMMEM	EM algorithm for Gaussian mixture model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gmmem.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmmem
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMEM	EM algorithm for Gaussian mixture model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [mix, options, errlog] = gmmem(mix, x, options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GMMEM    EM algorithm for Gaussian mixture model.
+
+    Description
+    [MIX, OPTIONS, ERRLOG] = GMMEM(MIX, X, OPTIONS) uses the Expectation
+    Maximization algorithm of Dempster et al. to estimate the parameters
+    of a Gaussian mixture model defined by a data structure MIX. The
+    matrix X represents the data whose expectation is maximized, with
+    each row corresponding to a vector.    The optional parameters have
+    the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs error
+    values in the return argument ERRLOG. If OPTIONS(1) is set to 0, then
+    only warning messages are displayed.  If OPTIONS(1) is -1, then
+    nothing is displayed.
+
+    OPTIONS(3) is a measure of the absolute precision required of the
+    error function at the solution. If the change in log likelihood
+    between two steps of the EM algorithm is less than this value, then
+    the function terminates.
+
+    OPTIONS(5) is set to 1 if a covariance matrix is reset to its
+    original value when any of its singular values are too small (less
+    than MIN_COVAR which has the value eps).   With the default value of
+    0 no action is taken.
+
+    OPTIONS(14) is the maximum number of iterations; default 100.
+
+    The optional return value OPTIONS contains the final error value
+    (i.e. data log likelihood) in OPTIONS(8).
+
+    See also
+    <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a>, <a href="gmminit.html" class="code" title="function mix = gmminit(mix, x, options)">GMMINIT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li><li><a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>	GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</li><li><a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">gmmprob</a>	GMMPROB Computes the data probability for a Gaussian mixture model.</li><li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li><li><a href="ppca.html" class="code" title="function [var, U, lambda] = ppca(x, ppca_dim)">ppca</a>	PPCA	Probabilistic Principal Components Analysis</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgmm1.html" class="code" title="">demgmm1</a>	DEMGMM1 Demonstrate EM for Gaussian mixtures.</li><li><a href="demgmm2.html" class="code" title="">demgmm2</a>	DEMGMM1 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm3.html" class="code" title="">demgmm3</a>	DEMGMM3 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm4.html" class="code" title="">demgmm4</a>	DEMGMM4 Demonstrate density modelling with a Gaussian mixture model.</li><li><a href="demgmm5.html" class="code" title="">demgmm5</a>	DEMGMM5 Demonstrate density modelling with a PPCA mixture model.</li><li><a href="demhmc1.html" class="code" title="">demhmc1</a>	DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.</li><li><a href="rbfsetbf.html" class="code" title="function net = rbfsetbf(net, options, x)">rbfsetbf</a>	RBFSETBF Set basis functions of RBF from data.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [mix, options, errlog] = gmmem(mix, x, options)</a>
+0002 <span class="comment">%GMMEM    EM algorithm for Gaussian mixture model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    [MIX, OPTIONS, ERRLOG] = GMMEM(MIX, X, OPTIONS) uses the Expectation</span>
+0006 <span class="comment">%    Maximization algorithm of Dempster et al. to estimate the parameters</span>
+0007 <span class="comment">%    of a Gaussian mixture model defined by a data structure MIX. The</span>
+0008 <span class="comment">%    matrix X represents the data whose expectation is maximized, with</span>
+0009 <span class="comment">%    each row corresponding to a vector.    The optional parameters have</span>
+0010 <span class="comment">%    the following interpretations.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs error</span>
+0013 <span class="comment">%    values in the return argument ERRLOG. If OPTIONS(1) is set to 0, then</span>
+0014 <span class="comment">%    only warning messages are displayed.  If OPTIONS(1) is -1, then</span>
+0015 <span class="comment">%    nothing is displayed.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    OPTIONS(3) is a measure of the absolute precision required of the</span>
+0018 <span class="comment">%    error function at the solution. If the change in log likelihood</span>
+0019 <span class="comment">%    between two steps of the EM algorithm is less than this value, then</span>
+0020 <span class="comment">%    the function terminates.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    OPTIONS(5) is set to 1 if a covariance matrix is reset to its</span>
+0023 <span class="comment">%    original value when any of its singular values are too small (less</span>
+0024 <span class="comment">%    than MIN_COVAR which has the value eps).   With the default value of</span>
+0025 <span class="comment">%    0 no action is taken.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%    OPTIONS(14) is the maximum number of iterations; default 100.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%    The optional return value OPTIONS contains the final error value</span>
+0030 <span class="comment">%    (i.e. data log likelihood) in OPTIONS(8).</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%    See also</span>
+0033 <span class="comment">%    GMM, GMMINIT</span>
+0034 <span class="comment">%</span>
+0035 
+0036 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0037 
+0038 <span class="comment">% Check that inputs are consistent</span>
+0039 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mix, <span class="string">'gmm'</span>, x);
+0040 <span class="keyword">if</span> ~isempty(errstring)
+0041   error(errstring);
+0042 <span class="keyword">end</span>
+0043 
+0044 [ndata, xdim] = size(x);
+0045 
+0046 <span class="comment">% Sort out the options</span>
+0047 <span class="keyword">if</span> (options(14))
+0048   niters = options(14);
+0049 <span class="keyword">else</span>
+0050   niters = 100;
+0051 <span class="keyword">end</span>
+0052 
+0053 display = options(1);
+0054 store = 0;
+0055 <span class="keyword">if</span> (nargout &gt; 2)
+0056   store = 1;    <span class="comment">% Store the error values to return them</span>
+0057   errlog = zeros(1, niters);
+0058 <span class="keyword">end</span>
+0059 test = 0;
+0060 <span class="keyword">if</span> options(3) &gt; 0.0
+0061   test = 1;    <span class="comment">% Test log likelihood for termination</span>
+0062 <span class="keyword">end</span>
+0063 
+0064 check_covars = 0;
+0065 <span class="keyword">if</span> options(5) &gt;= 1
+0066   <span class="keyword">if</span> display &gt;= 0
+0067     disp(<span class="string">'check_covars is on'</span>);
+0068   <span class="keyword">end</span>
+0069   check_covars = 1;    <span class="comment">% Ensure that covariances don't collapse</span>
+0070   MIN_COVAR = eps;    <span class="comment">% Minimum singular value of covariance matrix</span>
+0071   init_covars = mix.covars;
+0072 <span class="keyword">end</span>
+0073 
+0074 <span class="comment">% Main loop of algorithm</span>
+0075 <span class="keyword">for</span> n = 1:niters
+0076   
+0077   <span class="comment">% Calculate posteriors based on old parameters</span>
+0078   [post, act] = <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>(mix, x);
+0079   
+0080   <span class="comment">% Calculate error value if needed</span>
+0081   <span class="keyword">if</span> (display | store | test)
+0082     prob = act*(mix.priors)';
+0083     <span class="comment">% Error value is negative log likelihood of data</span>
+0084     e = - sum(log(prob));
+0085     <span class="keyword">if</span> store
+0086       errlog(n) = e;
+0087     <span class="keyword">end</span>
+0088     <span class="keyword">if</span> display &gt; 0
+0089       fprintf(1, <span class="string">'Cycle %4d  Error %11.6f\n'</span>, n, e);
+0090     <span class="keyword">end</span>
+0091     <span class="keyword">if</span> test
+0092       <span class="keyword">if</span> (n &gt; 1 &amp; abs(e - eold) &lt; options(3))
+0093         options(8) = e;
+0094         <span class="keyword">return</span>;
+0095       <span class="keyword">else</span>
+0096         eold = e;
+0097       <span class="keyword">end</span>
+0098     <span class="keyword">end</span>
+0099   <span class="keyword">end</span>
+0100   
+0101   <span class="comment">% Adjust the new estimates for the parameters</span>
+0102   new_pr = sum(post, 1);
+0103   new_c = post' * x;
+0104   
+0105   <span class="comment">% Now move new estimates to old parameter vectors</span>
+0106   mix.priors = new_pr ./ ndata;
+0107   
+0108   mix.centres = new_c ./ (new_pr' * ones(1, mix.nin));
+0109   
+0110   <span class="keyword">switch</span> mix.covar_type
+0111   <span class="keyword">case</span> <span class="string">'spherical'</span>
+0112     n2 = <a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(x, mix.centres);
+0113     <span class="keyword">for</span> j = 1:mix.ncentres
+0114       v(j) = (post(:,j)'*n2(:,j));
+0115     <span class="keyword">end</span>
+0116     mix.covars = ((v./new_pr))./mix.nin;
+0117     <span class="keyword">if</span> check_covars
+0118       <span class="comment">% Ensure that no covariance is too small</span>
+0119       <span class="keyword">for</span> j = 1:mix.ncentres
+0120         <span class="keyword">if</span> mix.covars(j) &lt; MIN_COVAR
+0121           mix.covars(j) = init_covars(j);
+0122         <span class="keyword">end</span>
+0123       <span class="keyword">end</span>
+0124     <span class="keyword">end</span>
+0125   <span class="keyword">case</span> <span class="string">'diag'</span>
+0126     <span class="keyword">for</span> j = 1:mix.ncentres
+0127       diffs = x - (ones(ndata, 1) * mix.centres(j,:));
+0128       mix.covars(j,:) = sum((diffs.*diffs).*(post(:,j)*ones(1, <span class="keyword">...</span>
+0129         mix.nin)), 1)./new_pr(j);
+0130     <span class="keyword">end</span>
+0131     <span class="keyword">if</span> check_covars
+0132       <span class="comment">% Ensure that no covariance is too small</span>
+0133       <span class="keyword">for</span> j = 1:mix.ncentres
+0134         <span class="keyword">if</span> min(mix.covars(j,:)) &lt; MIN_COVAR
+0135           mix.covars(j,:) = init_covars(j,:);
+0136         <span class="keyword">end</span>
+0137       <span class="keyword">end</span>
+0138     <span class="keyword">end</span>
+0139   <span class="keyword">case</span> <span class="string">'full'</span>
+0140     <span class="keyword">for</span> j = 1:mix.ncentres
+0141       diffs = x - (ones(ndata, 1) * mix.centres(j,:));
+0142       diffs = diffs.*(sqrt(post(:,j))*ones(1, mix.nin));
+0143       mix.covars(:,:,j) = (diffs'*diffs)/new_pr(j);
+0144     <span class="keyword">end</span>
+0145     <span class="keyword">if</span> check_covars
+0146       <span class="comment">% Ensure that no covariance is too small</span>
+0147       <span class="keyword">for</span> j = 1:mix.ncentres
+0148         <span class="keyword">if</span> min(svd(mix.covars(:,:,j))) &lt; MIN_COVAR
+0149           mix.covars(:,:,j) = init_covars(:,:,j);
+0150         <span class="keyword">end</span>
+0151       <span class="keyword">end</span>
+0152     <span class="keyword">end</span>
+0153   <span class="keyword">case</span> <span class="string">'ppca'</span>
+0154     <span class="keyword">for</span> j = 1:mix.ncentres
+0155       diffs = x - (ones(ndata, 1) * mix.centres(j,:));
+0156       diffs = diffs.*(sqrt(post(:,j))*ones(1, mix.nin));
+0157       [tempcovars, tempU, templambda] = <span class="keyword">...</span>
+0158     <a href="ppca.html" class="code" title="function [var, U, lambda] = ppca(x, ppca_dim)">ppca</a>((diffs'*diffs)/new_pr(j), mix.ppca_dim);
+0159       <span class="keyword">if</span> length(templambda) ~= mix.ppca_dim
+0160     error(<span class="string">'Unable to extract enough components'</span>);
+0161       <span class="keyword">else</span> 
+0162         mix.covars(j) = tempcovars;
+0163         mix.U(:, :, j) = tempU;
+0164         mix.lambda(j, :) = templambda;
+0165       <span class="keyword">end</span>
+0166     <span class="keyword">end</span>
+0167     <span class="keyword">if</span> check_covars
+0168       <span class="keyword">if</span> mix.covars(j) &lt; MIN_COVAR
+0169         mix.covars(j) = init_covars(j);
+0170       <span class="keyword">end</span>
+0171     <span class="keyword">end</span>
+0172     <span class="keyword">otherwise</span>
+0173       error([<span class="string">'Unknown covariance type '</span>, mix.covar_type]);               
+0174   <span class="keyword">end</span>
+0175 <span class="keyword">end</span>
+0176 
+0177 options(8) = -sum(log(<a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">gmmprob</a>(mix, x)));
+0178 <span class="keyword">if</span> (display &gt;= 0)
+0179   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0180 <span class="keyword">end</span>
+0181</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

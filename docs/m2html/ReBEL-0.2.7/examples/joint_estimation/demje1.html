@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demje1</title>
+  <meta name="keywords" content="demje1">
+  <meta name="description" content="DEMJE1  Demonstrate joint estimation on a 2nd order LTI system.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">joint_estimation</a> &gt; demje1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\joint_estimation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>demje1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DEMJE1  Demonstrate joint estimation on a 2nd order LTI system.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DEMJE1  Demonstrate joint estimation on a 2nd order LTI system.
+
+   This is a demonstration of how to use the ReBEL toolkit for joint estimation on
+   a simple 2nd order LTI system.
+
+   See also
+   GSSM_LTI1, DEMSE1, DEMPE1
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>	ADDRELPATH  Add a relative path which gets expanded into a absolute path</li><li><a href="../../.././ReBEL-0.2.7/core/cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>	CVECREP  Column vector replicate</li><li><a href="../../.././ReBEL-0.2.7/core/ekf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ekf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ekf</a>	EKF  Extended Kalman Filter</li><li><a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>	GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</li><li><a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>	GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure</li><li><a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>	REMRELPATH  Remove a relative path (which gets expanded into a absolute path)</li><li><a href="../../.././ReBEL-0.2.7/core/srukf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srukf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srukf</a>	SRUKF  Square Root Unscented Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_lti1.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_lti1</a>	GSSM_LTI1  Generalized state space model for simple LTI system</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% DEMJE1  Demonstrate joint estimation on a 2nd order LTI system.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   This is a demonstration of how to use the ReBEL toolkit for joint estimation on</span>
+0004 <span class="comment">%   a simple 2nd order LTI system.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   See also</span>
+0007 <span class="comment">%   GSSM_LTI1, DEMSE1, DEMPE1</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0012 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0013 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0014 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0017 <span class="comment">%   detail.</span>
+0018 
+0019 <span class="comment">%===============================================================================================</span>
+0020 
+0021 clc;
+0022 clear all; close all;
+0023 
+0024 fprintf(<span class="string">'\nDEMJE1 : This demonstration shows how the ReBEL toolkit is used for joint estimation\n'</span>);
+0025 fprintf(<span class="string">'         on a 2nd order LTI system. The scalar observation is corrupted by additive white\n'</span>);
+0026 fprintf(<span class="string">'         Gaussian noise. We compare the performance of the EKF to that of the SRUKF on the\n'</span>);
+0027 fprintf(<span class="string">'         same sequence.\n\n'</span>);
+0028 fprintf(<span class="string">'         Note : This example has not been fine tuned for optimal performance and can sometimes\n'</span>);
+0029 fprintf(<span class="string">'                fail to convergence to a good solution. In such a case, simply re-run the experiment \n\n'</span>);
+0030 
+0031 
+0032 <span class="comment">%--- General setup</span>
+0033 
+0034 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../gssm'</span>);         <span class="comment">% add relative search path to example GSSM files to MATLABPATH</span>
+0035 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../data'</span>);         <span class="comment">% add relative search path to example data files to MATLABPATH</span>
+0036 
+0037 <span class="comment">%--- Initialise GSSM model from external system description script.</span>
+0038 model = <a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_lti1.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_lti1</a>(<span class="string">'init'</span>);
+0039 
+0040 
+0041 <span class="comment">%--- Generate some data</span>
+0042 
+0043 N  = 1000;                                               <span class="comment">% number of datapoints</span>
+0044 X  = zeros(model.statedim,N);                           <span class="comment">% state data buffer</span>
+0045 y  = zeros(model.obsdim,N);                             <span class="comment">% observation data buffer</span>
+0046 
+0047 pnoise = model.pNoise.sample( model.pNoise, N);   <span class="comment">% generate process noise</span>
+0048 onoise = model.oNoise.sample( model.oNoise, N);   <span class="comment">% generate observation noise</span>
+0049 
+0050 
+0051 X(:,1) = [1 0]';                                          <span class="comment">% initial state</span>
+0052 y(1)   = model.hfun( model, X(:,1), onoise(1), []); <span class="comment">% observation of initial state</span>
+0053 <span class="keyword">for</span> j=2:N,
+0054     X(:,j) = model.ffun( model, X(:,j-1), pnoise(:,j-1), []);
+0055     y(j)   = model.hfun( model, X(:,j), onoise(:,j), []);
+0056 <span class="keyword">end</span>
+0057 
+0058 
+0059 ftype1 = <span class="string">'ekf'</span>;
+0060 ftype2 = <span class="string">'srukf'</span>;
+0061 
+0062 
+0063 <span class="comment">%--- Setup argument data structure which serves as input to</span>
+0064 <span class="comment">%--- the 'geninfds' function. This function generates the InferenceDS and</span>
+0065 <span class="comment">%--- SystemNoiseDS data structures which are needed by all inference algorithms</span>
+0066 <span class="comment">%--- in the PiLab toolkit.</span>
+0067 
+0068 Arg.type = <span class="string">'joint'</span>;                                  <span class="comment">% inference type (state estimation)</span>
+0069 Arg.tag = <span class="string">'Joint estimation for GSSM_LTI1 system.'</span>;  <span class="comment">% arbitrary ID tag</span>
+0070 Arg.model = model;                                   <span class="comment">% GSSM data structure of external system</span>
+0071 
+0072 InfDS = <a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>(Arg);                               <span class="comment">% create inference data structure</span>
+0073 
+0074 [pNoise1, oNoise1, InfDS1] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS,ftype1);    <span class="comment">% generate process and observation noise sources for SRUKF</span>
+0075 [pNoise2, oNoise2, InfDS2] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS,ftype2);    <span class="comment">% generate process and observation noise sources for SRCDKF</span>
+0076 
+0077 
+0078 <span class="comment">%--- Some default values</span>
+0079 
+0080 pNoiseCov0 = chol(1e-4*eye(model.paramdim))';
+0081 
+0082 Px0 = eye(InfDS.statedim);   <span class="comment">% initial state covariance</span>
+0083 
+0084 <span class="comment">%------------------- Extended Kalman Filter ------------------------------------</span>
+0085 
+0086 Xh1 = zeros(InfDS1.statedim,N);
+0087 Px1 = Px0;         <span class="comment">% initial state covariance</span>
+0088 pNoise1.cov(2:<span class="keyword">end</span>,2:end) = pNoiseCov0;
+0089 
+0090 fprintf(<span class="string">'\n  EKF running... '</span>);
+0091 
+0092 [Xh1, Px1, pNoise1] = <a href="../../.././ReBEL-0.2.7/core/ekf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ekf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ekf</a>(Xh1(:,1), Px1, pNoise1, oNoise1, y, [], [], InfDS1);
+0093 
+0094 fprintf(<span class="string">' done.\n\n '</span>);
+0095 
+0096 
+0097 <span class="comment">%------------------- Square-root Unscented Kalman Filter -------------</span>
+0098 
+0099 Xh2 = zeros(InfDS1.statedim,N);
+0100 
+0101 Sx2 = chol(Px0)';      <span class="comment">% square-root filters operate on the Cholesky factor (matrix</span>
+0102                        <span class="comment">% sqaure root) of the state covariance</span>
+0103 
+0104 alpha = 1e-1;
+0105 beta = 2;
+0106 kappa = 0;
+0107 
+0108 InfDS2.spkfParams = [alpha beta kappa];  <span class="comment">% UKF parameters</span>
+0109 
+0110 pNoise2.cov(2:<span class="keyword">end</span>,2:end) = pNoiseCov0;
+0111 
+0112 
+0113 fprintf(<span class="string">' SRUKF running... '</span>);
+0114 
+0115 [Xh2, Sx2, pNoise2] = <a href="../../.././ReBEL-0.2.7/core/srukf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srukf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srukf</a>(Xh2(:,1), Sx2, pNoise2, oNoise2, y, [], [], InfDS2);
+0116 
+0117 fprintf(<span class="string">' done.\n\n '</span>);
+0118 
+0119 <span class="comment">%---------------------------------------------------------------------------------</span>
+0120 
+0121 
+0122 <span class="comment">%--- Plot results</span>
+0123 
+0124 figure(1);
+0125 clf
+0126 subplot(211);
+0127 p1 = plot(X(1,:),<span class="string">'b'</span>,<span class="string">'linewidth'</span>,2); hold on
+0128 p2 = plot(y,<span class="string">'g+'</span>);
+0129 p3 = plot(Xh1(1,:),<span class="string">'m'</span>);
+0130 p4 = plot(Xh2(1,:),<span class="string">'r'</span>); hold off
+0131 legend([p1 p2 p3 p4],<span class="string">'clean'</span>,<span class="string">'noisy'</span>,<span class="string">'EKF estimate'</span>,<span class="string">'SRUKF estimate'</span>,-1);
+0132 xlabel(<span class="string">'time'</span>);
+0133 ylabel(<span class="string">'state(1)'</span>);
+0134 title(<span class="string">'DEMJE1 : LTI System Joint Estimation'</span>);
+0135 
+0136 true_model_trace = <a href="../../.././ReBEL-0.2.7/core/cvecrep.html" class="code" title="function m = cvecrep(v,c)">cvecrep</a>(model.params,N-1);
+0137 
+0138 Wh1 = Xh1(InfDS.model.statedim+1:<span class="keyword">end</span>,:);
+0139 Wh2 = Xh2(InfDS.model.statedim+1:<span class="keyword">end</span>,:);
+0140 
+0141 subplot(212);
+0142 p11=plot(true_model_trace(1,:),<span class="string">'b--'</span>,<span class="string">'linewidth'</span>,3); hold on;
+0143 p12=plot(true_model_trace(2,:),<span class="string">'r--'</span>,<span class="string">'linewidth'</span>,3);
+0144 p21=plot(Wh1(1,:),<span class="string">'b-.'</span>);
+0145 p22=plot(Wh1(2,:),<span class="string">'r-.'</span>);
+0146 p31=plot(Wh2(1,:),<span class="string">'b'</span>);
+0147 p32=plot(Wh2(2,:),<span class="string">'r'</span>); hold off
+0148 axis([1 N -1.5 2.5]);
+0149 legend([p11 p21 p31 p12 p22 p32],<span class="string">'true parameter 1'</span>,<span class="string">'EKF estimate'</span>,<span class="string">'SRUKF estimate'</span>,<span class="string">'true parameter 2'</span>,<span class="string">'EKF estimate'</span>,<span class="string">'SRUKF estimate'</span>,-1);
+0150 xlabel(<span class="string">'time'</span>);
+0151 ylabel(<span class="string">'parameter values'</span>);
+0152 
+0153 
+0154 <span class="comment">%--- Calculate mean square estimation error</span>
+0155 
+0156 mse1 = mean((Xh1(1,:)-X(1,:)).^2);
+0157 mse2 = mean((Xh2(1,:)-X(1,:)).^2);
+0158 
+0159 fprintf(<span class="string">'\nMean-square-error (MSE) of EKF estimate   : %4.3f\n'</span>, mse1);
+0160 fprintf(<span class="string">'\nMean-square-error (MSE) of SRUKF estimate : %4.3f\n\n'</span>, mse2);
+0161 
+0162 
+0163 <span class="comment">%--- House keeping</span>
+0164 
+0165 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../gssm'</span>);       <span class="comment">% remove relative search path to example GSSM files from MATLABPATH</span>
+0166 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../data'</span>);       <span class="comment">% remove relative search path to example data files from MATLABPATH</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

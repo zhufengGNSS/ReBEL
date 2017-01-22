@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of addangle</title>
+  <meta name="keywords" content="addangle">
+  <meta name="description" content="ADDANGLE   Addition function for 'angle space' sigma-points expressed in radians.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; addangle.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>addangle
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>ADDANGLE   Addition function for 'angle space' sigma-points expressed in radians.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function C = addangle(A, B) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">  ADDANGLE   Addition function for 'angle space' sigma-points expressed in radians.
+             This needed to deal with the angular discontinuety at +- pi radians.
+
+             C = addangle(A,B)
+
+   INPUT
+           A and B  : angles expressed in radians
+   OUTPUT
+           C        : sum C=A+B such that  -pi &lt; C &lt; pi
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="cdkf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = cdkf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">cdkf</a>	CDKF  Central Difference Kalman Filter  (Sigma-Point Kalman Filter variant)</li><li><a href="srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>	SRCDKF  Square Root Central Difference Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="srukf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srukf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srukf</a>	SRUKF  Square Root Unscented Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="ukf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ukf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ukf</a>	UKF  Unscented Kalman Filter</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_bft.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_bft</a>	GSSM_BFT  General state space model for Bearings and Frequency Tracking of a randomly maneuvering</li><li><a href="../.././ReBEL-0.2.7/examples/gssm/gssm_brt.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_brt</a>	GSSM_BRT  General state space model for Bearing-and-Range Tracking of a randomly maneuvering</li><li><a href="../.././ReBEL-0.2.7/examples/state_estimation/demse4.html" class="code" title="">demse4</a>	DEMSE4  Bearing Only Tracking Example</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function C = addangle(A, B)</a>
+0002 
+0003 <span class="comment">%  ADDANGLE   Addition function for 'angle space' sigma-points expressed in radians.</span>
+0004 <span class="comment">%             This needed to deal with the angular discontinuety at +- pi radians.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%             C = addangle(A,B)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   INPUT</span>
+0009 <span class="comment">%           A and B  : angles expressed in radians</span>
+0010 <span class="comment">%   OUTPUT</span>
+0011 <span class="comment">%           C        : sum C=A+B such that  -pi &lt; C &lt; pi</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0016 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0017 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0018 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0021 <span class="comment">%   detail.</span>
+0022 
+0023 <span class="comment">%=============================================================================================</span>
+0024 
+0025 C = A + B;
+0026 
+0027 twopi = 2*pi;
+0028 
+0029 idx1 = C &gt; pi;
+0030 idx2 = C &lt; -pi;
+0031 
+0032 C(idx1) = C(idx1) - twopi;
+0033 C(idx2) = C(idx2) + twopi;
+0034</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmmsamp</title>
+  <meta name="keywords" content="gmmsamp">
+  <meta name="description" content="GMMSAMP Sample from a Gaussian mixture distribution.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gmmsamp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmmsamp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMSAMP Sample from a Gaussian mixture distribution.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [data, label] = gmmsamp(mix, n) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GMMSAMP Sample from a Gaussian mixture distribution.
+
+    Description
+
+    DATA = GSAMP(MIX, N) generates a sample of size N from a Gaussian
+    mixture distribution defined by the MIX data structure. The matrix X
+    has N rows in which each row represents a MIX.NIN-dimensional sample
+    vector.
+
+    [DATA, LABEL] = GMMSAMP(MIX, N) also returns a column vector of
+    classes (as an index 1..N) LABEL.
+
+    See also
+    <a href="gsamp.html" class="code" title="function x = gsamp(mu, covar, nsamp)">GSAMP</a>, <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gsamp.html" class="code" title="function x = gsamp(mu, covar, nsamp)">gsamp</a>	GSAMP	Sample from a Gaussian distribution.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev2.html" class="code" title="">demev2</a>	DEMEV2	Demonstrate Bayesian classification for the MLP.</li><li><a href="demglm1.html" class="code" title="">demglm1</a>	DEMGLM1 Demonstrate simple classification using a generalized linear model.</li><li><a href="demglm2.html" class="code" title="">demglm2</a>	DEMGLM2 Demonstrate simple classification using a generalized linear model.</li><li><a href="demgmm1.html" class="code" title="">demgmm1</a>	DEMGMM1 Demonstrate EM for Gaussian mixtures.</li><li><a href="demgtm2.html" class="code" title="">demgtm2</a>	DEMGTM2 Demonstrate GTM for visualisation.</li><li><a href="demmlp2.html" class="code" title="">demmlp2</a>	DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</li><li><a href="demns1.html" class="code" title="">demns1</a>	DEMNS1	Demonstrate Neuroscale for visualisation.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [data, label] = gmmsamp(mix, n)</a>
+0002 <span class="comment">%GMMSAMP Sample from a Gaussian mixture distribution.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    DATA = GSAMP(MIX, N) generates a sample of size N from a Gaussian</span>
+0007 <span class="comment">%    mixture distribution defined by the MIX data structure. The matrix X</span>
+0008 <span class="comment">%    has N rows in which each row represents a MIX.NIN-dimensional sample</span>
+0009 <span class="comment">%    vector.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    [DATA, LABEL] = GMMSAMP(MIX, N) also returns a column vector of</span>
+0012 <span class="comment">%    classes (as an index 1..N) LABEL.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also</span>
+0015 <span class="comment">%    GSAMP, GMM</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0019 
+0020 <span class="comment">% Check input arguments</span>
+0021 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mix, <span class="string">'gmm'</span>);
+0022 <span class="keyword">if</span> ~isempty(errstring)
+0023   error(errstring);
+0024 <span class="keyword">end</span>
+0025 <span class="keyword">if</span> n &lt; 1
+0026   error(<span class="string">'Number of data points must be positive'</span>)
+0027 <span class="keyword">end</span>
+0028 
+0029 <span class="comment">% Determine number to sample from each component</span>
+0030 priors = rand(1, n);
+0031 
+0032 <span class="comment">% Pre-allocate data array</span>
+0033 data = zeros(n, mix.nin);
+0034 <span class="keyword">if</span> nargout &gt; 1
+0035   label = zeros(n, 1);
+0036 <span class="keyword">end</span>
+0037 cum_prior = 0;        <span class="comment">% Cumulative sum of priors</span>
+0038 total_samples = 0;    <span class="comment">% Cumulative sum of number of sampled points</span>
+0039 <span class="keyword">for</span> j = 1:mix.ncentres
+0040   num_samples = sum(priors &gt;= cum_prior &amp; <span class="keyword">...</span>
+0041     priors &lt; cum_prior + mix.priors(j));
+0042   <span class="comment">% Form a full covariance matrix</span>
+0043   <span class="keyword">switch</span> mix.covar_type
+0044     <span class="keyword">case</span> <span class="string">'spherical'</span>
+0045       covar = mix.covars(j) * eye(mix.nin);
+0046     <span class="keyword">case</span> <span class="string">'diag'</span>
+0047       covar = diag(mix.covars(j, :));
+0048     <span class="keyword">case</span> <span class="string">'full'</span>
+0049       covar = mix.covars(:, :, j);
+0050     <span class="keyword">case</span> <span class="string">'ppca'</span>
+0051       covar = mix.covars(j) * eye(mix.nin) + <span class="keyword">...</span>
+0052         mix.U(:, :, j)* <span class="keyword">...</span>
+0053         (diag(mix.lambda(j, :))-(mix.covars(j)*eye(mix.ppca_dim)))* <span class="keyword">...</span>
+0054         (mix.U(:, :, j)');
+0055     <span class="keyword">otherwise</span>
+0056       error([<span class="string">'Unknown covariance type '</span>, mix.covar_type]);
+0057   <span class="keyword">end</span>
+0058   data(total_samples+1:total_samples+num_samples, :) = <span class="keyword">...</span>
+0059     <a href="gsamp.html" class="code" title="function x = gsamp(mu, covar, nsamp)">gsamp</a>(mix.centres(j, :), covar, num_samples);
+0060   <span class="keyword">if</span> nargout &gt; 1
+0061     label(total_samples+1:total_samples+num_samples) = j;
+0062   <span class="keyword">end</span>
+0063   cum_prior = cum_prior + mix.priors(j);
+0064   total_samples = total_samples + num_samples;
+0065 <span class="keyword">end</span>
+0066</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

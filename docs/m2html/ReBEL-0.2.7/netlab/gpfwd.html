@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gpfwd</title>
+  <meta name="keywords" content="gpfwd">
+  <meta name="description" content="GPFWD	Forward propagation through Gaussian Process.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gpfwd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gpfwd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GPFWD	Forward propagation through Gaussian Process.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [y, sigsq] = gpfwd(net, x, cninv) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GPFWD    Forward propagation through Gaussian Process.
+
+    Description
+    Y = GPFWD(NET, X) takes a Gaussian Process data structure NET
+    together  with a matrix X of input vectors, and forward propagates
+    the inputs through the model to generate a matrix Y of output
+    vectors.  Each row of X corresponds to one input vector and each row
+    of Y corresponds to one output vector.  This assumes that the
+    training data (both inputs and targets) has been stored in NET by a
+    call to GPINIT; these are needed to compute the training data
+    covariance matrix.
+
+    [Y, SIGSQ] = GPFWD(NET, X) also generates a column vector SIGSQ of
+    conditional variances (or squared error bars) where each value
+    corresponds to a pattern.
+
+    [Y, SIGSQ] = GPFWD(NET, X, CNINV) uses the pre-computed inverse
+    covariance matrix CNINV in the forward propagation.  This increases
+    efficiency if several calls to GPFWD are made.
+
+    See also
+    <a href="gp.html" class="code" title="function net = gp(nin, covar_fn, prior)">GP</a>, <a href="demgp.html" class="code" title="">DEMGP</a>, <a href="gpinit.html" class="code" title="function net = gpinit(net, tr_in, tr_targets, prior)">GPINIT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>	GPCOVAR Calculate the covariance for a Gaussian Process.</li><li><a href="gpcovarp.html" class="code" title="function [covp, covf] = gpcovarp(net, x1, x2)">gpcovarp</a>	GPCOVARP Calculate the prior covariance for a Gaussian Process.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgp.html" class="code" title="">demgp</a>	DEMGP	Demonstrate simple regression using a Gaussian Process.</li><li><a href="demgpard.html" class="code" title="">demgpard</a>	DEMGPARD Demonstrate ARD using a Gaussian Process.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [y, sigsq] = gpfwd(net, x, cninv)</a>
+0002 <span class="comment">%GPFWD    Forward propagation through Gaussian Process.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    Y = GPFWD(NET, X) takes a Gaussian Process data structure NET</span>
+0006 <span class="comment">%    together  with a matrix X of input vectors, and forward propagates</span>
+0007 <span class="comment">%    the inputs through the model to generate a matrix Y of output</span>
+0008 <span class="comment">%    vectors.  Each row of X corresponds to one input vector and each row</span>
+0009 <span class="comment">%    of Y corresponds to one output vector.  This assumes that the</span>
+0010 <span class="comment">%    training data (both inputs and targets) has been stored in NET by a</span>
+0011 <span class="comment">%    call to GPINIT; these are needed to compute the training data</span>
+0012 <span class="comment">%    covariance matrix.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    [Y, SIGSQ] = GPFWD(NET, X) also generates a column vector SIGSQ of</span>
+0015 <span class="comment">%    conditional variances (or squared error bars) where each value</span>
+0016 <span class="comment">%    corresponds to a pattern.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    [Y, SIGSQ] = GPFWD(NET, X, CNINV) uses the pre-computed inverse</span>
+0019 <span class="comment">%    covariance matrix CNINV in the forward propagation.  This increases</span>
+0020 <span class="comment">%    efficiency if several calls to GPFWD are made.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    See also</span>
+0023 <span class="comment">%    GP, DEMGP, GPINIT</span>
+0024 <span class="comment">%</span>
+0025 
+0026 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0027 
+0028 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gp'</span>, x);
+0029 <span class="keyword">if</span> ~isempty(errstring);
+0030   error(errstring);
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">if</span> ~(isfield(net, <span class="string">'tr_in'</span>) &amp; isfield(net, <span class="string">'tr_targets'</span>))
+0034    error(<span class="string">'Require training inputs and targets'</span>);
+0035 <span class="keyword">end</span>
+0036 
+0037 <span class="keyword">if</span> nargin == 2
+0038   <span class="comment">% Inverse covariance matrix not supplied.</span>
+0039   cninv = inv(<a href="gpcovar.html" class="code" title="function [cov, covf] = gpcovar(net, x)">gpcovar</a>(net, net.tr_in));
+0040 <span class="keyword">end</span>
+0041 ktest = <a href="gpcovarp.html" class="code" title="function [covp, covf] = gpcovarp(net, x1, x2)">gpcovarp</a>(net, x, net.tr_in);
+0042 
+0043 <span class="comment">% Predict mean</span>
+0044 y = ktest*cninv*net.tr_targets;
+0045 
+0046 <span class="keyword">if</span> nargout &gt;= 2
+0047   <span class="comment">% Predict error bar</span>
+0048   ndata = size(x, 1);
+0049   sigsq = (ones(ndata, 1) * <a href="gpcovarp.html" class="code" title="function [covp, covf] = gpcovarp(net, x1, x2)">gpcovarp</a>(net, x(1,:), x(1,:))) <span class="keyword">...</span>
+0050     - sum((ktest*cninv).*ktest, 2); 
+0051 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

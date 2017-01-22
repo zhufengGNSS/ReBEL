@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of olgd</title>
+  <meta name="keywords" content="olgd">
+  <meta name="description" content="OLGD	On-line gradient descent optimization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; olgd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>olgd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>OLGD	On-line gradient descent optimization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [net, options, errlog, pointlog] = olgd(net, options, x, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">OLGD    On-line gradient descent optimization.
+
+    Description
+    [NET, OPTIONS, ERRLOG, POINTLOG] = OLGD(NET, OPTIONS, X, T) uses  on-
+    line gradient descent to find a local minimum of the error function
+    for the network NET computed on the input data X and target values T.
+    A log of the error values after each cycle is (optionally) returned
+    in ERRLOG, and a log of the points visited is (optionally) returned
+    in POINTLOG. Because the gradient is computed on-line (i.e. after
+    each pattern) this can be quite inefficient in Matlab.
+
+    The error function value at final weight vector is returned in
+    OPTIONS(8).
+
+    The optional parameters have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs error
+    values in the return argument ERRLOG, and the points visited in the
+    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only
+    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is
+    displayed.
+
+    OPTIONS(2) is the precision required for the value of X at the
+    solution. If the absolute difference between the values of X between
+    two successive steps is less than OPTIONS(2), then this condition is
+    satisfied.
+
+    OPTIONS(3) is the precision required of the objective function at the
+    solution.  If the absolute difference between the error functions
+    between two successive steps is less than OPTIONS(3), then this
+    condition is satisfied. Both this and the previous condition must be
+    satisfied for termination. Note that testing the function value at
+    each iteration roughly halves the speed of the algorithm.
+
+    OPTIONS(5) determines whether the patterns are sampled randomly with
+    replacement. If it is 0 (the default), then patterns are sampled in
+    order.
+
+    OPTIONS(6) determines if the learning rate decays.  If it is 1 then
+    the learning rate decays at a rate of 1/T.  If it is 0 (the default)
+    then the learning rate is constant.
+
+    OPTIONS(9) should be set to 1 to check the user defined gradient
+    function.
+
+    OPTIONS(10) returns the total number of function evaluations
+    (including those in any line searches).
+
+    OPTIONS(11) returns the total number of gradient evaluations.
+
+    OPTIONS(14) is the maximum number of iterations (passes through the
+    complete pattern set); default 100.
+
+    OPTIONS(17) is the momentum; default 0.5.
+
+    OPTIONS(18) is the learning rate; default 0.01.
+
+    See also
+    <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">GRADDESC</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li><li><a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">neterr</a>	NETERR	Evaluate network error function for generic optimizers</li><li><a href="netgrad.html" class="code" title="function g = netgrad(w, net, x, t)">netgrad</a>	NETGRAD Evaluate network error gradient for generic optimizers</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demolgd1.html" class="code" title="">demolgd1</a>	DEMOLGD1 Demonstrate simple MLP optimisation with on-line gradient descent</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [net, options, errlog, pointlog] = olgd(net, options, x, t)</a>
+0002 <span class="comment">%OLGD    On-line gradient descent optimization.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    [NET, OPTIONS, ERRLOG, POINTLOG] = OLGD(NET, OPTIONS, X, T) uses  on-</span>
+0006 <span class="comment">%    line gradient descent to find a local minimum of the error function</span>
+0007 <span class="comment">%    for the network NET computed on the input data X and target values T.</span>
+0008 <span class="comment">%    A log of the error values after each cycle is (optionally) returned</span>
+0009 <span class="comment">%    in ERRLOG, and a log of the points visited is (optionally) returned</span>
+0010 <span class="comment">%    in POINTLOG. Because the gradient is computed on-line (i.e. after</span>
+0011 <span class="comment">%    each pattern) this can be quite inefficient in Matlab.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    The error function value at final weight vector is returned in</span>
+0014 <span class="comment">%    OPTIONS(8).</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    The optional parameters have the following interpretations.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs error</span>
+0019 <span class="comment">%    values in the return argument ERRLOG, and the points visited in the</span>
+0020 <span class="comment">%    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only</span>
+0021 <span class="comment">%    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is</span>
+0022 <span class="comment">%    displayed.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%    OPTIONS(2) is the precision required for the value of X at the</span>
+0025 <span class="comment">%    solution. If the absolute difference between the values of X between</span>
+0026 <span class="comment">%    two successive steps is less than OPTIONS(2), then this condition is</span>
+0027 <span class="comment">%    satisfied.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%    OPTIONS(3) is the precision required of the objective function at the</span>
+0030 <span class="comment">%    solution.  If the absolute difference between the error functions</span>
+0031 <span class="comment">%    between two successive steps is less than OPTIONS(3), then this</span>
+0032 <span class="comment">%    condition is satisfied. Both this and the previous condition must be</span>
+0033 <span class="comment">%    satisfied for termination. Note that testing the function value at</span>
+0034 <span class="comment">%    each iteration roughly halves the speed of the algorithm.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%    OPTIONS(5) determines whether the patterns are sampled randomly with</span>
+0037 <span class="comment">%    replacement. If it is 0 (the default), then patterns are sampled in</span>
+0038 <span class="comment">%    order.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%    OPTIONS(6) determines if the learning rate decays.  If it is 1 then</span>
+0041 <span class="comment">%    the learning rate decays at a rate of 1/T.  If it is 0 (the default)</span>
+0042 <span class="comment">%    then the learning rate is constant.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%    OPTIONS(9) should be set to 1 to check the user defined gradient</span>
+0045 <span class="comment">%    function.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%    OPTIONS(10) returns the total number of function evaluations</span>
+0048 <span class="comment">%    (including those in any line searches).</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%    OPTIONS(11) returns the total number of gradient evaluations.</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">%    OPTIONS(14) is the maximum number of iterations (passes through the</span>
+0053 <span class="comment">%    complete pattern set); default 100.</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%    OPTIONS(17) is the momentum; default 0.5.</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">%    OPTIONS(18) is the learning rate; default 0.01.</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">%    See also</span>
+0060 <span class="comment">%    GRADDESC</span>
+0061 <span class="comment">%</span>
+0062 
+0063 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0064 
+0065 <span class="comment">%  Set up the options.</span>
+0066 <span class="keyword">if</span> length(options) &lt; 18
+0067   error(<span class="string">'Options vector too short'</span>)
+0068 <span class="keyword">end</span>
+0069 
+0070 <span class="keyword">if</span> (options(14))
+0071   niters = options(14);
+0072 <span class="keyword">else</span>
+0073   niters = 100;
+0074 <span class="keyword">end</span>
+0075 
+0076 <span class="comment">% Learning rate: must be positive</span>
+0077 <span class="keyword">if</span> (options(18) &gt; 0)
+0078   eta = options(18);
+0079 <span class="keyword">else</span>
+0080   eta = 0.01;
+0081 <span class="keyword">end</span>
+0082 <span class="comment">% Save initial learning rate for annealing</span>
+0083 lr = eta;
+0084 <span class="comment">% Momentum term: allow zero momentum</span>
+0085 <span class="keyword">if</span> (options(17) &gt;= 0)
+0086   mu = options(17);
+0087 <span class="keyword">else</span>
+0088   mu = 0.5;
+0089 <span class="keyword">end</span>
+0090 
+0091 pakstr = [net.type, <span class="string">'pak'</span>];
+0092 unpakstr = [net.type, <span class="string">'unpak'</span>];
+0093 
+0094 <span class="comment">% Extract initial weights from the network</span>
+0095 w = feval(pakstr, net);
+0096 
+0097 display = options(1);
+0098 
+0099 <span class="comment">% Work out if we need to compute f at each iteration.</span>
+0100 <span class="comment">% Needed if display results or if termination</span>
+0101 <span class="comment">% criterion requires it.</span>
+0102 fcneval = (display | options(3));
+0103 
+0104 <span class="comment">%  Check gradients</span>
+0105 <span class="keyword">if</span> (options(9))
+0106   feval(<span class="string">'gradchek'</span>, w, <span class="string">'neterr'</span>, <span class="string">'netgrad'</span>, net, x, t);
+0107 <span class="keyword">end</span>
+0108 
+0109 dwold = zeros(1, length(w));
+0110 fold = 0; <span class="comment">% Must be initialised so that termination test can be performed</span>
+0111 ndata = size(x, 1);
+0112 
+0113 <span class="keyword">if</span> fcneval
+0114   fnew = <a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">neterr</a>(w, net, x, t);
+0115   options(10) = options(10) + 1;
+0116   fold = fnew;
+0117 <span class="keyword">end</span>
+0118 
+0119 j = 1;
+0120 <span class="keyword">if</span> nargout &gt;= 3
+0121   errlog(j, :) = fnew;
+0122   <span class="keyword">if</span> nargout == 4
+0123     pointlog(j, :) = w;
+0124   <span class="keyword">end</span>
+0125 <span class="keyword">end</span>
+0126 
+0127 <span class="comment">%  Main optimization loop.</span>
+0128 <span class="keyword">while</span> j &lt;= niters
+0129   wold = w;
+0130   <span class="keyword">if</span> options(5)
+0131     <span class="comment">% Randomise order of pattern presentation: with replacement</span>
+0132     pnum = ceil(rand(ndata, 1).*ndata);
+0133   <span class="keyword">else</span>
+0134     pnum = 1:ndata;
+0135   <span class="keyword">end</span>
+0136   <span class="keyword">for</span> k = 1:ndata
+0137     grad = <a href="netgrad.html" class="code" title="function g = netgrad(w, net, x, t)">netgrad</a>(w, net, x(pnum(k),:), t(pnum(k),:));
+0138     <span class="keyword">if</span> options(6)
+0139       <span class="comment">% Let learning rate decrease as 1/t</span>
+0140       lr = eta/((j-1)*ndata + k);
+0141     <span class="keyword">end</span>
+0142     dw = mu*dwold - lr*grad;
+0143     w =  w + dw;
+0144     dwold = dw;
+0145   <span class="keyword">end</span>
+0146   options(11) = options(11) + 1;  <span class="comment">% Increment gradient evaluation count</span>
+0147   <span class="keyword">if</span> fcneval
+0148     fold = fnew;
+0149     fnew = <a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">neterr</a>(w, net, x, t);
+0150     options(10) = options(10) + 1;
+0151   <span class="keyword">end</span>
+0152   <span class="keyword">if</span> display
+0153     fprintf(1, <span class="string">'Iteration  %5d  Error %11.8f\n'</span>, j, fnew);
+0154   <span class="keyword">end</span>
+0155   j = j + 1;
+0156   <span class="keyword">if</span> nargout &gt;= 3
+0157     errlog(j) = fnew;
+0158     <span class="keyword">if</span> nargout == 4
+0159       pointlog(j, :) = w;
+0160     <span class="keyword">end</span>
+0161   <span class="keyword">end</span>
+0162   <span class="keyword">if</span> (max(abs(w - wold)) &lt; options(2) &amp; abs(fnew - fold) &lt; options(3))
+0163     <span class="comment">% Termination criteria are met</span>
+0164     options(8) = fnew;
+0165     net = feval(unpakstr, net, w);
+0166     <span class="keyword">return</span>;
+0167   <span class="keyword">end</span>
+0168 <span class="keyword">end</span>
+0169 
+0170 <span class="keyword">if</span> fcneval
+0171   options(8) = fnew;
+0172 <span class="keyword">else</span>
+0173   <span class="comment">% Return error on entire dataset</span>
+0174   options(8) = <a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">neterr</a>(w, net, x, t);
+0175   options(10) = options(10) + 1;
+0176 <span class="keyword">end</span>
+0177 <span class="keyword">if</span> (options(1) &gt;= 0)
+0178   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0179 <span class="keyword">end</span>
+0180 
+0181 net = feval(unpakstr, net, w);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

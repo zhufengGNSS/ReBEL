@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demns1</title>
+  <meta name="keywords" content="demns1">
+  <meta name="description" content="DEMNS1	Demonstrate Neuroscale for visualisation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demns1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demns1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMNS1	Demonstrate Neuroscale for visualisation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMNS1    Demonstrate Neuroscale for visualisation.
+
+    Description
+    This script demonstrates the use of the Neuroscale algorithm for
+    topographic projection and visualisation.  A data sample is generated
+    from a mixture of two Gaussians in 4d space, and an RBF is trained
+    with the stress error function to project the data into 2d.  The
+    training data and a test sample are both plotted in this projection.
+
+    See also
+    <a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">RBF</a>, <a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">RBFTRAIN</a>, <a href="rbfprior.html" class="code" title="function [mask, prior] = rbfprior(rbfunc, nin, nhidden, nout, aw2, ab2)">RBFPRIOR</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li><li><a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">rbf</a>	RBF	Creates an RBF network with specified architecture</li><li><a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>	RBFFWD	Forward propagation through RBF network with linear outputs.</li><li><a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">rbftrain</a>	RBFTRAIN Two stage training of RBF network.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMNS1    Demonstrate Neuroscale for visualisation.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    This script demonstrates the use of the Neuroscale algorithm for</span>
+0005 <span class="comment">%    topographic projection and visualisation.  A data sample is generated</span>
+0006 <span class="comment">%    from a mixture of two Gaussians in 4d space, and an RBF is trained</span>
+0007 <span class="comment">%    with the stress error function to project the data into 2d.  The</span>
+0008 <span class="comment">%    training data and a test sample are both plotted in this projection.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    See also</span>
+0011 <span class="comment">%    RBF, RBFTRAIN, RBFPRIOR</span>
+0012 <span class="comment">%</span>
+0013 
+0014 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0015 
+0016 <span class="comment">% Generate the data</span>
+0017 <span class="comment">% Fix seeds for reproducible results</span>
+0018 rand(<span class="string">'state'</span>, 420);
+0019 randn(<span class="string">'state'</span>, 420);
+0020 
+0021 input_dim = 4;
+0022 output_dim = 2;
+0023 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(input_dim, 2, <span class="string">'spherical'</span>);
+0024 mix.centres = [1 1 1 1; 0 0 0 0];
+0025 mix.priors = [0.5 0.5];
+0026 mix.covars = [0.1 0.1];
+0027 
+0028 ndata = 60;
+0029 [data, labels] = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(mix, ndata);
+0030 
+0031 clc
+0032 disp(<span class="string">'This demonstration illustrates the use of the Neuroscale model'</span>)
+0033 disp(<span class="string">'to perform a topographic projection of data.  We begin by generating'</span>)
+0034 disp(<span class="string">'60 data points from a mixture of two Gaussians in 4 dimensional space.'</span>)
+0035 disp(<span class="string">' '</span>)
+0036 disp(<span class="string">'Press any key to continue'</span>)
+0037 pause
+0038 
+0039 ncentres = 10;
+0040 net = <a href="rbf.html" class="code" title="function net = rbf(nin, nhidden, nout, rbfunc, outfunc, prior, beta)">rbf</a>(input_dim, ncentres, output_dim, <span class="string">'tps'</span>, <span class="string">'neuroscale'</span>);
+0041 dstring = [<span class="string">'the Sammon mapping.  The model has '</span>, num2str(ncentres), <span class="keyword">...</span>
+0042     <span class="string">' centres, two outputs, and uses'</span>];
+0043 clc
+0044 disp(<span class="string">'The Neuroscale model is an RBF with a Stress error measure as used in'</span>)
+0045 disp(dstring)
+0046 disp(<span class="string">'thin plate spline basis functions.'</span>)
+0047 disp(<span class="string">' '</span>)
+0048 disp(<span class="string">'It is trained using the shadow targets algorithm for at most 60 iterations.'</span>)
+0049 disp(<span class="string">' '</span>)
+0050 disp(<span class="string">'Press any key to continue'</span>)
+0051 pause
+0052 
+0053 <span class="comment">% First row controls shadow targets, second row controls rbfsetbf</span>
+0054 options(1, :) = foptions;
+0055 options(2, :) = foptions;
+0056 options(1, 1) = 1;
+0057 options(1, 2) = 1e-2;
+0058 options(1, 3) = 1e-2;
+0059 options(1, 6) = 1;    <span class="comment">% Switch on PCA initialisation</span>
+0060 options(1, 14) = 60;
+0061 options(2, 1) = -1;   <span class="comment">% Switch off all warnings</span>
+0062 options(2, 5) = 1;
+0063 options(2, 14) = 10;
+0064 net2 = <a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">rbftrain</a>(net, options, data);
+0065 
+0066 disp(<span class="string">' '</span>)
+0067 disp(<span class="string">'After training the model, we project the training data by a normal'</span>)
+0068 disp(<span class="string">'forward propagation through the RBF network.  Because there are two'</span>)
+0069 disp(<span class="string">'outputs, the results can be plotted and visualised.'</span>)
+0070 disp(<span class="string">' '</span>)
+0071 disp(<span class="string">'Press any key to continue'</span>)
+0072 pause
+0073 
+0074 <span class="comment">% Plot the result</span>
+0075 y = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net2, data);
+0076 ClassSymbol1 = <span class="string">'r.'</span>;
+0077 ClassSymbol2 = <span class="string">'b.'</span>;
+0078 PointSize = 12;
+0079 fh1 = figure;
+0080 hold on;
+0081 plot(y((labels==1),1),y(labels==1,2),ClassSymbol1, <span class="string">'MarkerSize'</span>, PointSize)
+0082 plot(y((labels&gt;1),1),y(labels&gt;1,2),ClassSymbol2, <span class="string">'MarkerSize'</span>, PointSize)
+0083 
+0084 disp(<span class="string">' '</span>)
+0085 disp(<span class="string">'In this plot, the red dots denote the first class and the blue'</span>)
+0086 disp(<span class="string">'dots the second class.'</span>)
+0087 disp(<span class="string">' '</span>)
+0088 disp(<span class="string">'Press any key to continue.'</span>)
+0089 disp(<span class="string">' '</span>)
+0090 pause
+0091 
+0092 disp(<span class="string">'We now generate a further 100 data points from the original distribution'</span>)
+0093 disp(<span class="string">'and plot their projection using star symbols.  Note that a Sammon'</span>)
+0094 disp(<span class="string">'mapping cannot be used to generalise to new data in this fashion.'</span>)
+0095 
+0096 [test_data, test_labels] = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(mix, 100);
+0097 ytest = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net2, test_data);
+0098 ClassSymbol1 = <span class="string">'ro'</span>;
+0099 ClassSymbol2 = <span class="string">'bo'</span>;
+0100 <span class="comment">% Circles are rather large symbols</span>
+0101 PointSize = 6;
+0102 hold on
+0103 plot(ytest((test_labels==1),1),ytest(test_labels==1,2), <span class="keyword">...</span>
+0104   ClassSymbol1, <span class="string">'MarkerSize'</span>, PointSize)
+0105 plot(ytest((test_labels&gt;1),1),ytest(test_labels&gt;1,2),<span class="keyword">...</span>
+0106   ClassSymbol2, <span class="string">'MarkerSize'</span>, PointSize)
+0107 hold on
+0108 legend(<span class="string">'Class 1'</span>, <span class="string">'Class 2'</span>, <span class="string">'Test Class 1'</span>, <span class="string">'Test Class 2'</span>)
+0109 disp(<span class="string">'Press any key to exit.'</span>)
+0110 pause
+0111 
+0112 close(fh1);
+0113 clear all;
+0114</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

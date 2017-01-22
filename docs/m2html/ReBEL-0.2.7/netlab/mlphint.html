@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlphint</title>
+  <meta name="keywords" content="mlphint">
+  <meta name="description" content="MLPHINT Plot Hinton diagram for 2-layer feed-forward network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlphint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlphint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPHINT Plot Hinton diagram for 2-layer feed-forward network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [h1, h2] = mlphint(net); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPHINT Plot Hinton diagram for 2-layer feed-forward network.
+
+    Description
+
+    MLPHINT(NET) takes a network structure NET and plots the Hinton
+    diagram comprised of two figure windows, one displaying the first-
+    layer weights and biases, and one displaying the second-layer weights
+    and biases.
+
+    [H1, H2] = MLPHINT(NET) also returns handles H1 and  H2 to the
+    figures which can be used, for instance, to delete the  figures when
+    they are no longer needed.
+
+    To print the figure correctly, you should call SET(H,
+    'INVERTHARDCOPY', 'ON') before printing.
+
+    See also
+    <a href="demhint.html" class="code" title="function demhint(nin, nhidden, nout)">DEMHINT</a>, <a href="hintmat.html" class="code" title="function [xvals, yvals, color] = hintmat(w);">HINTMAT</a>, <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mlppak.html" class="code" title="function w = mlppak(net)">MLPPAK</a>, <a href="mlpunpak.html" class="code" title="function net = mlpunpak(net, w)">MLPUNPAK</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="hintmat.html" class="code" title="function [xvals, yvals, color] = hintmat(w);">hintmat</a>	HINTMAT Evaluates the coordinates of the patches for a Hinton diagram.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demhint.html" class="code" title="function demhint(nin, nhidden, nout)">demhint</a>	DEMHINT Demonstration of Hinton diagram for 2-layer feed-forward network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [h1, h2] = mlphint(net);</a>
+0002 <span class="comment">%MLPHINT Plot Hinton diagram for 2-layer feed-forward network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    MLPHINT(NET) takes a network structure NET and plots the Hinton</span>
+0007 <span class="comment">%    diagram comprised of two figure windows, one displaying the first-</span>
+0008 <span class="comment">%    layer weights and biases, and one displaying the second-layer weights</span>
+0009 <span class="comment">%    and biases.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    [H1, H2] = MLPHINT(NET) also returns handles H1 and  H2 to the</span>
+0012 <span class="comment">%    figures which can be used, for instance, to delete the  figures when</span>
+0013 <span class="comment">%    they are no longer needed.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    To print the figure correctly, you should call SET(H,</span>
+0016 <span class="comment">%    'INVERTHARDCOPY', 'ON') before printing.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    See also</span>
+0019 <span class="comment">%    DEMHINT, HINTMAT, MLP, MLPPAK, MLPUNPAK</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0023 
+0024 <span class="comment">% Set scale to be up to 0.9 of maximum absolute weight value, where scale</span>
+0025 <span class="comment">% defined so that area of box proportional to weight value.</span>
+0026 
+0027 <span class="comment">% Use no more than 640x480 pixels</span>
+0028 xmax = 640; ymax = 480;
+0029 
+0030 <span class="comment">% Offset bottom left hand corner</span>
+0031 x01 = 40; y01 = 40;
+0032 x02 = 80; y02 = 80;
+0033 
+0034 <span class="comment">% Need to allow 5 pixels border for window frame: but 30 at top</span>
+0035 border = 5;
+0036 top_border = 30;
+0037 
+0038 ymax = ymax - top_border;
+0039 xmax = xmax - border;
+0040 
+0041 <span class="comment">% First layer</span>
+0042 
+0043 wb1 = [net.w1; net.b1];
+0044 [xvals, yvals, color] = <a href="hintmat.html" class="code" title="function [xvals, yvals, color] = hintmat(w);">hintmat</a>(wb1');
+0045 <span class="comment">% Try to preserve aspect ratio approximately</span>
+0046 <span class="keyword">if</span> (8*net.nhidden &lt; 6*(net.nin + 1))
+0047   delx = xmax; dely = xmax*net.nhidden/(net.nin + 1);
+0048 <span class="keyword">else</span>
+0049   delx = ymax*(net.nin + 1)/net.nhidden; dely = ymax;
+0050 <span class="keyword">end</span>
+0051 
+0052 h1 = figure(<span class="string">'Color'</span>, [0.5 0.5 0.5], <span class="keyword">...</span>
+0053   <span class="string">'Name'</span>, <span class="string">'Hinton diagram: first-layer weights and biases'</span>, <span class="keyword">...</span>
+0054   <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0055   <span class="string">'Colormap'</span>, [0 0 0; 1 1 1], <span class="keyword">...</span>
+0056   <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="keyword">...</span>
+0057   <span class="string">'Position'</span>, [x01 y01 delx dely]);
+0058 set(gca, <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="string">'Position'</span>, [0 0 1 1]);
+0059 hold on
+0060 
+0061 cmap = [0 0 0; 1 1 1];
+0062 colors(1, :, :) = cmap(color, :);
+0063 patch(xvals', yvals', colors, <span class="string">'Edgecolor'</span>, <span class="string">'none'</span>);
+0064 axis equal;
+0065 xpos = net.nin;
+0066 line([xpos xpos], [0 net.nhidden], <span class="string">'color'</span>, <span class="string">'red'</span>, <span class="string">'linewidth'</span>, 3);
+0067 
+0068 <span class="comment">% Second layer</span>
+0069 
+0070 wb2 = [net.w2; net.b2];
+0071 [xvals, yvals, color] = <a href="hintmat.html" class="code" title="function [xvals, yvals, color] = hintmat(w);">hintmat</a>(wb2');
+0072 <span class="keyword">if</span> (8*net.nout &lt; 6*(net.nhidden + 1))
+0073   delx = xmax; dely = xmax*net.nout/(net.nhidden + 1);
+0074 <span class="keyword">else</span>
+0075   delx = ymax*(net.nhidden + 1)/net.nout; dely = ymax;
+0076 <span class="keyword">end</span>
+0077 
+0078 h2 = figure(<span class="string">'Color'</span>, [0.5 0.5 0.5], <span class="keyword">...</span>
+0079   <span class="string">'Name'</span>, <span class="string">'Hinton diagram: second-layer weights and biases'</span>, <span class="keyword">...</span>
+0080   <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0081   <span class="string">'Colormap'</span>, [0 0 0; 1 1 1], <span class="keyword">...</span><span class="comment">  </span>
+0082   <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="keyword">...</span>
+0083   <span class="string">'Position'</span>, [x02 y02 delx dely]);
+0084 set(gca, <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="string">'Position'</span>, [0 0 1 1]);
+0085 
+0086 hold on
+0087 colors2(1, :, :) = cmap(color, :);
+0088 patch(xvals', yvals', colors2, <span class="string">'Edgecolor'</span>, <span class="string">'none'</span>);
+0089 axis equal;
+0090 xpos = net.nhidden;
+0091 line([xpos xpos], [0 net.nout], <span class="string">'color'</span>, <span class="string">'red'</span>, <span class="string">'linewidth'</span>, 3);
+0092</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

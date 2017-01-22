@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demgtm2</title>
+  <meta name="keywords" content="demgtm2">
+  <meta name="description" content="DEMGTM2 Demonstrate GTM for visualisation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demgtm2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demgtm2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMGTM2 Demonstrate GTM for visualisation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMGTM2 Demonstrate GTM for visualisation.
+
+    Description
+     This script demonstrates the use of a GTM with  a two-dimensional
+    latent space to visualise data in a higher dimensional space. This is
+    done through the use of the mean responsibility and magnification
+    factors.
+
+    See also
+    <a href="demgtm1.html" class="code" title="">DEMGTM1</a>, <a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">GTM</a>, <a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">GTMEM</a>, <a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">GTMPOST</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li><li><a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">gtm</a>	GTM	Create a Generative Topographic Map.</li><li><a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">gtmem</a>	GTMEM	EM algorithm for Generative Topographic Mapping.</li><li><a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">gtminit</a>	GTMINIT Initialise the weights and latent sample in a GTM.</li><li><a href="gtmlmean.html" class="code" title="function means = gtmlmean(net, data)">gtmlmean</a>	GTMLMEAN Mean responsibility for data in a GTM.</li><li><a href="gtmlmode.html" class="code" title="function modes = gtmlmode(net, data)">gtmlmode</a>	GTMLMODE Mode responsibility for data in a GTM.</li><li><a href="gtmmag.html" class="code" title="function mags = gtmmag(net, latent_data)">gtmmag</a>	GTMMAG	Magnification factors for a GTM</li><li><a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">gtmpost</a>	GTMPOST Latent space responsibility for data in a GTM.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMGTM2 Demonstrate GTM for visualisation.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%     This script demonstrates the use of a GTM with  a two-dimensional</span>
+0005 <span class="comment">%    latent space to visualise data in a higher dimensional space. This is</span>
+0006 <span class="comment">%    done through the use of the mean responsibility and magnification</span>
+0007 <span class="comment">%    factors.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    See also</span>
+0010 <span class="comment">%    DEMGTM1, GTM, GTMEM, GTMPOST</span>
+0011 <span class="comment">%</span>
+0012 
+0013 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0014 
+0015 
+0016 <span class="comment">% Fix seeds for reproducible results</span>
+0017 rand(<span class="string">'state'</span>, 420);
+0018 randn(<span class="string">'state'</span>, 420);
+0019 
+0020 ndata = 300
+0021 clc;
+0022 disp(<span class="string">'This demonstration shows how a Generative Topographic Mapping'</span>)
+0023 disp(<span class="string">'can be used to model and visualise high dimensional data.  The'</span>)
+0024 disp(<span class="string">'data is generated from a mixture of two spherical Gaussians in'</span>)
+0025 dstring = [<span class="string">'four dimensional space. '</span>, num2str(ndata), <span class="keyword">...</span>
+0026       <span class="string">' data points are generated.'</span>];
+0027 disp(dstring);
+0028 disp(<span class="string">' '</span>);
+0029 disp(<span class="string">'Press any key to continue.'</span>)
+0030 pause
+0031 <span class="comment">% Create data</span>
+0032 data_dim = 4;
+0033 latent_dim = 2;
+0034 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(data_dim, 2, <span class="string">'spherical'</span>);
+0035 mix.centres = [1 1 1 1; 0 0 0 0];
+0036 mix.priors = [0.5 0.5];
+0037 mix.covars = [0.1 0.1];
+0038 
+0039 [data, labels] = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(mix, ndata);
+0040 
+0041 latent_shape = [15 15];  <span class="comment">% Number of latent points in each dimension</span>
+0042 nlatent = prod(latent_shape);  <span class="comment">% Number of latent points</span>
+0043 num_rbf_centres = 16;
+0044 
+0045 clc;
+0046 dstring = [<span class="string">'Next we generate and initialise the GTM.  There are '</span>,<span class="keyword">...</span>
+0047       num2str(nlatent), <span class="string">' latent points'</span>];
+0048 disp(dstring);
+0049 dstring = [<span class="string">'arranged in a square of '</span>, num2str(latent_shape(1)), <span class="keyword">...</span>
+0050       <span class="string">' points on a side.  There are '</span>, num2str(num_rbf_centres), <span class="keyword">...</span>
+0051       <span class="string">' centres in the'</span>];
+0052 disp(dstring);
+0053 disp(<span class="string">'RBF model, which has Gaussian activation functions.'</span>)
+0054 disp(<span class="string">' '</span>)
+0055 disp(<span class="string">'Once the model is created, the latent data sample'</span>)
+0056 disp(<span class="string">'and RBF centres are placed uniformly in the square [-1 1 -1 1].'</span>)
+0057 disp(<span class="string">'The output weights of the RBF are computed to map the latent'</span>);
+0058 disp(<span class="string">'space to the two dimensional PCA subspace of the data.'</span>);
+0059 disp(<span class="string">' '</span>)
+0060 disp(<span class="string">'Press any key to continue.'</span>);
+0061 pause;
+0062 
+0063 <span class="comment">% Create and initialise GTM model</span>
+0064 net = <a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">gtm</a>(latent_dim, nlatent, data_dim, num_rbf_centres, <span class="keyword">...</span>
+0065    <span class="string">'gaussian'</span>, 0.1);
+0066 
+0067 options = foptions;
+0068 options(1) = -1;
+0069 options(7) = 1;    <span class="comment">% Set width factor of RBF</span>
+0070 net = <a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">gtminit</a>(net, options, data, <span class="string">'regular'</span>, latent_shape, [4 4]);
+0071 
+0072 options = foptions;
+0073 options(14) = 30;
+0074 options(1) = 1;
+0075 
+0076 clc;
+0077 dstring = [<span class="string">'We now train the model with '</span>, num2str(options(14)), <span class="keyword">...</span>
+0078       <span class="string">' iterations of'</span>];
+0079 disp(dstring)
+0080 disp(<span class="string">'the EM algorithm for the GTM.'</span>)
+0081 disp(<span class="string">' '</span>)
+0082 disp(<span class="string">'Press any key to continue.'</span>)
+0083 pause;
+0084 
+0085 [net, options] = <a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">gtmem</a>(net, data, options);
+0086 
+0087 disp(<span class="string">' '</span>)
+0088 disp(<span class="string">'Press any key to continue.'</span>)
+0089 pause;
+0090 
+0091 clc;
+0092 disp(<span class="string">'We now visualise the data by plotting, for each data point,'</span>);
+0093 disp(<span class="string">'the posterior mean and mode (in latent space).  These give'</span>);
+0094 disp(<span class="string">'a summary of the entire posterior distribution in latent space.'</span>)
+0095 disp(<span class="string">'The corresponding values are joined by a line to aid the'</span>)
+0096 disp(<span class="string">'interpretation.'</span>)
+0097 disp(<span class="string">' '</span>)
+0098 disp(<span class="string">'Press any key to continue.'</span>);
+0099 pause;
+0100 <span class="comment">% Plot posterior means</span>
+0101 means = <a href="gtmlmean.html" class="code" title="function means = gtmlmean(net, data)">gtmlmean</a>(net, data);
+0102 modes = <a href="gtmlmode.html" class="code" title="function modes = gtmlmode(net, data)">gtmlmode</a>(net, data);
+0103 PointSize = 12;
+0104 ClassSymbol1 = <span class="string">'r.'</span>;
+0105 ClassSymbol2 = <span class="string">'b.'</span>;
+0106 fh1 = figure;
+0107 hold on;
+0108 title(<span class="string">'Visualisation in latent space'</span>)
+0109 plot(means((labels==1),1), means(labels==1,2), <span class="keyword">...</span>
+0110   ClassSymbol1, <span class="string">'MarkerSize'</span>, PointSize)
+0111 plot(means((labels&gt;1),1),means(labels&gt;1,2),<span class="keyword">...</span>
+0112    ClassSymbol2, <span class="string">'MarkerSize'</span>, PointSize)
+0113 
+0114 ClassSymbol1 = <span class="string">'ro'</span>;
+0115 ClassSymbol2 = <span class="string">'bo'</span>;
+0116 plot(modes(labels==1,1), modes(labels==1,2), <span class="keyword">...</span>
+0117   ClassSymbol1)
+0118 plot(modes(labels&gt;1,1),modes(labels&gt;1,2),<span class="keyword">...</span>
+0119    ClassSymbol2)
+0120 
+0121 <span class="comment">% Join up means and modes</span>
+0122 <span class="keyword">for</span> n = 1:ndata
+0123    plot([means(n,1); modes(n,1)], [means(n,2); modes(n,2)], <span class="string">'g-'</span>)
+0124 <span class="keyword">end</span>
+0125 <span class="comment">% Place legend outside data plot</span>
+0126 legend(<span class="string">'Mean (class 1)'</span>, <span class="string">'Mean (class 2)'</span>, <span class="string">'Mode (class 1)'</span>,<span class="keyword">...</span>
+0127    <span class="string">'Mode (class 2)'</span>, -1);
+0128 
+0129 <span class="comment">% Display posterior for a data point</span>
+0130 <span class="comment">% Choose an interesting one with a large distance between mean and</span>
+0131 <span class="comment">% mode</span>
+0132 [distance, point] = max(sum((means-modes).^2, 2));
+0133 resp = <a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">gtmpost</a>(net, data(point, :));
+0134 
+0135 disp(<span class="string">' '</span>)
+0136 disp(<span class="string">'For more detailed information, the full posterior distribution'</span>)
+0137 disp(<span class="string">'(or responsibility) can be plotted in latent space for a'</span>)
+0138 disp(<span class="string">'single data point.  This point has been chosen as the one'</span>)
+0139 disp(<span class="string">'with the largest distance between mean and mode.'</span>)
+0140 disp(<span class="string">' '</span>)
+0141 disp(<span class="string">'Press any key to continue.'</span>);
+0142 pause;
+0143 
+0144 R = reshape(resp, fliplr(latent_shape));
+0145 XL = reshape(net.X(:,1), fliplr(latent_shape));
+0146 YL = reshape(net.X(:,2), fliplr(latent_shape));
+0147 
+0148 fh2 = figure;
+0149 imagesc(net.X(:, 1), net.X(:,2), R);
+0150 hold on;
+0151 tstr = [<span class="string">'Responsibility for point '</span>, num2str(point)];
+0152 title(tstr);
+0153 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>)
+0154 colormap(hot);
+0155 colorbar
+0156 disp(<span class="string">' '</span>);
+0157 disp(<span class="string">'Press any key to continue.'</span>)
+0158 pause
+0159 
+0160 clc
+0161 disp(<span class="string">'Finally, we visualise the data with the posterior means in'</span>)
+0162 disp(<span class="string">'latent space as before, but superimpose the magnification'</span>)
+0163 disp(<span class="string">'factors to highlight the separation between clusters.'</span>)
+0164 disp(<span class="string">' '</span>)
+0165 disp(<span class="string">'Note the large magnitude factors down the centre of the'</span>)
+0166 disp(<span class="string">'graph, showing that the manifold is stretched more in'</span>)
+0167 disp(<span class="string">'this region than within each of the two clusters.'</span>)
+0168 ClassSymbol1 = <span class="string">'g.'</span>;
+0169 ClassSymbol2 = <span class="string">'b.'</span>;
+0170 
+0171 fh3 = figure;
+0172 mags = <a href="gtmmag.html" class="code" title="function mags = gtmmag(net, latent_data)">gtmmag</a>(net, net.X);
+0173 <span class="comment">% Reshape into grid form</span>
+0174 Mags = reshape(mags, fliplr(latent_shape));
+0175 imagesc(net.X(:, 1), net.X(:,2), Mags);
+0176 hold on
+0177 title(<span class="string">'Dataset visualisation with magnification factors'</span>)
+0178 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>)
+0179 colormap(hot);
+0180 colorbar
+0181 hold on; <span class="comment">% Else the magnification plot disappears</span>
+0182 plot(means(labels==1,1), means(labels==1,2), <span class="keyword">...</span>
+0183   ClassSymbol1, <span class="string">'MarkerSize'</span>, PointSize)
+0184 plot(means(labels&gt;1,1), means(labels&gt;1,2), <span class="keyword">...</span>
+0185   ClassSymbol2, <span class="string">'MarkerSize'</span>, PointSize)
+0186 
+0187 disp(<span class="string">' '</span>)
+0188 disp(<span class="string">'Press any key to exit.'</span>)
+0189 pause
+0190 
+0191 close(fh1);
+0192 close(fh2);
+0193 close(fh3);
+0194 clear all;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

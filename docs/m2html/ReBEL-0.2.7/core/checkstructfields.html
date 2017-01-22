@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of checkstructfields</title>
+  <meta name="keywords" content="checkstructfields">
+  <meta name="description" content="CHECKSTRUCTFIELDS Checks if a data structure has the required fields.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; checkstructfields.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>checkstructfields
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CHECKSTRUCTFIELDS Checks if a data structure has the required fields.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function errstring = checkstructfields(ds,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CHECKSTRUCTFIELDS Checks if a data structure has the required fields.
+
+   errstring = checkstructfields(ds, field1, field2, ...)
+
+   This function checks if data structure 'ds' has the fields specified by the
+   character arrays (strings) 'field1', 'field2', ... e.g.
+
+        missing_fields = checkstructfields(ds, 'field1', 'field2', 'field3');
+
+   The names of the missing fields are returned in 'errstring'.
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consistent.html" class="code" title="function errstring = consistent(ds, type)">consistent</a>	CONSISTENT   Check ReBEL data structures for consistentency.</li><li><a href="geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>	GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function errstring = checkstructfields(ds,varargin)</a>
+0002 
+0003 <span class="comment">% CHECKSTRUCTFIELDS Checks if a data structure has the required fields.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   errstring = checkstructfields(ds, field1, field2, ...)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   This function checks if data structure 'ds' has the fields specified by the</span>
+0008 <span class="comment">%   character arrays (strings) 'field1', 'field2', ... e.g.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%        missing_fields = checkstructfields(ds, 'field1', 'field2', 'field3');</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   The names of the missing fields are returned in 'errstring'.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0017 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0018 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0019 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0022 <span class="comment">%   detail.</span>
+0023 
+0024 <span class="comment">%===============================================================================================</span>
+0025 
+0026 errstring = <span class="string">''</span>;
+0027 
+0028 <span class="comment">%-- Check existence of required data structure fields</span>
+0029 <span class="keyword">for</span> j=1:length(varargin),
+0030   <span class="keyword">if</span> ~ischar(varargin{j})
+0031     error(<span class="string">' [ checkstructfields ]   The field name arguments should be character arrays (strings).'</span>);
+0032   <span class="keyword">end</span>
+0033   <span class="keyword">if</span> ~isfield(ds,varargin{j}),
+0034     errstring = [varargin{j} <span class="string">' '</span>];
+0035   <span class="keyword">end</span>
+0036 <span class="keyword">end</span>
+0037</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

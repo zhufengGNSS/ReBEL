@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of maxitmess</title>
+  <meta name="keywords" content="maxitmess">
+  <meta name="description" content="MAXITMESS Create a standard error message when training reaches max. iterations.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; maxitmess.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>maxitmess
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MAXITMESS Create a standard error message when training reaches max. iterations.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function s = maxitmess() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MAXITMESS Create a standard error message when training reaches max. iterations.
+
+    Description
+    S = MAXITMESS returns a standard string that it used by training
+    algorithms when the maximum number of iterations (as specified in
+    OPTIONS(14) is reached.
+
+    See also
+    <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">GLMTRAIN</a>, <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">GMMEM</a>, <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">GRADDESC</a>, <a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">GTMEM</a>, <a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">KMEANS</a>, <a href="olgd.html" class="code" title="function [net, options, errlog, pointlog] = olgd(net, options, x, t)">OLGD</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">conjgrad</a>	CONJGRAD Conjugate gradients optimization.</li><li><a href="glmtrain.html" class="code" title="function [net, options] = glmtrain(net, options, x, t)">glmtrain</a>	GLMTRAIN Specialised training of generalized linear model</li><li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">graddesc</a>	GRADDESC Gradient descent optimization.</li><li><a href="gtmem.html" class="code" title="function [net, options, errlog] = gtmem(net, t, options)">gtmem</a>	GTMEM	EM algorithm for Generative Topographic Mapping.</li><li><a href="kmeans.html" class="code" title="function [centres, options, post, errlog] = kmeans(centres, data, options)">kmeans</a>	KMEANS	Trains a k means cluster model.</li><li><a href="olgd.html" class="code" title="function [net, options, errlog, pointlog] = olgd(net, options, x, t)">olgd</a>	OLGD	On-line gradient descent optimization.</li><li><a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">quasinew</a>	QUASINEW Quasi-Newton optimization.</li><li><a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">scg</a>	SCG	Scaled conjugate gradient optimization.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s = maxitmess()</a>
+0002 <span class="comment">%MAXITMESS Create a standard error message when training reaches max. iterations.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    S = MAXITMESS returns a standard string that it used by training</span>
+0006 <span class="comment">%    algorithms when the maximum number of iterations (as specified in</span>
+0007 <span class="comment">%    OPTIONS(14) is reached.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    See also</span>
+0010 <span class="comment">%    CONJGRAD, GLMTRAIN, GMMEM, GRADDESC, GTMEM, KMEANS, OLGD, QUASINEW, SCG</span>
+0011 <span class="comment">%</span>
+0012 
+0013 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0014 
+0015 s = <span class="string">'Maximum number of iterations has been exceeded'</span>;
+0016</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

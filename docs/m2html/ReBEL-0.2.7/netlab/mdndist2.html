@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mdndist2</title>
+  <meta name="keywords" content="mdndist2">
+  <meta name="description" content="MDNDIST2 Calculates squared distance between centres of Gaussian kernels and data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mdndist2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mdndist2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MDNDIST2 Calculates squared distance between centres of Gaussian kernels and data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function n2 = mdndist2(mixparams, t) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MDNDIST2 Calculates squared distance between centres of Gaussian kernels and data
+
+    Description
+    N2 = MDNDIST2(MIXPARAMS, T) takes takes the centres of the Gaussian
+    contained in  MIXPARAMS and the target data matrix, T, and computes
+    the squared  Euclidean distance between them.  If T has M rows and N
+    columns, then the CENTRES field in the MIXPARAMS structure should
+    have M rows and N*MIXPARAMS.NCENTRES columns: the centres in each row
+    relate to the corresponding row in T. The result has M rows and
+    MIXPARAMS.NCENTRES columns. The I, Jth entry is the  squared distance
+    from the Ith row of X to the Jth centre in the Ith row of
+    MIXPARAMS.CENTRES.
+
+    See also
+    <a href="mdnfwd.html" class="code" title="function [mixparams, y, z, a] = mdnfwd(net, x)">MDNFWD</a>, <a href="mdnprob.html" class="code" title="function [prob,a] = mdnprob(mixparams, t)">MDNPROB</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">mdngrad</a>	MDNGRAD Evaluate gradient of error function for Mixture Density Network.</li><li><a href="mdnprob.html" class="code" title="function [prob,a] = mdnprob(mixparams, t)">mdnprob</a>	MDNPROB Computes the data probability likelihood for an MDN mixture structure.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function n2 = mdndist2(mixparams, t)</a>
+0002 <span class="comment">%MDNDIST2 Calculates squared distance between centres of Gaussian kernels and data</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    N2 = MDNDIST2(MIXPARAMS, T) takes takes the centres of the Gaussian</span>
+0006 <span class="comment">%    contained in  MIXPARAMS and the target data matrix, T, and computes</span>
+0007 <span class="comment">%    the squared  Euclidean distance between them.  If T has M rows and N</span>
+0008 <span class="comment">%    columns, then the CENTRES field in the MIXPARAMS structure should</span>
+0009 <span class="comment">%    have M rows and N*MIXPARAMS.NCENTRES columns: the centres in each row</span>
+0010 <span class="comment">%    relate to the corresponding row in T. The result has M rows and</span>
+0011 <span class="comment">%    MIXPARAMS.NCENTRES columns. The I, Jth entry is the  squared distance</span>
+0012 <span class="comment">%    from the Ith row of X to the Jth centre in the Ith row of</span>
+0013 <span class="comment">%    MIXPARAMS.CENTRES.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    See also</span>
+0016 <span class="comment">%    MDNFWD, MDNPROB</span>
+0017 <span class="comment">%</span>
+0018 
+0019 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0020 <span class="comment">%    David J Evans (1998)</span>
+0021 
+0022 <span class="comment">% Check arguments for consistency</span>
+0023 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mixparams, <span class="string">'mdnmixes'</span>);
+0024 <span class="keyword">if</span> ~isempty(errstring)
+0025   error(errstring);
+0026 <span class="keyword">end</span>
+0027 
+0028 ncentres   = mixparams.ncentres;
+0029 dim_target = mixparams.dim_target;
+0030 ntarget    = size(t, 1);
+0031 <span class="keyword">if</span> ntarget ~= size(mixparams.centres, 1)
+0032   error(<span class="string">'Number of targets does not match number of mixtures'</span>)
+0033 <span class="keyword">end</span>
+0034 <span class="keyword">if</span> size(t, 2) ~= mixparams.dim_target
+0035   error(<span class="string">'Target dimension does not match mixture dimension'</span>)
+0036 <span class="keyword">end</span>
+0037 
+0038 <span class="comment">% Build t that suits parameters, that is repeat t for each centre</span>
+0039 t = kron(ones(1, ncentres), t);
+0040 
+0041 <span class="comment">% Do subtraction and square</span>
+0042 diff2 = (t - mixparams.centres).^2;
+0043 
+0044 <span class="comment">% Reshape and sum each component</span>
+0045 diff2 = reshape(diff2', dim_target, (ntarget*ncentres))';
+0046 n2 = sum(diff2, 2);
+0047 
+0048 <span class="comment">% Calculate the sum of distance, and reshape</span>
+0049 <span class="comment">% so that we have a distance for each centre per target</span>
+0050 n2 = reshape(n2, ncentres, ntarget)';
+0051</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demmlp2</title>
+  <meta name="keywords" content="demmlp2">
+  <meta name="description" content="DEMMLP2 Demonstrate simple classification using a multi-layer perceptron">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demmlp2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demmlp2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMMLP2 Demonstrate simple classification using a multi-layer perceptron
+
+    Description
+    The problem consists of input data in two dimensions drawn from a
+    mixture of three Gaussians: two of which are assigned to a single
+    class.  An MLP with logistic outputs trained with a quasi-Newton
+    optimisation algorithm is compared with the optimal Bayesian decision
+    rule.
+
+    See also
+    <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">MLPFWD</a>, <a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">NETERR</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="confmat.html" class="code" title="function [C,rate]=confmat(Y,T)">confmat</a>	CONFMAT Compute a confusion matrix.</li><li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>	GMMACTIV Computes the activations of a Gaussian mixture model.</li><li><a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>	GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li><li><a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>	MLP	Create a 2-layer feedforward network.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li><li><a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>	NETOPT	Optimize the weights in a network model.</li><li><a href="plotmat.html" class="code" title="function plotmat(matrix, textcolour, gridcolour, fontsize)">plotmat</a>	PLOTMAT Display a matrix.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMMLP2 Demonstrate simple classification using a multi-layer perceptron</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    The problem consists of input data in two dimensions drawn from a</span>
+0005 <span class="comment">%    mixture of three Gaussians: two of which are assigned to a single</span>
+0006 <span class="comment">%    class.  An MLP with logistic outputs trained with a quasi-Newton</span>
+0007 <span class="comment">%    optimisation algorithm is compared with the optimal Bayesian decision</span>
+0008 <span class="comment">%    rule.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    See also</span>
+0011 <span class="comment">%    MLP, MLPFWD, NETERR, QUASINEW</span>
+0012 <span class="comment">%</span>
+0013 
+0014 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0015 
+0016 
+0017 <span class="comment">% Set up some figure parameters</span>
+0018 AxisShift = 0.05;
+0019 ClassSymbol1 = <span class="string">'r.'</span>;
+0020 ClassSymbol2 = <span class="string">'y.'</span>;
+0021 PointSize = 12;
+0022 titleSize = 10;
+0023 
+0024 <span class="comment">% Fix the seeds</span>
+0025 rand(<span class="string">'state'</span>, 423);
+0026 randn(<span class="string">'state'</span>, 423);
+0027 
+0028 clc
+0029 disp(<span class="string">'This demonstration shows how an MLP with logistic outputs and'</span>)
+0030 disp(<span class="string">'and cross entropy error function can be trained to model the'</span>)
+0031 disp(<span class="string">'posterior class probabilities in a classification problem.'</span>)
+0032 disp(<span class="string">'The results are compared with the optimal Bayes rule classifier,'</span>)
+0033 disp(<span class="string">'which can be computed exactly as we know the form of the generating'</span>)
+0034 disp(<span class="string">'distribution.'</span>)
+0035 disp(<span class="string">' '</span>)
+0036 disp(<span class="string">'Press any key to continue.'</span>)
+0037 pause
+0038 
+0039 fh1 = figure;
+0040 set(fh1, <span class="string">'Name'</span>, <span class="string">'True Data Distribution'</span>);
+0041 whitebg(fh1, <span class="string">'k'</span>);
+0042 
+0043 <span class="comment">%</span>
+0044 <span class="comment">% Generate the data</span>
+0045 <span class="comment">%</span>
+0046 n=200;
+0047 
+0048 <span class="comment">% Set up mixture model: 2d data with three centres</span>
+0049 <span class="comment">% Class 1 is first centre, class 2 from the other two</span>
+0050 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(2, 3, <span class="string">'full'</span>);
+0051 mix.priors = [0.5 0.25 0.25];
+0052 mix.centres = [0 -0.1; 1 1; 1 -1];
+0053 mix.covars(:,:,1) = [0.625 -0.2165; -0.2165 0.875];
+0054 mix.covars(:,:,2) = [0.2241 -0.1368; -0.1368 0.9759];
+0055 mix.covars(:,:,3) = [0.2375 0.1516; 0.1516 0.4125];
+0056 
+0057 [data, label] = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(mix, n);
+0058 
+0059 <span class="comment">%</span>
+0060 <span class="comment">% Calculate some useful axis limits</span>
+0061 <span class="comment">%</span>
+0062 x0 = min(data(:,1));
+0063 x1 = max(data(:,1));
+0064 y0 = min(data(:,2));
+0065 y1 = max(data(:,2));
+0066 dx = x1-x0;
+0067 dy = y1-y0;
+0068 expand = 5/100;            <span class="comment">% Add on 5 percent each way</span>
+0069 x0 = x0 - dx*expand;
+0070 x1 = x1 + dx*expand;
+0071 y0 = y0 - dy*expand;
+0072 y1 = y1 + dy*expand;
+0073 resolution = 100;
+0074 step = dx/resolution;
+0075 xrange = [x0:step:x1];
+0076 yrange = [y0:step:y1];
+0077 <span class="comment">%</span>
+0078 <span class="comment">% Generate the grid</span>
+0079 <span class="comment">%</span>
+0080 [X Y]=meshgrid([x0:step:x1],[y0:step:y1]);
+0081 <span class="comment">%</span>
+0082 <span class="comment">% Calculate the class conditional densities, the unconditional densities and</span>
+0083 <span class="comment">% the posterior probabilities</span>
+0084 <span class="comment">%</span>
+0085 px_j = <a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>(mix, [X(:) Y(:)]);
+0086 px = reshape(px_j*(mix.priors)',size(X));
+0087 post = <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>(mix, [X(:) Y(:)]);
+0088 p1_x = reshape(post(:, 1), size(X));
+0089 p2_x = reshape(post(:, 2) + post(:, 3), size(X));
+0090 
+0091 <span class="comment">%</span>
+0092 <span class="comment">% Generate some pretty pictures !!</span>
+0093 <span class="comment">%</span>
+0094 colormap(hot)
+0095 colorbar
+0096 subplot(1,2,1)
+0097 hold on
+0098 plot(data((label==1),1),data(label==1,2),ClassSymbol1, <span class="string">'MarkerSize'</span>, PointSize)
+0099 plot(data((label&gt;1),1),data(label&gt;1,2),ClassSymbol2, <span class="string">'MarkerSize'</span>, PointSize)
+0100 contour(xrange,yrange,p1_x,[0.5 0.5],<span class="string">'w-'</span>);
+0101 axis([x0 x1 y0 y1])
+0102 set(gca,<span class="string">'Box'</span>,<span class="string">'On'</span>)
+0103 title(<span class="string">'The Sampled Data'</span>);
+0104 rect=get(gca,<span class="string">'Position'</span>);
+0105 rect(1)=rect(1)-AxisShift;
+0106 rect(3)=rect(3)+AxisShift;
+0107 set(gca,<span class="string">'Position'</span>,rect)
+0108 hold off
+0109 
+0110 subplot(1,2,2)
+0111 imagesc(X(:),Y(:),px);
+0112 hold on
+0113 [cB, hB] = contour(xrange,yrange,p1_x,[0.5 0.5],<span class="string">'w:'</span>);
+0114 set(hB,<span class="string">'LineWidth'</span>, 2);
+0115 axis([x0 x1 y0 y1])
+0116 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>)
+0117 title(<span class="string">'Probability Density p(x)'</span>)
+0118 hold off
+0119 
+0120 drawnow;
+0121 clc;
+0122 disp(<span class="string">'The first figure shows the data sampled from a mixture of three'</span>)
+0123 disp(<span class="string">'Gaussians, the first of which (whose centre is near the origin) is'</span>)
+0124 disp(<span class="string">'labelled red and the other two are labelled yellow.  The second plot'</span>)
+0125 disp(<span class="string">'shows the unconditional density of the data with the optimal Bayesian'</span>)
+0126 disp(<span class="string">'decision boundary superimposed.'</span>)
+0127 disp(<span class="string">' '</span>)
+0128 disp(<span class="string">'Press any key to continue.'</span>)
+0129 pause
+0130 fh2 = figure;
+0131 set(fh2, <span class="string">'Name'</span>, <span class="string">'Class-conditional Densities and Posterior Probabilities'</span>);
+0132 whitebg(fh2, <span class="string">'w'</span>);
+0133 
+0134 subplot(2,2,1)
+0135 p1=reshape(px_j(:,1),size(X));
+0136 imagesc(X(:),Y(:),p1);
+0137 colormap hot
+0138 colorbar
+0139 axis(axis)
+0140 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>)
+0141 hold on
+0142 plot(mix.centres(:,1),mix.centres(:,2),<span class="string">'b+'</span>,<span class="string">'MarkerSize'</span>,8,<span class="string">'LineWidth'</span>,2)
+0143 title(<span class="string">'Density p(x|red)'</span>)
+0144 hold off
+0145 
+0146 subplot(2,2,2)
+0147 p2=reshape((px_j(:,2)+px_j(:,3)),size(X));
+0148 imagesc(X(:),Y(:),p2);
+0149 colorbar
+0150 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>)
+0151 hold on
+0152 plot(mix.centres(:,1),mix.centres(:,2),<span class="string">'b+'</span>,<span class="string">'MarkerSize'</span>,8,<span class="string">'LineWidth'</span>,2)
+0153 title(<span class="string">'Density p(x|yellow)'</span>)
+0154 hold off
+0155 
+0156 subplot(2,2,3)
+0157 imagesc(X(:),Y(:),p1_x);
+0158 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>)
+0159 colorbar
+0160 title(<span class="string">'Posterior Probability p(red|x)'</span>)
+0161 hold on
+0162 plot(mix.centres(:,1),mix.centres(:,2),<span class="string">'b+'</span>,<span class="string">'MarkerSize'</span>,8,<span class="string">'LineWidth'</span>,2)
+0163 hold off
+0164 
+0165 subplot(2,2,4)
+0166 imagesc(X(:),Y(:),p2_x);
+0167 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>)
+0168 colorbar
+0169 title(<span class="string">'Posterior Probability p(yellow|x)'</span>)
+0170 hold on
+0171 plot(mix.centres(:,1),mix.centres(:,2),<span class="string">'b+'</span>,<span class="string">'MarkerSize'</span>,8,<span class="string">'LineWidth'</span>,2)
+0172 hold off
+0173 
+0174 <span class="comment">% Now set up and train the MLP</span>
+0175 nhidden=6;
+0176 nout=1;
+0177 alpha = 0.2;    <span class="comment">% Weight decay</span>
+0178 ncycles = 60;    <span class="comment">% Number of training cycles.</span>
+0179 <span class="comment">% Set up MLP network</span>
+0180 net = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(2, nhidden, nout, <span class="string">'logistic'</span>, alpha);
+0181 options = zeros(1,18);
+0182 options(1) = 1;                 <span class="comment">% Print out error values</span>
+0183 options(14) = ncycles;
+0184 
+0185 mlpstring = [<span class="string">'We now set up an MLP with '</span>, num2str(nhidden), <span class="keyword">...</span>
+0186     <span class="string">' hidden units, logistic output and cross'</span>];
+0187 trainstring = [<span class="string">'entropy error function, and train it for '</span>, <span class="keyword">...</span>
+0188     num2str(ncycles), <span class="string">' cycles using the'</span>];
+0189 wdstring = [<span class="string">'quasi-Newton optimisation algorithm with weight decay of '</span>, <span class="keyword">...</span>
+0190     num2str(alpha), <span class="string">'.'</span>];
+0191 
+0192 <span class="comment">% Force out the figure before training the MLP</span>
+0193 drawnow;
+0194 disp(<span class="string">' '</span>)
+0195 disp(<span class="string">'The second figure shows the class conditional densities and posterior'</span>)
+0196 disp(<span class="string">'probabilities for each class. The blue crosses mark the centres of'</span>)
+0197 disp(<span class="string">'the three Gaussians.'</span>)
+0198 disp(<span class="string">' '</span>)
+0199 disp(mlpstring)
+0200 disp(trainstring)
+0201 disp(wdstring)
+0202 disp(<span class="string">' '</span>)
+0203 disp(<span class="string">'Press any key to continue.'</span>)
+0204 pause
+0205 
+0206 <span class="comment">% Convert targets to 0-1 encoding</span>
+0207 target=[label==1];
+0208 
+0209 <span class="comment">% Train using quasi-Newton.</span>
+0210 [net] = <a href="netopt.html" class="code" title="function [net, options, varargout] = netopt(net, options, x, t, alg);">netopt</a>(net, options, data, target, <span class="string">'quasinew'</span>);
+0211 y = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, data);
+0212 yg = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, [X(:) Y(:)]);
+0213 yg = reshape(yg(:,1),size(X));
+0214 
+0215 fh3 = figure;
+0216 set(fh3, <span class="string">'Name'</span>, <span class="string">'Network Output'</span>);
+0217 whitebg(fh3, <span class="string">'k'</span>)
+0218 subplot(1, 2, 1)
+0219 hold on
+0220 plot(data((label==1),1),data(label==1,2),<span class="string">'r.'</span>, <span class="string">'MarkerSize'</span>, PointSize)
+0221 plot(data((label&gt;1),1),data(label&gt;1,2),<span class="string">'y.'</span>, <span class="string">'MarkerSize'</span>, PointSize)
+0222 <span class="comment">% Bayesian decision boundary</span>
+0223 [cB, hB] = contour(xrange,yrange,p1_x,[0.5 0.5],<span class="string">'b-'</span>);
+0224 [cN, hN] = contour(xrange,yrange,yg,[0.5 0.5],<span class="string">'r-'</span>);
+0225 set(hB, <span class="string">'LineWidth'</span>, 2);
+0226 set(hN, <span class="string">'LineWidth'</span>, 2);
+0227 Chandles = [hB(1) hN(1)];
+0228 legend(Chandles, <span class="string">'Bayes'</span>, <span class="keyword">...</span>
+0229   <span class="string">'Network'</span>, 3);
+0230 
+0231 axis([x0 x1 y0 y1])
+0232 set(gca,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XTick'</span>,[],<span class="string">'YTick'</span>,[])
+0233 
+0234 title(<span class="string">'Training Data'</span>,<span class="string">'FontSize'</span>,titleSize);
+0235 hold off
+0236 
+0237 subplot(1, 2, 2)
+0238 imagesc(X(:),Y(:),yg);
+0239 colormap hot
+0240 colorbar
+0241 axis(axis)
+0242 set(gca,<span class="string">'YDir'</span>,<span class="string">'normal'</span>,<span class="string">'XTick'</span>,[],<span class="string">'YTick'</span>,[])
+0243 title(<span class="string">'Network Output'</span>,<span class="string">'FontSize'</span>,titleSize)
+0244 
+0245 clc
+0246 disp(<span class="string">'This figure shows the training data with the decision boundary'</span>)
+0247 disp(<span class="string">'produced by the trained network and the network''s prediction of'</span>)
+0248 disp(<span class="string">'the posterior probability of the red class.'</span>)
+0249 disp(<span class="string">' '</span>)
+0250 disp(<span class="string">'Press any key to continue.'</span>)
+0251 pause
+0252 
+0253 <span class="comment">%</span>
+0254 <span class="comment">% Now generate and classify a test data set</span>
+0255 <span class="comment">%</span>
+0256 [testdata testlabel] = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(mix, n);
+0257 testlab=[testlabel==1 testlabel&gt;1];
+0258 
+0259 <span class="comment">% This is the Bayesian classification</span>
+0260 tpx_j = <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>(mix, testdata);
+0261 Bpost = [tpx_j(:,1), tpx_j(:,2)+tpx_j(:,3)];
+0262 [Bcon Brate]=<a href="confmat.html" class="code" title="function [C,rate]=confmat(Y,T)">confmat</a>(Bpost, [testlabel==1 testlabel&gt;1]);
+0263 
+0264 <span class="comment">% Compute network classification</span>
+0265 yt = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, testdata);
+0266 <span class="comment">% Convert single output to posteriors for both classes</span>
+0267 testpost = [yt 1-yt];
+0268 [C trate]=<a href="confmat.html" class="code" title="function [C,rate]=confmat(Y,T)">confmat</a>(testpost,[testlabel==1 testlabel&gt;1]);
+0269 
+0270 fh4 = figure;
+0271 set(fh4, <span class="string">'Name'</span>, <span class="string">'Decision Boundaries'</span>);
+0272 whitebg(fh4, <span class="string">'k'</span>);
+0273 hold on
+0274 plot(testdata((testlabel==1),1),testdata((testlabel==1),2),<span class="keyword">...</span>
+0275   ClassSymbol1, <span class="string">'MarkerSize'</span>, PointSize)
+0276 plot(testdata((testlabel&gt;1),1),testdata((testlabel&gt;1),2),<span class="keyword">...</span>
+0277   ClassSymbol2, <span class="string">'MarkerSize'</span>, PointSize)
+0278 <span class="comment">% Bayesian decision boundary</span>
+0279 [cB, hB] = contour(xrange,yrange,p1_x,[0.5 0.5],<span class="string">'b-'</span>);
+0280 set(hB, <span class="string">'LineWidth'</span>, 2);
+0281 <span class="comment">% Network decision boundary</span>
+0282 [cN, hN] = contour(xrange,yrange,yg,[0.5 0.5],<span class="string">'r-'</span>);
+0283 set(hN, <span class="string">'LineWidth'</span>, 2);
+0284 Chandles = [hB(1) hN(1)];
+0285 legend(Chandles, <span class="string">'Bayes decision boundary'</span>, <span class="keyword">...</span>
+0286   <span class="string">'Network decision boundary'</span>, -1);
+0287 axis([x0 x1 y0 y1])
+0288 title(<span class="string">'Test Data'</span>)
+0289 set(gca,<span class="string">'Box'</span>,<span class="string">'On'</span>,<span class="string">'Xtick'</span>,[],<span class="string">'YTick'</span>,[])
+0290 
+0291 clc
+0292 disp(<span class="string">'This figure shows the test data with the decision boundary'</span>)
+0293 disp(<span class="string">'produced by the trained network and the optimal Bayes rule.'</span>)
+0294 disp(<span class="string">' '</span>)
+0295 disp(<span class="string">'Press any key to continue.'</span>)
+0296 pause
+0297 
+0298 fh5 = figure;
+0299 set(fh5, <span class="string">'Name'</span>, <span class="string">'Test Set Performance'</span>);
+0300 whitebg(fh5, <span class="string">'w'</span>);
+0301 <span class="comment">% Bayes rule performance</span>
+0302 subplot(1,2,1)
+0303 <a href="plotmat.html" class="code" title="function plotmat(matrix, textcolour, gridcolour, fontsize)">plotmat</a>(Bcon,<span class="string">'b'</span>,<span class="string">'k'</span>,12)
+0304 set(gca,<span class="string">'XTick'</span>,[0.5 1.5])
+0305 set(gca,<span class="string">'YTick'</span>,[0.5 1.5])
+0306 grid(<span class="string">'off'</span>)
+0307 set(gca,<span class="string">'XTickLabel'</span>,[<span class="string">'Red   '</span> ; <span class="string">'Yellow'</span>])
+0308 set(gca,<span class="string">'YTickLabel'</span>,[<span class="string">'Yellow'</span> ; <span class="string">'Red   '</span>])
+0309 ylabel(<span class="string">'True'</span>)
+0310 xlabel(<span class="string">'Predicted'</span>)
+0311 title([<span class="string">'Bayes Confusion Matrix ('</span> num2str(Brate(1)) <span class="string">'%)'</span>])
+0312 
+0313 <span class="comment">% Network performance</span>
+0314 subplot(1,2, 2)
+0315 <a href="plotmat.html" class="code" title="function plotmat(matrix, textcolour, gridcolour, fontsize)">plotmat</a>(C,<span class="string">'b'</span>,<span class="string">'k'</span>,12)
+0316 set(gca,<span class="string">'XTick'</span>,[0.5 1.5])
+0317 set(gca,<span class="string">'YTick'</span>,[0.5 1.5])
+0318 grid(<span class="string">'off'</span>)
+0319 set(gca,<span class="string">'XTickLabel'</span>,[<span class="string">'Red   '</span> ; <span class="string">'Yellow'</span>])
+0320 set(gca,<span class="string">'YTickLabel'</span>,[<span class="string">'Yellow'</span> ; <span class="string">'Red   '</span>])
+0321 ylabel(<span class="string">'True'</span>)
+0322 xlabel(<span class="string">'Predicted'</span>)
+0323 title([<span class="string">'Network Confusion Matrix ('</span> num2str(trate(1)) <span class="string">'%)'</span>])
+0324 
+0325 disp(<span class="string">'The final figure shows the confusion matrices for the'</span>)
+0326 disp(<span class="string">'two rules on the test set.'</span>)
+0327 disp(<span class="string">' '</span>)
+0328 disp(<span class="string">'Press any key to exit.'</span>)
+0329 pause
+0330 whitebg(fh1, <span class="string">'w'</span>);
+0331 whitebg(fh2, <span class="string">'w'</span>);
+0332 whitebg(fh3, <span class="string">'w'</span>);
+0333 whitebg(fh4, <span class="string">'w'</span>);
+0334 whitebg(fh5, <span class="string">'w'</span>);
+0335 close(fh1); close(fh2); close(fh3);
+0336 close(fh4); close(fh5);
+0337 clear all;</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

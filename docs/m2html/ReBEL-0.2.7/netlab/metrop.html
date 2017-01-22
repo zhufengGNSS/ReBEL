@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of metrop</title>
+  <meta name="keywords" content="metrop">
+  <meta name="description" content="METROP	Markov Chain Monte Carlo sampling with Metropolis algorithm.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; metrop.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>metrop
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>METROP	Markov Chain Monte Carlo sampling with Metropolis algorithm.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [samples, energies, diagn] = metrop(f, x, options, gradf, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">METROP    Markov Chain Monte Carlo sampling with Metropolis algorithm.
+
+    Description
+     SAMPLES = METROP(F, X, OPTIONS) uses the Metropolis algorithm to
+    sample from the distribution P ~ EXP(-F), where F is the first
+    argument to METROP.   The Markov chain starts at the point X and each
+    candidate state is picked from a Gaussian proposal distribution and
+    accepted or rejected according to the Metropolis criterion.
+
+    SAMPLES = METROP(F, X, OPTIONS, [], P1, P2, ...) allows additional
+    arguments to be passed to F().  The fourth argument is ignored, but
+    is included for compatibility with HMC and the optimisers.
+
+    [SAMPLES, ENERGIES, DIAGN] = METROP(F, X, OPTIONS) also returns a log
+    of the energy values (i.e. negative log probabilities) for the
+    samples in ENERGIES and DIAGN, a structure containing diagnostic
+    information (position and acceptance threshold) for each step of the
+    chain in DIAGN.POS and DIAGN.ACC respectively.  All candidate states
+    (including rejected ones) are stored in DIAGN.POS.
+
+    S = METROP('STATE') returns a state structure that contains the state
+    of the two random number generators RAND and RANDN. These are
+    contained in fields randstate,  randnstate.
+
+    METROP('STATE', S) resets the state to S.  If S is an integer, then
+    it is passed to RAND and RANDN. If S is a structure returned by
+    METROP('STATE') then it resets the generator to exactly the same
+    state.
+
+    The optional parameters in the OPTIONS vector have the following
+    interpretations.
+
+    OPTIONS(1) is set to 1 to display the energy values and rejection
+    threshold at each step of the Markov chain. If the value is 2, then
+    the position vectors at each step are also displayed.
+
+    OPTIONS(14) is the number of samples retained from the Markov chain;
+    default 100.
+
+    OPTIONS(15) is the number of samples omitted from the start of the
+    chain; default 0.
+
+    OPTIONS(18) is the variance of the proposal distribution; default 1.
+
+    See also
+    <a href="hmc.html" class="code" title="function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin)">HMC</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demmet1.html" class="code" title="function demmet1(plot_wait)">demmet1</a>	DEMMET1 Demonstrate Markov Chain Monte Carlo sampling on a Gaussian.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function state = get_state(f)</a></li><li><a href="#_sub2" class="code">function set_state(f, x)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [samples, energies, diagn] = metrop(f, x, options, gradf, varargin)</a>
+0002 <span class="comment">%METROP    Markov Chain Monte Carlo sampling with Metropolis algorithm.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     SAMPLES = METROP(F, X, OPTIONS) uses the Metropolis algorithm to</span>
+0006 <span class="comment">%    sample from the distribution P ~ EXP(-F), where F is the first</span>
+0007 <span class="comment">%    argument to METROP.   The Markov chain starts at the point X and each</span>
+0008 <span class="comment">%    candidate state is picked from a Gaussian proposal distribution and</span>
+0009 <span class="comment">%    accepted or rejected according to the Metropolis criterion.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    SAMPLES = METROP(F, X, OPTIONS, [], P1, P2, ...) allows additional</span>
+0012 <span class="comment">%    arguments to be passed to F().  The fourth argument is ignored, but</span>
+0013 <span class="comment">%    is included for compatibility with HMC and the optimisers.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    [SAMPLES, ENERGIES, DIAGN] = METROP(F, X, OPTIONS) also returns a log</span>
+0016 <span class="comment">%    of the energy values (i.e. negative log probabilities) for the</span>
+0017 <span class="comment">%    samples in ENERGIES and DIAGN, a structure containing diagnostic</span>
+0018 <span class="comment">%    information (position and acceptance threshold) for each step of the</span>
+0019 <span class="comment">%    chain in DIAGN.POS and DIAGN.ACC respectively.  All candidate states</span>
+0020 <span class="comment">%    (including rejected ones) are stored in DIAGN.POS.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    S = METROP('STATE') returns a state structure that contains the state</span>
+0023 <span class="comment">%    of the two random number generators RAND and RANDN. These are</span>
+0024 <span class="comment">%    contained in fields randstate,  randnstate.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    METROP('STATE', S) resets the state to S.  If S is an integer, then</span>
+0027 <span class="comment">%    it is passed to RAND and RANDN. If S is a structure returned by</span>
+0028 <span class="comment">%    METROP('STATE') then it resets the generator to exactly the same</span>
+0029 <span class="comment">%    state.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%    The optional parameters in the OPTIONS vector have the following</span>
+0032 <span class="comment">%    interpretations.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%    OPTIONS(1) is set to 1 to display the energy values and rejection</span>
+0035 <span class="comment">%    threshold at each step of the Markov chain. If the value is 2, then</span>
+0036 <span class="comment">%    the position vectors at each step are also displayed.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%    OPTIONS(14) is the number of samples retained from the Markov chain;</span>
+0039 <span class="comment">%    default 100.</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%    OPTIONS(15) is the number of samples omitted from the start of the</span>
+0042 <span class="comment">%    chain; default 0.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%    OPTIONS(18) is the variance of the proposal distribution; default 1.</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">%    See also</span>
+0047 <span class="comment">%    HMC</span>
+0048 <span class="comment">%</span>
+0049 
+0050 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0051 
+0052 <span class="keyword">if</span> nargin &lt;= 2
+0053   <span class="keyword">if</span> ~strcmp(f, <span class="string">'state'</span>)
+0054     error(<span class="string">'Unknown argument to metrop'</span>);
+0055   <span class="keyword">end</span>
+0056   <span class="keyword">switch</span> nargin
+0057     <span class="keyword">case</span> 1
+0058       <span class="comment">% Return state of sampler</span>
+0059       samples = <a href="#_sub1" class="code" title="subfunction state = get_state(f)">get_state</a>(f);    <span class="comment">% Function defined in this module</span>
+0060       <span class="keyword">return</span>;
+0061     <span class="keyword">case</span> 2
+0062       <span class="comment">% Set the state of the sampler</span>
+0063       <a href="#_sub2" class="code" title="subfunction set_state(f, x)">set_state</a>(f, x);        <span class="comment">% Function defined in this module</span>
+0064       <span class="keyword">return</span>;
+0065   <span class="keyword">end</span>
+0066 <span class="keyword">end</span>
+0067 
+0068 display = options(1);
+0069 <span class="keyword">if</span> options(14) &gt; 0
+0070   nsamples = options(14);
+0071 <span class="keyword">else</span>
+0072   nsamples = 100;
+0073 <span class="keyword">end</span>
+0074 <span class="keyword">if</span> options(15) &gt;= 0
+0075   nomit = options(15);
+0076 <span class="keyword">else</span>
+0077   nomit = 0;
+0078 <span class="keyword">end</span>
+0079 <span class="keyword">if</span> options(18) &gt; 0.0
+0080   std_dev = sqrt(options(18));
+0081 <span class="keyword">else</span>
+0082   std_dev = 1.0;   <span class="comment">% default</span>
+0083 <span class="keyword">end</span>            
+0084 nparams = length(x);
+0085 
+0086 <span class="comment">% Set up string for evaluating potential function.</span>
+0087 f = fcnchk(f, length(varargin));
+0088 
+0089 samples = zeros(nsamples, nparams);        <span class="comment">% Matrix of returned samples.</span>
+0090 <span class="keyword">if</span> nargout &gt;= 2
+0091   en_save = 1;
+0092   energies = zeros(nsamples, 1);
+0093 <span class="keyword">else</span>
+0094   en_save = 0;
+0095 <span class="keyword">end</span>
+0096 <span class="keyword">if</span> nargout &gt;= 3
+0097   diagnostics = 1;
+0098   diagn_pos = zeros(nsamples, nparams);
+0099   diagn_acc = zeros(nsamples, 1);
+0100 <span class="keyword">else</span>
+0101   diagnostics = 0;
+0102 <span class="keyword">end</span>
+0103 
+0104 <span class="comment">% Main loop.</span>
+0105 n = - nomit + 1;
+0106 Eold = feval(f, x, varargin{:});    <span class="comment">% Evaluate starting energy.</span>
+0107 nreject = 0;                <span class="comment">% Initialise count of rejected states.</span>
+0108 <span class="keyword">while</span> n &lt;= nsamples
+0109 
+0110   xold = x;
+0111   <span class="comment">% Sample a new point from the proposal distribution</span>
+0112   x = xold + randn(1, nparams)*std_dev;
+0113 
+0114   <span class="comment">% Now apply Metropolis algorithm.</span>
+0115   Enew = feval(f, x, varargin{:});    <span class="comment">% Evaluate new energy.</span>
+0116   a = exp(Eold - Enew);            <span class="comment">% Acceptance threshold.</span>
+0117   <span class="keyword">if</span> (diagnostics &amp; n &gt; 0)
+0118     diagn_pos(n,:) = x;
+0119     diagn_acc(n,:) = a;
+0120   <span class="keyword">end</span>
+0121   <span class="keyword">if</span> (display &gt; 1)
+0122     fprintf(1, <span class="string">'New position is\n'</span>);
+0123     disp(x);
+0124   <span class="keyword">end</span>
+0125 
+0126   <span class="keyword">if</span> a &gt; rand(1)    <span class="comment">% Accept the new state.</span>
+0127     Eold = Enew;
+0128     <span class="keyword">if</span> (display &gt; 0)
+0129       fprintf(1, <span class="string">'Finished step %4d  Threshold: %g\n'</span>, n, a);
+0130     <span class="keyword">end</span>
+0131   <span class="keyword">else</span>            <span class="comment">% Reject the new state</span>
+0132     <span class="keyword">if</span> n &gt; 0
+0133       nreject = nreject + 1;
+0134     <span class="keyword">end</span>
+0135     x = xold;    <span class="comment">% Reset position</span>
+0136     <span class="keyword">if</span> (display &gt; 0)
+0137       fprintf(1, <span class="string">'  Sample rejected %4d.  Threshold: %g\n'</span>, n, a);
+0138     <span class="keyword">end</span>
+0139   <span class="keyword">end</span>
+0140   <span class="keyword">if</span> n &gt; 0
+0141     samples(n,:) = x;            <span class="comment">% Store sample.</span>
+0142     <span class="keyword">if</span> en_save 
+0143       energies(n) = Eold;        <span class="comment">% Store energy.</span>
+0144     <span class="keyword">end</span>
+0145   <span class="keyword">end</span>
+0146   n = n + 1;
+0147 <span class="keyword">end</span>
+0148 
+0149 <span class="keyword">if</span> (display &gt; 0)
+0150   fprintf(1, <span class="string">'\nFraction of samples rejected:  %g\n'</span>, <span class="keyword">...</span>
+0151           nreject/(nsamples));
+0152 <span class="keyword">end</span>
+0153 
+0154 <span class="keyword">if</span> diagnostics
+0155   diagn.pos = diagn_pos;
+0156   diagn.acc = diagn_acc;
+0157 <span class="keyword">end</span>
+0158 
+0159 <span class="comment">% Return complete state of the sampler.</span>
+0160 <a name="_sub1" href="#_subfunctions" class="code">function state = get_state(f)</a>
+0161 
+0162 state.randstate = rand(<span class="string">'state'</span>);
+0163 state.randnstate = randn(<span class="string">'state'</span>);
+0164 <span class="keyword">return</span>
+0165 
+0166 <span class="comment">% Set state of sampler, either from full state, or with an integer</span>
+0167 <a name="_sub2" href="#_subfunctions" class="code">function set_state(f, x)</a>
+0168 
+0169 <span class="keyword">if</span> isnumeric(x)
+0170   rand(<span class="string">'state'</span>, x);
+0171   randn(<span class="string">'state'</span>, x);
+0172 <span class="keyword">else</span>
+0173   <span class="keyword">if</span> ~isstruct(x)
+0174     error(<span class="string">'Second argument to metrop must be number or state structure'</span>);
+0175   <span class="keyword">end</span>
+0176   <span class="keyword">if</span> (~isfield(x, <span class="string">'randstate'</span>) | ~isfield(x, <span class="string">'randnstate'</span>))
+0177     error(<span class="string">'Second argument to metrop must contain correct fields'</span>)
+0178   <span class="keyword">end</span>
+0179   rand(<span class="string">'state'</span>, x.randstate);
+0180   randn(<span class="string">'state'</span>, x.randnstate);
+0181 <span class="keyword">end</span>
+0182 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

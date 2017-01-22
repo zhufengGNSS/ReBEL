@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmmprobability</title>
+  <meta name="keywords" content="gmmprobability">
+  <meta name="description" content="GMMPROBABILITY  Calculates any of the related (through Bayes rule) probabilities">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">core</a> &gt; gmmprobability.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\core&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmmprobability
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMPROBABILITY  Calculates any of the related (through Bayes rule) probabilities</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GMMPROBABILITY  Calculates any of the related (through Bayes rule) probabilities
+                 of a Gaussian Mixture Model (gmmDS) and a given dataset X.
+                 'prob_type' is a string indicating which of the four probability
+                 values are needed. These probabilities are:
+
+                      P(X|C) . P(C)                       likelihood . prior
+           P(C|X) = -----------------       posterior =  --------------------
+                          P(X)                                evidence
+
+            where C is the component classes (Gaussians) of the GMM and X is the data.
+
+   probability = gmmprobability(gmmDS, X, W)
+
+   INPUT
+          gmmDS         Gaussian mixture model data structure with the following fields
+            .cov_type   covariance matrix type 'full' , 'diag' , 'sqrt' , 'sqrt-diag'    [string]
+            .dim        data dimension  [scalar]
+            .M          number of Gaussian component densities  [scalar]
+            .weights    mixing priors (component weights) [1-by-M vector]
+            .mu         M Gaussian component means (columns of matrix) [dim-by-M matrix]
+            .cov        covariance matrices of Gaussian components (must comply with .cov_type)
+                        [dim-by-dim-by-M matrix]
+          X             buffer of N dim-by-1 data set vectors to be evaluated  [dim-by-N]
+          W             (optional) 1-by-N vector of sample weights. If specified, the sample
+                                   set will be weighted according to these weights.
+
+   OUTPUT
+          prior         The prior (without seeing data) probability of a component
+                        density generating any given data vector, i.e. P(C(i)).
+                        This is simply the same as the prior mixing weights,
+                        'gmmDS.weights'. [M-by-1 matrix]
+
+          likelihood    M-by-N martrix where the j,i-th entry is the likelihood
+                        of input column vector i (of X) conditioned on component
+                        density j, i.e. P(X(i)|C(j))
+
+          evidence      1-by-N matrix where the i-th entry is the total data probability
+                        for a given data vector X(i), i.e. P(X(i))=sum_over_all_j[P(X(i)|C(j))]
+
+          posterior     M-by-N matrix where the j,i-th entry is the posterior
+                        probability (after seeing the data) that a component
+                        density j has generated a specific data vector X(i), i.e.
+                        P(C(j)|X(i))   (class posterior probabilities)
+
+
+   See also
+     <a href="gmmsample.html" class="code" title="function [X,comp] = gmmsample(gmmDS, N)">GMMSAMPLE</a>
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="rvecrep.html" class="code" title="function m = rvecrep(v,c)">rvecrep</a>	RVECREP  Row vector replicate</li><li><a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>	EVIDENCE Re-estimate hyperparameters using evidence approximation.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="gmmfit.html" class="code" title="function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W)">gmmfit</a>	GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X</li><li><a href="gmsppf.html" class="code" title="function [estimate, ParticleFilterDS, pNoise, oNoise, extra] = gmsppf(ParticleFilterDS, pNoise, oNoise, obs, U1, U2, InferenceDS)">gmsppf</a>	GMSPPF  Gaussian Mixture Sigma-Point Particle Filter</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W)</a>
+0002 
+0003 <span class="comment">% GMMPROBABILITY  Calculates any of the related (through Bayes rule) probabilities</span>
+0004 <span class="comment">%                 of a Gaussian Mixture Model (gmmDS) and a given dataset X.</span>
+0005 <span class="comment">%                 'prob_type' is a string indicating which of the four probability</span>
+0006 <span class="comment">%                 values are needed. These probabilities are:</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%                      P(X|C) . P(C)                       likelihood . prior</span>
+0009 <span class="comment">%           P(C|X) = -----------------       posterior =  --------------------</span>
+0010 <span class="comment">%                          P(X)                                evidence</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%            where C is the component classes (Gaussians) of the GMM and X is the data.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   probability = gmmprobability(gmmDS, X, W)</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   INPUT</span>
+0017 <span class="comment">%          gmmDS         Gaussian mixture model data structure with the following fields</span>
+0018 <span class="comment">%            .cov_type   covariance matrix type 'full' , 'diag' , 'sqrt' , 'sqrt-diag'    [string]</span>
+0019 <span class="comment">%            .dim        data dimension  [scalar]</span>
+0020 <span class="comment">%            .M          number of Gaussian component densities  [scalar]</span>
+0021 <span class="comment">%            .weights    mixing priors (component weights) [1-by-M vector]</span>
+0022 <span class="comment">%            .mu         M Gaussian component means (columns of matrix) [dim-by-M matrix]</span>
+0023 <span class="comment">%            .cov        covariance matrices of Gaussian components (must comply with .cov_type)</span>
+0024 <span class="comment">%                        [dim-by-dim-by-M matrix]</span>
+0025 <span class="comment">%          X             buffer of N dim-by-1 data set vectors to be evaluated  [dim-by-N]</span>
+0026 <span class="comment">%          W             (optional) 1-by-N vector of sample weights. If specified, the sample</span>
+0027 <span class="comment">%                                   set will be weighted according to these weights.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%   OUTPUT</span>
+0030 <span class="comment">%          prior         The prior (without seeing data) probability of a component</span>
+0031 <span class="comment">%                        density generating any given data vector, i.e. P(C(i)).</span>
+0032 <span class="comment">%                        This is simply the same as the prior mixing weights,</span>
+0033 <span class="comment">%                        'gmmDS.weights'. [M-by-1 matrix]</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%          likelihood    M-by-N martrix where the j,i-th entry is the likelihood</span>
+0036 <span class="comment">%                        of input column vector i (of X) conditioned on component</span>
+0037 <span class="comment">%                        density j, i.e. P(X(i)|C(j))</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%          evidence      1-by-N matrix where the i-th entry is the total data probability</span>
+0040 <span class="comment">%                        for a given data vector X(i), i.e. P(X(i))=sum_over_all_j[P(X(i)|C(j))]</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%          posterior     M-by-N matrix where the j,i-th entry is the posterior</span>
+0043 <span class="comment">%                        probability (after seeing the data) that a component</span>
+0044 <span class="comment">%                        density j has generated a specific data vector X(i), i.e.</span>
+0045 <span class="comment">%                        P(C(j)|X(i))   (class posterior probabilities)</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">%   See also</span>
+0049 <span class="comment">%     GMMSAMPLE</span>
+0050 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0053 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0054 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0055 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0058 <span class="comment">%   detail.</span>
+0059 
+0060 <span class="comment">%=============================================================================================</span>
+0061 
+0062 Nout = nargout;
+0063 
+0064 [dim,nov] = size(X);              <span class="comment">% number and dimension of input vectors</span>
+0065 
+0066 <span class="keyword">if</span> (dim~=gmmDS.dim)
+0067     error(<span class="string">' [ gmmprobability ] Data dimension and GMM model dimension is not the same.'</span>);
+0068 <span class="keyword">end</span>
+0069 
+0070 M = gmmDS.M;                      <span class="comment">% dumber of component densities</span>
+0071 mu    = gmmDS.mu;                 <span class="comment">% component means</span>
+0072 covar = gmmDS.cov;                <span class="comment">% component covariance matrices</span>
+0073 
+0074 prior = gmmDS.weights(:);        <span class="comment">% prior mixing probabilities</span>
+0075 
+0076 ones_nov = ones(nov,1);
+0077 ones_M   = ones(M,1);
+0078 
+0079 <span class="comment">%--- Calculate likelihood</span>
+0080 <span class="keyword">if</span> Nout &gt; 1
+0081 
+0082   likelihood = zeros(M,nov);        <span class="comment">% preallocate component likelihood matrix</span>
+0083   normfact = (2*pi)^(gmmDS.dim/2);  <span class="comment">% component density normalizing factor</span>
+0084 
+0085   <span class="keyword">switch</span> gmmDS.cov_type             <span class="comment">% calculate per component likelihood</span>
+0086 
+0087   <span class="keyword">case</span> {<span class="string">'full'</span>,<span class="string">'diag'</span>}
+0088 
+0089     <span class="keyword">for</span> k=1:M,
+0090         cmu = mu(:,k);
+0091         XX = X - cmu(:,ones_nov);
+0092         S = chol(covar(:,:,k))';
+0093         foo = S \ XX;
+0094         likelihood(k,:) = exp(-0.5*sum(foo.*foo, 1))/abs((normfact*prod(diag(S))));
+0095     <span class="keyword">end</span>
+0096 
+0097   <span class="keyword">case</span> {<span class="string">'sqrt'</span>,<span class="string">'sqrt-diag'</span>}
+0098 
+0099     <span class="keyword">for</span> k=1:M,
+0100         cmu = mu(:,k);
+0101         XX = X - cmu(:,ones_nov);
+0102         S = covar(:,:,k);
+0103         foo = S \ XX;
+0104         likelihood(k,:) = exp(-0.5*sum(foo.*foo, 1))/abs((normfact*prod(diag(S))));
+0105     <span class="keyword">end</span>
+0106 
+0107   <span class="keyword">otherwise</span>
+0108 
+0109     error([<span class="string">' [ gmmprobability ] Unknown covariance type '</span>, mix.cov_type]);
+0110 
+0111   <span class="keyword">end</span>
+0112 
+0113 <span class="keyword">end</span>
+0114 
+0115 likelihood = likelihood + 1e-99;
+0116 
+0117 
+0118 <span class="comment">%--- Calculate evidence</span>
+0119 <span class="keyword">if</span> Nout &gt; 2
+0120 
+0121   <span class="keyword">if</span> (nargin == 3)
+0122     <a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a> = prior' * (likelihood ./ W(ones_M,:));  <span class="comment">% weighted</span>
+0123   <span class="keyword">else</span>
+0124     <a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a> = prior'*likelihood;                     <span class="comment">% non-weighted</span>
+0125   <span class="keyword">end</span>
+0126 
+0127   <a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a> = <a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a> + 1e-99;
+0128 
+0129 <span class="keyword">end</span>
+0130 
+0131 
+0132 <span class="comment">%--- Calculate posterior</span>
+0133 <span class="keyword">if</span> Nout &gt; 3
+0134 
+0135   posterior = likelihood ./ ((1./prior)*<a href="../.././ReBEL-0.2.7/netlab/evidence.html" class="code" title="function [net, gamma, logev] = evidence(net, x, t, num)">evidence</a>) + 1e-99;
+0136   <span class="comment">% normalize</span>
+0137   posterior = posterior ./ <a href="rvecrep.html" class="code" title="function m = rvecrep(v,c)">rvecrep</a>(sum(posterior,1),M);
+0138 
+0139 <span class="keyword">end</span>
+0140 
+0141 
+0142</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

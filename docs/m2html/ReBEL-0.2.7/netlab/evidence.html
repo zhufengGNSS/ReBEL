@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of evidence</title>
+  <meta name="keywords" content="evidence">
+  <meta name="description" content="EVIDENCE Re-estimate hyperparameters using evidence approximation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; evidence.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>evidence
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>EVIDENCE Re-estimate hyperparameters using evidence approximation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [net, gamma, logev] = evidence(net, x, t, num) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EVIDENCE Re-estimate hyperparameters using evidence approximation.
+
+    Description
+    [NET] = EVIDENCE(NET, X, T) re-estimates the hyperparameters ALPHA
+    and BETA by applying Bayesian re-estimation formulae for NUM
+    iterations. The hyperparameter ALPHA can be a simple scalar
+    associated with an isotropic prior on the weights, or can be a vector
+    in which each component is associated with a group of weights as
+    defined by the INDEX matrix in the NET data structure. These more
+    complex priors can be set up for an MLP using MLPPRIOR. Initial
+    values for the iterative re-estimation are taken from the network
+    data structure NET passed as an input argument, while the return
+    argument NET contains the re-estimated values.
+
+    [NET, GAMMA, LOGEV] = EVIDENCE(NET, X, T, NUM) allows the re-
+    estimation  formula to be applied for NUM cycles in which the re-
+    estimated values for the hyperparameters from each cycle are used to
+    re-evaluate the Hessian matrix for the next cycle.  The return value
+    GAMMA is the number of well-determined parameters and LOGEV is the
+    log of the evidence.
+
+    See also
+    <a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">MLPPRIOR</a>, <a href="netgrad.html" class="code" title="function g = netgrad(w, net, x, t)">NETGRAD</a>, <a href="nethess.html" class="code" title="function [h, varargout] = nethess(w, net, x, t, varargin)">NETHESS</a>, <a href="demev1.html" class="code" title="">DEMEV1</a>, <a href="demard.html" class="code" title="">DEMARD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="errbayes.html" class="code" title="function [e, edata, eprior] = errbayes(net, edata)">errbayes</a>	ERRBAYES Evaluate Bayesian error function for network.</li><li><a href="hbayes.html" class="code" title="function [h, hdata] = hbayes(net, hdata)">hbayes</a>	HBAYES	Evaluate Hessian of Bayesian error function for network.</li><li><a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">neterr</a>	NETERR	Evaluate network error function for generic optimizers</li><li><a href="nethess.html" class="code" title="function [h, varargout] = nethess(w, net, x, t, varargin)">nethess</a>	NETHESS Evaluate network Hessian</li><li><a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>	NETPAK	Combines weights and biases into one weights vector.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../.././ReBEL-0.2.7/core/gennoiseds.html" class="code" title="function NoiseDS = gennoiseds(ArgDS)">gennoiseds</a>	GENNOISEDS    Generates a NoiseDS data structure describing a noise source.</li><li><a href="../.././ReBEL-0.2.7/core/gmmfit.html" class="code" title="function [gmmDS, leb] = gmmfit(X, M, tt, cov_type, check_cov, display, W)">gmmfit</a>	GMMFIT   Fit a Gaussian mixture model (GMM) with M components to dataset X</li><li><a href="../.././ReBEL-0.2.7/core/gmmprobability.html" class="code" title="function [prior, likelihood, evidence, posterior] = gmmprobability(gmmDS, X, W)">gmmprobability</a>	GMMPROBABILITY  Calculates any of the related (through Bayes rule) probabilities</li><li><a href="demard.html" class="code" title="">demard</a>	DEMARD	Automatic relevance determination using the MLP.</li><li><a href="demev1.html" class="code" title="">demev1</a>	DEMEV1	Demonstrate Bayesian regression for the MLP.</li><li><a href="demev2.html" class="code" title="">demev2</a>	DEMEV2	Demonstrate Bayesian classification for the MLP.</li><li><a href="demev3.html" class="code" title="">demev3</a>	DEMEV3	Demonstrate Bayesian regression for the RBF.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [net, gamma, logev] = evidence(net, x, t, num)</a>
+0002 <span class="comment">%EVIDENCE Re-estimate hyperparameters using evidence approximation.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    [NET] = EVIDENCE(NET, X, T) re-estimates the hyperparameters ALPHA</span>
+0006 <span class="comment">%    and BETA by applying Bayesian re-estimation formulae for NUM</span>
+0007 <span class="comment">%    iterations. The hyperparameter ALPHA can be a simple scalar</span>
+0008 <span class="comment">%    associated with an isotropic prior on the weights, or can be a vector</span>
+0009 <span class="comment">%    in which each component is associated with a group of weights as</span>
+0010 <span class="comment">%    defined by the INDEX matrix in the NET data structure. These more</span>
+0011 <span class="comment">%    complex priors can be set up for an MLP using MLPPRIOR. Initial</span>
+0012 <span class="comment">%    values for the iterative re-estimation are taken from the network</span>
+0013 <span class="comment">%    data structure NET passed as an input argument, while the return</span>
+0014 <span class="comment">%    argument NET contains the re-estimated values.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    [NET, GAMMA, LOGEV] = EVIDENCE(NET, X, T, NUM) allows the re-</span>
+0017 <span class="comment">%    estimation  formula to be applied for NUM cycles in which the re-</span>
+0018 <span class="comment">%    estimated values for the hyperparameters from each cycle are used to</span>
+0019 <span class="comment">%    re-evaluate the Hessian matrix for the next cycle.  The return value</span>
+0020 <span class="comment">%    GAMMA is the number of well-determined parameters and LOGEV is the</span>
+0021 <span class="comment">%    log of the evidence.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%    See also</span>
+0024 <span class="comment">%    MLPPRIOR, NETGRAD, NETHESS, DEMEV1, DEMARD</span>
+0025 <span class="comment">%</span>
+0026 
+0027 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0028 
+0029 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">''</span>, x, t);
+0030 <span class="keyword">if</span> ~isempty(errstring)
+0031   error(errstring);
+0032 <span class="keyword">end</span>
+0033 
+0034 ndata = size(x, 1);
+0035 <span class="keyword">if</span> nargin == 3
+0036   num = 1;
+0037 <span class="keyword">end</span>
+0038 
+0039 <span class="comment">% Extract weights from network</span>
+0040 w = <a href="netpak.html" class="code" title="function w = netpak(net)">netpak</a>(net);
+0041 
+0042 <span class="comment">% Evaluate data-dependent contribution to the Hessian matrix.</span>
+0043 [h, dh] = <a href="nethess.html" class="code" title="function [h, varargout] = nethess(w, net, x, t, varargin)">nethess</a>(w, net, x, t); 
+0044 clear h;  <span class="comment">% To save memory when Hessian is large</span>
+0045 <span class="keyword">if</span> (~isfield(net, <span class="string">'beta'</span>))
+0046   local_beta = 1;
+0047 <span class="keyword">end</span>
+0048 
+0049 [evec, evl] = eig(dh);
+0050 <span class="comment">% Now set the negative eigenvalues to zero.</span>
+0051 evl = evl.*(evl &gt; 0);
+0052 <span class="comment">% safe_evl is used to avoid taking log of zero</span>
+0053 safe_evl = evl + eps.*(evl &lt;= 0);
+0054 
+0055 [e, edata, eprior] = <a href="neterr.html" class="code" title="function [e, varargout] = neterr(w, net, x, t)">neterr</a>(w, net, x, t);
+0056 
+0057 <span class="keyword">if</span> size(net.alpha) == [1 1]
+0058   <span class="comment">% Form vector of eigenvalues</span>
+0059   evl = diag(evl);
+0060   safe_evl = diag(safe_evl);
+0061 <span class="keyword">else</span>
+0062   ngroups = size(net.alpha, 1);
+0063   gams = zeros(1, ngroups);
+0064   logas = zeros(1, ngroups);
+0065   <span class="comment">% Reconstruct data hessian with negative eigenvalues set to zero.</span>
+0066   dh = evec*evl*evec';
+0067 <span class="keyword">end</span>
+0068 
+0069 <span class="comment">% Do the re-estimation.</span>
+0070 <span class="keyword">for</span> k = 1 : num
+0071   <span class="comment">% Re-estimate alpha.</span>
+0072   <span class="keyword">if</span> size(net.alpha) == [1 1]
+0073     <span class="comment">% Evaluate number of well-determined parameters.</span>
+0074     L = evl;
+0075     <span class="keyword">if</span> isfield(net, <span class="string">'beta'</span>)
+0076       L = net.beta*L;
+0077     <span class="keyword">end</span>
+0078     gamma = sum(L./(L + net.alpha));
+0079     net.alpha = 0.5*gamma/eprior;
+0080     <span class="comment">% Partially evaluate log evidence: only include unmasked weights</span>
+0081     logev = 0.5*length(w)*log(net.alpha);
+0082   <span class="keyword">else</span>
+0083     hinv = inv(<a href="hbayes.html" class="code" title="function [h, hdata] = hbayes(net, hdata)">hbayes</a>(net, dh));
+0084     <span class="keyword">for</span> m = 1 : ngroups
+0085       group_nweights = sum(net.index(:, m));
+0086       gams(m) = group_nweights - <span class="keyword">...</span>
+0087             net.alpha(m)*sum(diag(hinv).*net.index(:,m));
+0088       net.alpha(m) = real(gams(m)/(2*eprior(m)));
+0089       <span class="comment">% Weight alphas by number of weights in group</span>
+0090       logas(m) = 0.5*group_nweights*log(net.alpha(m));
+0091     <span class="keyword">end</span> 
+0092     gamma = sum(gams, 2);
+0093     logev = sum(logas);
+0094   <span class="keyword">end</span>
+0095   <span class="comment">% Re-estimate beta.</span>
+0096   <span class="keyword">if</span> isfield(net, <span class="string">'beta'</span>)
+0097       net.beta = 0.5*(net.nout*ndata - gamma)/edata;
+0098       logev = logev + 0.5*ndata*log(net.beta) - 0.5*ndata*log(2*pi);
+0099       local_beta = net.beta;
+0100   <span class="keyword">end</span>
+0101   
+0102   <span class="comment">% Evaluate new log evidence</span>
+0103   e = <a href="errbayes.html" class="code" title="function [e, edata, eprior] = errbayes(net, edata)">errbayes</a>(net, edata);
+0104   <span class="keyword">if</span> size(net.alpha) == [1 1]
+0105     logev = logev - e - 0.5*sum(log(local_beta*safe_evl+net.alpha));
+0106   <span class="keyword">else</span>
+0107     <span class="keyword">for</span> m = 1:ngroups  
+0108       logev = logev - e - <span class="keyword">...</span>
+0109       0.5*sum(log(local_beta*(safe_evl*net.index(:, m))+<span class="keyword">...</span>
+0110       net.alpha(m)));
+0111     <span class="keyword">end</span>
+0112   <span class="keyword">end</span>
+0113 <span class="keyword">end</span>
+0114</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

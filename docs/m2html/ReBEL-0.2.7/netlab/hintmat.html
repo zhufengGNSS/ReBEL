@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hintmat</title>
+  <meta name="keywords" content="hintmat">
+  <meta name="description" content="HINTMAT Evaluates the coordinates of the patches for a Hinton diagram.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; hintmat.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>hintmat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>HINTMAT Evaluates the coordinates of the patches for a Hinton diagram.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [xvals, yvals, color] = hintmat(w); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HINTMAT Evaluates the coordinates of the patches for a Hinton diagram.
+
+    Description
+    [xvals, yvals, color] = hintmat(w)
+      takes a matrix W and returns coordinates XVALS, YVALS for the
+    patches comrising the Hinton diagram, together with a vector COLOR
+    labelling the color (black or white) of the corresponding elements
+    according to their sign.
+
+    See also
+    <a href="hinton.html" class="code" title="function h = hinton(w);">HINTON</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="hinton.html" class="code" title="function h = hinton(w);">hinton</a>	HINTON	Plot Hinton diagram for a weight matrix.</li><li><a href="mlphint.html" class="code" title="function [h1, h2] = mlphint(net);">mlphint</a>	MLPHINT Plot Hinton diagram for 2-layer feed-forward network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [xvals, yvals, color] = hintmat(w);</a>
+0002 <span class="comment">%HINTMAT Evaluates the coordinates of the patches for a Hinton diagram.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    [xvals, yvals, color] = hintmat(w)</span>
+0006 <span class="comment">%      takes a matrix W and returns coordinates XVALS, YVALS for the</span>
+0007 <span class="comment">%    patches comrising the Hinton diagram, together with a vector COLOR</span>
+0008 <span class="comment">%    labelling the color (black or white) of the corresponding elements</span>
+0009 <span class="comment">%    according to their sign.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    See also</span>
+0012 <span class="comment">%    HINTON</span>
+0013 <span class="comment">%</span>
+0014 
+0015 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0016 
+0017 <span class="comment">% Set scale to be up to 0.9 of maximum absolute weight value, where scale</span>
+0018 <span class="comment">% defined so that area of box proportional to weight value.</span>
+0019 
+0020 w = flipud(w);
+0021 [nrows, ncols] = size(w);
+0022 
+0023 scale = 0.45*sqrt(abs(w)/max(max(abs(w))));
+0024 scale = scale(:);
+0025 color = 0.5*(sign(w(:)) + 3);
+0026 
+0027 delx = 1;
+0028 dely = 1;
+0029 [X, Y] = meshgrid(0.5*delx:delx:(ncols-0.5*delx), 0.5*dely:dely:(nrows-0.5*dely));
+0030 
+0031 <span class="comment">% Now convert from matrix format to column vector format, and then duplicate</span>
+0032 <span class="comment">% columns with appropriate offsets determined by normalized weight magnitudes.</span>
+0033 
+0034 xtemp = X(:);
+0035 ytemp = Y(:);
+0036 
+0037 xvals = [xtemp-delx*scale, xtemp+delx*scale, <span class="keyword">...</span>
+0038          xtemp+delx*scale, xtemp-delx*scale];
+0039 yvals = [ytemp-dely*scale, ytemp-dely*scale, <span class="keyword">...</span>
+0040          ytemp+dely*scale, ytemp+dely*scale];
+0041</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

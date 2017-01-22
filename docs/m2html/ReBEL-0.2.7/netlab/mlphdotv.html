@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlphdotv</title>
+  <meta name="keywords" content="mlphdotv">
+  <meta name="description" content="MLPHDOTV Evaluate the product of the data Hessian with a vector.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlphdotv.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlphdotv
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPHDOTV Evaluate the product of the data Hessian with a vector.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function hdv = mlphdotv(net, x, t, v) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPHDOTV Evaluate the product of the data Hessian with a vector. 
+
+    Description
+
+    HDV = MLPHDOTV(NET, X, T, V) takes an MLP network data structure NET,
+    together with the matrix X of input vectors, the matrix T of target
+    vectors and an arbitrary row vector V whose length equals the number
+    of parameters in the network, and returns the product of the data-
+    dependent contribution to the Hessian matrix with V. The
+    implementation is based on the R-propagation algorithm of
+    Pearlmutter.
+
+    See also
+    <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mlphess.html" class="code" title="function [h, hdata] = mlphess(net, x, t, hdata)">MLPHESS</a>, <a href="hesschek.html" class="code" title="function h = hesschek(net, x, t)">HESSCHEK</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li><li><a href="mlpunpak.html" class="code" title="function net = mlpunpak(net, w)">mlpunpak</a>	MLPUNPAK Separates weights vector into weight and bias matrices.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mlphess.html" class="code" title="function [h, hdata] = mlphess(net, x, t, hdata)">mlphess</a>	MLPHESS Evaluate the Hessian matrix for a multi-layer perceptron network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function hdv = mlphdotv(net, x, t, v)</a>
+0002 <span class="comment">%MLPHDOTV Evaluate the product of the data Hessian with a vector.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    HDV = MLPHDOTV(NET, X, T, V) takes an MLP network data structure NET,</span>
+0007 <span class="comment">%    together with the matrix X of input vectors, the matrix T of target</span>
+0008 <span class="comment">%    vectors and an arbitrary row vector V whose length equals the number</span>
+0009 <span class="comment">%    of parameters in the network, and returns the product of the data-</span>
+0010 <span class="comment">%    dependent contribution to the Hessian matrix with V. The</span>
+0011 <span class="comment">%    implementation is based on the R-propagation algorithm of</span>
+0012 <span class="comment">%    Pearlmutter.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also</span>
+0015 <span class="comment">%    MLP, MLPHESS, HESSCHEK</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0019 
+0020 <span class="comment">% Check arguments for consistency</span>
+0021 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'mlp'</span>, x, t);
+0022 <span class="keyword">if</span> ~isempty(errstring);
+0023   error(errstring);
+0024 <span class="keyword">end</span>
+0025 
+0026 ndata = size(x, 1);
+0027 
+0028 [y, z] = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, x);        <span class="comment">% Standard forward propagation.</span>
+0029 zprime = (1 - z.*z);            <span class="comment">% Hidden unit first derivatives.</span>
+0030 zpprime = -2.0*z.*zprime;        <span class="comment">% Hidden unit second derivatives.</span>
+0031 
+0032 vnet = <a href="mlpunpak.html" class="code" title="function net = mlpunpak(net, w)">mlpunpak</a>(net, v);    <span class="comment">%         Unpack the v vector.</span>
+0033 
+0034 <span class="comment">% Do the R-forward propagation.</span>
+0035 
+0036 ra1 = x*vnet.w1 + ones(ndata, 1)*vnet.b1;
+0037 rz = zprime.*ra1;
+0038 ra2 = rz*net.w2 + z*vnet.w2 + ones(ndata, 1)*vnet.b2;
+0039 
+0040 <span class="keyword">switch</span> net.outfn
+0041 
+0042   <span class="keyword">case</span> <span class="string">'linear'</span>      <span class="comment">% Linear outputs</span>
+0043 
+0044     ry = ra2;
+0045 
+0046   <span class="keyword">case</span> <span class="string">'logistic'</span>    <span class="comment">% Logistic outputs</span>
+0047 
+0048     ry = y.*(1 - y).*ra2;
+0049 
+0050   <span class="keyword">case</span> <span class="string">'softmax'</span>     <span class="comment">% Softmax outputs</span>
+0051   
+0052     nout = size(t, 2);
+0053     ry = y.*ra2 - y.*(sum(y.*ra2, 2)*ones(1, nout));
+0054 
+0055   <span class="keyword">otherwise</span>
+0056     error([<span class="string">'Unknown activation function '</span>, net.outfn]);  
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="comment">% Evaluate delta for the output units.</span>
+0060 
+0061 delout = y - t;
+0062 
+0063 <span class="comment">% Do the standard backpropagation.</span>
+0064 
+0065 delhid = zprime.*(delout*net.w2');
+0066 
+0067 <span class="comment">% Now do the R-backpropagation.</span>
+0068 
+0069 rdelhid = zpprime.*ra1.*(delout*net.w2') + zprime.*(delout*vnet.w2') + <span class="keyword">...</span>
+0070           zprime.*(ry*net.w2');
+0071 
+0072 <span class="comment">% Finally, evaluate the components of hdv and then merge into long vector.</span>
+0073 
+0074 hw1 = x'*rdelhid;
+0075 hb1 = sum(rdelhid, 1);
+0076 hw2 = z'*ry + rz'*delout;
+0077 hb2 = sum(ry, 1);
+0078 
+0079 hdv = [hw1(:)', hb1, hw2(:)', hb2];</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

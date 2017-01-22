@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demse1</title>
+  <meta name="keywords" content="demse1">
+  <meta name="description" content="DEMSE1  Demonstrate state estimation on a simple 2nd order LTI system.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">state_estimation</a> &gt; demse1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\state_estimation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>demse1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DEMSE1  Demonstrate state estimation on a simple 2nd order LTI system.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DEMSE1  Demonstrate state estimation on a simple 2nd order LTI system.
+
+   This is a simple demonstration of how to use the ReBEL toolkit for state estimation on
+   a simple 2nd order LTI system.
+
+   See also
+   GSSM_LTI1
+
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>	ADDRELPATH  Add a relative path which gets expanded into a absolute path</li><li><a href="../../.././ReBEL-0.2.7/core/cdkf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = cdkf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">cdkf</a>	CDKF  Central Difference Kalman Filter  (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/core/ekf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ekf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ekf</a>	EKF  Extended Kalman Filter</li><li><a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>	GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</li><li><a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>	GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure</li><li><a href="../../.././ReBEL-0.2.7/core/kf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = kf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">kf</a>	KF  Kalman Filter</li><li><a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>	REMRELPATH  Remove a relative path (which gets expanded into a absolute path)</li><li><a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>	SRCDKF  Square Root Central Difference Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/core/srukf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srukf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srukf</a>	SRUKF  Square Root Unscented Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/core/ukf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ukf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ukf</a>	UKF  Unscented Kalman Filter</li><li><a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_lti1.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_lti1</a>	GSSM_LTI1  Generalized state space model for simple LTI system</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% DEMSE1  Demonstrate state estimation on a simple 2nd order LTI system.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   This is a simple demonstration of how to use the ReBEL toolkit for state estimation on</span>
+0004 <span class="comment">%   a simple 2nd order LTI system.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   See also</span>
+0007 <span class="comment">%   GSSM_LTI1</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0012 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0013 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0014 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0017 <span class="comment">%   detail.</span>
+0018 
+0019 <span class="comment">%=============================================================================================</span>
+0020 
+0021 clc;
+0022 clear all;
+0023 
+0024 fprintf(<span class="string">'\nDEMSE1 : This demonstration shows how the ReBEL toolkit is used for simple state estimation\n'</span>);
+0025 fprintf(<span class="string">'         on a 2nd order LTI system. The scalar observation is corrupted by additive white\n'</span>);
+0026 fprintf(<span class="string">'         Gaussian noise.\n\n'</span>);
+0027 
+0028 
+0029 <span class="comment">%--- General setup</span>
+0030 
+0031 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../gssm'</span>);         <span class="comment">% add relative search path to example GSSM files to MATLABPATH</span>
+0032 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../data'</span>);         <span class="comment">% add relative search path to example data files to MATLABPATH</span>
+0033 
+0034 <span class="comment">%--- Initialise GSSM model from external system description script.</span>
+0035 
+0036 model = <a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_lti1.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_lti1</a>(<span class="string">'init'</span>);
+0037 
+0038 
+0039 <span class="comment">%--- Generate some data</span>
+0040 
+0041 N  = 600;                                               <span class="comment">% number of datapoints</span>
+0042 X  = zeros(model.statedim,N);                           <span class="comment">% state data buffer</span>
+0043 y  = zeros(model.obsdim,N);                             <span class="comment">% observation data buffer</span>
+0044 
+0045 pnoise = model.pNoise.sample( model.pNoise, N);   <span class="comment">% generate process noise</span>
+0046 onoise = model.oNoise.sample( model.oNoise, N);   <span class="comment">% generate observation noise</span>
+0047 
+0048 X(:,1) = [1 0]';                                          <span class="comment">% initial state</span>
+0049 y(1)   = model.hfun( model, X(:,1), onoise(1), []); <span class="comment">% observation of initial state</span>
+0050 <span class="keyword">for</span> j=2:N,
+0051     X(:,j) = model.ffun( model, X(:,j-1), pnoise(j-1), []);
+0052     y(j)   = model.hfun( model, X(:,j), onoise(j), []);
+0053 <span class="keyword">end</span>
+0054 
+0055 
+0056 <span class="comment">%--- Ask the user which inference algorithm to use</span>
+0057 
+0058 <span class="comment">%ftype = input('Type of estimator [ kf, ekf, ukf, cdkf, srcdkf, or srukf ] ? ','s');</span>
+0059 
+0060 <span class="comment">%if ~stringmatch(ftype,{'kf','ekf','ukf','cdkf','srcdkf','srukf'})</span>
+0061 <span class="comment">%    error('That estimator/filter type is not recognized.');</span>
+0062 <span class="comment">%end</span>
+0063 
+0064 <span class="comment">%--- Use a couple of different filters...</span>
+0065 lftype = {<span class="string">'kf'</span>,<span class="string">'ekf'</span>,<span class="string">'ukf'</span>,<span class="string">'cdkf'</span>,<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>};
+0066 
+0067 <span class="keyword">for</span> k=1:6,
+0068     
+0069   ftype = lftype{k};    
+0070 
+0071 
+0072   <span class="comment">%--- Setup argument data structure which serves as input to</span>
+0073   <span class="comment">%--- the 'geninfds' function. This function generates the InferenceDS</span>
+0074   <span class="comment">%--- data structures which are needed by all inference algorithms</span>
+0075   <span class="comment">%--- in the PiLab toolkit.</span>
+0076 
+0077   Arg.type = <span class="string">'state'</span>;                                  <span class="comment">% inference type (state estimation)</span>
+0078   Arg.tag = <span class="string">'State estimation for GSSM_LTI1 system.'</span>;  <span class="comment">% arbitrary ID tag</span>
+0079   Arg.model = model;                                   <span class="comment">% GSSM data structure of external system</span>
+0080 
+0081   InfDS = <a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>(Arg);                               <span class="comment">% Create inference data structure and</span>
+0082 
+0083   [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS, ftype);       <span class="comment">% generate process and observation noise sources</span>
+0084 
+0085   <span class="comment">%--- Setup runtime buffers</span>
+0086 
+0087   Xh = zeros(InfDS.statedim,N);          <span class="comment">% state estimation buffer</span>
+0088   Xh(:,1) = zeros(size(X(:,1)));         <span class="comment">% initial estimate of state E[X(0)]</span>
+0089   Px = eye(InfDS.statedim);              <span class="comment">% initial state covariance</span>
+0090 
+0091 
+0092 
+0093   <span class="comment">%--- Call inference algorithm / estimator</span>
+0094 
+0095   <span class="keyword">switch</span> ftype
+0096 
+0097     <span class="comment">%------------------- Linear Kalman Filter --------------------------------------</span>
+0098     <span class="keyword">case</span> <span class="string">'kf'</span>
+0099 
+0100         [Xh, Px] = <a href="../../.././ReBEL-0.2.7/core/kf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = kf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">kf</a>(Xh(:,1), Px, pNoise, oNoise, y, [], [], InfDS);
+0101 
+0102     <span class="comment">%------------------- Extended Kalman Filter ------------------------------------</span>
+0103     <span class="keyword">case</span> <span class="string">'ekf'</span>
+0104 
+0105 
+0106         [Xh, Px] = <a href="../../.././ReBEL-0.2.7/core/ekf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ekf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ekf</a>(Xh(:,1), Px, pNoise, oNoise, y, [], [], InfDS);
+0107 
+0108 
+0109     <span class="comment">%------------------- Unscented Kalman Filter -----------------------------------</span>
+0110     <span class="keyword">case</span> <span class="string">'ukf'</span>
+0111 
+0112         alpha = 1;         <span class="comment">% scale factor (UKF parameter)</span>
+0113         beta  = 2;         <span class="comment">% optimal setting for Gaussian priors (UKF parameter)</span>
+0114         kappa = 0;         <span class="comment">% optimal for state dimension=2 (UKF parameter)</span>
+0115 
+0116         InfDS.spkfParams = [alpha beta kappa];
+0117 
+0118         [Xh, Px] = <a href="../../.././ReBEL-0.2.7/core/ukf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ukf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ukf</a>(Xh(:,1), Px, pNoise, oNoise, y, [], [], InfDS);
+0119 
+0120 
+0121     <span class="comment">%------------------- Central Difference Kalman Filter ---------------------------</span>
+0122     <span class="keyword">case</span> <span class="string">'cdkf'</span>
+0123 
+0124         InfDS.spkfParams = sqrt(3);    <span class="comment">% scale factor (CDKF parameter h)</span>
+0125 
+0126         [Xh, Px] = <a href="../../.././ReBEL-0.2.7/core/cdkf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = cdkf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">cdkf</a>(Xh(:,1), Px, pNoise, oNoise, y, [], [], InfDS);
+0127 
+0128 
+0129     <span class="comment">%------------------- Square Root Unscented Kalman Filter ------------------------</span>
+0130     <span class="keyword">case</span> <span class="string">'srukf'</span>
+0131 
+0132         alpha = 1;         <span class="comment">% scale factor (UKF parameter)</span>
+0133         beta  = 2;         <span class="comment">% optimal setting for Gaussian priors (UKF parameter)</span>
+0134         kappa = 0;         <span class="comment">% optimal for state dimension=2 (UKF parameter)</span>
+0135 
+0136         Sx = chol(Px)';
+0137 
+0138         InfDS.spkfParams = [alpha beta kappa];
+0139 
+0140         [Xh, Sx] = <a href="../../.././ReBEL-0.2.7/core/srukf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srukf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srukf</a>(Xh(:,1), Sx, pNoise, oNoise, y, [], [], InfDS);
+0141 
+0142 
+0143     <span class="comment">%------------------- Square Root Central Difference Kalman Filter ---------------</span>
+0144     <span class="keyword">case</span> <span class="string">'srcdkf'</span>
+0145 
+0146         InfDS.spkfParams  = sqrt(3);    <span class="comment">% scale factor (CDKF parameter h)</span>
+0147 
+0148         Sx = chol(Px)';
+0149 
+0150         [Xh, Sx] = <a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>(Xh(:,1), Sx, pNoise, oNoise, y, [], [], InfDS);
+0151 
+0152 
+0153 
+0154 
+0155   <span class="keyword">end</span>
+0156 
+0157 
+0158   <span class="comment">%--- Plot results</span>
+0159 
+0160   figure(1); subplot(3,2,k);
+0161   p1 = plot(X(1,:)); hold on
+0162   p2 = plot(y,<span class="string">'g+'</span>);
+0163   p3 = plot(Xh(1,:),<span class="string">'r'</span>); hold off;
+0164   legend([p1 p2 p3],<span class="string">'clean'</span>,<span class="string">'noisy'</span>,[ftype <span class="string">' estimate'</span>]);
+0165   xlabel(<span class="string">'time'</span>);
+0166   title(<span class="string">'DEMSE1 : LTI System State Estimation'</span>);
+0167 
+0168 
+0169   <span class="comment">%--- Calculate mean square estimation error</span>
+0170   mse = mean((Xh(1,:)-X(1,:)).^2);
+0171   disp([ftype <span class="string">' : Mean square error (MSE) of estimate : '</span> num2str(mse)]);
+0172 
+0173 <span class="keyword">end</span>  
+0174   
+0175 <span class="comment">%--- House keeping</span>
+0176 
+0177 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../gssm'</span>);       <span class="comment">% remove relative search path to example GSSM files from MATLABPATH</span>
+0178 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../data'</span>);       <span class="comment">% remove relative search path to example data files from MATLABPATH</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

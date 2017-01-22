@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gtmem</title>
+  <meta name="keywords" content="gtmem">
+  <meta name="description" content="GTMEM	EM algorithm for Generative Topographic Mapping.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gtmem.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gtmem
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GTMEM	EM algorithm for Generative Topographic Mapping.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [net, options, errlog] = gtmem(net, t, options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GTMEM    EM algorithm for Generative Topographic Mapping.
+
+    Description
+    [NET, OPTIONS, ERRLOG] = GTMEM(NET, T, OPTIONS) uses the Expectation
+    Maximization algorithm to estimate the parameters of a GTM defined by
+    a data structure NET. The matrix T represents the data whose
+    expectation is maximized, with each row corresponding to a vector.
+    It is assumed that the latent data NET.X has been set following a
+    call to GTMINIT, for example.    The optional parameters have the
+    following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs error
+    values in the return argument ERRLOG. If OPTIONS(1) is set to 0, then
+    only warning messages are displayed.  If OPTIONS(1) is -1, then
+    nothing is displayed.
+
+    OPTIONS(3) is a measure of the absolute precision required of the
+    error function at the solution. If the change in log likelihood
+    between two steps of the EM algorithm is less than this value, then
+    the function terminates.
+
+    OPTIONS(14) is the maximum number of iterations; default 100.
+
+    The optional return value OPTIONS contains the final error value
+    (i.e. data log likelihood) in OPTIONS(8).
+
+    See also
+    <a href="gtm.html" class="code" title="function net = gtm(dim_latent, nlatent, dim_data, ncentres, rbfunc,prior)">GTM</a>, <a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">GTMINIT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li><li><a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>	DIST2	Calculates squared distance between two sets of points.</li><li><a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">gtmpost</a>	GTMPOST Latent space responsibility for data in a GTM.</li><li><a href="gtmprob.html" class="code" title="function prob = gtmprob(net, data)">gtmprob</a>	GTMPROB Probability for data under a GTM.</li><li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li><li><a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>	RBFFWD	Forward propagation through RBF network with linear outputs.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demgtm1.html" class="code" title="">demgtm1</a>	DEMGTM1 Demonstrate EM for GTM.</li><li><a href="demgtm2.html" class="code" title="">demgtm2</a>	DEMGTM2 Demonstrate GTM for visualisation.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [net, options, errlog] = gtmem(net, t, options)</a>
+0002 <span class="comment">%GTMEM    EM algorithm for Generative Topographic Mapping.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    [NET, OPTIONS, ERRLOG] = GTMEM(NET, T, OPTIONS) uses the Expectation</span>
+0006 <span class="comment">%    Maximization algorithm to estimate the parameters of a GTM defined by</span>
+0007 <span class="comment">%    a data structure NET. The matrix T represents the data whose</span>
+0008 <span class="comment">%    expectation is maximized, with each row corresponding to a vector.</span>
+0009 <span class="comment">%    It is assumed that the latent data NET.X has been set following a</span>
+0010 <span class="comment">%    call to GTMINIT, for example.    The optional parameters have the</span>
+0011 <span class="comment">%    following interpretations.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs error</span>
+0014 <span class="comment">%    values in the return argument ERRLOG. If OPTIONS(1) is set to 0, then</span>
+0015 <span class="comment">%    only warning messages are displayed.  If OPTIONS(1) is -1, then</span>
+0016 <span class="comment">%    nothing is displayed.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    OPTIONS(3) is a measure of the absolute precision required of the</span>
+0019 <span class="comment">%    error function at the solution. If the change in log likelihood</span>
+0020 <span class="comment">%    between two steps of the EM algorithm is less than this value, then</span>
+0021 <span class="comment">%    the function terminates.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%    OPTIONS(14) is the maximum number of iterations; default 100.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%    The optional return value OPTIONS contains the final error value</span>
+0026 <span class="comment">%    (i.e. data log likelihood) in OPTIONS(8).</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%    See also</span>
+0029 <span class="comment">%    GTM, GTMINIT</span>
+0030 <span class="comment">%</span>
+0031 
+0032 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0033 
+0034 <span class="comment">% Check that inputs are consistent</span>
+0035 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(net, <span class="string">'gtm'</span>, t);
+0036 <span class="keyword">if</span> ~isempty(errstring)
+0037   error(errstring);
+0038 <span class="keyword">end</span>
+0039 
+0040 <span class="comment">% Sort out the options</span>
+0041 <span class="keyword">if</span> (options(14))
+0042   niters = options(14);
+0043 <span class="keyword">else</span>
+0044   niters = 100;
+0045 <span class="keyword">end</span>
+0046 
+0047 display = options(1);
+0048 store = 0;
+0049 <span class="keyword">if</span> (nargout &gt; 2)
+0050   store = 1;    <span class="comment">% Store the error values to return them</span>
+0051   errlog = zeros(1, niters);
+0052 <span class="keyword">end</span>
+0053 test = 0;
+0054 <span class="keyword">if</span> options(3) &gt; 0.0
+0055   test = 1;    <span class="comment">% Test log likelihood for termination</span>
+0056 <span class="keyword">end</span>
+0057 
+0058 <span class="comment">% Calculate various quantities that remain constant during training</span>
+0059 [ndata, tdim] = size(t);
+0060 ND = ndata*tdim;
+0061 [net.gmmnet.centres, Phi] = <a href="rbffwd.html" class="code" title="function [a, z, n2] = rbffwd(net, x)">rbffwd</a>(net.rbfnet, net.X);
+0062 Phi = [Phi ones(size(net.X, 1), 1)];
+0063 PhiT = Phi';
+0064 [K, Mplus1] = size(Phi);
+0065 
+0066 A = zeros(Mplus1, Mplus1);
+0067 cholDcmp = zeros(Mplus1, Mplus1);
+0068 <span class="comment">% Use a sparse representation for the weight regularizing matrix.</span>
+0069 <span class="keyword">if</span> (net.rbfnet.alpha &gt; 0)
+0070   Alpha = net.rbfnet.alpha*speye(Mplus1);
+0071   Alpha(Mplus1, Mplus1) = 0;
+0072 <span class="keyword">end</span> 
+0073 
+0074 <span class="keyword">for</span> n = 1:niters
+0075    <span class="comment">% Calculate responsibilities</span>
+0076    [R, act] = <a href="gtmpost.html" class="code" title="function [post, a] = gtmpost(net, data)">gtmpost</a>(net, t);
+0077      <span class="comment">% Calculate error value if needed</span>
+0078    <span class="keyword">if</span> (display | store | test)
+0079       prob = act*(net.gmmnet.priors)';
+0080       <span class="comment">% Error value is negative log likelihood of data</span>
+0081       e = - sum(log(max(prob,eps)));
+0082       <span class="keyword">if</span> store
+0083          errlog(n) = e;
+0084       <span class="keyword">end</span>
+0085       <span class="keyword">if</span> display &gt; 0
+0086          fprintf(1, <span class="string">'Cycle %4d  Error %11.6f\n'</span>, n, e);
+0087       <span class="keyword">end</span>
+0088       <span class="keyword">if</span> test
+0089          <span class="keyword">if</span> (n &gt; 1 &amp; abs(e - eold) &lt; options(3))
+0090             options(8) = e;
+0091             <span class="keyword">return</span>;
+0092          <span class="keyword">else</span>
+0093             eold = e;
+0094          <span class="keyword">end</span>
+0095       <span class="keyword">end</span>
+0096    <span class="keyword">end</span>
+0097 
+0098    <span class="comment">% Calculate matrix be inverted (Phi'*G*Phi + alpha*I in the papers).</span>
+0099    <span class="comment">% Sparse representation of G normally executes faster and saves</span>
+0100    <span class="comment">% memory</span>
+0101    <span class="keyword">if</span> (net.rbfnet.alpha &gt; 0)
+0102       A = full(PhiT*spdiags(sum(R)', 0, K, K)*Phi + <span class="keyword">...</span>
+0103          (Alpha.*net.gmmnet.covars(1)));
+0104    <span class="keyword">else</span>
+0105       A = full(PhiT*spdiags(sum(R)', 0, K, K)*Phi);
+0106    <span class="keyword">end</span>
+0107    <span class="comment">% A is a symmetric matrix likely to be positive definite, so try</span>
+0108    <span class="comment">% fast Cholesky decomposition to calculate W, otherwise use SVD.</span>
+0109    <span class="comment">% (PhiT*(R*t)) is computed right-to-left, as R</span>
+0110    <span class="comment">% and t are normally (much) larger than PhiT.</span>
+0111    [cholDcmp singular] = chol(A);
+0112    <span class="keyword">if</span> (singular)
+0113       <span class="keyword">if</span> (display)
+0114          fprintf(1, <span class="keyword">...</span>
+0115             <span class="string">'gtmem: Warning -- M-Step matrix singular, using pinv.\n'</span>);
+0116       <span class="keyword">end</span>
+0117       W = pinv(A)*(PhiT*(R'*t));
+0118    <span class="keyword">else</span>
+0119       W = cholDcmp \ (cholDcmp' \ (PhiT*(R'*t)));
+0120    <span class="keyword">end</span>
+0121    <span class="comment">% Put new weights into network to calculate responsibilities</span>
+0122    <span class="comment">% net.rbfnet = netunpak(net.rbfnet, W);</span>
+0123    net.rbfnet.w2 = W(1:net.rbfnet.nhidden, :);
+0124    net.rbfnet.b2 = W(net.rbfnet.nhidden+1, :);
+0125    <span class="comment">% Calculate new distances</span>
+0126    d = <a href="dist2.html" class="code" title="function n2 = dist2(x, c)">dist2</a>(t, Phi*W);
+0127    
+0128    <span class="comment">% Calculate new value for beta</span>
+0129    net.gmmnet.covars = ones(1, net.gmmnet.ncentres)*(sum(sum(d.*R))/ND);
+0130 <span class="keyword">end</span>
+0131 
+0132 options(8) = -sum(log(<a href="gtmprob.html" class="code" title="function prob = gtmprob(net, data)">gtmprob</a>(net, t)));
+0133 <span class="keyword">if</span> (display &gt;= 0)
+0134   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0135 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

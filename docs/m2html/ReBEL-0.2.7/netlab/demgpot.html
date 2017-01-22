@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demgpot</title>
+  <meta name="keywords" content="demgpot">
+  <meta name="description" content="DEMGPOT Computes the gradient of the negative log likelihood for a mixture model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demgpot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demgpot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMGPOT Computes the gradient of the negative log likelihood for a mixture model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function g = demgpot(x, mix) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMGPOT Computes the gradient of the negative log likelihood for a mixture model.
+
+    Description
+    This function computes the gradient of the negative log of the
+    unconditional data density P(X) with respect to the coefficients of
+    the data vector X for a Gaussian mixture model.  The data structure
+    MIX defines the mixture model, while the matrix X contains the data
+    vector as a row vector. Note the unusual order of the arguments: this
+    is so that the function can be used in DEMHMC1 directly for sampling
+    from the distribution P(X).
+
+    See also
+    <a href="demhmc1.html" class="code" title="">DEMHMC1</a>, <a href="demmet1.html" class="code" title="function demmet1(plot_wait)">DEMMET1</a>, <a href="dempot.html" class="code" title="function e = dempot(x, mix)">DEMPOT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>	GMMACTIV Computes the activations of a Gaussian mixture model.</li><li><a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">gmmprob</a>	GMMPROB Computes the data probability for a Gaussian mixture model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function g = demgpot(x, mix)</a>
+0002 <span class="comment">%DEMGPOT Computes the gradient of the negative log likelihood for a mixture model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    This function computes the gradient of the negative log of the</span>
+0006 <span class="comment">%    unconditional data density P(X) with respect to the coefficients of</span>
+0007 <span class="comment">%    the data vector X for a Gaussian mixture model.  The data structure</span>
+0008 <span class="comment">%    MIX defines the mixture model, while the matrix X contains the data</span>
+0009 <span class="comment">%    vector as a row vector. Note the unusual order of the arguments: this</span>
+0010 <span class="comment">%    is so that the function can be used in DEMHMC1 directly for sampling</span>
+0011 <span class="comment">%    from the distribution P(X).</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    See also</span>
+0014 <span class="comment">%    DEMHMC1, DEMMET1, DEMPOT</span>
+0015 <span class="comment">%</span>
+0016 
+0017 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0018 
+0019 <span class="comment">% Computes the potential gradient</span>
+0020 
+0021 temp = (ones(mix.ncentres,1)*x)-mix.centres;
+0022 temp = temp.*(<a href="gmmactiv.html" class="code" title="function a = gmmactiv(mix, x)">gmmactiv</a>(mix,x)'*ones(1, mix.nin));
+0023 <span class="comment">% Assume spherical covariance structure</span>
+0024 <span class="keyword">if</span> ~strcmp(mix.covar_type, <span class="string">'spherical'</span>)
+0025   error(<span class="string">'Spherical covariance only.'</span>)
+0026 <span class="keyword">end</span>
+0027 temp = temp./(mix.covars'*ones(1, mix.nin));
+0028 temp = temp.*(mix.priors'*ones(1, mix.nin));
+0029 g = sum(temp, 1)/<a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">gmmprob</a>(mix, x);</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

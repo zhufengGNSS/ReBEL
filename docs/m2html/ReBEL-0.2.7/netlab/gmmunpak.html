@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gmmunpak</title>
+  <meta name="keywords" content="gmmunpak">
+  <meta name="description" content="GMMUNPAK Separates a vector of Gaussian mixture model parameters into its components.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; gmmunpak.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gmmunpak
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>GMMUNPAK Separates a vector of Gaussian mixture model parameters into its components.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function mix = gmmunpak(mix, p) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GMMUNPAK Separates a vector of Gaussian mixture model parameters into its components.
+
+    Description
+    MIX = GMMUNPAK(MIX, P) takes a GMM data structure MIX and  a single
+    row vector of parameters P and returns a mixture data structure
+    identical to the input MIX, except that the mixing coefficients
+    PRIORS, centres CENTRES and covariances COVARS  (and, for PPCA, the
+    lambdas and U (PCA sub-spaces)) are all set to the corresponding
+    elements of P.
+
+    See also
+    <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a>, <a href="gmmpak.html" class="code" title="function p = gmmpak(mix)">GMMPAK</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>	CONSIST Check that arguments are consistent.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mdn2gmm.html" class="code" title="function gmmmixes = mdn2gmm(mdnmixes)">mdn2gmm</a>	MDN2GMM Converts an MDN mixture data structure to array of GMMs.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mix = gmmunpak(mix, p)</a>
+0002 <span class="comment">%GMMUNPAK Separates a vector of Gaussian mixture model parameters into its components.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    MIX = GMMUNPAK(MIX, P) takes a GMM data structure MIX and  a single</span>
+0006 <span class="comment">%    row vector of parameters P and returns a mixture data structure</span>
+0007 <span class="comment">%    identical to the input MIX, except that the mixing coefficients</span>
+0008 <span class="comment">%    PRIORS, centres CENTRES and covariances COVARS  (and, for PPCA, the</span>
+0009 <span class="comment">%    lambdas and U (PCA sub-spaces)) are all set to the corresponding</span>
+0010 <span class="comment">%    elements of P.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    See also</span>
+0013 <span class="comment">%    GMM, GMMPAK</span>
+0014 <span class="comment">%</span>
+0015 
+0016 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0017 
+0018 errstring = <a href="consist.html" class="code" title="function errstring = consist(model, type, inputs, outputs)">consist</a>(mix, <span class="string">'gmm'</span>);
+0019 <span class="keyword">if</span> ~errstring
+0020   error(errstring);
+0021 <span class="keyword">end</span>
+0022 <span class="keyword">if</span> mix.nwts ~= length(p)
+0023   error(<span class="string">'Invalid weight vector length'</span>)
+0024 <span class="keyword">end</span>
+0025 
+0026 mark1 = mix.ncentres;
+0027 mark2 = mark1 + mix.ncentres*mix.nin;
+0028 
+0029 mix.priors = reshape(p(1:mark1), 1, mix.ncentres);
+0030 mix.centres = reshape(p(mark1 + 1:mark2), mix.ncentres, mix.nin);
+0031 <span class="keyword">switch</span> mix.covar_type
+0032   <span class="keyword">case</span> <span class="string">'spherical'</span>
+0033     mark3 = mix.ncentres*(2 + mix.nin);
+0034     mix.covars = reshape(p(mark2 + 1:mark3), 1, mix.ncentres);
+0035   <span class="keyword">case</span> <span class="string">'diag'</span>
+0036     mark3 = mix.ncentres*(1 + mix.nin + mix.nin);
+0037     mix.covars = reshape(p(mark2 + 1:mark3), mix.ncentres, mix.nin);
+0038   <span class="keyword">case</span> <span class="string">'full'</span>
+0039     mark3 = mix.ncentres*(1 + mix.nin + mix.nin*mix.nin);
+0040     mix.covars = reshape(p(mark2 + 1:mark3), mix.nin, mix.nin, <span class="keyword">...</span>
+0041       mix.ncentres);
+0042   <span class="keyword">case</span> <span class="string">'ppca'</span>
+0043     mark3 = mix.ncentres*(2 + mix.nin);
+0044     mix.covars = reshape(p(mark2 + 1:mark3), 1, mix.ncentres);
+0045     <span class="comment">% Now also extract k and eigenspaces</span>
+0046     mark4 = mark3 + mix.ncentres*mix.ppca_dim;
+0047     mix.lambda = reshape(p(mark3 + 1:mark4), mix.ncentres, <span class="keyword">...</span>
+0048       mix.ppca_dim);
+0049     mix.U = reshape(p(mark4 + 1:end), mix.nin, mix.ppca_dim, <span class="keyword">...</span>
+0050       mix.ncentres);
+0051   <span class="keyword">otherwise</span>
+0052     error([<span class="string">'Unknown covariance type '</span>, mix.covar_type]);
+0053 <span class="keyword">end</span>
+0054</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

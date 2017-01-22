@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlpevfwd</title>
+  <meta name="keywords" content="mlpevfwd">
+  <meta name="description" content="MLPEVFWD Forward propagation with evidence for MLP">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlpevfwd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlpevfwd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPEVFWD Forward propagation with evidence for MLP</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [y, extra, invhess] = mlpevfwd(net, x, t, x_test, invhess) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPEVFWD Forward propagation with evidence for MLP
+
+    Description
+    Y = MLPEVFWD(NET, X, T, X_TEST) takes a network data structure  NET
+    together with the input X and target T training data and input test
+    data X_TEST. It returns the normal forward propagation through the
+    network Y together with a matrix EXTRA which consists of error bars
+    (variance) for a regression problem or moderated outputs for a
+    classification problem. The optional argument (and return value)
+    INVHESS is the inverse of the network Hessian computed on the
+    training data inputs and targets.  Passing it in avoids recomputing
+    it, which can be a significant saving for large training sets.
+
+    See also
+    <a href="fevbayes.html" class="code" title="function [extra, invhess] = fevbayes(net, y, a, x, t, x_test, invhess)">FEVBAYES</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="fevbayes.html" class="code" title="function [extra, invhess] = fevbayes(net, y, a, x, t, x_test, invhess)">fevbayes</a>	FEVBAYES Evaluate Bayesian regularisation for network forward propagation.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demev2.html" class="code" title="">demev2</a>	DEMEV2	Demonstrate Bayesian classification for the MLP.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [y, extra, invhess] = mlpevfwd(net, x, t, x_test, invhess)</a>
+0002 <span class="comment">%MLPEVFWD Forward propagation with evidence for MLP</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    Y = MLPEVFWD(NET, X, T, X_TEST) takes a network data structure  NET</span>
+0006 <span class="comment">%    together with the input X and target T training data and input test</span>
+0007 <span class="comment">%    data X_TEST. It returns the normal forward propagation through the</span>
+0008 <span class="comment">%    network Y together with a matrix EXTRA which consists of error bars</span>
+0009 <span class="comment">%    (variance) for a regression problem or moderated outputs for a</span>
+0010 <span class="comment">%    classification problem. The optional argument (and return value)</span>
+0011 <span class="comment">%    INVHESS is the inverse of the network Hessian computed on the</span>
+0012 <span class="comment">%    training data inputs and targets.  Passing it in avoids recomputing</span>
+0013 <span class="comment">%    it, which can be a significant saving for large training sets.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    See also</span>
+0016 <span class="comment">%    FEVBAYES</span>
+0017 <span class="comment">%</span>
+0018 
+0019 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0020 
+0021 [y, z, a] = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, x_test);
+0022 <span class="keyword">if</span> nargin == 4
+0023   [extra, invhess] = <a href="fevbayes.html" class="code" title="function [extra, invhess] = fevbayes(net, y, a, x, t, x_test, invhess)">fevbayes</a>(net, y, a, x, t, x_test);
+0024 <span class="keyword">else</span>
+0025   [extra, invhess] = <a href="fevbayes.html" class="code" title="function [extra, invhess] = fevbayes(net, y, a, x, t, x_test, invhess)">fevbayes</a>(net, y, a, x, t, x_test, invhess);
+0026 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

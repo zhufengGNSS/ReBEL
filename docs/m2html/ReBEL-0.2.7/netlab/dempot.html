@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dempot</title>
+  <meta name="keywords" content="dempot">
+  <meta name="description" content="DEMPOT	Computes the negative log likelihood for a mixture model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; dempot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>dempot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMPOT	Computes the negative log likelihood for a mixture model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function e = dempot(x, mix) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMPOT    Computes the negative log likelihood for a mixture model.
+
+    Description
+    This function computes the negative log of the unconditional data
+    density P(X) for a Gaussian mixture model.  The data structure MIX
+    defines the mixture model, while the matrix X contains the data
+    vectors.
+
+    See also
+    <a href="demgpot.html" class="code" title="function g = demgpot(x, mix)">DEMGPOT</a>, <a href="demhmc1.html" class="code" title="">DEMHMC1</a>, <a href="demmet1.html" class="code" title="function demmet1(plot_wait)">DEMMET1</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">gmmprob</a>	GMMPROB Computes the data probability for a Gaussian mixture model.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function e = dempot(x, mix)</a>
+0002 <span class="comment">%DEMPOT    Computes the negative log likelihood for a mixture model.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    This function computes the negative log of the unconditional data</span>
+0006 <span class="comment">%    density P(X) for a Gaussian mixture model.  The data structure MIX</span>
+0007 <span class="comment">%    defines the mixture model, while the matrix X contains the data</span>
+0008 <span class="comment">%    vectors.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    See also</span>
+0011 <span class="comment">%    DEMGPOT, DEMHMC1, DEMMET1</span>
+0012 <span class="comment">%</span>
+0013 
+0014 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0015 
+0016 <span class="comment">% Computes the potential (negative log likelihood)</span>
+0017 e = -log(<a href="gmmprob.html" class="code" title="function prob = gmmprob(mix, x)">gmmprob</a>(mix, x));</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

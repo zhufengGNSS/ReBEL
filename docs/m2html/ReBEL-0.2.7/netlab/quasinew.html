@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of quasinew</title>
+  <meta name="keywords" content="quasinew">
+  <meta name="description" content="QUASINEW Quasi-Newton optimization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; quasinew.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>quasinew
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>QUASINEW Quasi-Newton optimization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">QUASINEW Quasi-Newton optimization.
+
+    Description
+    [X, OPTIONS, FLOG, POINTLOG] = QUASINEW(F, X, OPTIONS, GRADF)  uses a
+    quasi-Newton algorithm to find a local minimum of the function F(X)
+    whose gradient is given by GRADF(X).  Here X is a row vector and F
+    returns a scalar value.   The point at which F has a local minimum is
+    returned as X.  The function value at that point is returned in
+    OPTIONS(8). A log of the function values after each cycle is
+    (optionally) returned in FLOG, and a log of the points visited is
+    (optionally) returned in POINTLOG.
+
+    QUASINEW(F, X, OPTIONS, GRADF, P1, P2, ...) allows  additional
+    arguments to be passed to F() and GRADF().
+
+    The optional parameters have the following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs error
+    values in the return argument ERRLOG, and the points visited in the
+    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only
+    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is
+    displayed.
+
+    OPTIONS(2) is a measure of the absolute precision required for the
+    value of X at the solution.  If the absolute difference between the
+    values of X between two successive steps is less than OPTIONS(2),
+    then this condition is satisfied.
+
+    OPTIONS(3) is a measure of the precision required of the objective
+    function at the solution.  If the absolute difference between the
+    objective function values between two successive steps is less than
+    OPTIONS(3), then this condition is satisfied. Both this and the
+    previous condition must be satisfied for termination.
+
+    OPTIONS(9) should be set to 1 to check the user defined gradient
+    function.
+
+    OPTIONS(10) returns the total number of function evaluations
+    (including those in any line searches).
+
+    OPTIONS(11) returns the total number of gradient evaluations.
+
+    OPTIONS(14) is the maximum number of iterations; default 100.
+
+    OPTIONS(15) is the precision in parameter space of the line search;
+    default 1E-2.
+
+    See also
+    <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="graddesc.html" class="code" title="function [x, options, flog, pointlog] = graddesc(f, x, options, gradf,varargin)">GRADDESC</a>, <a href="linemin.html" class="code" title="function [x, options] = linemin(f, pt, dir, fpt, options,varargin)">LINEMIN</a>, <a href="minbrack.html" class="code" title="function  [br_min, br_mid, br_max, num_evals] = minbrack(f, a, b, fa,varargin)">MINBRACK</a>, <a href="scg.html" class="code" title="function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)">SCG</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demopt1.html" class="code" title="function demopt1(xinit)">demopt1</a>	DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x, options, flog, pointlog] = quasinew(f, x, options, gradf, </a><span class="keyword">...</span>
+0002                                     varargin)
+0003 <span class="comment">%QUASINEW Quasi-Newton optimization.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    Description</span>
+0006 <span class="comment">%    [X, OPTIONS, FLOG, POINTLOG] = QUASINEW(F, X, OPTIONS, GRADF)  uses a</span>
+0007 <span class="comment">%    quasi-Newton algorithm to find a local minimum of the function F(X)</span>
+0008 <span class="comment">%    whose gradient is given by GRADF(X).  Here X is a row vector and F</span>
+0009 <span class="comment">%    returns a scalar value.   The point at which F has a local minimum is</span>
+0010 <span class="comment">%    returned as X.  The function value at that point is returned in</span>
+0011 <span class="comment">%    OPTIONS(8). A log of the function values after each cycle is</span>
+0012 <span class="comment">%    (optionally) returned in FLOG, and a log of the points visited is</span>
+0013 <span class="comment">%    (optionally) returned in POINTLOG.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    QUASINEW(F, X, OPTIONS, GRADF, P1, P2, ...) allows  additional</span>
+0016 <span class="comment">%    arguments to be passed to F() and GRADF().</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    The optional parameters have the following interpretations.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs error</span>
+0021 <span class="comment">%    values in the return argument ERRLOG, and the points visited in the</span>
+0022 <span class="comment">%    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only</span>
+0023 <span class="comment">%    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is</span>
+0024 <span class="comment">%    displayed.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    OPTIONS(2) is a measure of the absolute precision required for the</span>
+0027 <span class="comment">%    value of X at the solution.  If the absolute difference between the</span>
+0028 <span class="comment">%    values of X between two successive steps is less than OPTIONS(2),</span>
+0029 <span class="comment">%    then this condition is satisfied.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%    OPTIONS(3) is a measure of the precision required of the objective</span>
+0032 <span class="comment">%    function at the solution.  If the absolute difference between the</span>
+0033 <span class="comment">%    objective function values between two successive steps is less than</span>
+0034 <span class="comment">%    OPTIONS(3), then this condition is satisfied. Both this and the</span>
+0035 <span class="comment">%    previous condition must be satisfied for termination.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%    OPTIONS(9) should be set to 1 to check the user defined gradient</span>
+0038 <span class="comment">%    function.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%    OPTIONS(10) returns the total number of function evaluations</span>
+0041 <span class="comment">%    (including those in any line searches).</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%    OPTIONS(11) returns the total number of gradient evaluations.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%    OPTIONS(14) is the maximum number of iterations; default 100.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%    OPTIONS(15) is the precision in parameter space of the line search;</span>
+0048 <span class="comment">%    default 1E-2.</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%    See also</span>
+0051 <span class="comment">%    CONJGRAD, GRADDESC, LINEMIN, MINBRACK, SCG</span>
+0052 <span class="comment">%</span>
+0053 
+0054 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0055 
+0056 <span class="comment">%  Set up the options.</span>
+0057 <span class="keyword">if</span> length(options) &lt; 18
+0058   error(<span class="string">'Options vector too short'</span>)
+0059 <span class="keyword">end</span>
+0060 
+0061 <span class="keyword">if</span>(options(14))
+0062   niters = options(14);
+0063 <span class="keyword">else</span>
+0064   niters = 100;
+0065 <span class="keyword">end</span>
+0066 
+0067 <span class="comment">% Set up options for line search</span>
+0068 line_options = foptions;
+0069 <span class="comment">% Don't need a very precise line search</span>
+0070 <span class="keyword">if</span> options(15) &gt; 0
+0071   line_options(2) = options(15);
+0072 <span class="keyword">else</span>
+0073   line_options(2) = 1e-2;  <span class="comment">% Default</span>
+0074 <span class="keyword">end</span>
+0075 <span class="comment">% Minimal fractional change in f from Newton step: otherwise do a line search</span>
+0076 min_frac_change = 1e-4;    
+0077 
+0078 display = options(1);
+0079 
+0080 <span class="comment">% Next two lines allow quasinew to work with expression strings</span>
+0081 f = fcnchk(f, length(varargin));
+0082 gradf = fcnchk(gradf, length(varargin));
+0083 
+0084 <span class="comment">% Check gradients</span>
+0085 <span class="keyword">if</span> (options(9))
+0086   feval(<span class="string">'gradchek'</span>, x, f, gradf, varargin{:});
+0087 <span class="keyword">end</span>
+0088 
+0089 nparams = length(x);
+0090 fnew = feval(f, x, varargin{:});
+0091 options(10) = options(10) + 1;
+0092 gradnew = feval(gradf, x, varargin{:});
+0093 options(11) = options(11) + 1;
+0094 p = -gradnew;        <span class="comment">% Search direction</span>
+0095 hessinv = eye(nparams); <span class="comment">% Initialise inverse Hessian to be identity matrix</span>
+0096 j = 1;
+0097 <span class="keyword">if</span> nargout &gt;= 3
+0098   flog(j, :) = fnew;
+0099   <span class="keyword">if</span> nargout == 4
+0100     pointlog(j, :) = x;
+0101   <span class="keyword">end</span>
+0102 <span class="keyword">end</span>
+0103 
+0104 <span class="keyword">while</span> (j &lt;= niters)
+0105 
+0106   xold = x;
+0107   fold = fnew;
+0108   gradold = gradnew;
+0109 
+0110   x = xold + p;
+0111   fnew = feval(f, x, varargin{:});
+0112   options(10) = options(10) + 1;
+0113 
+0114   <span class="comment">% This shouldn't occur, but rest of code depends on sd being downhill</span>
+0115   <span class="keyword">if</span> (gradnew*p' &gt;= 0)
+0116     p = -p;
+0117     <span class="keyword">if</span> options(1) &gt;= 0
+0118       warning(<span class="string">'search direction uphill in quasinew'</span>);
+0119     <span class="keyword">end</span>
+0120   <span class="keyword">end</span>
+0121 
+0122   <span class="comment">% Does the Newton step reduce the function value sufficiently?</span>
+0123   <span class="keyword">if</span> (fnew &gt;= fold + min_frac_change * (gradnew*p'))
+0124     <span class="comment">% No it doesn't</span>
+0125     <span class="comment">% Minimize along current search direction: must be less than Newton step</span>
+0126     [lmin, line_options] = feval(<span class="string">'linemin'</span>, f, xold, p, fold, <span class="keyword">...</span>
+0127       line_options, varargin{:});
+0128     options(10) = options(10) + line_options(10);
+0129     options(11) = options(11) + line_options(11);
+0130     <span class="comment">% Correct x and fnew to be the actual search point we have found</span>
+0131     x = xold + lmin * p;
+0132     p = x - xold;
+0133     fnew = line_options(8);
+0134   <span class="keyword">end</span>
+0135 
+0136   <span class="comment">% Check for termination</span>
+0137   <span class="keyword">if</span> (max(abs(x - xold)) &lt; options(2) &amp; max(abs(fnew - fold)) &lt; options(3))
+0138     options(8) = fnew;
+0139     <span class="keyword">return</span>;
+0140   <span class="keyword">end</span>
+0141   gradnew = feval(gradf, x, varargin{:});
+0142   options(11) = options(11) + 1;
+0143   v = gradnew - gradold;
+0144   vdotp = v*p';
+0145 
+0146   <span class="comment">% Skip update to inverse Hessian if fac not sufficiently positive</span>
+0147   <span class="keyword">if</span> (vdotp*vdotp &gt; eps*sum(v.^2)*sum(p.^2)) 
+0148     Gv = (hessinv*v')';
+0149     vGv = sum(v.*Gv);
+0150     u = p./vdotp - Gv./vGv;
+0151     <span class="comment">% Use BFGS update rule</span>
+0152     hessinv = hessinv + (p'*p)/vdotp - (Gv'*Gv)/vGv + vGv*(u'*u);
+0153   <span class="keyword">end</span>
+0154 
+0155   p = -(hessinv * gradnew')';
+0156 
+0157   <span class="keyword">if</span> (display &gt; 0)
+0158     fprintf(1, <span class="string">'Cycle %4d  Function %11.6f\n'</span>, j, fnew);
+0159   <span class="keyword">end</span>
+0160 
+0161   j = j + 1;
+0162   <span class="keyword">if</span> nargout &gt;= 3
+0163     flog(j, :) = fnew;
+0164     <span class="keyword">if</span> nargout == 4
+0165       pointlog(j, :) = x;
+0166     <span class="keyword">end</span>
+0167   <span class="keyword">end</span>
+0168 <span class="keyword">end</span>
+0169 
+0170 <span class="comment">% If we get here, then we haven't terminated in the given number of</span>
+0171 <span class="comment">% iterations.</span>
+0172 
+0173 options(8) = fold;
+0174 <span class="keyword">if</span> (options(1) &gt;= 0)
+0175   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0176 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

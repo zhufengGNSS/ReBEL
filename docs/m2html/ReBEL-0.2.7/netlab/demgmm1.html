@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demgmm1</title>
+  <meta name="keywords" content="demgmm1">
+  <meta name="description" content="DEMGMM1 Demonstrate EM for Gaussian mixtures.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demgmm1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demgmm1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMGMM1 Demonstrate EM for Gaussian mixtures.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMGMM1 Demonstrate EM for Gaussian mixtures.
+
+    Description
+    This script demonstrates the use of the EM algorithm to fit a mixture
+    of Gaussians to a set of data using maximum likelihood. A colour
+    coding scheme is used to illustrate the evaluation of the posterior
+    probabilities in the E-step of the EM algorithm.
+
+    See also
+    <a href="demgmm2.html" class="code" title="">DEMGMM2</a>, <a href="demgmm3.html" class="code" title="">DEMGMM3</a>, <a href="demgmm4.html" class="code" title="">DEMGMM4</a>, <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">GMM</a>, <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">GMMEM</a>, <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">GMMPOST</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>	GMM	Creates a Gaussian mixture model with specified architecture.</li><li><a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>	GMMEM	EM algorithm for Gaussian mixture model.</li><li><a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>	GMMPOST Computes the class posterior probabilities of a Gaussian mixture model.</li><li><a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>	GMMSAMP Sample from a Gaussian mixture distribution.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%DEMGMM1 Demonstrate EM for Gaussian mixtures.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%    Description</span>
+0004 <span class="comment">%    This script demonstrates the use of the EM algorithm to fit a mixture</span>
+0005 <span class="comment">%    of Gaussians to a set of data using maximum likelihood. A colour</span>
+0006 <span class="comment">%    coding scheme is used to illustrate the evaluation of the posterior</span>
+0007 <span class="comment">%    probabilities in the E-step of the EM algorithm.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    See also</span>
+0010 <span class="comment">%    DEMGMM2, DEMGMM3, DEMGMM4, GMM, GMMEM, GMMPOST</span>
+0011 <span class="comment">%</span>
+0012 
+0013 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0014 
+0015 clc;
+0016 disp(<span class="string">'This demonstration illustrates the use of the EM (expectation-'</span>)
+0017 disp(<span class="string">'maximization) algorithm for fitting of a mixture of Gaussians to a'</span>)
+0018 disp(<span class="string">'data set by maximum likelihood.'</span>)
+0019 disp(<span class="string">' '</span>)
+0020 disp(<span class="string">'The data set consists of 40 data points in a 2-dimensional'</span>)
+0021 disp(<span class="string">'space, generated by sampling from a mixture of 2 Gaussian'</span>)
+0022 disp(<span class="string">'distributions.'</span>)
+0023 disp(<span class="string">' '</span>)
+0024 disp(<span class="string">'Press any key to see a plot of the data.'</span>)
+0025 pause;
+0026 
+0027 <span class="comment">% Generate the data</span>
+0028 randn(<span class="string">'state'</span>, 0); rand(<span class="string">'state'</span>, 0);
+0029 gmix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(2, 2, <span class="string">'spherical'</span>);
+0030 ndat1 = 20; ndat2 = 20; ndata = ndat1+ndat2;
+0031 gmix.centres =  [0.3 0.3; 0.7 0.7]; 
+0032 gmix.covars = [0.01 0.01];
+0033 x = <a href="gmmsamp.html" class="code" title="function [data, label] = gmmsamp(mix, n)">gmmsamp</a>(gmix, ndata);
+0034 
+0035 h = figure;
+0036 hd = plot(x(:, 1), x(:, 2), <span class="string">'.g'</span>, <span class="string">'markersize'</span>, 30);
+0037 hold on; axis([0 1 0 1]); axis square; set(gca, <span class="string">'box'</span>, <span class="string">'on'</span>);
+0038 ht = text(0.5, 1.05, <span class="string">'Data'</span>, <span class="string">'horizontalalignment'</span>, <span class="string">'center'</span>);
+0039 disp(<span class="string">' '</span>);
+0040 disp(<span class="string">'Press any key to continue.'</span>)
+0041 pause; clc;
+0042 
+0043 disp(<span class="string">'We next create and initialize a mixture model consisting of a mixture'</span>)
+0044 disp(<span class="string">'of 2 Gaussians having ''spherical'' covariance matrices, using the'</span>)
+0045 disp(<span class="string">'function GMM. The Gaussian components can be displayed on the same'</span>)
+0046 disp(<span class="string">'plot as the data by drawing a contour of constant probability density'</span>)
+0047 disp(<span class="string">'for each component having radius equal to the corresponding standard'</span>)
+0048 disp(<span class="string">'deviation. Component 1 is coloured red and component 2 is coloured'</span>)
+0049 disp(<span class="string">'blue.'</span>)
+0050 disp(<span class="string">' '</span>)
+0051 disp(<span class="string">'Note that a particulary poor choice of initial parameters has been'</span>)
+0052 disp(<span class="string">'made in order to illustrate more effectively the operation of the'</span>)
+0053 disp(<span class="string">'EM algorithm.'</span>)
+0054 disp(<span class="string">' '</span>)
+0055 disp(<span class="string">'Press any key to see the initial configuration of the mixture model.'</span>)
+0056 pause;
+0057 
+0058 <span class="comment">% Set up mixture model</span>
+0059 ncentres = 2; input_dim = 2;
+0060 mix = <a href="gmm.html" class="code" title="function mix = gmm(dim, ncentres, covar_type, ppca_dim)">gmm</a>(input_dim, ncentres, <span class="string">'spherical'</span>);
+0061 
+0062 <span class="comment">% Initialise the mixture model</span>
+0063 mix.centres = [0.2 0.8; 0.8, 0.2];
+0064 mix.covars = [0.01 0.01];
+0065 
+0066 <span class="comment">% Plot the initial model</span>
+0067 ncirc = 30; theta = linspace(0, 2*pi, ncirc);
+0068 xs = cos(theta); ys = sin(theta);
+0069 xvals = mix.centres(:, 1)*ones(1,ncirc) + sqrt(mix.covars')*xs;
+0070 yvals = mix.centres(:, 2)*ones(1,ncirc) + sqrt(mix.covars')*ys;
+0071 hc(1)=line(xvals(1,:), yvals(1,:), <span class="string">'color'</span>, <span class="string">'r'</span>);
+0072 hc(2)=line(xvals(2,:), yvals(2,:), <span class="string">'color'</span>, <span class="string">'b'</span>);
+0073 set(ht, <span class="string">'string'</span>, <span class="string">'Initial Configuration'</span>);
+0074 figure(h);
+0075 disp(<span class="string">' '</span>)
+0076 disp(<span class="string">'Press any key to continue'</span>); 
+0077 pause; clc;
+0078 
+0079 disp(<span class="string">'Now we adapt the parameters of the mixture model iteratively using the'</span>)
+0080 disp(<span class="string">'EM algorithm. Each cycle of the EM algorithm consists of an E-step'</span>)
+0081 disp(<span class="string">'followed by an M-step.  We start with the E-step, which involves the'</span>)
+0082 disp(<span class="string">'evaluation of the posterior probabilities (responsibilities) which the'</span>)
+0083 disp(<span class="string">'two components have for each of the data points.'</span>)
+0084 disp(<span class="string">' '</span>)
+0085 disp(<span class="string">'Since we have labelled the two components using the colours red and'</span>)
+0086 disp(<span class="string">'blue, a convenient way to indicate the value of a posterior'</span>)
+0087 disp(<span class="string">'probability for a given data point is to colour the point using a'</span>)
+0088 disp(<span class="string">'scale ranging from pure red (corresponding to a posterior probability'</span>)
+0089 disp(<span class="string">'of 1.0 for the red component and 0.0 for the blue component) through'</span>)
+0090 disp(<span class="string">'to pure blue.'</span>)
+0091 disp(<span class="string">' '</span>)
+0092 disp(<span class="string">'Press any key to see the result of applying the first E-step.'</span>)
+0093 pause;
+0094 
+0095 <span class="comment">% Initial E-step.</span>
+0096 set(ht, <span class="string">'string'</span>, <span class="string">'E-step'</span>);
+0097 post = <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>(mix, x);
+0098 dcols = [post(:,1), zeros(ndata, 1), post(:,2)];
+0099 delete(hd); 
+0100 <span class="keyword">for</span> i = 1 : ndata
+0101   hd(i) = plot(x(i, 1), x(i, 2), <span class="string">'color'</span>, dcols(i,:), <span class="keyword">...</span>
+0102           <span class="string">'marker'</span>, <span class="string">'.'</span>, <span class="string">'markersize'</span>, 30);
+0103 <span class="keyword">end</span>
+0104 figure(h);
+0105 
+0106 disp(<span class="string">' '</span>);
+0107 disp(<span class="string">'Press any key to continue'</span>)
+0108 pause; clc;
+0109 
+0110 disp(<span class="string">'Next we perform the corresponding M-step. This involves replacing the'</span>)
+0111 disp(<span class="string">'centres of the component Gaussians by the corresponding weighted means'</span>)
+0112 disp(<span class="string">'of the data. Thus the centre of the red component is replaced by the'</span>)
+0113 disp(<span class="string">'mean of the data set, in which each data point is weighted according to'</span>)
+0114 disp(<span class="string">'the amount of red ink (corresponding to the responsibility of'</span>)
+0115 disp(<span class="string">'component 1 for explaining that data point). The variances and mixing'</span>)
+0116 disp(<span class="string">'proportions of the two components are similarly re-estimated.'</span>)
+0117 disp(<span class="string">' '</span>)
+0118 disp(<span class="string">'Press any key to see the result of applying the first M-step.'</span>)
+0119 pause;
+0120 
+0121 <span class="comment">% M-step.</span>
+0122 set(ht, <span class="string">'string'</span>, <span class="string">'M-step'</span>);
+0123 options = foptions; 
+0124 options(14) = 1; <span class="comment">% A single iteration</span>
+0125 options(1) = -1; <span class="comment">% Switch off all messages, including warning</span>
+0126 mix = <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>(mix, x, options);
+0127 delete(hc);
+0128 xvals = mix.centres(:, 1)*ones(1,ncirc) + sqrt(mix.covars')*xs;
+0129 yvals = mix.centres(:, 2)*ones(1,ncirc) + sqrt(mix.covars')*ys;
+0130 hc(1)=line(xvals(1,:), yvals(1,:), <span class="string">'color'</span>, <span class="string">'r'</span>);
+0131 hc(2)=line(xvals(2,:), yvals(2,:), <span class="string">'color'</span>, <span class="string">'b'</span>);
+0132 figure(h);
+0133 disp(<span class="string">' '</span>)
+0134 disp(<span class="string">'Press any key to continue'</span>)
+0135 pause; clc;
+0136 
+0137 disp(<span class="string">'We can continue making alternate E and M steps until the changes in'</span>)
+0138 disp(<span class="string">'the log likelihood at each cycle become sufficiently small.'</span>)
+0139 disp(<span class="string">' '</span>)
+0140 disp(<span class="string">'Press any key to see an animation of a further 9 EM cycles.'</span>)
+0141 pause;
+0142 figure(h);
+0143 
+0144 <span class="comment">% Loop over EM iterations.</span>
+0145 numiters = 9;
+0146 <span class="keyword">for</span> n = 1 : numiters
+0147 
+0148   set(ht, <span class="string">'string'</span>, <span class="string">'E-step'</span>);
+0149   post = <a href="gmmpost.html" class="code" title="function [post, a] = gmmpost(mix, x)">gmmpost</a>(mix, x);
+0150   dcols = [post(:,1), zeros(ndata, 1), post(:,2)];
+0151   delete(hd); 
+0152   <span class="keyword">for</span> i = 1 : ndata
+0153     hd(i) = plot(x(i, 1), x(i, 2), <span class="string">'color'</span>, dcols(i,:), <span class="keyword">...</span>
+0154                  <span class="string">'marker'</span>, <span class="string">'.'</span>, <span class="string">'markersize'</span>, 30);
+0155   <span class="keyword">end</span>
+0156   pause(1)
+0157 
+0158   set(ht, <span class="string">'string'</span>, <span class="string">'M-step'</span>);
+0159   [mix, options] = <a href="gmmem.html" class="code" title="function [mix, options, errlog] = gmmem(mix, x, options)">gmmem</a>(mix, x, options);
+0160   fprintf(1, <span class="string">'Cycle %4d  Error %11.6f\n'</span>, n, options(8));
+0161   delete(hc);
+0162   xvals = mix.centres(:, 1)*ones(1,ncirc) + sqrt(mix.covars')*xs;
+0163   yvals = mix.centres(:, 2)*ones(1,ncirc) + sqrt(mix.covars')*ys;
+0164   hc(1)=line(xvals(1,:), yvals(1,:), <span class="string">'color'</span>, <span class="string">'r'</span>);
+0165   hc(2)=line(xvals(2,:), yvals(2,:), <span class="string">'color'</span>, <span class="string">'b'</span>);
+0166   pause(1)
+0167 
+0168 <span class="keyword">end</span>
+0169 
+0170 disp(<span class="string">' '</span>);
+0171 disp(<span class="string">'Press any key to end.'</span>)
+0172 pause; clc; close(h); clear all
+0173</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

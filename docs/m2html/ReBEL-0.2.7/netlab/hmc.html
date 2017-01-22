@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hmc</title>
+  <meta name="keywords" content="hmc">
+  <meta name="description" content="HMC	Hybrid Monte Carlo sampling.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; hmc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>hmc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>HMC	Hybrid Monte Carlo sampling.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HMC    Hybrid Monte Carlo sampling.
+
+    Description
+    SAMPLES = HMC(F, X, OPTIONS, GRADF) uses a  hybrid Monte Carlo
+    algorithm to sample from the distribution P ~ EXP(-F), where F is the
+    first argument to HMC. The Markov chain starts at the point X, and
+    the function GRADF is the gradient of the `energy' function F.
+
+    HMC(F, X, OPTIONS, GRADF, P1, P2, ...) allows additional arguments to
+    be passed to F() and GRADF().
+
+    [SAMPLES, ENERGIES, DIAGN] = HMC(F, X, OPTIONS, GRADF) also returns a
+    log of the energy values (i.e. negative log probabilities) for the
+    samples in ENERGIES and DIAGN, a structure containing diagnostic
+    information (position, momentum and acceptance threshold) for each
+    step of the chain in DIAGN.POS, DIAGN.MOM and DIAGN.ACC respectively.
+    All candidate states (including rejected ones) are stored in
+    DIAGN.POS.
+
+    [SAMPLES, ENERGIES, DIAGN] = HMC(F, X, OPTIONS, GRADF) also returns
+    the ENERGIES (i.e. negative log probabilities) corresponding to the
+    samples.  The DIAGN structure contains three fields:
+
+    POS the position vectors of the dynamic process.
+
+    MOM the momentum vectors of the dynamic process.
+
+    ACC the acceptance thresholds.
+
+    S = HMC('STATE') returns a state structure that contains the state of
+    the two random number generators RAND and RANDN and the momentum of
+    the dynamic process.  These are contained in fields  randstate,
+    randnstate and mom respectively.  The momentum state is only used for
+    a persistent momentum update.
+
+    HMC('STATE', S) resets the state to S.  If S is an integer, then it
+    is passed to RAND and RANDN and the momentum variable is randomised.
+    If S is a structure returned by HMC('STATE') then it resets the
+    generator to exactly the same state.
+
+    The optional parameters in the OPTIONS vector have the following
+    interpretations.
+
+    OPTIONS(1) is set to 1 to display the energy values and rejection
+    threshold at each step of the Markov chain. If the value is 2, then
+    the position vectors at each step are also displayed.
+
+    OPTIONS(5) is set to 1 if momentum persistence is used; default 0,
+    for complete replacement of momentum variables.
+
+    OPTIONS(7) defines the trajectory length (i.e. the number of leap-
+    frog steps at each iteration).  Minimum value 1.
+
+    OPTIONS(9) is set to 1 to check the user defined gradient function.
+
+    OPTIONS(14) is the number of samples retained from the Markov chain;
+    default 100.
+
+    OPTIONS(15) is the number of samples omitted from the start of the
+    chain; default 0.
+
+    OPTIONS(17) defines the momentum used when a persistent update of
+    (leap-frog) momentum is used.  This is bounded to the interval [0,
+    1).
+
+    OPTIONS(18) is the step size used in leap-frogs; default 1/trajectory
+    length.
+
+    See also
+    <a href="metrop.html" class="code" title="function [samples, energies, diagn] = metrop(f, x, options, gradf, varargin)">METROP</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demhmc1.html" class="code" title="">demhmc1</a>	DEMHMC1 Demonstrate Hybrid Monte Carlo sampling on mixture of two Gaussians.</li><li><a href="demhmc2.html" class="code" title="">demhmc2</a>	DEMHMC2 Demonstrate Bayesian regression with Hybrid Monte Carlo sampling.</li><li><a href="demhmc3.html" class="code" title="">demhmc3</a>	DEMHMC3 Demonstrate Bayesian regression with Hybrid Monte Carlo sampling.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function state = get_state(f)</a></li><li><a href="#_sub2" class="code">function set_state(f, x)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [samples, energies, diagn] = hmc(f, x, options, gradf, varargin)</a>
+0002 <span class="comment">%HMC    Hybrid Monte Carlo sampling.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    SAMPLES = HMC(F, X, OPTIONS, GRADF) uses a  hybrid Monte Carlo</span>
+0006 <span class="comment">%    algorithm to sample from the distribution P ~ EXP(-F), where F is the</span>
+0007 <span class="comment">%    first argument to HMC. The Markov chain starts at the point X, and</span>
+0008 <span class="comment">%    the function GRADF is the gradient of the `energy' function F.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    HMC(F, X, OPTIONS, GRADF, P1, P2, ...) allows additional arguments to</span>
+0011 <span class="comment">%    be passed to F() and GRADF().</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    [SAMPLES, ENERGIES, DIAGN] = HMC(F, X, OPTIONS, GRADF) also returns a</span>
+0014 <span class="comment">%    log of the energy values (i.e. negative log probabilities) for the</span>
+0015 <span class="comment">%    samples in ENERGIES and DIAGN, a structure containing diagnostic</span>
+0016 <span class="comment">%    information (position, momentum and acceptance threshold) for each</span>
+0017 <span class="comment">%    step of the chain in DIAGN.POS, DIAGN.MOM and DIAGN.ACC respectively.</span>
+0018 <span class="comment">%    All candidate states (including rejected ones) are stored in</span>
+0019 <span class="comment">%    DIAGN.POS.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%    [SAMPLES, ENERGIES, DIAGN] = HMC(F, X, OPTIONS, GRADF) also returns</span>
+0022 <span class="comment">%    the ENERGIES (i.e. negative log probabilities) corresponding to the</span>
+0023 <span class="comment">%    samples.  The DIAGN structure contains three fields:</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%    POS the position vectors of the dynamic process.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%    MOM the momentum vectors of the dynamic process.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%    ACC the acceptance thresholds.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%    S = HMC('STATE') returns a state structure that contains the state of</span>
+0032 <span class="comment">%    the two random number generators RAND and RANDN and the momentum of</span>
+0033 <span class="comment">%    the dynamic process.  These are contained in fields  randstate,</span>
+0034 <span class="comment">%    randnstate and mom respectively.  The momentum state is only used for</span>
+0035 <span class="comment">%    a persistent momentum update.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%    HMC('STATE', S) resets the state to S.  If S is an integer, then it</span>
+0038 <span class="comment">%    is passed to RAND and RANDN and the momentum variable is randomised.</span>
+0039 <span class="comment">%    If S is a structure returned by HMC('STATE') then it resets the</span>
+0040 <span class="comment">%    generator to exactly the same state.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%    The optional parameters in the OPTIONS vector have the following</span>
+0043 <span class="comment">%    interpretations.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%    OPTIONS(1) is set to 1 to display the energy values and rejection</span>
+0046 <span class="comment">%    threshold at each step of the Markov chain. If the value is 2, then</span>
+0047 <span class="comment">%    the position vectors at each step are also displayed.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%    OPTIONS(5) is set to 1 if momentum persistence is used; default 0,</span>
+0050 <span class="comment">%    for complete replacement of momentum variables.</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">%    OPTIONS(7) defines the trajectory length (i.e. the number of leap-</span>
+0053 <span class="comment">%    frog steps at each iteration).  Minimum value 1.</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%    OPTIONS(9) is set to 1 to check the user defined gradient function.</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">%    OPTIONS(14) is the number of samples retained from the Markov chain;</span>
+0058 <span class="comment">%    default 100.</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">%    OPTIONS(15) is the number of samples omitted from the start of the</span>
+0061 <span class="comment">%    chain; default 0.</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">%    OPTIONS(17) defines the momentum used when a persistent update of</span>
+0064 <span class="comment">%    (leap-frog) momentum is used.  This is bounded to the interval [0,</span>
+0065 <span class="comment">%    1).</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">%    OPTIONS(18) is the step size used in leap-frogs; default 1/trajectory</span>
+0068 <span class="comment">%    length.</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">%    See also</span>
+0071 <span class="comment">%    METROP</span>
+0072 <span class="comment">%</span>
+0073 
+0074 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0075 
+0076 <span class="comment">% Global variable to store state of momentum variables: set by set_state</span>
+0077 <span class="comment">% Used to initialise variable if set</span>
+0078 <span class="keyword">global</span> HMC_MOM
+0079 <span class="keyword">if</span> nargin &lt;= 2
+0080   <span class="keyword">if</span> ~strcmp(f, <span class="string">'state'</span>)
+0081     error(<span class="string">'Unknown argument to hmc'</span>);
+0082   <span class="keyword">end</span>
+0083   <span class="keyword">switch</span> nargin
+0084     <span class="keyword">case</span> 1
+0085       samples = <a href="#_sub1" class="code" title="subfunction state = get_state(f)">get_state</a>(f);
+0086       <span class="keyword">return</span>;
+0087     <span class="keyword">case</span> 2
+0088       <a href="#_sub2" class="code" title="subfunction set_state(f, x)">set_state</a>(f, x);
+0089       <span class="keyword">return</span>;
+0090   <span class="keyword">end</span>
+0091 <span class="keyword">end</span>
+0092 
+0093 display = options(1);
+0094 <span class="keyword">if</span> (round(options(5) == 1))
+0095   persistence = 1;
+0096   <span class="comment">% Set alpha to lie in [0, 1)</span>
+0097   alpha = max(0, options(17));
+0098   alpha = min(1, alpha);
+0099   salpha = sqrt(1-alpha*alpha);
+0100 <span class="keyword">else</span>
+0101   persistence = 0;
+0102 <span class="keyword">end</span>
+0103 L = max(1, options(7)); <span class="comment">% At least one step in leap-frogging</span>
+0104 <span class="keyword">if</span> options(14) &gt; 0
+0105   nsamples = options(14);
+0106 <span class="keyword">else</span>
+0107   nsamples = 100;    <span class="comment">% Default</span>
+0108 <span class="keyword">end</span>
+0109 <span class="keyword">if</span> options(15) &gt;= 0
+0110   nomit = options(15);
+0111 <span class="keyword">else</span>
+0112   nomit = 0;
+0113 <span class="keyword">end</span>
+0114 <span class="keyword">if</span> options(18) &gt; 0
+0115   step_size = options(18);    <span class="comment">% Step size.</span>
+0116 <span class="keyword">else</span>
+0117   step_size = 1/L;        <span class="comment">% Default</span>
+0118 <span class="keyword">end</span>
+0119 x = x(:)';        <span class="comment">% Force x to be a row vector</span>
+0120 nparams = length(x);
+0121 
+0122 <span class="comment">% Set up strings for evaluating potential function and its gradient.</span>
+0123 f = fcnchk(f, length(varargin));
+0124 gradf = fcnchk(gradf, length(varargin));
+0125 
+0126 <span class="comment">% Check the gradient evaluation.</span>
+0127 <span class="keyword">if</span> (options(9))
+0128   <span class="comment">% Check gradients</span>
+0129   feval(<span class="string">'gradchek'</span>, x, f, gradf, varargin{:});
+0130 <span class="keyword">end</span>
+0131 
+0132 samples = zeros(nsamples, nparams);    <span class="comment">% Matrix of returned samples.</span>
+0133 <span class="keyword">if</span> nargout &gt;= 2
+0134   en_save = 1;
+0135   energies = zeros(nsamples, 1);
+0136 <span class="keyword">else</span>
+0137   en_save = 0;
+0138 <span class="keyword">end</span>
+0139 <span class="keyword">if</span> nargout &gt;= 3
+0140   diagnostics = 1;
+0141   diagn_pos = zeros(nsamples, nparams);
+0142   diagn_mom = zeros(nsamples, nparams);
+0143   diagn_acc = zeros(nsamples, 1);
+0144 <span class="keyword">else</span>
+0145   diagnostics = 0;
+0146 <span class="keyword">end</span>
+0147 
+0148 n = - nomit + 1;
+0149 Eold = feval(f, x, varargin{:});    <span class="comment">% Evaluate starting energy.</span>
+0150 nreject = 0;
+0151 <span class="keyword">if</span> (~persistence | isempty(HMC_MOM))
+0152   p = randn(1, nparams);        <span class="comment">% Initialise momenta at random</span>
+0153 <span class="keyword">else</span>
+0154   p = HMC_MOM;                <span class="comment">% Initialise momenta from stored state</span>
+0155 <span class="keyword">end</span>
+0156 lambda = 1;
+0157 
+0158 <span class="comment">% Main loop.</span>
+0159 <span class="keyword">while</span> n &lt;= nsamples
+0160 
+0161   xold = x;            <span class="comment">% Store starting position.</span>
+0162   pold = p;            <span class="comment">% Store starting momenta</span>
+0163   Hold = Eold + 0.5*(p*p'); <span class="comment">% Recalculate Hamiltonian as momenta have changed</span>
+0164 
+0165   <span class="keyword">if</span> ~persistence
+0166     <span class="comment">% Choose a direction at random</span>
+0167     <span class="keyword">if</span> (rand &lt; 0.5)
+0168       lambda = -1;
+0169     <span class="keyword">else</span>
+0170       lambda = 1;
+0171     <span class="keyword">end</span>
+0172   <span class="keyword">end</span>
+0173   <span class="comment">% Perturb step length.</span>
+0174   epsilon = lambda*step_size*(1.0 + 0.1*randn(1));
+0175 
+0176   <span class="comment">% First half-step of leapfrog.</span>
+0177   p = p - 0.5*epsilon*feval(gradf, x, varargin{:});
+0178   x = x + epsilon*p;
+0179   
+0180   <span class="comment">% Full leapfrog steps.</span>
+0181   <span class="keyword">for</span> m = 1 : L - 1
+0182     p = p - epsilon*feval(gradf, x, varargin{:});
+0183     x = x + epsilon*p;
+0184   <span class="keyword">end</span>
+0185 
+0186   <span class="comment">% Final half-step of leapfrog.</span>
+0187   p = p - 0.5*epsilon*feval(gradf, x, varargin{:});
+0188 
+0189   <span class="comment">% Now apply Metropolis algorithm.</span>
+0190   Enew = feval(f, x, varargin{:});    <span class="comment">% Evaluate new energy.</span>
+0191   p = -p;                <span class="comment">% Negate momentum</span>
+0192   Hnew = Enew + 0.5*p*p';        <span class="comment">% Evaluate new Hamiltonian.</span>
+0193   a = exp(Hold - Hnew);            <span class="comment">% Acceptance threshold.</span>
+0194   <span class="keyword">if</span> (diagnostics &amp; n &gt; 0)
+0195     diagn_pos(n,:) = x;
+0196     diagn_mom(n,:) = p;
+0197     diagn_acc(n,:) = a;
+0198   <span class="keyword">end</span>
+0199   <span class="keyword">if</span> (display &gt; 1)
+0200     fprintf(1, <span class="string">'New position is\n'</span>);
+0201     disp(x);
+0202   <span class="keyword">end</span>
+0203 
+0204   <span class="keyword">if</span> a &gt; rand(1)            <span class="comment">% Accept the new state.</span>
+0205     Eold = Enew;            <span class="comment">% Update energy</span>
+0206     <span class="keyword">if</span> (display &gt; 0)
+0207       fprintf(1, <span class="string">'Finished step %4d  Threshold: %g\n'</span>, n, a);
+0208     <span class="keyword">end</span>
+0209   <span class="keyword">else</span>                    <span class="comment">% Reject the new state.</span>
+0210     <span class="keyword">if</span> n &gt; 0 
+0211       nreject = nreject + 1;
+0212     <span class="keyword">end</span>
+0213     x = xold;                <span class="comment">% Reset position</span>
+0214     p = pold;               <span class="comment">% Reset momenta</span>
+0215     <span class="keyword">if</span> (display &gt; 0)
+0216       fprintf(1, <span class="string">'  Sample rejected %4d.  Threshold: %g\n'</span>, n, a);
+0217     <span class="keyword">end</span>
+0218   <span class="keyword">end</span>
+0219   <span class="keyword">if</span> n &gt; 0
+0220     samples(n,:) = x;            <span class="comment">% Store sample.</span>
+0221     <span class="keyword">if</span> en_save 
+0222       energies(n) = Eold;        <span class="comment">% Store energy.</span>
+0223     <span class="keyword">end</span>
+0224   <span class="keyword">end</span>
+0225 
+0226   <span class="comment">% Set momenta for next iteration</span>
+0227   <span class="keyword">if</span> persistence
+0228     p = -p;
+0229     <span class="comment">% Adjust momenta by a small random amount.</span>
+0230     p = alpha.*p + salpha.*randn(1, nparams);
+0231   <span class="keyword">else</span>
+0232     p = randn(1, nparams);    <span class="comment">% Replace all momenta.</span>
+0233   <span class="keyword">end</span>
+0234 
+0235   n = n + 1;
+0236 <span class="keyword">end</span>
+0237 
+0238 <span class="keyword">if</span> (display &gt; 0)
+0239   fprintf(1, <span class="string">'\nFraction of samples rejected:  %g\n'</span>, <span class="keyword">...</span>
+0240     nreject/(nsamples));
+0241 <span class="keyword">end</span>
+0242 <span class="keyword">if</span> diagnostics
+0243   diagn.pos = diagn_pos;
+0244   diagn.mom = diagn_mom;
+0245   diagn.acc = diagn_acc;
+0246 <span class="keyword">end</span>
+0247 <span class="comment">% Store final momentum value in global so that it can be retrieved later</span>
+0248 HMC_MOM = p;
+0249 <span class="keyword">return</span>
+0250 
+0251 <span class="comment">% Return complete state of sampler (including momentum)</span>
+0252 <a name="_sub1" href="#_subfunctions" class="code">function state = get_state(f)</a>
+0253 
+0254 <span class="keyword">global</span> HMC_MOM
+0255 state.randstate = rand(<span class="string">'state'</span>);
+0256 state.randnstate = randn(<span class="string">'state'</span>);
+0257 state.mom = HMC_MOM;
+0258 <span class="keyword">return</span>
+0259 
+0260 <span class="comment">% Set complete state of sampler (including momentum) or just set randn</span>
+0261 <span class="comment">% and rand with integer argument.</span>
+0262 <a name="_sub2" href="#_subfunctions" class="code">function set_state(f, x)</a>
+0263 
+0264 <span class="keyword">global</span> HMC_MOM
+0265 <span class="keyword">if</span> isnumeric(x)
+0266   rand(<span class="string">'state'</span>, x);
+0267   randn(<span class="string">'state'</span>, x);
+0268   HMC_MOM = [];
+0269 <span class="keyword">else</span>
+0270   <span class="keyword">if</span> ~isstruct(x)
+0271     error(<span class="string">'Second argument to hmc must be number or state structure'</span>);
+0272   <span class="keyword">end</span>
+0273   <span class="keyword">if</span> (~isfield(x, <span class="string">'randstate'</span>) | ~isfield(x, <span class="string">'randnstate'</span>) <span class="keyword">...</span>
+0274       | ~isfield(x, <span class="string">'mom'</span>))
+0275     error(<span class="string">'Second argument to hmc must contain correct fields'</span>)
+0276   <span class="keyword">end</span>
+0277   rand(<span class="string">'state'</span>, x.randstate);
+0278   randn(<span class="string">'state'</span>, x.randnstate);
+0279   HMC_MOM = x.mom;
+0280 <span class="keyword">end</span>
+0281 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of scg</title>
+  <meta name="keywords" content="scg">
+  <meta name="description" content="SCG	Scaled conjugate gradient optimization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; scg.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>scg
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>SCG	Scaled conjugate gradient optimization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SCG    Scaled conjugate gradient optimization.
+
+    Description
+    [X, OPTIONS] = SCG(F, X, OPTIONS, GRADF) uses a scaled conjugate
+    gradients algorithm to find a local minimum of the function F(X)
+    whose gradient is given by GRADF(X).  Here X is a row vector and F
+    returns a scalar value. The point at which F has a local minimum is
+    returned as X.  The function value at that point is returned in
+    OPTIONS(8).
+
+    [X, OPTIONS, FLOG, POINTLOG, SCALELOG] = SCG(F, X, OPTIONS, GRADF)
+    also returns (optionally) a log of the function values after each
+    cycle in FLOG, a log of the points visited in POINTLOG, and a log of
+    the scale values in the algorithm in SCALELOG.
+
+    SCG(F, X, OPTIONS, GRADF, P1, P2, ...) allows additional arguments to
+    be passed to F() and GRADF().     The optional parameters have the
+    following interpretations.
+
+    OPTIONS(1) is set to 1 to display error values; also logs error
+    values in the return argument ERRLOG, and the points visited in the
+    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only
+    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is
+    displayed.
+
+    OPTIONS(2) is a measure of the absolute precision required for the
+    value of X at the solution.  If the absolute difference between the
+    values of X between two successive steps is less than OPTIONS(2),
+    then this condition is satisfied.
+
+    OPTIONS(3) is a measure of the precision required of the objective
+    function at the solution.  If the absolute difference between the
+    objective function values between two successive steps is less than
+    OPTIONS(3), then this condition is satisfied. Both this and the
+    previous condition must be satisfied for termination.
+
+    OPTIONS(9) is set to 1 to check the user defined gradient function.
+
+    OPTIONS(10) returns the total number of function evaluations
+    (including those in any line searches).
+
+    OPTIONS(11) returns the total number of gradient evaluations.
+
+    OPTIONS(14) is the maximum number of iterations; default 100.
+
+    See also
+    <a href="conjgrad.html" class="code" title="function [x, options, flog, pointlog] = conjgrad(f, x, options, gradf,varargin)">CONJGRAD</a>, <a href="quasinew.html" class="code" title="function [x, options, flog, pointlog] = quasinew(f, x, options, gradf,varargin)">QUASINEW</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>	MAXITMESS Create a standard error message when training reaches max. iterations.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demopt1.html" class="code" title="function demopt1(xinit)">demopt1</a>	DEMOPT1 Demonstrate different optimisers on Rosenbrock's function.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x, options, flog, pointlog, scalelog] = scg(f, x, options, gradf, varargin)</a>
+0002 <span class="comment">%SCG    Scaled conjugate gradient optimization.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    [X, OPTIONS] = SCG(F, X, OPTIONS, GRADF) uses a scaled conjugate</span>
+0006 <span class="comment">%    gradients algorithm to find a local minimum of the function F(X)</span>
+0007 <span class="comment">%    whose gradient is given by GRADF(X).  Here X is a row vector and F</span>
+0008 <span class="comment">%    returns a scalar value. The point at which F has a local minimum is</span>
+0009 <span class="comment">%    returned as X.  The function value at that point is returned in</span>
+0010 <span class="comment">%    OPTIONS(8).</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    [X, OPTIONS, FLOG, POINTLOG, SCALELOG] = SCG(F, X, OPTIONS, GRADF)</span>
+0013 <span class="comment">%    also returns (optionally) a log of the function values after each</span>
+0014 <span class="comment">%    cycle in FLOG, a log of the points visited in POINTLOG, and a log of</span>
+0015 <span class="comment">%    the scale values in the algorithm in SCALELOG.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    SCG(F, X, OPTIONS, GRADF, P1, P2, ...) allows additional arguments to</span>
+0018 <span class="comment">%    be passed to F() and GRADF().     The optional parameters have the</span>
+0019 <span class="comment">%    following interpretations.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%    OPTIONS(1) is set to 1 to display error values; also logs error</span>
+0022 <span class="comment">%    values in the return argument ERRLOG, and the points visited in the</span>
+0023 <span class="comment">%    return argument POINTSLOG.  If OPTIONS(1) is set to 0, then only</span>
+0024 <span class="comment">%    warning messages are displayed.  If OPTIONS(1) is -1, then nothing is</span>
+0025 <span class="comment">%    displayed.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%    OPTIONS(2) is a measure of the absolute precision required for the</span>
+0028 <span class="comment">%    value of X at the solution.  If the absolute difference between the</span>
+0029 <span class="comment">%    values of X between two successive steps is less than OPTIONS(2),</span>
+0030 <span class="comment">%    then this condition is satisfied.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%    OPTIONS(3) is a measure of the precision required of the objective</span>
+0033 <span class="comment">%    function at the solution.  If the absolute difference between the</span>
+0034 <span class="comment">%    objective function values between two successive steps is less than</span>
+0035 <span class="comment">%    OPTIONS(3), then this condition is satisfied. Both this and the</span>
+0036 <span class="comment">%    previous condition must be satisfied for termination.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%    OPTIONS(9) is set to 1 to check the user defined gradient function.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%    OPTIONS(10) returns the total number of function evaluations</span>
+0041 <span class="comment">%    (including those in any line searches).</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%    OPTIONS(11) returns the total number of gradient evaluations.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%    OPTIONS(14) is the maximum number of iterations; default 100.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%    See also</span>
+0048 <span class="comment">%    CONJGRAD, QUASINEW</span>
+0049 <span class="comment">%</span>
+0050 
+0051 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0052 
+0053 <span class="comment">%  Set up the options.</span>
+0054 <span class="keyword">if</span> length(options) &lt; 18
+0055   error(<span class="string">'Options vector too short'</span>)
+0056 <span class="keyword">end</span>
+0057 
+0058 <span class="keyword">if</span>(options(14))
+0059   niters = options(14);
+0060 <span class="keyword">else</span>
+0061   niters = 100;
+0062 <span class="keyword">end</span>
+0063 
+0064 display = options(1);
+0065 gradcheck = options(9);
+0066 
+0067 <span class="comment">% Set up strings for evaluating function and gradient</span>
+0068 f = fcnchk(f, length(varargin));
+0069 gradf = fcnchk(gradf, length(varargin));
+0070 
+0071 nparams = length(x);
+0072 
+0073 <span class="comment">%  Check gradients</span>
+0074 <span class="keyword">if</span> (gradcheck)
+0075   feval(<span class="string">'gradchek'</span>, x, f, gradf, varargin{:});
+0076 <span class="keyword">end</span>
+0077 
+0078 sigma0 = 1.0e-4;
+0079 fold = feval(f, x, varargin{:});    <span class="comment">% Initial function value.</span>
+0080 fnow = fold;
+0081 options(10) = options(10) + 1;        <span class="comment">% Increment function evaluation counter.</span>
+0082 gradnew = feval(gradf, x, varargin{:});    <span class="comment">% Initial gradient.</span>
+0083 gradold = gradnew;
+0084 options(11) = options(11) + 1;        <span class="comment">% Increment gradient evaluation counter.</span>
+0085 d = -gradnew;                <span class="comment">% Initial search direction.</span>
+0086 success = 1;                <span class="comment">% Force calculation of directional derivs.</span>
+0087 nsuccess = 0;                <span class="comment">% nsuccess counts number of successes.</span>
+0088 beta = 1.0;                <span class="comment">% Initial scale parameter.</span>
+0089 betamin = 1.0e-15;             <span class="comment">% Lower bound on scale.</span>
+0090 betamax = 1.0e100;            <span class="comment">% Upper bound on scale.</span>
+0091 j = 1;                    <span class="comment">% j counts number of iterations.</span>
+0092 <span class="keyword">if</span> nargout &gt;= 3
+0093   flog(j, :) = fold;
+0094   <span class="keyword">if</span> nargout == 4
+0095     pointlog(j, :) = x;
+0096   <span class="keyword">end</span>
+0097 <span class="keyword">end</span>
+0098 
+0099 <span class="comment">% Main optimization loop.</span>
+0100 <span class="keyword">while</span> (j &lt;= niters)
+0101 
+0102   <span class="comment">% Calculate first and second directional derivatives.</span>
+0103   <span class="keyword">if</span> (success == 1)
+0104     mu = d*gradnew';
+0105     <span class="keyword">if</span> (mu &gt;= 0)
+0106       d = - gradnew;
+0107       mu = d*gradnew';
+0108     <span class="keyword">end</span>
+0109     kappa = d*d';
+0110     <span class="keyword">if</span> kappa &lt; eps
+0111       options(8) = fnow;
+0112       <span class="keyword">return</span>
+0113     <span class="keyword">end</span>
+0114     sigma = sigma0/sqrt(kappa);
+0115     xplus = x + sigma*d;
+0116     gplus = feval(gradf, xplus, varargin{:});
+0117     options(11) = options(11) + 1; 
+0118     theta = (d*(gplus' - gradnew'))/sigma;
+0119   <span class="keyword">end</span>
+0120 
+0121   <span class="comment">% Increase effective curvature and evaluate step size alpha.</span>
+0122   delta = theta + beta*kappa;
+0123   <span class="keyword">if</span> (delta &lt;= 0) 
+0124     delta = beta*kappa;
+0125     beta = beta - theta/kappa;
+0126   <span class="keyword">end</span>
+0127   alpha = - mu/delta;
+0128   
+0129   <span class="comment">% Calculate the comparison ratio.</span>
+0130   xnew = x + alpha*d;
+0131   fnew = feval(f, xnew, varargin{:});
+0132   options(10) = options(10) + 1;
+0133   Delta = 2*(fnew - fold)/(alpha*mu);
+0134   <span class="keyword">if</span> (Delta  &gt;= 0)
+0135     success = 1;
+0136     nsuccess = nsuccess + 1;
+0137     x = xnew;
+0138     fnow = fnew;
+0139   <span class="keyword">else</span>
+0140     success = 0;
+0141     fnow = fold;
+0142   <span class="keyword">end</span>
+0143 
+0144   <span class="keyword">if</span> nargout &gt;= 3
+0145     <span class="comment">% Store relevant variables</span>
+0146     flog(j) = fnow;        <span class="comment">% Current function value</span>
+0147     <span class="keyword">if</span> nargout &gt;= 4
+0148       pointlog(j,:) = x;    <span class="comment">% Current position</span>
+0149       <span class="keyword">if</span> nargout &gt;= 5
+0150     scalelog(j) = beta;    <span class="comment">% Current scale parameter</span>
+0151       <span class="keyword">end</span>
+0152     <span class="keyword">end</span>
+0153   <span class="keyword">end</span>    
+0154   <span class="keyword">if</span> display &gt; 0
+0155     fprintf(1, <span class="string">'Cycle %4d  Error %11.6f  Scale %e\n'</span>, j, fnow, beta);
+0156   <span class="keyword">end</span>
+0157 
+0158   <span class="keyword">if</span> (success == 1)
+0159     <span class="comment">% Test for termination</span>
+0160 
+0161     <span class="keyword">if</span> (max(abs(alpha*d)) &lt; options(2) &amp; max(abs(fnew-fold)) &lt; options(3))
+0162       options(8) = fnew;
+0163       <span class="keyword">return</span>;
+0164 
+0165     <span class="keyword">else</span>
+0166       <span class="comment">% Update variables for new position</span>
+0167       fold = fnew;
+0168       gradold = gradnew;
+0169       gradnew = feval(gradf, x, varargin{:});
+0170       options(11) = options(11) + 1;
+0171       <span class="comment">% If the gradient is zero then we are done.</span>
+0172       <span class="keyword">if</span> (gradnew*gradnew' == 0)
+0173     options(8) = fnew;
+0174     <span class="keyword">return</span>;
+0175       <span class="keyword">end</span>
+0176     <span class="keyword">end</span>
+0177   <span class="keyword">end</span>
+0178 
+0179   <span class="comment">% Adjust beta according to comparison ratio.</span>
+0180   <span class="keyword">if</span> (Delta &lt; 0.25)
+0181     beta = min(4.0*beta, betamax);
+0182   <span class="keyword">end</span>
+0183   <span class="keyword">if</span> (Delta &gt; 0.75)
+0184     beta = max(0.5*beta, betamin);
+0185   <span class="keyword">end</span>
+0186 
+0187   <span class="comment">% Update search direction using Polak-Ribiere formula, or re-start</span>
+0188   <span class="comment">% in direction of negative gradient after nparams steps.</span>
+0189   <span class="keyword">if</span> (nsuccess == nparams)
+0190     d = -gradnew;
+0191     nsuccess = 0;
+0192   <span class="keyword">else</span>
+0193     <span class="keyword">if</span> (success == 1)
+0194       gamma = (gradold - gradnew)*gradnew'/(mu);
+0195       d = gamma*d - gradnew;
+0196     <span class="keyword">end</span>
+0197   <span class="keyword">end</span>
+0198   j = j + 1;
+0199 <span class="keyword">end</span>
+0200 
+0201 <span class="comment">% If we get here, then we haven't terminated in the given number of</span>
+0202 <span class="comment">% iterations.</span>
+0203 
+0204 options(8) = fold;
+0205 <span class="keyword">if</span> (options(1) &gt;= 0)
+0206   disp(<a href="maxitmess.html" class="code" title="function s = maxitmess()">maxitmess</a>);
+0207 <span class="keyword">end</span>
+0208</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

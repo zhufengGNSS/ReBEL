@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demse3</title>
+  <meta name="keywords" content="demse3">
+  <meta name="description" content="DEMSE3  Demonstrate nonlinear time series state estimation for Mackey-Glass chaotic time series">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">examples</a> &gt; <a href="#">state_estimation</a> &gt; demse3.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../menu.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\examples\state_estimation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>demse3
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DEMSE3  Demonstrate nonlinear time series state estimation for Mackey-Glass chaotic time series</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DEMSE3  Demonstrate nonlinear time series state estimation for Mackey-Glass chaotic time series
+
+  The Mackey-Glass time-delay differential equation is defined by
+
+            dx(t)/dt = 0.2x(t-tau)/(1+x(t-tau)^10) - 0.1x(t)
+
+  When x(0) = 1.2 and tau = 17, we have a non-periodic and non-convergent time series that
+  is very sensitive to initial conditions. (We assume x(t) = 0 when t &lt; 0.)
+
+  We assume that the chaotic time series is generated with by a nonlinear autoregressive
+  model where the nonlinear functional unit is a feedforward neural network. We use a
+  tap length of 6 and a 6-4-1 MLP neural network (using the Netlab toolkit) with hyperbolic
+  tangent activation functions in the hidden layer and a linear output activation.
+
+   See also
+   GSSM_MACKEY_GLASS, <a href="demse1.html" class="code" title="">DEMSE1</a>, <a href="demse2.html" class="code" title="">DEMSE2</a>
+   Copyright (c) Oregon Health &amp; Science University (2006)
+
+   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for
+   academic use only (see included license file) and can be obtained from
+   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the
+   software should contact rebel@csee.ogi.edu for commercial licensing information.
+
+   See LICENSE (which should be part of the main toolkit distribution) for more
+   detail.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>	ADDRELPATH  Add a relative path which gets expanded into a absolute path</li><li><a href="../../.././ReBEL-0.2.7/core/cdkf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = cdkf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">cdkf</a>	CDKF  Central Difference Kalman Filter  (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/core/datamat.html" class="code" title="function dm=datamat(x,M)">datamat</a>	DATAMAT  Packs a vector of data (length N) into a data matrix of dimension M-by-(N-M+1)</li><li><a href="../../.././ReBEL-0.2.7/core/ekf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ekf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ekf</a>	EKF  Extended Kalman Filter</li><li><a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>	GENINFDS  Generate inference data structure from a generalized state space model and user defined inference parameters.</li><li><a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>	GENSYSNOISEDS  Generate process and observation noise data structures for a given InferenceDS data structure</li><li><a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>	REMRELPATH  Remove a relative path (which gets expanded into a absolute path)</li><li><a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>	SRCDKF  Square Root Central Difference Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/core/srukf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srukf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srukf</a>	SRUKF  Square Root Unscented Kalman Filter (Sigma-Point Kalman Filter variant)</li><li><a href="../../.././ReBEL-0.2.7/core/ukf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ukf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ukf</a>	UKF  Unscented Kalman Filter</li><li><a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_mackey_glass.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_mackey_glass</a>	GSSM_MACKEY_GLASS  Generalized state space model for Mackey-Glass chaotic time series</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% DEMSE3  Demonstrate nonlinear time series state estimation for Mackey-Glass chaotic time series</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%  The Mackey-Glass time-delay differential equation is defined by</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%            dx(t)/dt = 0.2x(t-tau)/(1+x(t-tau)^10) - 0.1x(t)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%  When x(0) = 1.2 and tau = 17, we have a non-periodic and non-convergent time series that</span>
+0008 <span class="comment">%  is very sensitive to initial conditions. (We assume x(t) = 0 when t &lt; 0.)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  We assume that the chaotic time series is generated with by a nonlinear autoregressive</span>
+0011 <span class="comment">%  model where the nonlinear functional unit is a feedforward neural network. We use a</span>
+0012 <span class="comment">%  tap length of 6 and a 6-4-1 MLP neural network (using the Netlab toolkit) with hyperbolic</span>
+0013 <span class="comment">%  tangent activation functions in the hidden layer and a linear output activation.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   See also</span>
+0016 <span class="comment">%   GSSM_MACKEY_GLASS, DEMSE1, DEMSE2</span>
+0017 <span class="comment">%   Copyright (c) Oregon Health &amp; Science University (2006)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   This file is part of the ReBEL Toolkit. The ReBEL Toolkit is available free for</span>
+0020 <span class="comment">%   academic use only (see included license file) and can be obtained from</span>
+0021 <span class="comment">%   http://choosh.csee.ogi.edu/rebel/.  Businesses wishing to obtain a copy of the</span>
+0022 <span class="comment">%   software should contact rebel@csee.ogi.edu for commercial licensing information.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   See LICENSE (which should be part of the main toolkit distribution) for more</span>
+0025 <span class="comment">%   detail.</span>
+0026 
+0027 <span class="comment">%=============================================================================================</span>
+0028 
+0029 clc;
+0030 clear all;
+0031 
+0032 fprintf(<span class="string">'\nDEMSE3 : Demonstrate nonlinear state estimation for Mackey-Glass chaotic time series\n\n'</span>);
+0033 
+0034 
+0035 <span class="comment">%--- General setup</span>
+0036 
+0037 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../gssm'</span>);         <span class="comment">% add relative search path to example GSSM files to MATLABPATH</span>
+0038 <a href="../../.././ReBEL-0.2.7/core/addrelpath.html" class="code" title="function addrelpath(path_string)">addrelpath</a>(<span class="string">'../data'</span>);         <span class="comment">% add relative search path to example data files to MATLABPATH</span>
+0039 
+0040 <span class="comment">%--- Initialise GSSM model from external system description script.</span>
+0041 
+0042 model = <a href="../../.././ReBEL-0.2.7/examples/gssm/gssm_mackey_glass.html" class="code" title="function [varargout] = model_interface(func, varargin)">gssm_mackey_glass</a>(<span class="string">'init'</span>);
+0043 
+0044 <span class="comment">%--- Load normalized Mackey glass data set</span>
+0045 
+0046 load(<span class="string">'mg30_normalized.mat'</span>);                            <span class="comment">% load 'mg30_data' variable</span>
+0047 
+0048 mg30_data = mg30_data(1:1000);                          <span class="comment">% only use 1000 data points</span>
+0049 
+0050 
+0051 <span class="comment">%--- Build state space data matrix of input data</span>
+0052 
+0053 X = <a href="../../.././ReBEL-0.2.7/core/datamat.html" class="code" title="function dm=datamat(x,M)">datamat</a>(mg30_data, model.statedim);                 <span class="comment">% pack vector of data into datamtrix for NN input</span>
+0054 
+0055 [dim,N]  = size(X);                                     <span class="comment">% dimension and number of datapoints</span>
+0056 y  = zeros(model.obsdim,N);                             <span class="comment">% observation data buffer</span>
+0057 
+0058 clean_signal_var = var(mg30_data);                      <span class="comment">% determine variance of clean time series</span>
+0059 
+0060 SNR = 3;                                                <span class="comment">% 3db SNR</span>
+0061 onoise_var = clean_signal_var/10^(SNR/10);              <span class="comment">% determine needed observation noise variance for a given SNR</span>
+0062 
+0063 model.oNoise.cov = onoise_var;                            <span class="comment">% set observation noise covariance</span>
+0064 
+0065 onoise = model.oNoise.sample( model.oNoise, N);   <span class="comment">% generate observation noise</span>
+0066 
+0067 y   = model.hfun( model, X, onoise);    <span class="comment">% generate observed time series (corrupted with observation noise)</span>
+0068 
+0069 figure(1);
+0070 p1=plot(X(1,:),<span class="string">'b'</span>); hold on;
+0071 p2=plot(y,<span class="string">'g+'</span>);
+0072 legend([p1 p2],<span class="string">'clean'</span>,<span class="string">'noisy'</span>);
+0073 xlabel(<span class="string">'time - k'</span>);
+0074 drawnow
+0075 
+0076 <span class="comment">%--- Ask the user which inference algorithm to use</span>
+0077 <span class="comment">% ftype = input('Type of estimator [ ekf, ukf, cdkf, srcdkf or srukf ] ? ','s');</span>
+0078 
+0079 <span class="comment">%--- Use a couple of different filters...</span>
+0080 lftype = {<span class="string">'ekf'</span>,<span class="string">'ukf'</span>,<span class="string">'cdkf'</span>,<span class="string">'srukf'</span>,<span class="string">'srcdkf'</span>};
+0081 
+0082 <span class="keyword">for</span> k=1:5,
+0083     
+0084   ftype = lftype{k};    
+0085 
+0086   <span class="comment">%--- Setup argument data structure which serves as input to</span>
+0087   <span class="comment">%--- the 'geninfds' function. This function generates the InferenceDS and</span>
+0088   <span class="comment">%--- SystemNoiseDS data structures which are needed by all inference algorithms</span>
+0089   <span class="comment">%--- in the PiLab toolkit.</span>
+0090 
+0091   Arg.type = <span class="string">'state'</span>;                                  <span class="comment">% inference type (state estimation)</span>
+0092   Arg.tag = <span class="string">'State estimation for GSSM_MACKEY_GLASS system.'</span>;  <span class="comment">% arbitrary ID tag</span>
+0093   Arg.model = model;                                   <span class="comment">% GSSM data structure of external system</span>
+0094 
+0095   InfDS = <a href="../../.././ReBEL-0.2.7/core/geninfds.html" class="code" title="function InferenceDS = geninfds(ArgDS)">geninfds</a>(Arg);                               <span class="comment">% Create inference data structure and</span>
+0096 
+0097   [pNoise, oNoise, InfDS] = <a href="../../.././ReBEL-0.2.7/core/gensysnoiseds.html" class="code" title="function [pNoise, oNoise, InferenceDS] = gensysnoiseds(InferenceDS, estimatorType, pNoiseAdaptMethod, pNoiseAdaptParams,oNoiseAdaptMethod, oNoiseAdaptParams)">gensysnoiseds</a>(InfDS,ftype);       <span class="comment">% generate process and observation noise sources</span>
+0098 
+0099 
+0100   <span class="comment">%--- Setup runtime buffers</span>
+0101 
+0102   Xh = zeros(InfDS.statedim,N);          <span class="comment">% state estimation buffer</span>
+0103   Xh(:,1) = X(:,1);     <span class="comment">% initial estimate of state E[X(0)]</span>
+0104   Px = eye(InfDS.statedim);              <span class="comment">% initial state covariance</span>
+0105 
+0106 
+0107   <span class="comment">%--- Call inference algorithm / estimator</span>
+0108 
+0109   <span class="keyword">switch</span> ftype
+0110 
+0111 
+0112     <span class="comment">%------------------- Extended Kalman Filter ------------------------------------</span>
+0113     <span class="keyword">case</span> <span class="string">'ekf'</span>
+0114 
+0115         [Xh, Px] = <a href="../../.././ReBEL-0.2.7/core/ekf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ekf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ekf</a>(Xh(:,1), Px, pNoise, oNoise, y, [], [], InfDS);
+0116 
+0117 
+0118     <span class="comment">%------------------- Unscented Kalman Filter -----------------------------------</span>
+0119     <span class="keyword">case</span> <span class="string">'ukf'</span>
+0120 
+0121         alpha = 1;         <span class="comment">% scale factor (UKF parameter)</span>
+0122         beta  = 2;         <span class="comment">% optimal setting for Gaussian priors (UKF parameter)</span>
+0123         kappa = 0;         <span class="comment">% optimal for state dimension=2 (UKF parameter)</span>
+0124 
+0125         InfDS.spkfParams = [alpha beta kappa];
+0126 
+0127         [Xh, Px] = <a href="../../.././ReBEL-0.2.7/core/ukf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = ukf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">ukf</a>(Xh(:,1), Px, pNoise, oNoise, y, [], [], InfDS);
+0128 
+0129 
+0130     <span class="comment">%------------------- Central Difference Kalman Filter ---------------------------</span>
+0131     <span class="keyword">case</span> <span class="string">'cdkf'</span>
+0132 
+0133         InfDS.spkfParams = sqrt(3);    <span class="comment">% scale factor (CDKF parameter h)</span>
+0134 
+0135         [Xh, Px] = <a href="../../.././ReBEL-0.2.7/core/cdkf.html" class="code" title="function [xh, Px, pNoise, oNoise, InternalVariablesDS] = cdkf(state, Pstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">cdkf</a>(Xh(:,1), Px, pNoise, oNoise, y, [], [], InfDS);
+0136 
+0137 
+0138     <span class="comment">%------------------- Square Root Unscented Kalman Filter ------------------------</span>
+0139     <span class="keyword">case</span> <span class="string">'srukf'</span>
+0140 
+0141         alpha = 1;         <span class="comment">% scale factor (UKF parameter)</span>
+0142         beta  = 2;         <span class="comment">% optimal setting for Gaussian priors (UKF parameter)</span>
+0143         kappa = 0;         <span class="comment">% optimal for state dimension=2 (UKF parameter)</span>
+0144 
+0145         Sx = chol(Px)';
+0146 
+0147         InfDS.spkfParams = [alpha beta kappa];
+0148 
+0149         [Xh, Sx] = <a href="../../.././ReBEL-0.2.7/core/srukf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srukf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srukf</a>(Xh(:,1), Sx, pNoise, oNoise, y, [], [], InfDS);
+0150 
+0151 
+0152     <span class="comment">%------------------- Square Root Central Difference Kalman Filter ---------------</span>
+0153     <span class="keyword">case</span> <span class="string">'srcdkf'</span>
+0154 
+0155         InfDS.spkfParams  = sqrt(3);    <span class="comment">% scale factor (CDKF parameter h)</span>
+0156 
+0157         Sx = chol(Px)';
+0158 
+0159         [Xh, Sx] = <a href="../../.././ReBEL-0.2.7/core/srcdkf.html" class="code" title="function [xh, Sx, pNoise, oNoise, InternalVariablesDS] = srcdkf(state, Sstate, pNoise, oNoise, obs, U1, U2, InferenceDS)">srcdkf</a>(Xh(:,1), Sx, pNoise, oNoise, y, [], [], InfDS);
+0160 
+0161 
+0162    <span class="keyword">otherwise</span>
+0163 
+0164     error(<span class="string">' Unknown estimator!'</span>);
+0165 
+0166   <span class="keyword">end</span>
+0167 
+0168   <span class="comment">%--- Plot results</span>
+0169 
+0170   figure(k); clf;
+0171   p1 = plot(X(1,:)); hold on
+0172   p2 = plot(y,<span class="string">'g+'</span>);
+0173   p3 = plot(Xh(1,:),<span class="string">'r'</span>); hold off;
+0174   legend([p1 p2 p3],<span class="string">'clean'</span>,<span class="string">'noisy'</span>,[ftype <span class="string">' estimate'</span>]);
+0175   xlabel(<span class="string">'time'</span>);
+0176   title(<span class="string">'DEMSE3 : Mackey-Glass-30 Chaotic Time Series State Estimation'</span>);
+0177 
+0178 
+0179   <span class="comment">%--- Calculate mean square estimation error</span>
+0180 
+0181   mse = mean((Xh(1,:)-X(1,:)).^2);
+0182   disp([ftype <span class="string">' : Mean square error (MSE) of estimate : '</span> num2str(mse)]);
+0183 
+0184 <span class="keyword">end</span>
+0185   
+0186 <span class="comment">%--- House keeping</span>
+0187 
+0188 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../gssm'</span>);       <span class="comment">% remove relative search path to example GSSM files from MATLABPATH</span>
+0189 <a href="../../.././ReBEL-0.2.7/core/remrelpath.html" class="code" title="function remrelpath(path_string)">remrelpath</a>(<span class="string">'../data'</span>);       <span class="comment">% remove relative search path to example data files from MATLABPATH</span></pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

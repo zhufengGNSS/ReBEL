@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of pca</title>
+  <meta name="keywords" content="pca">
+  <meta name="description" content="PCA	Principal Components Analysis">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; pca.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>pca
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PCA	Principal Components Analysis</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [PCcoeff, PCvec] = pca(data, N) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PCA    Principal Components Analysis
+
+    Description
+     PCCOEFF = PCA(DATA) computes the eigenvalues of the covariance
+    matrix of the dataset DATA and returns them as PCCOEFF.  These
+    coefficients give the variance of DATA along the corresponding
+    principal components.
+
+    PCCOEFF = PCA(DATA, N) returns the largest N eigenvalues.
+
+    [PCCOEFF, PCVEC] = PCA(DATA) returns the principal components as well
+    as the coefficients.  This is considerably more computationally
+    demanding than just computing the eigenvalues.
+
+    See also
+    <a href="eigdec.html" class="code" title="function [evals, evec] = eigdec(x, N)">EIGDEC</a>, <a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">GTMINIT</a>, <a href="ppca.html" class="code" title="function [var, U, lambda] = ppca(x, ppca_dim)">PPCA</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="eigdec.html" class="code" title="function [evals, evec] = eigdec(x, N)">eigdec</a>	EIGDEC	Sorted eigendecomposition</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gtminit.html" class="code" title="function net = gtminit(net, options, data, samp_type, varargin)">gtminit</a>	GTMINIT Initialise the weights and latent sample in a GTM.</li><li><a href="rbftrain.html" class="code" title="function [net, options] = rbftrain(net, options, x, t)">rbftrain</a>	RBFTRAIN Two stage training of RBF network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [PCcoeff, PCvec] = pca(data, N)</a>
+0002 <span class="comment">%PCA    Principal Components Analysis</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%     PCCOEFF = PCA(DATA) computes the eigenvalues of the covariance</span>
+0006 <span class="comment">%    matrix of the dataset DATA and returns them as PCCOEFF.  These</span>
+0007 <span class="comment">%    coefficients give the variance of DATA along the corresponding</span>
+0008 <span class="comment">%    principal components.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    PCCOEFF = PCA(DATA, N) returns the largest N eigenvalues.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    [PCCOEFF, PCVEC] = PCA(DATA) returns the principal components as well</span>
+0013 <span class="comment">%    as the coefficients.  This is considerably more computationally</span>
+0014 <span class="comment">%    demanding than just computing the eigenvalues.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    See also</span>
+0017 <span class="comment">%    EIGDEC, GTMINIT, PPCA</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0021 
+0022 <span class="keyword">if</span> nargin == 1
+0023    N = size(data, 2);
+0024 <span class="keyword">end</span>
+0025 
+0026 <span class="keyword">if</span> nargout == 1
+0027    evals_only = logical(1);
+0028 <span class="keyword">else</span>
+0029    evals_only = logical(0);
+0030 <span class="keyword">end</span>
+0031 
+0032 <span class="keyword">if</span> N ~= round(N) | N &lt; 1 | N &gt; size(data, 2)
+0033    error(<span class="string">'Number of PCs must be integer, &gt;0, &lt; dim'</span>);
+0034 <span class="keyword">end</span>
+0035 
+0036 <span class="comment">% Find the sorted eigenvalues of the data covariance matrix</span>
+0037 <span class="keyword">if</span> evals_only
+0038    PCcoeff = <a href="eigdec.html" class="code" title="function [evals, evec] = eigdec(x, N)">eigdec</a>(cov(data), N);
+0039 <span class="keyword">else</span>
+0040   [PCcoeff, PCvec] = <a href="eigdec.html" class="code" title="function [evals, evec] = eigdec(x, N)">eigdec</a>(cov(data), N);
+0041 <span class="keyword">end</span>
+0042</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

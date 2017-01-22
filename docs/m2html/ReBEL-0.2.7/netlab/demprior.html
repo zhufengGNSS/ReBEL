@@ -1,0 +1,465 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demprior</title>
+  <meta name="keywords" content="demprior">
+  <meta name="description" content="DEMPRIOR Demonstrate sampling from a multi-parameter Gaussian prior.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; demprior.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>demprior
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DEMPRIOR Demonstrate sampling from a multi-parameter Gaussian prior.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function demprior(action); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEMPRIOR Demonstrate sampling from a multi-parameter Gaussian prior.
+
+    Description
+    This function plots the functions represented by a multi-layer
+    perceptron network when the weights are set to values drawn from a
+    Gaussian prior distribution. The parameters AW1, AB1 AW2 and AB2
+    control the inverse variances of the first-layer weights, the hidden
+    unit  biases, the second-layer weights and the output unit biases
+    respectively.  Their values can be adjusted on a logarithmic scale
+    using the sliders, or  by typing values into the text boxes and
+    pressing the return key.
+
+    See also
+    <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demprior.html" class="code" title="function demprior(action);">demprior</a>	DEMPRIOR Demonstrate sampling from a multi-parameter Gaussian prior.</li><li><a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>	MLP	Create a 2-layer feedforward network.</li><li><a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>	MLPFWD	Forward propagation through 2-layer network.</li><li><a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">mlpinit</a>	MLPINIT Initialise the weights in a 2-layer feedforward network.</li><li><a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">mlpprior</a>	MLPPRIOR Create Gaussian prior for mlp.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="demnlab.html" class="code" title="function demnlab(action);">demnlab</a>	DEMNLAB A front-end Graphical User Interface to the demos</li><li><a href="demprior.html" class="code" title="function demprior(action);">demprior</a>	DEMPRIOR Demonstrate sampling from a multi-parameter Gaussian prior.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function demprior(action);</a>
+0002 <span class="comment">%DEMPRIOR Demonstrate sampling from a multi-parameter Gaussian prior.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    This function plots the functions represented by a multi-layer</span>
+0006 <span class="comment">%    perceptron network when the weights are set to values drawn from a</span>
+0007 <span class="comment">%    Gaussian prior distribution. The parameters AW1, AB1 AW2 and AB2</span>
+0008 <span class="comment">%    control the inverse variances of the first-layer weights, the hidden</span>
+0009 <span class="comment">%    unit  biases, the second-layer weights and the output unit biases</span>
+0010 <span class="comment">%    respectively.  Their values can be adjusted on a logarithmic scale</span>
+0011 <span class="comment">%    using the sliders, or  by typing values into the text boxes and</span>
+0012 <span class="comment">%    pressing the return key.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also</span>
+0015 <span class="comment">%    MLP</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0019 
+0020 <span class="keyword">if</span> nargin&lt;1,
+0021     action=<span class="string">'initialize'</span>;
+0022 <span class="keyword">end</span>;
+0023 
+0024 <span class="keyword">if</span> strcmp(action,<span class="string">'initialize'</span>)
+0025   
+0026   aw1 = 0.01;
+0027   ab1 = 0.1;
+0028   aw2 = 1.0;
+0029   ab2 = 1.0;
+0030   
+0031   <span class="comment">% Create FIGURE</span>
+0032   fig=figure( <span class="keyword">...</span>
+0033     <span class="string">'Name'</span>,<span class="string">'Sampling from a Gaussian prior'</span>, <span class="keyword">...</span>
+0034     <span class="string">'Position'</span>, [50 50 480 380], <span class="keyword">...</span>
+0035     <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
+0036     <span class="string">'Color'</span>, [0.8 0.8 0.8], <span class="keyword">...</span>
+0037     <span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0038 
+0039   <span class="comment">% The TITLE BAR frame</span>
+0040   uicontrol(fig,  <span class="keyword">...</span>
+0041     <span class="string">'Style'</span>,<span class="string">'frame'</span>, <span class="keyword">...</span>
+0042     <span class="string">'Units'</span>,<span class="string">'normalized'</span>, <span class="keyword">...</span>
+0043     <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="keyword">...</span>
+0044     <span class="string">'Position'</span>, [0.5 0.82 0.45 0.1], <span class="keyword">...</span>
+0045     <span class="string">'BackgroundColor'</span>,[0.60 0.60 0.60]);
+0046   
+0047   <span class="comment">% The TITLE BAR text</span>
+0048   uicontrol(fig, <span class="keyword">...</span>
+0049     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0050     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0051     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0052     <span class="string">'Position'</span>, [0.54 0.85 0.40 0.05], <span class="keyword">...</span>
+0053     <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0054     <span class="string">'String'</span>, <span class="string">'Sampling from a Gaussian prior'</span>);
+0055   
+0056   <span class="comment">% Frames to enclose sliders</span>
+0057   uicontrol(fig, <span class="keyword">...</span>
+0058     <span class="string">'Style'</span>, <span class="string">'frame'</span>, <span class="keyword">...</span>
+0059     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0060     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0061     <span class="string">'Position'</span>, [0.05 0.08 0.35 0.18]);
+0062   
+0063   uicontrol(fig, <span class="keyword">...</span>
+0064     <span class="string">'Style'</span>, <span class="string">'frame'</span>, <span class="keyword">...</span>
+0065     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0066     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0067     <span class="string">'Position'</span>, [0.05 0.3 0.35 0.18]);
+0068    
+0069   uicontrol(fig, <span class="keyword">...</span>
+0070     <span class="string">'Style'</span>, <span class="string">'frame'</span>, <span class="keyword">...</span>
+0071     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0072     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0073     <span class="string">'Position'</span>, [0.05 0.52 0.35 0.18]);
+0074    
+0075   uicontrol(fig, <span class="keyword">...</span>
+0076     <span class="string">'Style'</span>, <span class="string">'frame'</span>, <span class="keyword">...</span>
+0077     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0078     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0079     <span class="string">'Position'</span>, [0.05 0.74 0.35 0.18]);
+0080    
+0081   <span class="comment">% Frame text</span>
+0082   uicontrol(fig, <span class="keyword">...</span>
+0083     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0084     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0085     <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0086     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0087     <span class="string">'Position'</span>, [0.07 0.17 0.06 0.07], <span class="keyword">...</span>
+0088     <span class="string">'String'</span>, <span class="string">'aw1'</span>);
+0089 
+0090   <span class="comment">% Frame text</span>
+0091   uicontrol(fig, <span class="keyword">...</span>
+0092     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0093     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0094     <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0095     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0096     <span class="string">'Position'</span>, [0.07 0.39 0.06 0.07], <span class="keyword">...</span>
+0097     <span class="string">'String'</span>, <span class="string">'ab1'</span>);
+0098 
+0099   <span class="comment">% Frame text</span>
+0100   uicontrol(fig, <span class="keyword">...</span>
+0101     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0102     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0103     <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0104     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0105     <span class="string">'Position'</span>, [0.07 0.61 0.06 0.07], <span class="keyword">...</span>
+0106     <span class="string">'String'</span>, <span class="string">'aw2'</span>);
+0107 
+0108   <span class="comment">% Frame text</span>
+0109   uicontrol(fig, <span class="keyword">...</span>
+0110     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0111     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0112     <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0113     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0114     <span class="string">'Position'</span>, [0.07 0.83 0.06 0.07], <span class="keyword">...</span>
+0115     <span class="string">'String'</span>, <span class="string">'ab2'</span>);
+0116    
+0117   <span class="comment">% Slider</span>
+0118   minval = -5; maxval = 5;
+0119   aw1slide = uicontrol(fig, <span class="keyword">...</span>
+0120     <span class="string">'Style'</span>, <span class="string">'slider'</span>, <span class="keyword">...</span>
+0121     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0122     <span class="string">'Value'</span>, log10(aw1), <span class="keyword">...</span>
+0123     <span class="string">'BackgroundColor'</span>, [0.8 0.8 0.8], <span class="keyword">...</span>
+0124     <span class="string">'Position'</span>, [0.07 0.1 0.31 0.05], <span class="keyword">...</span>
+0125     <span class="string">'Min'</span>, minval, <span class="string">'Max'</span>, maxval, <span class="keyword">...</span>
+0126     <span class="string">'Callback'</span>, <span class="string">'demprior update'</span>);
+0127   
+0128   <span class="comment">% Slider</span>
+0129   ab1slide = uicontrol(fig, <span class="keyword">...</span>
+0130     <span class="string">'Style'</span>, <span class="string">'slider'</span>, <span class="keyword">...</span>
+0131     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0132     <span class="string">'Value'</span>, log10(ab1), <span class="keyword">...</span>
+0133     <span class="string">'BackgroundColor'</span>, [0.8 0.8 0.8], <span class="keyword">...</span>
+0134     <span class="string">'Position'</span>, [0.07 0.32 0.31 0.05], <span class="keyword">...</span>
+0135     <span class="string">'Min'</span>, minval, <span class="string">'Max'</span>, maxval, <span class="keyword">...</span>
+0136     <span class="string">'Callback'</span>, <span class="string">'demprior update'</span>);
+0137   
+0138   <span class="comment">% Slider</span>
+0139   aw2slide = uicontrol(fig, <span class="keyword">...</span>
+0140     <span class="string">'Style'</span>, <span class="string">'slider'</span>, <span class="keyword">...</span>
+0141     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0142     <span class="string">'Value'</span>, log10(aw2), <span class="keyword">...</span>
+0143     <span class="string">'BackgroundColor'</span>, [0.8 0.8 0.8], <span class="keyword">...</span>
+0144     <span class="string">'Position'</span>, [0.07 0.54 0.31 0.05], <span class="keyword">...</span>
+0145     <span class="string">'Min'</span>, minval, <span class="string">'Max'</span>, maxval, <span class="keyword">...</span>
+0146     <span class="string">'Callback'</span>, <span class="string">'demprior update'</span>);
+0147   
+0148   <span class="comment">% Slider</span>
+0149   ab2slide = uicontrol(fig, <span class="keyword">...</span>
+0150     <span class="string">'Style'</span>, <span class="string">'slider'</span>, <span class="keyword">...</span>
+0151     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0152     <span class="string">'Value'</span>, log10(ab2), <span class="keyword">...</span>
+0153     <span class="string">'BackgroundColor'</span>, [0.8 0.8 0.8], <span class="keyword">...</span>
+0154     <span class="string">'Position'</span>, [0.07 0.76 0.31 0.05], <span class="keyword">...</span>
+0155     <span class="string">'Min'</span>, minval, <span class="string">'Max'</span>, maxval, <span class="keyword">...</span>
+0156     <span class="string">'Callback'</span>, <span class="string">'demprior update'</span>);
+0157   
+0158   <span class="comment">% The graph box</span>
+0159   haxes = axes(<span class="string">'Position'</span>, [0.5 0.28 0.45 0.45], <span class="keyword">...</span>
+0160     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0161     <span class="string">'Visible'</span>, <span class="string">'on'</span>);
+0162   
+0163   <span class="comment">% Text display of hyper-parameter values</span>
+0164   
+0165   format = <span class="string">'%8f'</span>;
+0166   
+0167   aw1val = uicontrol(fig, <span class="keyword">...</span>
+0168     <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="keyword">...</span>
+0169     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0170     <span class="string">'Position'</span>, [0.15 0.17 0.23 0.07], <span class="keyword">...</span>
+0171     <span class="string">'String'</span>, sprintf(format, aw1), <span class="keyword">...</span>
+0172     <span class="string">'Callback'</span>, <span class="string">'demprior newval'</span>);
+0173   
+0174   ab1val = uicontrol(fig, <span class="keyword">...</span>
+0175     <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="keyword">...</span>
+0176     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0177     <span class="string">'Position'</span>, [0.15 0.39 0.23 0.07], <span class="keyword">...</span>
+0178     <span class="string">'String'</span>, sprintf(format, ab1), <span class="keyword">...</span>
+0179     <span class="string">'Callback'</span>, <span class="string">'demprior newval'</span>);
+0180   
+0181   aw2val = uicontrol(fig, <span class="keyword">...</span>
+0182     <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="keyword">...</span>
+0183     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0184     <span class="string">'Position'</span>, [0.15 0.61 0.23 0.07], <span class="keyword">...</span>
+0185     <span class="string">'String'</span>, sprintf(format, aw2), <span class="keyword">...</span>
+0186     <span class="string">'Callback'</span>, <span class="string">'demprior newval'</span>);
+0187   
+0188   ab2val = uicontrol(fig, <span class="keyword">...</span>
+0189     <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="keyword">...</span>
+0190     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0191     <span class="string">'Position'</span>, [0.15 0.83 0.23 0.07], <span class="keyword">...</span>
+0192     <span class="string">'String'</span>, sprintf(format, ab2), <span class="keyword">...</span>
+0193     <span class="string">'Callback'</span>, <span class="string">'demprior newval'</span>);
+0194    
+0195   <span class="comment">% The SAMPLE button</span>
+0196   uicontrol(fig, <span class="keyword">...</span>
+0197     <span class="string">'Style'</span>,<span class="string">'push'</span>, <span class="keyword">...</span>
+0198     <span class="string">'Units'</span>,<span class="string">'normalized'</span>, <span class="keyword">...</span>
+0199     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0200     <span class="string">'Position'</span>,[0.5 0.08 0.13 0.1], <span class="keyword">...</span>
+0201     <span class="string">'String'</span>,<span class="string">'Sample'</span>, <span class="keyword">...</span>
+0202     <span class="string">'Callback'</span>,<span class="string">'demprior replot'</span>);
+0203   
+0204   <span class="comment">% The CLOSE button</span>
+0205   uicontrol(fig, <span class="keyword">...</span>
+0206     <span class="string">'Style'</span>,<span class="string">'push'</span>, <span class="keyword">...</span>
+0207     <span class="string">'Units'</span>,<span class="string">'normalized'</span>, <span class="keyword">...</span>
+0208     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0209     <span class="string">'Position'</span>,[0.82 0.08 0.13 0.1], <span class="keyword">...</span>
+0210     <span class="string">'String'</span>,<span class="string">'Close'</span>, <span class="keyword">...</span>
+0211     <span class="string">'Callback'</span>,<span class="string">'close(gcf)'</span>);
+0212   
+0213   <span class="comment">% The HELP button</span>
+0214   uicontrol(fig, <span class="keyword">...</span>
+0215     <span class="string">'Style'</span>,<span class="string">'push'</span>, <span class="keyword">...</span>
+0216     <span class="string">'Units'</span>,<span class="string">'normalized'</span>, <span class="keyword">...</span>
+0217     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0218     <span class="string">'Position'</span>,[0.66 0.08 0.13 0.1], <span class="keyword">...</span>
+0219     <span class="string">'String'</span>,<span class="string">'Help'</span>, <span class="keyword">...</span>
+0220     <span class="string">'Callback'</span>,<span class="string">'demprior help'</span>);
+0221   
+0222    <span class="comment">% Save handles to objects</span>
+0223   
+0224   hndlList=[fig aw1slide ab1slide aw2slide ab2slide aw1val ab1val aw2val <span class="keyword">...</span>
+0225       ab2val haxes];
+0226   set(fig, <span class="string">'UserData'</span>, hndlList);
+0227   
+0228   <a href="demprior.html" class="code" title="function demprior(action);">demprior</a>(<span class="string">'replot'</span>)
+0229   
+0230   
+0231 <span class="keyword">elseif</span> strcmp(action, <span class="string">'update'</span>),
+0232   
+0233   <span class="comment">% Update when a slider is moved.</span>
+0234   
+0235   hndlList   = get(gcf, <span class="string">'UserData'</span>);
+0236   aw1slide   = hndlList(2);
+0237   ab1slide = hndlList(3);
+0238   aw2slide  = hndlList(4);
+0239   ab2slide = hndlList(5);
+0240   aw1val = hndlList(6);
+0241   ab1val = hndlList(7);
+0242   aw2val = hndlList(8);
+0243   ab2val = hndlList(9);
+0244   haxes = hndlList(10);
+0245   
+0246   aw1 = 10^get(aw1slide, <span class="string">'Value'</span>);
+0247   ab1 = 10^get(ab1slide, <span class="string">'Value'</span>);
+0248   aw2 = 10^get(aw2slide, <span class="string">'Value'</span>);
+0249   ab2 = 10^get(ab2slide, <span class="string">'Value'</span>);
+0250     
+0251   format = <span class="string">'%8f'</span>;
+0252   set(aw1val, <span class="string">'String'</span>, sprintf(format, aw1));
+0253   set(ab1val, <span class="string">'String'</span>, sprintf(format, ab1));
+0254   set(aw2val, <span class="string">'String'</span>, sprintf(format, aw2));
+0255   set(ab2val, <span class="string">'String'</span>, sprintf(format, ab2));
+0256   
+0257   <a href="demprior.html" class="code" title="function demprior(action);">demprior</a>(<span class="string">'replot'</span>);
+0258   
+0259 <span class="keyword">elseif</span> strcmp(action, <span class="string">'newval'</span>),
+0260   
+0261   <span class="comment">% Update when text is changed.</span>
+0262   
+0263   hndlList   = get(gcf, <span class="string">'UserData'</span>);
+0264   aw1slide   = hndlList(2);
+0265   ab1slide = hndlList(3);
+0266   aw2slide  = hndlList(4);
+0267   ab2slide = hndlList(5);
+0268   aw1val = hndlList(6);
+0269   ab1val = hndlList(7);
+0270   aw2val = hndlList(8);
+0271   ab2val = hndlList(9);
+0272   haxes = hndlList(10);
+0273     
+0274   aw1 = sscanf(get(aw1val, <span class="string">'String'</span>), <span class="string">'%f'</span>);
+0275   ab1 = sscanf(get(ab1val, <span class="string">'String'</span>), <span class="string">'%f'</span>);
+0276   aw2 = sscanf(get(aw2val, <span class="string">'String'</span>), <span class="string">'%f'</span>);
+0277   ab2 = sscanf(get(ab2val, <span class="string">'String'</span>), <span class="string">'%f'</span>);
+0278   
+0279   set(aw1slide, <span class="string">'Value'</span>, log10(aw1));
+0280   set(ab1slide, <span class="string">'Value'</span>, log10(ab1));
+0281   set(aw2slide, <span class="string">'Value'</span>, log10(aw2));
+0282   set(ab2slide, <span class="string">'Value'</span>, log10(ab2));
+0283   
+0284   <a href="demprior.html" class="code" title="function demprior(action);">demprior</a>(<span class="string">'replot'</span>);
+0285   
+0286 <span class="keyword">elseif</span> strcmp(action, <span class="string">'replot'</span>),
+0287   
+0288   <span class="comment">% Re-sample from the prior and plot graphs.</span>
+0289  
+0290   oldFigNumber=watchon;
+0291 
+0292   hndlList   = get(gcf, <span class="string">'UserData'</span>);
+0293   aw1slide   = hndlList(2);
+0294   ab1slide = hndlList(3);
+0295   aw2slide  = hndlList(4);
+0296   ab2slide = hndlList(5);
+0297   haxes = hndlList(10);
+0298   
+0299   aw1 = 10^get(aw1slide, <span class="string">'Value'</span>);
+0300   ab1 = 10^get(ab1slide, <span class="string">'Value'</span>);
+0301   aw2 = 10^get(aw2slide, <span class="string">'Value'</span>);
+0302   ab2 = 10^get(ab2slide, <span class="string">'Value'</span>);
+0303  
+0304   axes(haxes);
+0305   cla
+0306   set(gca, <span class="keyword">...</span>
+0307     <span class="string">'Box'</span>, <span class="string">'on'</span>, <span class="keyword">...</span>
+0308     <span class="string">'Color'</span>, [0 0 0], <span class="keyword">...</span>
+0309     <span class="string">'XColor'</span>, [0 0 0], <span class="keyword">...</span>
+0310     <span class="string">'YColor'</span>, [0 0 0], <span class="keyword">...</span>
+0311     <span class="string">'FontSize'</span>, 14);
+0312   axis([-1 1 -10 10]);  
+0313   set(gca,<span class="string">'DefaultLineLineWidth'</span>, 2);
+0314 
+0315   nhidden = 12;
+0316   prior = <a href="mlpprior.html" class="code" title="function prior = mlpprior(nin, nhidden, nout, aw1, ab1, aw2, ab2)">mlpprior</a>(1, nhidden, 1, aw1, ab1, aw2, ab2);
+0317   xvals = -1:0.005:1;
+0318   nsample = 10;    <span class="comment">% Number of samples from prior.</span>
+0319   hold on
+0320   plot([-1 0; 1 0], [0 -10; 0 10], <span class="string">'b--'</span>);
+0321   net = <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">mlp</a>(1, nhidden, 1, <span class="string">'linear'</span>, prior);
+0322   <span class="keyword">for</span> i = 1:nsample
+0323     net = <a href="mlpinit.html" class="code" title="function net = mlpinit(net, prior)">mlpinit</a>(net, prior);
+0324     yvals = <a href="mlpfwd.html" class="code" title="function [y, z, a] = mlpfwd(net, x)">mlpfwd</a>(net, xvals');
+0325     plot(xvals', yvals, <span class="string">'y'</span>);
+0326   <span class="keyword">end</span>
+0327     
+0328   watchoff(oldFigNumber);
+0329  
+0330 <span class="keyword">elseif</span> strcmp(action, <span class="string">'help'</span>),
+0331   
+0332   <span class="comment">% Provide help to user.</span>
+0333 
+0334   oldFigNumber=watchon;
+0335 
+0336   helpfig = figure(<span class="string">'Position'</span>, [100 100 480 400], <span class="keyword">...</span>
+0337     <span class="string">'Name'</span>, <span class="string">'Help'</span>, <span class="keyword">...</span>
+0338     <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0339     <span class="string">'Color'</span>, [0.8 0.8 0.8], <span class="keyword">...</span>
+0340     <span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0341   
+0342     <span class="comment">% The HELP TITLE BAR frame</span>
+0343   uicontrol(helpfig,  <span class="keyword">...</span>
+0344     <span class="string">'Style'</span>,<span class="string">'frame'</span>, <span class="keyword">...</span>
+0345     <span class="string">'Units'</span>,<span class="string">'normalized'</span>, <span class="keyword">...</span>
+0346     <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="keyword">...</span>
+0347     <span class="string">'Position'</span>, [0.05 0.82 0.9 0.1], <span class="keyword">...</span>
+0348     <span class="string">'BackgroundColor'</span>,[0.60 0.60 0.60]);
+0349   
+0350   <span class="comment">% The HELP TITLE BAR text</span>
+0351   uicontrol(helpfig, <span class="keyword">...</span>
+0352     <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0353     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0354     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0355     <span class="string">'Position'</span>, [0.26 0.85 0.6 0.05], <span class="keyword">...</span>
+0356     <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0357     <span class="string">'String'</span>, <span class="string">'Help: Sampling from a Gaussian Prior'</span>);
+0358   
+0359   helpstr1 = strcat( <span class="keyword">...</span>
+0360     <span class="string">'This demonstration shows the effects of sampling from a Gaussian'</span>, <span class="keyword">...</span>
+0361      <span class="string">' prior over weights for a two-layer feed-forward network. The'</span>, <span class="keyword">...</span>
+0362      <span class="string">' parameters aw1, ab1, aw2 and ab2 control the inverse variances of'</span>, <span class="keyword">...</span>
+0363      <span class="string">' the first-layer weights, the hidden unit biases, the second-layer'</span>, <span class="keyword">...</span>
+0364      <span class="string">' weights and the output unit biases respectively. Their values can'</span>, <span class="keyword">...</span>
+0365      <span class="string">' be adjusted on a logarithmic scale using the sliders, or by'</span>, <span class="keyword">...</span>
+0366      <span class="string">' typing values into the text boxes and pressing the return key.'</span>, <span class="keyword">...</span>
+0367      <span class="string">'  After setting these values, press the ''Sample'' button to see a'</span>, <span class="keyword">...</span>
+0368      <span class="string">' new sample from the prior. '</span>);
+0369    helpstr2 = strcat( <span class="keyword">...</span>
+0370      <span class="string">'Observe how aw1 controls the horizontal length-scale of the'</span>, <span class="keyword">...</span>
+0371      <span class="string">' variation in the functions, ab1 controls the input range over'</span>, <span class="keyword">...</span>
+0372      <span class="string">' such variations occur, aw2 sets the vertical scale of the output'</span>, <span class="keyword">...</span>
+0373      <span class="string">' and ab2 sets the vertical off-set of the output. The network has'</span>, <span class="keyword">...</span>
+0374      <span class="string">' 12 hidden units. '</span>);
+0375    hstr(1) = {helpstr1};
+0376    hstr(2) = {<span class="string">''</span>};
+0377    hstr(3) = {helpstr2};
+0378 
+0379   <span class="comment">% The HELP text</span>
+0380   helpui = uicontrol(helpfig, <span class="keyword">...</span>
+0381     <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="keyword">...</span>
+0382     <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0383     <span class="string">'ForegroundColor'</span>, [0 0 0], <span class="keyword">...</span>
+0384     <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0385     <span class="string">'BackgroundColor'</span>, [1 1 1], <span class="keyword">...</span>
+0386     <span class="string">'Min'</span>, 0, <span class="keyword">...</span>
+0387     <span class="string">'Max'</span>, 2, <span class="keyword">...</span>
+0388     <span class="string">'Position'</span>, [0.05 0.2 0.9 0.8]);
+0389    
+0390    [hstrw , newpos] = textwrap(helpui, hstr, 70);
+0391    set(helpui, <span class="string">'String'</span>, hstrw, <span class="string">'Position'</span>, [0.05, 0.2, 0.9, newpos(4)]);
+0392    
+0393    
+0394   <span class="comment">% The CLOSE button</span>
+0395   uicontrol(helpfig, <span class="keyword">...</span>
+0396     <span class="string">'Style'</span>,<span class="string">'push'</span>, <span class="keyword">...</span>
+0397     <span class="string">'Units'</span>,<span class="string">'normalized'</span>, <span class="keyword">...</span>
+0398     <span class="string">'BackgroundColor'</span>, [0.6 0.6 0.6], <span class="keyword">...</span>
+0399     <span class="string">'Position'</span>,[0.4 0.05 0.2 0.1], <span class="keyword">...</span>
+0400     <span class="string">'String'</span>,<span class="string">'Close'</span>, <span class="keyword">...</span>
+0401     <span class="string">'Callback'</span>,<span class="string">'close(gcf)'</span>);
+0402 
+0403    watchoff(oldFigNumber);
+0404 
+0405 <span class="keyword">end</span>;
+0406</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

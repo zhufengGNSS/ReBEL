@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hinton</title>
+  <meta name="keywords" content="hinton">
+  <meta name="description" content="HINTON	Plot Hinton diagram for a weight matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; hinton.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>hinton
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>HINTON	Plot Hinton diagram for a weight matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function h = hinton(w); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HINTON    Plot Hinton diagram for a weight matrix.
+
+    Description
+
+    HINTON(W) takes a matrix W and plots the Hinton diagram.
+
+    H = HINTON(NET) also returns the figure handle H which can be used,
+    for instance, to delete the  figure when it is no longer needed.
+
+    To print the figure correctly in black and white, you should call
+    SET(H, 'INVERTHARDCOPY', 'OFF') before printing.
+
+    See also
+    <a href="demhint.html" class="code" title="function demhint(nin, nhidden, nout)">DEMHINT</a>, <a href="hintmat.html" class="code" title="function [xvals, yvals, color] = hintmat(w);">HINTMAT</a>, <a href="mlphint.html" class="code" title="function [h1, h2] = mlphint(net);">MLPHINT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="hintmat.html" class="code" title="function [xvals, yvals, color] = hintmat(w);">hintmat</a>	HINTMAT Evaluates the coordinates of the patches for a Hinton diagram.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function h = hinton(w);</a>
+0002 <span class="comment">%HINTON    Plot Hinton diagram for a weight matrix.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    HINTON(W) takes a matrix W and plots the Hinton diagram.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%    H = HINTON(NET) also returns the figure handle H which can be used,</span>
+0009 <span class="comment">%    for instance, to delete the  figure when it is no longer needed.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    To print the figure correctly in black and white, you should call</span>
+0012 <span class="comment">%    SET(H, 'INVERTHARDCOPY', 'OFF') before printing.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also</span>
+0015 <span class="comment">%    DEMHINT, HINTMAT, MLPHINT</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0019 
+0020 <span class="comment">% Set scale to be up to 0.9 of maximum absolute weight value, where scale</span>
+0021 <span class="comment">% defined so that area of box proportional to weight value.</span>
+0022 
+0023 <span class="comment">% Use no more than 640x480 pixels</span>
+0024 xmax = 640; ymax = 480;
+0025 
+0026 <span class="comment">% Offset bottom left hand corner</span>
+0027 x01 = 40; y01 = 40;
+0028 x02 = 80; y02 = 80;
+0029 
+0030 <span class="comment">% Need to allow 5 pixels border for window frame: but 30 at top</span>
+0031 border = 5;
+0032 top_border = 30;
+0033 
+0034 ymax = ymax - top_border;
+0035 xmax = xmax - border;
+0036 
+0037 <span class="comment">% First layer</span>
+0038 
+0039 [xvals, yvals, color] = <a href="hintmat.html" class="code" title="function [xvals, yvals, color] = hintmat(w);">hintmat</a>(w);
+0040 <span class="comment">% Try to preserve aspect ratio approximately</span>
+0041 <span class="keyword">if</span> (8*size(w, 1) &lt; 6*size(w, 2))
+0042   delx = xmax; dely = xmax*size(w, 1)/(size(w, 2));
+0043 <span class="keyword">else</span>
+0044   delx = ymax*size(w, 2)/size(w, 1); dely = ymax;
+0045 <span class="keyword">end</span>
+0046 
+0047 h = figure(<span class="string">'Color'</span>, [0.5 0.5 0.5], <span class="keyword">...</span>
+0048   <span class="string">'Name'</span>, <span class="string">'Hinton diagram'</span>, <span class="keyword">...</span>
+0049   <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0050   <span class="string">'Colormap'</span>, [0 0 0; 1 1 1], <span class="keyword">...</span>
+0051   <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="keyword">...</span>
+0052   <span class="string">'Position'</span>, [x01 y01 delx dely]);
+0053 set(gca, <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="string">'Position'</span>, [0 0 1 1]);
+0054 hold on
+0055 patch(xvals', yvals', color', <span class="string">'Edgecolor'</span>, <span class="string">'none'</span>);
+0056 axis equal;
+0057</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

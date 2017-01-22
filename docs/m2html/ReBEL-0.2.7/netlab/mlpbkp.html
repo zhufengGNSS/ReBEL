@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mlpbkp</title>
+  <meta name="keywords" content="mlpbkp">
+  <meta name="description" content="MLPBKP	Backpropagate gradient of error function for 2-layer network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../menu.html">Home</a> &gt;  <a href="#">ReBEL-0.2.7</a> &gt; <a href="#">netlab</a> &gt; mlpbkp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../menu.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="menu.html">Index for .\ReBEL-0.2.7\netlab&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mlpbkp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MLPBKP	Backpropagate gradient of error function for 2-layer network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function g = mlpbkp(net, x, z, deltas) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MLPBKP    Backpropagate gradient of error function for 2-layer network.
+
+    Description
+    G = MLPBKP(NET, X, Z, DELTAS) takes a network data structure NET
+    together with a matrix X of input vectors, a matrix  Z of hidden unit
+    activations, and a matrix DELTAS of the  gradient of the error
+    function with respect to the values of the output units (i.e. the
+    summed inputs to the output units, before the activation function is
+    applied). The return value is the gradient G of the error function
+    with respect to the network weights. Each row of X corresponds to one
+    input vector.
+
+    This function is provided so that the common backpropagation
+    algorithm can be used by multi-layer perceptron network models to
+    compute gradients for mixture density networks as well as standard
+    error functions.
+
+    See also
+    <a href="mlp.html" class="code" title="function net = mlp(nin, nhidden, nout, outfunc, prior, beta)">MLP</a>, <a href="mlpgrad.html" class="code" title="function [g, gdata, gprior] = mlpgrad(net, x, t)">MLPGRAD</a>, <a href="mlpderiv.html" class="code" title="function g = mlpderiv(net, x)">MLPDERIV</a>, <a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">MDNGRAD</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mdngrad.html" class="code" title="function g = mdngrad(net, x, t)">mdngrad</a>	MDNGRAD Evaluate gradient of error function for Mixture Density Network.</li><li><a href="mlpderiv.html" class="code" title="function g = mlpderiv(net, x)">mlpderiv</a>	MLPDERIV Evaluate derivatives of network outputs with respect to weights.</li><li><a href="mlpgrad.html" class="code" title="function [g, gdata, gprior] = mlpgrad(net, x, t)">mlpgrad</a>	MLPGRAD Evaluate gradient of error function for 2-layer network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function g = mlpbkp(net, x, z, deltas)</a>
+0002 <span class="comment">%MLPBKP    Backpropagate gradient of error function for 2-layer network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Description</span>
+0005 <span class="comment">%    G = MLPBKP(NET, X, Z, DELTAS) takes a network data structure NET</span>
+0006 <span class="comment">%    together with a matrix X of input vectors, a matrix  Z of hidden unit</span>
+0007 <span class="comment">%    activations, and a matrix DELTAS of the  gradient of the error</span>
+0008 <span class="comment">%    function with respect to the values of the output units (i.e. the</span>
+0009 <span class="comment">%    summed inputs to the output units, before the activation function is</span>
+0010 <span class="comment">%    applied). The return value is the gradient G of the error function</span>
+0011 <span class="comment">%    with respect to the network weights. Each row of X corresponds to one</span>
+0012 <span class="comment">%    input vector.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    This function is provided so that the common backpropagation</span>
+0015 <span class="comment">%    algorithm can be used by multi-layer perceptron network models to</span>
+0016 <span class="comment">%    compute gradients for mixture density networks as well as standard</span>
+0017 <span class="comment">%    error functions.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also</span>
+0020 <span class="comment">%    MLP, MLPGRAD, MLPDERIV, MDNGRAD</span>
+0021 <span class="comment">%</span>
+0022 
+0023 <span class="comment">%    Copyright (c) Ian T Nabney (1996-2001)</span>
+0024 
+0025 <span class="comment">% Evaluate second-layer gradients.</span>
+0026 gw2 = z'*deltas;
+0027 gb2 = sum(deltas, 1);
+0028 
+0029 <span class="comment">% Now do the backpropagation.</span>
+0030 delhid = deltas*net.w2';
+0031 delhid = delhid.*(1.0 - z.*z);
+0032 
+0033 <span class="comment">% Finally, evaluate the first-layer gradients.</span>
+0034 gw1 = x'*delhid;
+0035 gb1 = sum(delhid, 1);
+0036 
+0037 g = [gw1(:)', gb1, gw2(:)', gb2];</pre></div>
+<hr><address>Generated on Tue 26-Sep-2006 10:36:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,12 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+
+  gssm_bft [URL="gssm_bft.html"];
+  gssm_bot [URL="gssm_bot.html"];
+  gssm_brt [URL="gssm_brt.html"];
+  gssm_lti1 [URL="gssm_lti1.html"];
+  gssm_mackey_glass [URL="gssm_mackey_glass.html"];
+  gssm_n1 [URL="gssm_n1.html"];
+  gssm_speech_linear [URL="gssm_speech_linear.html"];
+  infds_train_nn [URL="infds_train_nn.html"];
+}
